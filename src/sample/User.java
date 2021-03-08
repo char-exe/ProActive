@@ -1,5 +1,8 @@
 package sample;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Period;
 import java.util.Date;
 
 /**
@@ -13,22 +16,45 @@ import java.util.Date;
  */
 public class User {
 
+    public enum Sex {
+        Male,Female,Other
+    }
+
     private String firstName;
     private String surName;
     private int age;
     private Sex sex;
-    private double height;  //Changed from int on class description
-    private double weight;  //Changed from int on class description
-    private Date dob;
+    private float height;  //Changed from int on class description storing in CM
+    private float weight;  //Changed from int on class description storing in KG
+    private LocalDate dob;
     private String email;
-    // private Set<Group>;  To be added in sprint 2
+    //private Set<Group> groupMemberships;  To be added in sprint 2 group not a suitable name object in Swing may be OK though
     private String userName;
-    private String realName;
 
-
-
-    public enum Sex {
-        Male,Female,Other
+    public User(String firstName, String surName, int age, Sex sex, float height, float weight, LocalDate dob, String email, String userName){
+        this.firstName = firstName;
+        this.surName = surName;
+        this.sex = sex;
+        this.height = height;
+        this.weight = weight;
+        this.dob = dob;
+        this.age = age;
+        this.email = email;
+        this.userName = userName;
     }
+
+
+    public static void main(String[] args) {
+        LocalDate today = LocalDate.now();
+        LocalDate birthday = LocalDate.of(1998, Month.APRIL, 25);
+
+        Period p = Period.between(birthday, today);
+
+        System.out.println(p.getYears());
+
+    }
+
+
+
 
 }
