@@ -38,7 +38,7 @@ public class User {
     private float weight;  //Changed from int on class description storing in KG
     private final LocalDate dob;
     private final String email;
-    //private Set<Group> groupMemberships = new ArrayList();  To be added in sprint 2 group not a suitable name object in Swing may be OK though
+    //private Set<Group> groupMemberships = new ArrayList();  To be added in sprint 2 group not a suitable name, object in Swing may be OK though
     private final String username;
 
     //Constructors
@@ -66,7 +66,6 @@ public class User {
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
-
 
     //Getters
     /**
@@ -144,29 +143,46 @@ public class User {
     //Setters
     /**
      *
-     * @param firstname the users new firstname
+     * @param firstname the User's new firstname
      */
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
+    /**
+     *
+     * @param surname the User's new surname
+     */
     public void setSurname(String surname) {
         this.surname = surname;
     }
 
+    /**
+     *
+     * @param sex the User's new sex
+     */
     public void setSex(Sex sex) {
         this.sex = sex;
     }
 
+    /**
+     *
+     * @param height the User's new height
+     */
     public void setHeight(float height) {
         this.height = height;
     }
 
+    /**
+     *
+     * @param weight the User's new weight
+     */
     public void setWeight(float weight) {
         this.weight = weight;
     }
 
     /**
+     *
      * Takes Users DOB and compares it to the current date, calculates and sets the age dynamically
      */
     public void setAge(){
@@ -176,25 +192,33 @@ public class User {
         this.age = Period.between(birthday, today).getYears();
     }
 
+    //Class-Specific Methods
+    /*
+    public ArrayList<Goal> getGoals(){
+        To be implemented in Sprint 2
+    }
 
+    public void joinGroup(Group group){
 
-//    public ArrayList<Goal> getGoals(){
-//
-//    }
+        To be implemented in Sprint 2
+    }
+    */
 
-//    public void joinGroup(Group group){
-//
-//    }
-
-
-
-
+    /**
+     *
+     * @return returns a String containing Users firstname, surname and sex
+     */
     @Override
     public String toString(){
         return this.firstname + " " + this.surname + " " + this.age + " " + this.getSex();
     }
 
-    /*
+
+    /**
+     * Test Harness
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         User user = new User("test","test", Sex.MALE, 0.1f, 0.1f,
                 LocalDate.of(1999, Month.DECEMBER, 28), "test", "test");
@@ -206,6 +230,4 @@ public class User {
         System.out.println(user);
 
     }
-    */
-
 }
