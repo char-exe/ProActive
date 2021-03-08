@@ -4,6 +4,12 @@ import java.util.Date;
 
 /**
  * A class to represent a user in a health tracking application.
+ *
+ * @author Owen Tasker
+ * @author Charlie Jones
+ *
+ * @version 1.00
+ *
  */
 public class User {
 
