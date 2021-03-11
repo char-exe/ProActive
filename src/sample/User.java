@@ -64,6 +64,7 @@ public class User {
         this.email = email;
         this.username = username;
 
+
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
 
