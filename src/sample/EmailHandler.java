@@ -6,13 +6,34 @@ import javax.mail.internet.*;
 
 public class EmailHandler {
 
-    //General account for use with this application, dont worry about non-secure password as  ultimately
-    //a throwaway account
-    private static final String proActiveEmail = "proactivese13@gmail.com";
-    private static final String proActivePass = "f45d09mFAcHr";
+    private final String email;
+    private final String pass;
 
-    private static Properties SetUpEmailHandler() {
-        // Get system properties
+    //Constructors
+    public EmailHandler(String email, String pass){
+        this.email = email;
+        this.pass = pass;
+    }
+
+    ///Getters
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    //Class Specific Methods
+
+    /**
+     * Method to set up the email settings
+     *
+     * @return returns a Properties object suitable to begin sending emails
+     */
+    private Properties SetUpEmailHandler() {
+
+        //Create Properties object, this will store information such as the source smtp server, port and others
         Properties prop = new Properties();
 
         prop.setProperty("mail.smtp.host", "smtp.gmail.com");
@@ -23,20 +44,31 @@ public class EmailHandler {
         return prop;
     }
 
-    private static void sendVerification(Properties prop, String to, String verificationCode){
+    /**
+     * Method to send a basic verification email to a user
+     *
+     * @param prop Takes a Properties object to know where it is meant to be sending information
+     * @param to Takes an email to send to
+     * @param verificationCode Takes a verification code to be created in a tokenHandler, will be used to confirm
+     *                         a user meant to join the app
+     */
+    private void sendVerification(Properties prop, String to, String verificationCode){
+
+        String email = this.getEmail();
+        String pass = this.getPass();
 
         //Create a session to send this email
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(proActiveEmail, proActivePass);
+                        return new PasswordAuthentication(email, pass);
                     }
                 });
 
         //Send Verification Email
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(proActiveEmail));
+            message.setFrom(new InternetAddress(email));
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(to)
@@ -55,8 +87,15 @@ public class EmailHandler {
 
     public static void main(String[] args) {
 
-        Properties prop = SetUpEmailHandler();
-        sendVerification(prop, "owen.tasker@gmail.com", "483RDc");
+        //General account for use with this application, dont worry about non-secure password as is ultimately
+        //a throwaway account
+        EmailHandler email = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
+
+        //Configure system to send emails, need to run this at start of each session
+        Properties prop = email.SetUpEmailHandler();
+
+        //Send a basic verification email
+        email.sendVerification(prop, "owen.tasker@gmail.com", "483RDc");
 
 
     }
