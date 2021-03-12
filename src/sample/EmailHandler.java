@@ -4,6 +4,18 @@ import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+/**
+ *  A class to allow for the emailing of codes and other information to users of the ProActive app
+ *
+ * @author Owen Tasker
+ *
+ * @version 1.1
+ *
+ * 1.0 - Initial EmailHandler class.
+ * 1.1 - Added Object oriented functionality and Javadoc comments.
+ *
+ */
+
 public class EmailHandler {
 
     private final String email;
