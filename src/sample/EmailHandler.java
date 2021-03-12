@@ -57,25 +57,34 @@ public class EmailHandler {
     }
 
     /**
-     * Method to send a basic verification email to a user
      *
-     * @param prop Takes a Properties object to know where it is meant to be sending information
-     * @param to Takes an email to send to
-     * @param verificationCode Takes a verification code to be created in a tokenHandler, will be used to confirm
-     *                         a user meant to join the app
+     * @param prop Takes in the system properties and properties about the smtp server
+     *
+     * @return returns a Session object, this is a persistent object required in all mail sending methods
      */
-    private void sendVerification(Properties prop, String to, String verificationCode){
-
+    private Session createSession(Properties prop){
         String email = this.getEmail();
         String pass = this.getPass();
 
         //Create a session to send this email
-        Session session = Session.getInstance(prop,
-                new javax.mail.Authenticator() {
+        return Session.getInstance(prop,
+                new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(email, pass);
                     }
                 });
+    }
+
+
+
+    /**
+     * Method to send a basic verification email to a user
+     *
+     * @param to Takes an email to send to
+     * @param verificationCode Takes a verification code to be created in a tokenHandler, will be used to confirm
+     *                         a user meant to join the app
+     */
+    private void sendVerification(Session session, String to, String verificationCode){
 
         //Send Verification Email
         try {
@@ -106,8 +115,11 @@ public class EmailHandler {
         //Configure system to send emails, need to run this at start of each session
         Properties prop = email.SetUpEmailHandler();
 
+        //Create email session
+        Session session = email.createSession(prop);
+
         //Send a basic verification email
-        email.sendVerification(prop, "owen.tasker@gmail.com", "483RDc");
+        email.sendVerification(session, "owen.tasker@gmail.com", "483RDc");
 
 
     }
