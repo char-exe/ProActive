@@ -55,7 +55,7 @@ public class EmailHandler {
      *
      * @return returns a Properties object suitable to begin sending emails
      */
-    private Properties SetUpEmailHandler() {
+    public Properties SetUpEmailHandler() {
 
         //Create Properties object, this will store information such as the source smtp server, port and others
         Properties prop = new Properties();
@@ -75,7 +75,7 @@ public class EmailHandler {
      *
      * @return returns a Session object, this is a persistent object required in all mail sending methods
      */
-    private Session createSession(Properties prop){
+    public Session createSession(Properties prop){
         String email = this.getEmail();
         String pass = this.getPass();
 
@@ -95,7 +95,7 @@ public class EmailHandler {
      * @param verificationCode Takes a verification code to be created in a tokenHandler, will be used to confirm
      *                         a user meant to join the app
      */
-    private void sendVerification(Session session, String to, String verificationCode){
+    public void sendVerification(Session session, String to, String verificationCode){
 
         //Send Verification Email
         try {
@@ -127,7 +127,7 @@ public class EmailHandler {
      *                    which will be implemented in the future, may need to be changed to a Token object once
      *                    it has been fully implemented
      */
-    private void sendGoal(Session session, String to, String goalName, String inviterName, String goalToken){
+    public void sendGoal(Session session, String to, String goalName, String inviterName, String goalToken){
 
         //Send an email as an invite to join a goal
         try {
@@ -158,7 +158,7 @@ public class EmailHandler {
      * @param to          Takes a To Address, this is the address that the email will be sent to
      * @param goalName    Takes the goal that has been completed
      */
-    private void sendGoalCompletion(Session session, String to, String goalName){
+    public void sendGoalCompletion(Session session, String to, String goalName){
         //Send an email as an invite to join a goal
         try {
             Message message = new MimeMessage(session);
@@ -179,8 +179,8 @@ public class EmailHandler {
         }
     }
 
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         //General account for use with this application, dont worry about non-secure password as is ultimately
         //a throwaway account
         EmailHandler email = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
@@ -193,8 +193,8 @@ public class EmailHandler {
 
         //Send a basic verification email
         email.sendVerification(session, "owen.tasker@gmail.com", "483RDc");
-        email.sendGoal(session, "owen.tasker@gmail.com", "Set Email Handler", "Owen Tasker", "5R3bn2");
-        email.sendGoalCompletion(session, "owen.tasker@gmail.com", "Set Up Email Handler");
+        email.sendGoal(session, "owen.tasker@gmail.com", "Set up user table in database", "Owen Tasker", "5R3bn2");
+        email.sendGoalCompletion(session, "owen.tasker@gmail.com", "Set up user table in database");
 
     }
 }

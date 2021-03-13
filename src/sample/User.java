@@ -140,6 +140,13 @@ public class User {
     public String getUsername() {
         return username;
     }
+    /**
+     *
+     * @return returns the users real name, formed by concatenating the first and last name
+     */
+    public String getRealName(){
+        return firstname + " " + surname;
+    }
 
     //Setters
     /**

@@ -132,14 +132,7 @@ public class DatabaseHandler
 
     public static void main(String[] args)
     {
-        DatabaseHandler dh = new DatabaseHandler();
 
-        User user = new User("Owen","Tasker", User.Sex.MALE, 72.0f, 85.0f,
-                LocalDate.of(1998, Month.APRIL, 25), "owen.tasker@gmail.com", "owen11111");
-
-        dh.createUserEntry(dh, user);
-
-        System.out.println("User Inserted into database");
 
     }
 }
