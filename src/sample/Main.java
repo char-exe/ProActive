@@ -24,14 +24,12 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        //launch(args);
-
-        DatabaseHandler dh = new DatabaseHandler();
+        DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
 
         User user = new User("Owen","Tasker", User.Sex.MALE, 72.0f, 85.0f,
-                LocalDate.of(1998, Month.APRIL, 25), "owen.tasker@gmail.com", "owen11111");
+                LocalDate.of(1998, Month.APRIL, 25), "owen.tasker@gmail.com", "owen2test");
 
-        dh.createUserEntry(dh, user);
+        dh.createUserEntry(user);
 
         System.out.println("User Inserted into database");
 
@@ -49,5 +47,6 @@ public class Main extends Application {
         email.sendVerification(session, user.getEmail(), "483RDc");
         email.sendGoal(session, user.getEmail(), "Set up user table in database", user.getRealName(), "5R3bn2");
         email.sendGoalCompletion(session, user.getEmail(), "Set up user table in database");
+
     }
 }
