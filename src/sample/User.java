@@ -1,19 +1,21 @@
 package sample;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.Period;
 
 /**
- * A class to represent a user in a health tracking application.
+ * A class to represent a user in a health tracking application, most/all error checking is completed
+ * inside of the registration form.
  *
  * @author Owen Tasker
  * @author Charlie Jones
  *
- * @version 1.1
+ * @version 1.2
  *
  * 1.0 - Initial user class structure and their variables.
  * 1.1 - Added constructor, getters and setters.
- *
+ * 1.2 - Added Javadoc comments for methods
  */
 public class User {
 
@@ -36,9 +38,10 @@ public class User {
     private float weight;  //Changed from int on class description storing in KG
     private final LocalDate dob;
     private final String email;
-    //private Set<Group> groupMemberships = new ArrayList();  To be added in sprint 2 group not a suitable name object in Swing may be OK though
+    //private Set<Group> groupMemberships = new ArrayList();  To be added in sprint 2 group not a suitable name, object in Swing may be OK though
     private final String username;
 
+    //Constructors
     /**
      *
      * @param firstname Stores the firstname of the User
@@ -61,22 +64,127 @@ public class User {
         this.email = email;
         this.username = username;
 
-        this.setAge();
+        this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
 
+    //Getters
+    /**
+     *
+     * @return returns the User's firstname
+     */
+    public String getFirstname() {
+        return firstname;
+    }
 
-//    public static void main(String[] args) {
-//        User user = new User("test","test", Sex.MALE, 0.1f, 0.1f,
-//                LocalDate.of(1999,Month.DECEMBER, 28), "test", "test");
-//
-//        System.out.println(user.getAge());
-//
-//        System.out.println(user.getSex());
-//
-//        System.out.println(user);
-//
-//    }
+    /**
+     *
+     * @return returns the User's surname
+     */
+    public String getSurname() {
+        return surname;
+    }
 
+    /**
+     *
+     * @return returns the User's age
+     */
+    public int getAge(){
+        return this.age;
+    }
+
+    /**
+     *
+     * @return returns the User's sex in String format
+     */
+    public String getSex() {
+        return sex.toString();
+    }
+
+    /**
+     *
+     * @return returns the User's height
+     */
+    public float getHeight(){
+        return height;
+    }
+
+    /**
+     *
+     * @return returns the User's weight
+     */
+    public float getWeight() {
+        return weight;
+    }
+
+    /**
+     *
+     * @return returns the User's Date of Birth
+     */
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    /**
+     *
+     * @return returns the User's email address
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     *
+     * @return returns the User's username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    //Setters
+    /**
+     *
+     * @param firstname the User's new firstname
+     */
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    /**
+     *
+     * @param surname the User's new surname
+     */
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    /**
+     *
+     * @param sex the User's new sex
+     */
+    public void setSex(Sex sex) {
+        this.sex = sex;
+    }
+
+    /**
+     *
+     * @param height the User's new height
+     */
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    /**
+     *
+     * @param weight the User's new weight
+     */
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+
+    /**
+     *
+     * Takes Users DOB and compares it to the current date, calculates and sets the age dynamically
+     */
     public void setAge(){
         LocalDate today = LocalDate.now();
         LocalDate birthday = LocalDate.of(this.dob.getYear(), this.dob.getMonth(), this.dob.getDayOfMonth());
@@ -84,76 +192,42 @@ public class User {
         this.age = Period.between(birthday, today).getYears();
     }
 
-    public String getFirstname() {
-        return firstname;
+    //Class-Specific Methods
+    /*
+    public ArrayList<Goal> getGoals(){
+        To be implemented in Sprint 2
     }
 
-    public String getSurname() {
-        return surname;
+    public void joinGroup(Group group){
+
+        To be implemented in Sprint 2
     }
+    */
 
-    public int getAge(){
-        return this.age;
-    }
-
-    public String getSex() {
-        return sex.toString();
-    }
-
-    public float getHeight(){
-        return height;
-    }
-
-    public float getWeight() {
-        return weight;
-    }
-
-    public LocalDate getDob() {
-        return dob;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setSex(Sex sex) {
-        this.sex = sex;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
-    }
-
-    public void setWeight(float weight) {
-        this.weight = weight;
-    }
-
-
-//    public ArrayList<Goal> getGoals(){
-//
-//    }
-
-//    public void joinGroup(Group group){
-//
-//    }
-
-
+    /**
+     *
+     * @return returns a String containing Users firstname, surname and sex
+     */
     @Override
     public String toString(){
         return this.firstname + " " + this.surname + " " + this.age + " " + this.getSex();
     }
 
+
+    /**
+     * Test Harness
+     *
+     * @param args Command line arguments
+     */
+    public static void main(String[] args) {
+        User user = new User("test","test", Sex.MALE, 0.1f, 0.1f,
+                LocalDate.of(1999, Month.DECEMBER, 28), "test", "test");
+
+        System.out.println(user.getAge());
+
+        System.out.println(user.getSex());
+
+        System.out.println(user);
+
+    }
 }
