@@ -223,11 +223,7 @@ public class User {
         User user = new User("test","test", Sex.MALE, 0.1f, 0.1f,
                 LocalDate.of(1999, Month.DECEMBER, 28), "test", "test");
 
-        System.out.println(user.getAge());
-
-        System.out.println(user.getSex());
-
-        System.out.println(user);
+        System.out.println(user.getDob().toString());
 
     }
 }
