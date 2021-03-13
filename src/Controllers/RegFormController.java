@@ -2,14 +2,32 @@ package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 
-import java.sql.SQLOutput;
+import java.io.IOException;
+
+
 
 public class RegFormController {
 
+    //Regexes for checking components
+    private final String FIRSTNAMEREGEX = "[A-Z][a-z]*";
+    private final String LASTNAMEREGEX  = "[A-Z][a-z]*?([ '-][a-zA-Z]+)*";
+    private final String EMAILREGEX     = "^\\w+.?\\w+@\\w+[.]\\w+([.]\\w+){0,2}$";
+    private final String USERNAMEREGEX  = "^[a-z0-9_-]{5,16}$";
+    private final String PASSWORDREGEX  = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+
+
+    @FXML public Label firstNamePopUp;
+    @FXML public Label lastNamePopUp;
     @FXML public Label emailPopUp;
+    @FXML public Label usernamePopUp;
     @FXML public Label passwordPopUp;
     @FXML public Label repeatPasswordPopUp;
 
@@ -23,6 +41,7 @@ public class RegFormController {
     @FXML public PasswordField repeatPasswordField;
 
     @FXML public Hyperlink termsConsLink;
+
     @FXML public CheckBox termsCheckBox;
 
     @FXML public Button submitButton;
@@ -30,12 +49,16 @@ public class RegFormController {
 
     @FXML protected void handleSubmitButtonAction(ActionEvent event) {
         if (
+                CheckFirstName() &&
+                CheckLastName() &&
+                CheckEmail() &&
+                CheckPassword() &&
                 CheckRepeatPassword() &&
                 CheckTermsBox()
         ){
+            //checks username with database handler for uniqueness.
             //checks inputs^ then double checks with user class
             //validate user inputs with user class
-            //if failed then need to know what will be bad for user
             //java scenes
             //call captcha
             //validate email with email handler
@@ -44,11 +67,11 @@ public class RegFormController {
             //tell database handler to create user with the details
             //end
 
-            String firstName = firstNameField.getText();
-            String lastName = lastNameField.getText();
-            String email = emailField.getText();
-            String username = usernameField.getText();
-            String password = passwordField.getText();
+            String firstName    = firstNameField.getText();
+            String lastName     = lastNameField.getText();
+            String email        = emailField.getText();
+            String username     = usernameField.getText();
+            String password     = passwordField.getText();
 
             System.out.println("First name = " + firstName);
             System.out.println("Last Name = " + lastName);
@@ -60,16 +83,63 @@ public class RegFormController {
             submitButton.setTextFill(Paint.valueOf("#bf2323"));
         }
     }
-    @FXML protected boolean CheckName(){
-        //check is all chars and suitable length
-        return true;
+
+    public void TermsAndCons() throws IOException
+    {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/TermsAndCons.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(part);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML protected boolean CheckFirstName(){
+        String name = firstNameField.getText();
+        if (name.matches(FIRSTNAMEREGEX)){
+            firstNamePopUp.setText("");
+            return true;
+        }
+        else{
+            firstNamePopUp.setText("Please enter a valid Name");
+            return false;
+        }
+    }
+
+    @FXML protected boolean CheckLastName(){
+        String name = lastNameField.getText();
+        if (name.matches(LASTNAMEREGEX)){
+            lastNamePopUp.setText("");
+            return true;
+        }
+        else{
+            lastNamePopUp.setText("Please enter a valid Name.");
+            return false;
+        }
     }
 
     @FXML protected boolean CheckEmail(){
         //needs to check for email ragax
         String email = emailField.getText();
-        String pattern = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}";
-        return true;
+        if (email.matches(EMAILREGEX)){
+            emailPopUp.setText("");
+            return true;
+        }
+        else{
+            emailPopUp.setText("Please Enter Valid Email!");
+            return false;
+        }
+    }
+
+    @FXML protected boolean CheckUsername(){
+        String username = usernameField.getText();
+        if (username.matches(USERNAMEREGEX)){
+            usernamePopUp.setText("");
+            return true;
+        }
+        else{
+            usernamePopUp.setText("Please only include characters and numbers, min 5 characters, max 16");
+            return false;
+        }
     }
 
     @FXML protected boolean CheckPassword(){
@@ -77,8 +147,7 @@ public class RegFormController {
         if (repeatPasswordField.getText().length() != 0){CheckRepeatPassword();}
 
         String password = passwordField.getText();
-        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
-        if(password.matches(pattern)){
+        if(password.matches(PASSWORDREGEX)){
             passwordPopUp.setText("");
             return true;
         }
