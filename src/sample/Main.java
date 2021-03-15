@@ -53,5 +53,6 @@ public class Main extends Application {
         email.sendGoal(session, user.getEmail(), "Set up user table in database", user.getRealName(), "5R3bn2");
         email.sendGoalCompletion(session, user.getEmail(), "Set up user table in database");
 
+        launch(args);
     }
 }
