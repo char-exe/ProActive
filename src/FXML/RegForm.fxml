@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegFormController">
+    <columnConstraints>
+        <ColumnConstraints />
+      <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+    </rowConstraints>
+    <children>
+        <Label fx:id="firstNamePopUp" textFill="darkred"
+               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+
+        <Label fx:id="lastNamePopUp" textFill="darkred"
+               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+
+        <Label fx:id="emailPopUp" textFill="darkred"
+               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+
+        <Label fx:id="usernamePopUp" textFill="darkred"
+               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+
+        <Label fx:id="passwordPopUp" textFill="darkred"
+               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
+
+        <Label fx:id="repeatPasswordPopUp" textFill="darkred"
+               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
+
+
+
+        <Text text="Sign up to ProActive" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+
+        <Label text="First Name:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+
+        <TextField fx:id="firstNameField" onKeyTyped="#CheckFirstName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label text="Last Name:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+
+        <TextField fx:id="lastNameField" onKeyTyped="#CheckLastName" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+        <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+
+        <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="6"
+                   onKeyTyped="#CheckEmail"/>
+
+        <Label text="Desired Username:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+
+        <TextField fx:id="usernameField" onKeyTyped="#CheckUsername" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+        <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+
+        <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="10"
+                       onKeyTyped="#CheckPassword"/>
+
+        <Label text="Repeat Password:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+
+        <PasswordField fx:id="repeatPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="12"
+                       onKeyTyped="#CheckRepeatPassword"/>
+
+        <Hyperlink fx:id="termsConsLink" onMouseClicked="#TermsAndCons"
+                   layoutY="32.0" text="Tick to accept out Terms &amp; Conditions"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="13"/>
+
+        <CheckBox fx:id="termsCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="13"
+                    onAction="#CheckTermsBox"/>
+
+        <Button fx:id="submitButton" onAction="#handleSubmitButtonAction" text="Submit" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
+      <VBox prefHeight="200.0" prefWidth="100.0" />
+    </children>
+</GridPane>
