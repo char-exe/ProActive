@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+      xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.CaptchaHandler">
+<children>
+    <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0">
+        <children>
+            <Label alignment="CENTER" prefHeight="53.0" prefWidth="316.0" text="ProActive">
+                <font>
+                    <Font size="36.0" />
+                </font>
+            </Label>
+            <ImageView fx:id="captchaImageBox" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="incorrectInputLabel" textFill="#c61b1b" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                <children>
+                    <TextField fx:id="captchaInput" alignment="CENTER" prefHeight="25.0" prefWidth="215.0" promptText="Enter CAPTCHA Text Here" />
+                </children>
+            </HBox>
+            <Button fx:id="captchaSubmit" mnemonicParsing="false" onAction="#validateCaptcha" text="Submit" />
+        </children>
+    </VBox>
+</children>
+</Pane>
