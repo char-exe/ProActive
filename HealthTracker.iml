@@ -110,5 +110,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
+    <orderEntry type="library" name="mail" level="application" />
   </component>
 </module>
