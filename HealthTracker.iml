@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="javafx15" level="application" />
+    <orderEntry type="library" name="mail" level="application" />
+    <orderEntry type="library" name="sqlite" level="application" />
   </component>
 </module>
