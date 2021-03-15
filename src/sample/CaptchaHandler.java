@@ -8,16 +8,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 
-import java.awt.*;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
-import java.awt.image.BufferedImage;
 import java.util.ResourceBundle;
-import javax.imageio.ImageIO;
 
 public class CaptchaHandler implements Initializable {
 
@@ -47,7 +42,7 @@ public class CaptchaHandler implements Initializable {
         System.out.println(captcha);
 
         //displays captcha image
-        File file = new File("src/sample/CaptchaImages/"+captcha+".JPG");
+        File file = new File("Resources/CaptchaImages/" +captcha+".JPG");
         InputStream captchaFileStream = null;
         try {
             captchaFileStream = new FileInputStream(file);

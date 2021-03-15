@@ -1,12 +1,10 @@
-package sample;
+package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,7 +12,7 @@ import java.util.ResourceBundle;
 public class SplashPageController implements Initializable {
 
     public SplashPageController(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("splashPage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/splashPage.fxml"));
         loader.setController(this);
         try {
             loader.load();
@@ -32,7 +30,7 @@ public class SplashPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("splashPage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/splashPage.fxml"));
         loader.setController(this);
         try {
             loader.load();

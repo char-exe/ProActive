@@ -1,11 +1,10 @@
-package sample;
+package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 
 public class LoginPageController {
     private String username, password;
@@ -17,7 +16,7 @@ public class LoginPageController {
     public void setPassword(String password) { this.password = password; }
 
     public LoginPageController(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("loginPage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/loginPage.fxml"));
         loader.setController(this);
         try {
             loader.load();

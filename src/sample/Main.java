@@ -17,7 +17,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../FXML/RegForm.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../FXML/splashPage.fxml"));
         primaryStage.setTitle("ProActive");
         primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.show();
@@ -49,9 +49,9 @@ public class Main extends Application {
         Session session = email.createSession(prop);
 
         //Send a basic verification email
-        email.sendVerification(session, user.getEmail(), "483RDc");
-        email.sendGoal(session, user.getEmail(), "Set up user table in database", user.getRealName(), "5R3bn2");
-        email.sendGoalCompletion(session, user.getEmail(), "Set up user table in database");
+//        email.sendVerification(session, user.getEmail(), "483RDc");
+//        email.sendGoal(session, user.getEmail(), "Set up user table in database", user.getRealName(), "5R3bn2");
+//        email.sendGoalCompletion(session, user.getEmail(), "Set up user table in database");
 
         launch(args);
     }
