@@ -10,5 +10,7 @@
     <orderEntry type="library" name="javafx15" level="application" />
     <orderEntry type="library" name="mail" level="application" />
     <orderEntry type="library" name="sqlite" level="application" />
+    <orderEntry type="library" name="javafx5" level="application" />
+    <orderEntry type="library" name="Mail" level="application" />
   </component>
 </module>
