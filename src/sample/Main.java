@@ -17,7 +17,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../FXML/splashPage.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../FXML/Graph.fxml"));
         primaryStage.setTitle("ProActive");
         primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.show();
@@ -29,24 +29,24 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
+        //DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
 
-        User user = new User("Owen","Tasker", User.Sex.MALE, 72.0f, 85.0f,
-                LocalDate.of(1998, Month.APRIL, 25), "owen.tasker@gmail.com", "owen2test");
+        //User user = new User("Owen","Tasker", User.Sex.MALE, 72.0f, 85.0f,
+        //        LocalDate.of(1998, Month.APRIL, 25), "owen.tasker@gmail.com", "owen2test");
 
-        dh.createUserEntry(user);
+        //dh.createUserEntry(user);
 
-        System.out.println("User Inserted into database");
+        //System.out.println("User Inserted into database");
 
         //General account for use with this application, dont worry about non-secure password as is ultimately
         //a throwaway account
-        EmailHandler email = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
+        //EmailHandler email = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
 
         //Configure system to send emails, need to run this at start of each session
-        Properties prop = email.SetUpEmailHandler();
+        //Properties prop = email.SetUpEmailHandler();
 
         //Create email session
-        Session session = email.createSession(prop);
+        //Session session = email.createSession(prop);
 
         //Send a basic verification email
 //        email.sendVerification(session, user.getEmail(), "483RDc");

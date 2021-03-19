@@ -3,41 +3,42 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="2000.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GraphController">
+
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GraphController">
    <children>
-      <ScrollPane prefHeight="2000.0" prefWidth="600.0">
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="2000.0" prefWidth="500.0" vbarPolicy="ALWAYS">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="2000.0" prefWidth="600.0">
+            <VBox>
                <children>
-                  <LineChart layoutX="58.0" layoutY="2.0" title="Calorie Intake for the Last 7 Days">
+                  <LineChart fx:id="intakeChart" title="Calorie Intake for the Last 7 Days" VBox.vgrow="ALWAYS">
                     <xAxis>
-                      <NumberAxis label="Day" side="BOTTOM" />
+                      <NumberAxis fx:id="intakeDateAxis" autoRanging="false" label="Date" minorTickCount="0" minorTickVisible="false" side="BOTTOM" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis label="Calorie Intake" side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <LineChart layoutX="58.0" layoutY="445.0" title="Calorie Burn for the Last 7 Days">
+                  <LineChart fx:id="burnChart" title="Calorie Burn for the Last 7 Days" VBox.vgrow="ALWAYS">
                     <xAxis>
-                      <NumberAxis label="Day" side="BOTTOM" />
+                      <NumberAxis fx:id="burnDateAxis" autoRanging="false" label="Date" minorTickVisible="false" side="BOTTOM" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis label="Calories Burned" side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <LineChart layoutX="58.0" layoutY="899.0" title="Minutes Spent Exercising for the Last 7 Days">
+                  <LineChart fx:id="spentChart" title="Minutes Spent Exercising for the Last 7 Days" VBox.vgrow="ALWAYS">
                      <xAxis>
-                        <NumberAxis label="Day" />
+                        <NumberAxis fx:id="spentDateAxis" autoRanging="false" label="Date" minorTickVisible="false" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
                      </xAxis>
                      <yAxis>
                         <NumberAxis label="Minutes" side="LEFT" />
                      </yAxis>
                   </LineChart>
                </children>
-            </AnchorPane>
+            </VBox>
         </content>
       </ScrollPane>
    </children>
-</AnchorPane>
+</VBox>
