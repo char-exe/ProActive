@@ -151,6 +151,34 @@ public class DatabaseHandler
     }
 
     /**
+     * Method to check that a username exists, if it does, return the resultset of that username,
+     * otherwise throw a SQLException
+     *
+     * @throws SQLException throws if the username does not exist
+     */
+    public String getPassFromUsername(String username) throws SQLException {
+        String pass = null;
+
+        String sql = "SELECT username, password FROM user WHERE username = '" + username + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                pass = rs.getString("password");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Could Not Find User");
+            throw new SQLException();
+        }
+
+        return pass;
+    }
+
+    /**
      * Method to insert a weight value into the weight_entry database table
      *
      * @param userID Takes in a users unique ID given to them by the DB, this will act as a foreign key and link
