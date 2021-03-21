@@ -3,14 +3,18 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -21,7 +25,7 @@ public class CaptchaHandler implements Initializable {
     lacks any good offline captcha generators. */
     String[] tempArray = {"DmpsTL", "7CTBKQ", "WQESWw", "vVtSZb", "GG1Nov", "yVrDPZ", "OKinC4",
             "oBUwvE", "t3wg3Z", "OwVKkz"};
-    private ArrayList<String> captchaList = new ArrayList<String>();
+    private ArrayList<String> captchaList = new ArrayList<>();
 
     //random number generator for selecting a random index
     private Random generator = new Random();
@@ -35,6 +39,7 @@ public class CaptchaHandler implements Initializable {
     @FXML ImageView captchaImageBox;
     @FXML TextField captchaInput;
     @FXML Label incorrectInputLabel;
+    @FXML Button captchaSubmit;
 
     public String serveCaptcha() {
         int captchaIndex = generator.nextInt(captchaList.size());
@@ -42,7 +47,8 @@ public class CaptchaHandler implements Initializable {
         System.out.println(captcha);
 
         //displays captcha image
-        File file = new File("Resources/CaptchaImages/" +captcha+".JPG");
+        File file = new File("src/Resources/CaptchaImages/" +captcha+".JPG");
+
         InputStream captchaFileStream = null;
         try {
             captchaFileStream = new FileInputStream(file);
@@ -57,9 +63,7 @@ public class CaptchaHandler implements Initializable {
     //this is executed after the FXML elements are initialized and thus the image is served here
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        for(String captchaTemp:tempArray){
-            captchaList.add(captchaTemp);
-        }
+        captchaList.addAll(Arrays.asList(tempArray));
         captcha = serveCaptcha();
     }
 
@@ -72,6 +76,8 @@ public class CaptchaHandler implements Initializable {
         //redirect if valid
         if (input.equals(captcha)) {
             System.out.println("Valid");
+            Stage stage = (Stage) captchaSubmit.getScene().getWindow();
+            stage.close();
         }
         //display error if invalid
         else {

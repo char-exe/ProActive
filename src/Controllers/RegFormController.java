@@ -11,10 +11,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
+import sample.EmailHandler;
+import sample.TokenHandler;
 import sample.User;
 
+import javax.mail.Session;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 
@@ -35,25 +41,25 @@ public class RegFormController implements Initializable {
     @FXML public Label sexPopUp;
     @FXML public Label passwordPopUp;
     @FXML public Label repeatPasswordPopUp;
-
+    @FXML public Label dateOfBirthPopUp;
 
     @FXML public TextField firstNameField;
     @FXML public TextField lastNameField;
     @FXML public TextField emailField;
     @FXML public TextField usernameField;
-
     @FXML public PasswordField passwordField;
     @FXML public PasswordField repeatPasswordField;
-
     @FXML public Hyperlink termsConsLink;
-
     @FXML public CheckBox termsCheckBox;
-
     @FXML public Button submitButton;
-
     @FXML public ChoiceBox sexCombo;
+    @FXML public DatePicker dateField;
+    @FXML public TextField heightField;
+    @FXML public TextField weightField;
+    @FXML public Label heightPopUp;
+    @FXML public Label weightPopUp;
 
-    @FXML protected void handleSubmitButtonAction(ActionEvent event) {
+    @FXML protected void handleSubmitButtonAction(ActionEvent event) throws IOException {
 
 
         if (
@@ -75,25 +81,36 @@ public class RegFormController implements Initializable {
             //tell database handler to create user with the details
             //end
 
+            //Instantiate Database and Email handlers
             DatabaseHandler db = new DatabaseHandler("jdbc:sqlite:proactive.db");
+            EmailHandler eh = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
+            Properties prop = eh.SetUpEmailHandler();
+            Session session = eh.createSession(prop);
 
-
+            //Read in all of the information from the registration form
             String firstName    = firstNameField.getText();
             String lastName     = lastNameField.getText();
             String email        = emailField.getText();
+            LocalDate dob       = dateField.getValue();
+            float height        = Float.parseFloat(heightField.getText());
+            float weight        = Float.parseFloat(weightField.getText());
             String username     = usernameField.getText();
+            String sex          = sexCombo.getValue().toString();
             String password     = passwordField.getText();
+
 
             if(!db.checkUserNameUnique(username)){
                 usernamePopUp.setText("Username Not Unique, Please Select a new one");
             }else {
-                System.out.println("First name = " + firstName);
-                System.out.println("Last Name = " + lastName);
-                System.out.println("Email = " + email);
-                System.out.println("Username = " + username);
-                System.out.println("Password = " + password);
+                Parent part = FXMLLoader.load(getClass().getResource("/FXML/captchaPage.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(part);
+                stage.setScene(scene);
+                stage.showAndWait();
 
-//                User user = new User(firstName, lastName, )
+                User user = new User(firstName, lastName, User.Sex.valueOf(sex.toUpperCase(Locale.ROOT)), height, weight, dob, email, username);
+                db.createUserEntry(user, password);
+                eh.sendVerification(session, email, TokenHandler.createRegistrationToken());
             }
         }
         else{
@@ -204,7 +221,7 @@ public class RegFormController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        sexCombo.getItems().removeAll();
+        sexCombo.getItems().removeAll(sexCombo.getItems());
         sexCombo.getItems().addAll("Male", "Female", "Other");
     }
 }

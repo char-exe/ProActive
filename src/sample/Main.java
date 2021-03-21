@@ -34,8 +34,6 @@ public class Main extends Application {
         User user = new User("Owen","Tasker", User.Sex.MALE, 72.0f, 85.0f,
                 LocalDate.of(1998, Month.APRIL, 25), "owen.tasker@gmail.com", "owen2test");
 
-        dh.createUserEntry(user);
-
         System.out.println("User Inserted into database");
 
         //General account for use with this application, dont worry about non-secure password as is ultimately

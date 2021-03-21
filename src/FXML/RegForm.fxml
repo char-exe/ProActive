@@ -36,57 +36,93 @@
     </rowConstraints>
 
     <children>
-        <Label fx:id="firstNamePopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
 
-        <Label fx:id="lastNamePopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
 
-        <Label fx:id="emailPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
 
-        <Label fx:id="usernamePopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
 
-        <Label fx:id="sexPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
 
-        <Label fx:id="passwordPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
-
-        <Label fx:id="repeatPasswordPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="13" />
 
 
 
         <Text text="Sign up to ProActive" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
 
+        <!-- First Name -->
+        <Label fx:id="firstNamePopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+
         <Label text="First Name:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 
         <TextField fx:id="firstNameField" onKeyTyped="#CheckFirstName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <!-- Last Name -->
+        <Label fx:id="lastNamePopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
 
         <Label text="Last Name:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
 
         <TextField fx:id="lastNameField" onKeyTyped="#CheckLastName" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
+        <!-- Email -->
+        <Label fx:id="emailPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+
         <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
 
         <TextField fx:id="emailField" onKeyTyped="#CheckEmail" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-        <Label text="Desired Username:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+        <!-- Date Of Birth -->
+        <Label fx:id="dateOfBirthPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
 
-        <TextField fx:id="usernameField" onKeyTyped="#CheckUsername" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+        <Label text="Date Of Birth:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
 
-        <Label text="Sex: " GridPane.columnIndex="0" GridPane.rowIndex="10" />
+        <DatePicker fx:id="dateField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 
-        <ChoiceBox fx:id="sexCombo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+        <!-- Height -->
+        <Label fx:id="heightPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
 
-        <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="12" />
+        <Label text="Height (Inches):" GridPane.columnIndex="0" GridPane.rowIndex="10" />
 
-        <PasswordField fx:id="passwordField" onKeyTyped="#CheckPassword" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+        <TextField fx:id="heightField" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 
-        <Label text="Repeat Password:" GridPane.columnIndex="0" GridPane.rowIndex="14" />
+        <!-- Weight -->
+        <Label fx:id="weightPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
 
-        <PasswordField fx:id="repeatPasswordField" onKeyTyped="#CheckRepeatPassword" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+        <Label text="Weight (KG):" GridPane.columnIndex="0" GridPane.rowIndex="12" />
 
-        <Hyperlink fx:id="termsConsLink" layoutY="32.0" onMouseClicked="#TermsAndCons" text="Tick to accept out Terms &amp; Conditions" GridPane.columnIndex="0" GridPane.rowIndex="15" />
+        <TextField fx:id="weightField" onKeyTyped="#CheckEmail" GridPane.columnIndex="1" GridPane.rowIndex="12" />
 
-        <CheckBox fx:id="termsCheckBox" onAction="#CheckTermsBox" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+        <!-- Username -->
+        <Label fx:id="usernamePopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="13" />
 
-        <Button fx:id="submitButton" onAction="#handleSubmitButtonAction" text="Submit" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="16" />
+        <Label text="Desired Username:" GridPane.columnIndex="0" GridPane.rowIndex="14" />
+
+        <TextField fx:id="usernameField" onKeyTyped="#CheckUsername" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+
+        <!-- Sex -->
+        <Label fx:id="sexPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
+
+        <Label text="Sex: " GridPane.columnIndex="0" GridPane.rowIndex="16" />
+
+        <ChoiceBox fx:id="sexCombo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="16" />
+
+        <!-- Password -->
+        <Label fx:id="passwordPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="17" />
+
+        <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="18" />
+
+        <PasswordField fx:id="passwordField" onKeyTyped="#CheckPassword" GridPane.columnIndex="1" GridPane.rowIndex="18" />
+
+        <!--Repeat Password-->
+        <Label fx:id="repeatPasswordPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="19" />
+
+        <Label text="Repeat Password:" GridPane.columnIndex="0" GridPane.rowIndex="20" />
+
+        <PasswordField fx:id="repeatPasswordField" onKeyTyped="#CheckRepeatPassword" GridPane.columnIndex="1" GridPane.rowIndex="20" />
+
+        <!-- Terms & Conditions-->
+        <Hyperlink fx:id="termsConsLink" layoutY="32.0" onMouseClicked="#TermsAndCons" text="Tick to accept out Terms &amp; Conditions" GridPane.columnIndex="0" GridPane.rowIndex="21" />
+
+        <CheckBox fx:id="termsCheckBox" onAction="#CheckTermsBox" GridPane.columnIndex="1" GridPane.rowIndex="21" />
+
+        <!-- Submit -->
+        <Button fx:id="submitButton" onAction="#handleSubmitButtonAction" text="Submit" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="22" />
       <VBox prefHeight="100.0" prefWidth="211.0" />
     </children>
 </GridPane>

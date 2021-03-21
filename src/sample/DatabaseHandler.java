@@ -227,11 +227,11 @@ public class DatabaseHandler
      *
      * @param user Takes in a User object, this will be used in all methods called by this method.
      */
-    public void createUserEntry(User user){
+    public void createUserEntry(User user, String password){
 
         //First we want to run the insertIntoUserTable method, this will return true if the action completed successful
         // and as such, we can make this an atomic action
-        insertIntoUserTable(user, "testPassword");
+        insertIntoUserTable(user, password);
 
         System.out.println("User Added To Database Successfully");
 
