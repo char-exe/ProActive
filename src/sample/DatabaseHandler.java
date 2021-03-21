@@ -151,6 +151,52 @@ public class DatabaseHandler
     }
 
     /**
+     * Method to check that a username exists, if it does, return the password related to that username,
+     * otherwise throw an SQLException
+     *
+     * @throws SQLException throws if the username does not exist
+     */
+    public String getPassFromUsername(String username) throws SQLException {
+        String pass = null;
+
+        String sql = "SELECT username, password FROM user WHERE username = '" + username + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                pass = rs.getString("password");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Could Not Find User");
+            throw new SQLException();
+        }
+
+        return pass;
+    }
+
+    public boolean checkUserNameUnique(String username){
+        String sql = "SELECT * FROM user WHERE username = '" + username + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (!rs.next()) {
+                System.out.println("Username is unique");
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    /**
      * Method to insert a weight value into the weight_entry database table
      *
      * @param userID Takes in a users unique ID given to them by the DB, this will act as a foreign key and link
@@ -181,11 +227,11 @@ public class DatabaseHandler
      *
      * @param user Takes in a User object, this will be used in all methods called by this method.
      */
-    public void createUserEntry(User user){
+    public void createUserEntry(User user, String password){
 
         //First we want to run the insertIntoUserTable method, this will return true if the action completed successful
         // and as such, we can make this an atomic action
-        insertIntoUserTable(user, "testPassword");
+        insertIntoUserTable(user, password);
 
         System.out.println("User Added To Database Successfully");
 
@@ -199,6 +245,31 @@ public class DatabaseHandler
         System.out.println("User Initial Weight Entry Added To Database Successfully");
 
         //Once this has all been completed, we have successfully created a user entry in the database
+    }
+
+    public void addTokenEntry(String tokenVal, int timestamp){
+        String sql = "INSERT INTO regTokens (tokenVal, timeDelay) VALUES" +
+                "('" + tokenVal + "', '" + timestamp+1800 + "')";
+
+        try {
+            Statement stmt  = this.conn.createStatement();
+            stmt.executeQuery(sql);
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public ResultSet getTokenResult(String tokenVal) throws SQLException {
+        String sql = "SELECT tokenVal, timeDelay FROM regTokens WHERE tokenVal = '" + tokenVal + "'";
+
+        ResultSet ret = null;
+
+        Statement stmt  = this.conn.createStatement();
+
+        return stmt.executeQuery(sql);
+
     }
 
     public static void main(String[] args) {

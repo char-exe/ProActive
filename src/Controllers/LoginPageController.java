@@ -3,8 +3,16 @@ package Controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import sample.DatabaseHandler;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class LoginPageController {
     private String username, password;
@@ -39,22 +47,36 @@ public class LoginPageController {
         username = usernameField.getText();
         password = passwordField.getText();
 
-        //testing functionality of components
-        System.out.println(username + " " + password);
-        diplayInvalidPassword();
-        displayInvalidUsername();
+        try{
+            DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
+            String serverSidePass = dh.getPassFromUsername(username);
+            if (password.equals(serverSidePass)){
+                Parent homePage = FXMLLoader.load(getClass().getResource("../FXML/homePage.fxml"));
 
+                Scene homeScene = new Scene(homePage);
 
+                Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+
+                window.setScene(homeScene);
+            }else {
+                displayInvalidPassword();
+            }
+        } catch (SQLException userError) {
+            displayInvalidUsername();
+        } catch (IOException e1){
+            System.out.println(e1.getMessage());
+        }
     }
 
 
     public void displayInvalidUsername() { usernameError.setText("Invalid Username"); }
     public void clearInvalidUsername() { usernameError.setText(""); }
-    public void diplayInvalidPassword() { passwordError.setText("Invalid Password"); }
+    public void displayInvalidPassword() { passwordError.setText("Invalid Password"); }
     public void clearInvalidPassword() { passwordError.setText(""); }
 
     //forgot password method
     public void forgotPassword(ActionEvent actionEvent) {
+
     }
 
     //forgot username method

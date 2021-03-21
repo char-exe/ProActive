@@ -68,6 +68,18 @@ public class User {
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
 
+    public User(String firstname, String surname, Sex sex, LocalDate dob, String email, String username){
+        this.firstname = firstname;
+        this.surname = surname;
+        this.sex = sex;
+        this.dob = dob;
+        this.email = email;
+        this.username = username;
+
+
+        this.setAge();  //Takes the current date and DOB and calculates the current age of the user
+    }
+
     //Getters
     /**
      *
