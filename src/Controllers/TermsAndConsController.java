@@ -14,16 +14,16 @@ public class TermsAndConsController {
     @FXML public Label termsText;
 
     @FXML protected void initialize() throws IOException {
-        String content = "*NEED TO CORRECT THE FILE READING BIT*";
-        /*DataInputStream file = new DataInputStream(new BufferedInputStream(new FileInputStream("Resources/TermsAndConditions.txt")));
+        String content = "";
+        DataInputStream file = new DataInputStream(new BufferedInputStream(new FileInputStream("src/Resources/TermsAndConditions.txt")));
         String line;
-        for (int i= 0; i< 500; i++){
-            line = file.readLine();
+        for (int i= 0; i< 259; i++){
+            line = file.readLine() + "\n";
             if (line==null){
                 break;
             }
             content += line;
-        }*/
+        }
         termsText.setText(content);
     }
 

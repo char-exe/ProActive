@@ -1,5 +1,6 @@
 package sample;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -101,6 +102,7 @@ public class EmailHandler {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email));
+            System.out.println(to);
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(to)
@@ -179,22 +181,7 @@ public class EmailHandler {
         }
     }
 
-
     public static void main(String[] args) {
-        //General account for use with this application, dont worry about non-secure password as is ultimately
-        //a throwaway account
-        EmailHandler email = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
-
-        //Configure system to send emails, need to run this at start of each session
-        Properties prop = email.SetUpEmailHandler();
-
-        //Create email session
-        Session session = email.createSession(prop);
-
-        //Send a basic verification email
-        email.sendVerification(session, "owen.tasker@gmail.com", "483RDc");
-        email.sendGoal(session, "owen.tasker@gmail.com", "Set up user table in database", "Owen Tasker", "5R3bn2");
-        email.sendGoalCompletion(session, "owen.tasker@gmail.com", "Set up user table in database");
-
+        long t = System.currentTimeMillis()/1000;
     }
 }

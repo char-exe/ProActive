@@ -247,6 +247,31 @@ public class DatabaseHandler
         //Once this has all been completed, we have successfully created a user entry in the database
     }
 
+    public void addTokenEntry(String tokenVal, int timestamp){
+        String sql = "INSERT INTO regTokens (tokenVal, timeDelay) VALUES" +
+                "('" + tokenVal + "', '" + timestamp+1800 + "')";
+
+        try {
+            Statement stmt  = this.conn.createStatement();
+            stmt.executeQuery(sql);
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public ResultSet getTokenResult(String tokenVal) throws SQLException {
+        String sql = "SELECT tokenVal, timeDelay FROM regTokens WHERE tokenVal = '" + tokenVal + "'";
+
+        ResultSet ret = null;
+
+        Statement stmt  = this.conn.createStatement();
+
+        return stmt.executeQuery(sql);
+
+    }
+
     public static void main(String[] args) {
         DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
 

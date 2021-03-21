@@ -19,6 +19,7 @@ import javax.mail.Session;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -102,15 +103,38 @@ public class RegFormController implements Initializable {
             if(!db.checkUserNameUnique(username)){
                 usernamePopUp.setText("Username Not Unique, Please Select a new one");
             }else {
-                Parent part = FXMLLoader.load(getClass().getResource("/FXML/captchaPage.fxml"));
+
+                //Load Captcha, wait for it to complete then move on
+                Parent captcha = FXMLLoader.load(getClass().getResource("/FXML/captchaPage.fxml"));
                 Stage stage = new Stage();
-                Scene scene = new Scene(part);
+                Scene scene = new Scene(captcha);
                 stage.setScene(scene);
                 stage.showAndWait();
 
+                //Load Email Verification, pass in the email we are using for the user in order to dynamically
+                //Send verification emails
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/FXML/EmailValidation.fxml"));
+                Parent emailValidationParent = loader.load();
+                Scene sceneEmail = new Scene(emailValidationParent);
+
+                //Send an initial token email, after this is done, open the confirmation window
+                EmailValidationController controller = loader.getController();
+                String token = TokenHandler.createUniqueToken(5);
+                eh.sendVerification(session, email, token);
+                db.addTokenEntry(token, (int)System.currentTimeMillis()/1000);
+                stage.setScene(sceneEmail);
+                controller.initData(email);
+                stage.showAndWait();
+
+                //Once Captcha has been confirmed, Create a User Object and in turn, a DB User object
                 User user = new User(firstName, lastName, User.Sex.valueOf(sex.toUpperCase(Locale.ROOT)), height, weight, dob, email, username);
                 db.createUserEntry(user, password);
-                eh.sendVerification(session, email, TokenHandler.createRegistrationToken());
+
+
+
+
+
             }
         }
         else{
