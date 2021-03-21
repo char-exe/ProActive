@@ -3,6 +3,7 @@ package Controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -10,12 +11,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
+import sample.User;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
-
-public class RegFormController {
+public class RegFormController implements Initializable {
 
     //Regexes for checking components
     private final String FIRSTNAMEREGEX = "[A-Z]?[a-z]*";
@@ -29,6 +32,7 @@ public class RegFormController {
     @FXML public Label lastNamePopUp;
     @FXML public Label emailPopUp;
     @FXML public Label usernamePopUp;
+    @FXML public Label sexPopUp;
     @FXML public Label passwordPopUp;
     @FXML public Label repeatPasswordPopUp;
 
@@ -47,6 +51,7 @@ public class RegFormController {
 
     @FXML public Button submitButton;
 
+    @FXML public ChoiceBox sexCombo;
 
     @FXML protected void handleSubmitButtonAction(ActionEvent event) {
 
@@ -87,6 +92,8 @@ public class RegFormController {
                 System.out.println("Email = " + email);
                 System.out.println("Username = " + username);
                 System.out.println("Password = " + password);
+
+//                User user = new User(firstName, lastName, )
             }
         }
         else{
@@ -193,5 +200,11 @@ public class RegFormController {
             submitButton.setTextFill(Paint.valueOf("darkred"));
             return false;
         }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        sexCombo.getItems().removeAll();
+        sexCombo.getItems().addAll("Male", "Female", "Other");
     }
 }

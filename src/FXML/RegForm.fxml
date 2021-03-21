@@ -6,11 +6,18 @@
 
 <GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegFormController">
     <columnConstraints>
-        <ColumnConstraints />
+      <ColumnConstraints />
       <ColumnConstraints />
     </columnConstraints>
+
     <rowConstraints>
-        <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />
@@ -27,24 +34,21 @@
       <RowConstraints />
       <RowConstraints />
     </rowConstraints>
+
     <children>
-        <Label fx:id="firstNamePopUp" textFill="darkred"
-               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+        <Label fx:id="firstNamePopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
 
-        <Label fx:id="lastNamePopUp" textFill="darkred"
-               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+        <Label fx:id="lastNamePopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
 
-        <Label fx:id="emailPopUp" textFill="darkred"
-               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+        <Label fx:id="emailPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
 
-        <Label fx:id="usernamePopUp" textFill="darkred"
-               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+        <Label fx:id="usernamePopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
 
-        <Label fx:id="passwordPopUp" textFill="darkred"
-               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
+        <Label fx:id="sexPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
 
-        <Label fx:id="repeatPasswordPopUp" textFill="darkred"
-               GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
+        <Label fx:id="passwordPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
+
+        <Label fx:id="repeatPasswordPopUp" textFill="darkred" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="13" />
 
 
 
@@ -60,32 +64,29 @@
 
         <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
 
-        <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="6"
-                   onKeyTyped="#CheckEmail"/>
+        <TextField fx:id="emailField" onKeyTyped="#CheckEmail" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
         <Label text="Desired Username:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
 
         <TextField fx:id="usernameField" onKeyTyped="#CheckUsername" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 
-        <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+        <Label text="Sex: " GridPane.columnIndex="0" GridPane.rowIndex="10" />
 
-        <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="10"
-                       onKeyTyped="#CheckPassword"/>
+        <ChoiceBox fx:id="sexCombo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 
-        <Label text="Repeat Password:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+        <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="12" />
 
-        <PasswordField fx:id="repeatPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="12"
-                       onKeyTyped="#CheckRepeatPassword"/>
+        <PasswordField fx:id="passwordField" onKeyTyped="#CheckPassword" GridPane.columnIndex="1" GridPane.rowIndex="12" />
 
-        <Hyperlink fx:id="termsConsLink" onMouseClicked="#TermsAndCons"
-                   layoutY="32.0" text="Tick to accept out Terms &amp; Conditions"
-                   GridPane.columnIndex="0"
-                   GridPane.rowIndex="13"/>
+        <Label text="Repeat Password:" GridPane.columnIndex="0" GridPane.rowIndex="14" />
 
-        <CheckBox fx:id="termsCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="13"
-                    onAction="#CheckTermsBox"/>
+        <PasswordField fx:id="repeatPasswordField" onKeyTyped="#CheckRepeatPassword" GridPane.columnIndex="1" GridPane.rowIndex="14" />
 
-        <Button fx:id="submitButton" onAction="#handleSubmitButtonAction" text="Submit" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
-      <VBox prefHeight="200.0" prefWidth="100.0" />
+        <Hyperlink fx:id="termsConsLink" layoutY="32.0" onMouseClicked="#TermsAndCons" text="Tick to accept out Terms &amp; Conditions" GridPane.columnIndex="0" GridPane.rowIndex="15" />
+
+        <CheckBox fx:id="termsCheckBox" onAction="#CheckTermsBox" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+
+        <Button fx:id="submitButton" onAction="#handleSubmitButtonAction" text="Submit" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="16" />
+      <VBox prefHeight="100.0" prefWidth="211.0" />
     </children>
 </GridPane>
