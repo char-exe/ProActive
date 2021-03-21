@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.mail.Session;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Properties;
@@ -27,7 +28,7 @@ public class Main extends Application {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
 
@@ -54,5 +55,8 @@ public class Main extends Application {
 //        email.sendGoalCompletion(session, user.getEmail(), "Set up user table in database");
 
         launch(args);
+
+        NutritionItem item = dh.getNutritionItem("Apple");
+        System.out.println(item.getName() + " " + item.getKcal());
     }
 }

@@ -201,6 +201,64 @@ public class DatabaseHandler
         //Once this has all been completed, we have successfully created a user entry in the database
     }
 
+    /**
+     * Method to retrieve nutrition items from the database. It will return the first item where the start of
+     * the item's name matches the input.
+     *
+     * @param itemName Takes in the a name to be searched in the database.
+     *
+     */
+    public NutritionItem getNutritionItem(String itemName)  {
+        String searchName = itemName + '%';
+        String sql = "SELECT * FROM food WHERE name LIKE '" + searchName + "'";
+
+        NutritionItem nutritionItem = new NutritionItem();
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+
+                NutritionItem newNutritionItem = new NutritionItem(rs.getString("name"),
+                        rs.getFloat("kcal"), rs.getFloat("protein"),
+                        rs.getFloat("fat"), rs.getFloat("carbs"),
+                        rs.getFloat("sugar"), rs.getFloat("fibre"),
+                        rs.getFloat("cholesterol"));
+                nutritionItem = newNutritionItem;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nutritionItem;
+    }
+
+    /**
+     * Method to retrieve exercise items from the database. It will return the first item where the start of
+     * the item's name matches the input.
+     *
+     * @param itemName Takes in the a name to be searched in the database.
+     *
+     */
+    public ExerciseItem getExerciseItem(String itemName)  {
+        String searchName = itemName + '%';
+        String sql = "SELECT * FROM exercise WHERE name LIKE '" + searchName + "'";
+
+        ExerciseItem exerciseItem = new ExerciseItem();
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+
+            ExerciseItem newExerciseItem = new ExerciseItem(rs.getString("name"),
+                    rs.getInt("burn_rate"));
+            exerciseItem = newExerciseItem;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return exerciseItem;
+    }
+
+
     public static void main(String[] args) {
         DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
 
