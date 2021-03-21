@@ -39,6 +39,7 @@ public class LoginPageController {
         username = usernameField.getText();
         password = passwordField.getText();
 
+
         //testing functionality of components
         System.out.println(username + " " + password);
         diplayInvalidPassword();
