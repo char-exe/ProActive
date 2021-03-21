@@ -62,6 +62,7 @@ public class RegFormController implements Initializable {
 
     @FXML protected void handleSubmitButtonAction(ActionEvent event) throws IOException {
 
+    @FXML protected void handleSubmitButtonAction(ActionEvent event) throws IOException {
 
         if (
                 CheckFirstName() &&

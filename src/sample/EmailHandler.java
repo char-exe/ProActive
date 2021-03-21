@@ -135,6 +135,7 @@ public class EmailHandler {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email));
+            System.out.println(to);
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(to)
