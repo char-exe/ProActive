@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  * @author Samuel Scarfe 100048633
  * @version 1.0 - Simple graphing with a loop for simple dummy data and axis formatting.
  */
-public class GraphController implements Initializable
+public class SummaryController implements Initializable
 {
     /**
      * A chart for viewing caloric intake over 7 days.
@@ -55,12 +55,12 @@ public class GraphController implements Initializable
     private NumberAxis spentDateAxis;
 
     /**
-     * Class constructor. Loads the Graph.fxml file into the FXMLLoader and sets this as the controller.
+     * Class constructor. Loads the Summary.fxml file into the FXMLLoader and sets this as the controller.
      */
-    public GraphController()
+    public SummaryController()
     {
         /*
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/Graph.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/Summary.fxml"));
         loader.setController(this);
         try
         {
@@ -68,7 +68,7 @@ public class GraphController implements Initializable
         }
         catch(IOException e)
         {
-            System.out.println(e.getMessage() + "Error loading Graph.fxml");
+            System.out.println(e.getMessage() + "Error loading Summary.fxml");
         }
 
          */
@@ -113,7 +113,7 @@ public class GraphController implements Initializable
         spentChart.getData().add(spentSeries);
 
         /*
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/Graph.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/Summary.fxml"));
         loader.setController(this);
         try
         {
@@ -121,7 +121,7 @@ public class GraphController implements Initializable
         }
         catch(IOException e)
         {
-            System.out.println(e.getMessage() + "Error loading Graph.fxml");
+            System.out.println(e.getMessage() + "Error loading Summary.fxml");
         }
 
          */

@@ -4,22 +4,15 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import javax.mail.Session;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.Properties;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../FXML/Graph.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../FXML/Main.fxml"));
         primaryStage.setTitle("ProActive");
-        primaryStage.setScene(new Scene(root, 500, 500));
+        primaryStage.setScene(new Scene(root, 1400, 800));
         primaryStage.show();
 
         //VBox content = FXMLLoader.load(getClass().getResource("splashPage.fxml"));

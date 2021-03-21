@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GraphController">
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SummaryController">
    <children>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="2000.0" prefWidth="500.0" vbarPolicy="ALWAYS">
         <content>
