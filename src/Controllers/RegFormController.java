@@ -62,8 +62,6 @@ public class RegFormController implements Initializable {
 
     @FXML protected void handleSubmitButtonAction(ActionEvent event) throws IOException {
 
-    @FXML protected void handleSubmitButtonAction(ActionEvent event) throws IOException {
-
         if (
                 CheckFirstName() &&
                 CheckLastName() &&
@@ -131,11 +129,6 @@ public class RegFormController implements Initializable {
                 //Once Captcha has been confirmed, Create a User Object and in turn, a DB User object
                 User user = new User(firstName, lastName, User.Sex.valueOf(sex.toUpperCase(Locale.ROOT)), height, weight, dob, email, username);
                 db.createUserEntry(user, password);
-
-
-
-
-
             }
         }
         else{
