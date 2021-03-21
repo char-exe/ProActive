@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import sample.DatabaseHandler;
 
 import java.io.IOException;
 
@@ -17,8 +18,8 @@ import java.io.IOException;
 public class RegFormController {
 
     //Regexes for checking components
-    private final String FIRSTNAMEREGEX = "[A-Z][a-z]*";
-    private final String LASTNAMEREGEX  = "[A-Z][a-z]*?([ '-][a-zA-Z]+)*";
+    private final String FIRSTNAMEREGEX = "[A-Z]?[a-z]*";
+    private final String LASTNAMEREGEX  = "[a-zA-Z]*([ '-][a-zA-Z]+)*";
     private final String EMAILREGEX     = "^\\w+.?\\w+@\\w+[.]\\w+([.]\\w+){0,2}$";
     private final String USERNAMEREGEX  = "^[a-z0-9_-]{5,16}$";
     private final String PASSWORDREGEX  = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
@@ -48,6 +49,8 @@ public class RegFormController {
 
 
     @FXML protected void handleSubmitButtonAction(ActionEvent event) {
+
+
         if (
                 CheckFirstName() &&
                 CheckLastName() &&
@@ -67,25 +70,31 @@ public class RegFormController {
             //tell database handler to create user with the details
             //end
 
+            DatabaseHandler db = new DatabaseHandler("jdbc:sqlite:proactive.db");
+
+
             String firstName    = firstNameField.getText();
             String lastName     = lastNameField.getText();
             String email        = emailField.getText();
             String username     = usernameField.getText();
             String password     = passwordField.getText();
 
-            System.out.println("First name = " + firstName);
-            System.out.println("Last Name = " + lastName);
-            System.out.println("Email = " + email);
-            System.out.println("Username = " + username);
-            System.out.println("Password = " + password);
+            if(!db.checkUserNameUnique(username)){
+                usernamePopUp.setText("Username Not Unique, Please Select a new one");
+            }else {
+                System.out.println("First name = " + firstName);
+                System.out.println("Last Name = " + lastName);
+                System.out.println("Email = " + email);
+                System.out.println("Username = " + username);
+                System.out.println("Password = " + password);
+            }
         }
         else{
             submitButton.setTextFill(Paint.valueOf("#bf2323"));
         }
     }
 
-    public void TermsAndCons() throws IOException
-    {
+    public void TermsAndCons() throws IOException {
         Parent part = FXMLLoader.load(getClass().getResource("/FXML/TermsAndCons.fxml"));
         Stage stage = new Stage();
         Scene scene = new Scene(part);
@@ -152,7 +161,7 @@ public class RegFormController {
             return true;
         }
         else{
-            passwordPopUp.setText("Needs to include minimum of 8 Characters, 1 Digit and 1 Special character");
+            passwordPopUp.setText("Needs to include minimum of 8 Characters, 1 Digit and 1 Special character (@#$%^&+=)");
             return false;
         }
     }
@@ -169,6 +178,7 @@ public class RegFormController {
             return true;
         }
     }
+
     @FXML protected boolean CheckTermsBox(){
         if (termsCheckBox.isSelected()&&!termsConsLink.getTextFill().equals(Paint.valueOf("darkred"))){
             return true;

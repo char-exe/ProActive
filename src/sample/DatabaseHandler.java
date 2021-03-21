@@ -151,8 +151,8 @@ public class DatabaseHandler
     }
 
     /**
-     * Method to check that a username exists, if it does, return the resultset of that username,
-     * otherwise throw a SQLException
+     * Method to check that a username exists, if it does, return the password related to that username,
+     * otherwise throw an SQLException
      *
      * @throws SQLException throws if the username does not exist
      */
@@ -176,6 +176,24 @@ public class DatabaseHandler
         }
 
         return pass;
+    }
+
+    public boolean checkUserNameUnique(String username){
+        String sql = "SELECT * FROM user WHERE username = '" + username + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (!rs.next()) {
+                System.out.println("Username is unique");
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 
     /**
