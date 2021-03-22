@@ -1,0 +1,42 @@
+.base{
+    -fx-background-color: #e0f8f7;
+}
+
+.sideBar {
+    -fx-background-color: #d4d4d4;
+}
+
+.sideBar Button{
+    -fx-background-color: #d4d4d4;
+}
+
+.sideBar Button:hover{
+    -fx-background-color: darkgrey;
+}
+
+.sideBar Button:disabled{
+    -fx-background-color: darkgrey;
+}
+
+.tree-cell{
+    -fx-font-family: 'monospaced';
+}
+
+.table-view .table-cell{
+    -fx-font-family: 'monospaced';
+}
+
+#plusIcon{
+    -fx-background-color: #9af1a0;
+}
+
+#minusIcon{
+    -fx-background-color: #fc7986;
+}
+
+.tile{
+    -fx-border-color: #7e6565;
+    -fx-border-radius: 15px;
+    -fx-background-color: #BCE5E2;
+    -fx-background-radius: 15px;
+}

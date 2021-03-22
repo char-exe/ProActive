@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.TermsAndConsController">
+   <children>
+      <SplitPane dividerPositions="0.17336683417085427" layoutX="-3.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="606.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Label layoutX="249.0" layoutY="24.0" text="Terms &amp; Conditions" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <ScrollPane prefHeight="326.0" prefWidth="603.0">
+                     <content>
+                        <Label fx:id="termsText" alignment="TOP_LEFT" prefHeight="541.0" prefWidth="579.0" />
+                     </content></ScrollPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

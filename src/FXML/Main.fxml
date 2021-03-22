@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
+   <top>
+      <MenuBar prefWidth="1920.0" BorderPane.alignment="CENTER">
+         <menus>
+            <Menu mnemonicParsing="false" text="File">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Close" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Delete" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="About" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+   </top>
+   <cursor>
+      <Cursor fx:constant="DEFAULT" />
+   </cursor>
+   <left>
+      <VBox fx:id="sideBar" minHeight="-Infinity" minWidth="-Infinity" prefHeight="743.0" prefWidth="200.0" styleClass="sideBar" stylesheets="@../style.css" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="homeButton" graphicTextGap="10.0" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#homeScreen" text="Home" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Separator prefWidth="200.0">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding></Separator>
+            <Button fx:id="logActivityButton" graphicTextGap="10.0" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#logActivityScreen" text="Log Activity" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Separator layoutX="10.0" layoutY="60.0" prefWidth="200.0">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding></Separator>
+            <Button fx:id="groupsButton" graphicTextGap="10.0" layoutX="10.0" layoutY="83.0" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#groupsScreen" text="Groups" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Separator layoutX="10.0" layoutY="113.0" prefWidth="200.0">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding></Separator>
+            <Button fx:id="goalsButton" graphicTextGap="10.0" layoutX="10.0" layoutY="136.0" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#goalsScreen" text="Goals" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Separator layoutX="25.0" layoutY="186.0" prefWidth="200.0">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding></Separator>
+            <Button fx:id="manageProfileButton" graphicTextGap="10.0" layoutX="10.0" layoutY="189.0" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="100.0" mnemonicParsing="false" onAction="#manageProfileScreen" text="Manage profile" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Separator layoutX="25.0" layoutY="239.0" prefWidth="200.0">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding></Separator>
+         </children>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
+      </VBox>
+   </left>
+</BorderPane>
