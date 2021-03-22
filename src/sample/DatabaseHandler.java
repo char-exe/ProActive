@@ -150,6 +150,46 @@ public class DatabaseHandler
         return userID;
     }
 
+    public String getPassFromUsername(String username) throws SQLException {
+        String pass = null;
+
+        String sql = "SELECT username, password FROM user WHERE username = '" + username + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                pass = rs.getString("password");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Could Not Find User");
+            throw new SQLException();
+        }
+
+        return pass;
+    }
+
+    public boolean checkUserNameUnique(String username){
+        String sql = "SELECT * FROM user WHERE username = '" + username + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (!rs.next()) {
+                System.out.println("Username is unique");
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
     /**
      * Method to insert a weight value into the weight_entry database table
      *
@@ -181,11 +221,11 @@ public class DatabaseHandler
      *
      * @param user Takes in a User object, this will be used in all methods called by this method.
      */
-    public void createUserEntry(User user){
+    public void createUserEntry(User user, String password){
 
         //First we want to run the insertIntoUserTable method, this will return true if the action completed successful
         // and as such, we can make this an atomic action
-        insertIntoUserTable(user, "testPassword");
+        insertIntoUserTable(user, password);
 
         System.out.println("User Added To Database Successfully");
 
@@ -282,6 +322,7 @@ public class DatabaseHandler
 
         return exerciseItem;
     }
+
 
 
     public static void main(String[] args) {
