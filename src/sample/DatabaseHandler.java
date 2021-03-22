@@ -151,52 +151,6 @@ public class DatabaseHandler
     }
 
     /**
-     * Method to check that a username exists, if it does, return the password related to that username,
-     * otherwise throw an SQLException
-     *
-     * @throws SQLException throws if the username does not exist
-     */
-    public String getPassFromUsername(String username) throws SQLException {
-        String pass = null;
-
-        String sql = "SELECT username, password FROM user WHERE username = '" + username + "'";
-
-        try (Statement stmt  = this.conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql))
-        {
-            while (rs.next())
-            {
-                pass = rs.getString("password");
-            }
-        }
-        catch (SQLException e)
-        {
-            System.out.println("Could Not Find User");
-            throw new SQLException();
-        }
-
-        return pass;
-    }
-
-    public boolean checkUserNameUnique(String username){
-        String sql = "SELECT * FROM user WHERE username = '" + username + "'";
-
-        try {
-            Statement stmt = this.conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (!rs.next()) {
-                System.out.println("Username is unique");
-                return true;
-            } else {
-                return false;
-            }
-        } catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-        return false;
-    }
-
-    /**
      * Method to insert a weight value into the weight_entry database table
      *
      * @param userID Takes in a users unique ID given to them by the DB, this will act as a foreign key and link
@@ -227,11 +181,11 @@ public class DatabaseHandler
      *
      * @param user Takes in a User object, this will be used in all methods called by this method.
      */
-    public void createUserEntry(User user, String password){
+    public void createUserEntry(User user){
 
         //First we want to run the insertIntoUserTable method, this will return true if the action completed successful
         // and as such, we can make this an atomic action
-        insertIntoUserTable(user, password);
+        insertIntoUserTable(user, "testPassword");
 
         System.out.println("User Added To Database Successfully");
 
@@ -271,6 +225,64 @@ public class DatabaseHandler
         return stmt.executeQuery(sql);
 
     }
+
+    /**
+     * Method to retrieve nutrition items from the database. It will return the first item where the start of
+     * the item's name matches the input.
+     *
+     * @param itemName Takes in the a name to be searched in the database.
+     *
+     */
+    public NutritionItem getNutritionItem(String itemName)  {
+        String searchName = itemName + '%';
+        String sql = "SELECT * FROM food WHERE name LIKE '" + searchName + "'";
+
+        NutritionItem nutritionItem = new NutritionItem();
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+
+                NutritionItem newNutritionItem = new NutritionItem(rs.getString("name"),
+                        rs.getFloat("kcal"), rs.getFloat("protein"),
+                        rs.getFloat("fat"), rs.getFloat("carbs"),
+                        rs.getFloat("sugar"), rs.getFloat("fibre"),
+                        rs.getFloat("cholesterol"));
+                nutritionItem = newNutritionItem;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nutritionItem;
+    }
+
+    /**
+     * Method to retrieve exercise items from the database. It will return the first item where the start of
+     * the item's name matches the input.
+     *
+     * @param itemName Takes in the a name to be searched in the database.
+     *
+     */
+    public ExerciseItem getExerciseItem(String itemName)  {
+        String searchName = itemName + '%';
+        String sql = "SELECT * FROM exercise WHERE name LIKE '" + searchName + "'";
+
+        ExerciseItem exerciseItem = new ExerciseItem();
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+
+            ExerciseItem newExerciseItem = new ExerciseItem(rs.getString("name"),
+                    rs.getInt("burn_rate"));
+            exerciseItem = newExerciseItem;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return exerciseItem;
+    }
+
 
     public static void main(String[] args) {
         DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
