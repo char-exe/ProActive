@@ -24,14 +24,14 @@ public class LoginPageController {
     public void setPassword(String password) { this.password = password; }
 
     public LoginPageController(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/loginPage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/LoginPage.fxml"));
         loader.setController(this);
         try {
             loader.load();
         }
         catch(Exception e)
         {
-            System.out.println(e.getMessage() + "Error loading loginPage.fxml");
+            System.out.println(e.getMessage() + "Error loading LoginPage.fxml");
         }
     }
 

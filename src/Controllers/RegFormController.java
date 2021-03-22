@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
@@ -19,7 +18,6 @@ import javax.mail.Session;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -104,7 +102,7 @@ public class RegFormController implements Initializable {
             }else {
 
                 //Load Captcha, wait for it to complete then move on
-                Parent captcha = FXMLLoader.load(getClass().getResource("/FXML/captchaPage.fxml"));
+                Parent captcha = FXMLLoader.load(getClass().getResource("/FXML/CaptchaPage.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(captcha);
                 stage.setScene(scene);

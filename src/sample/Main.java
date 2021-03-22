@@ -10,12 +10,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../FXML/Main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../FXML/SplashPage.fxml"));
         primaryStage.setTitle("ProActive");
         primaryStage.setScene(new Scene(root, 1400, 800));
         primaryStage.show();
 
-        //VBox content = FXMLLoader.load(getClass().getResource("splashPage.fxml"));
+        //VBox content = FXMLLoader.load(getClass().getResource("SplashPage.fxml"));
         //root.setCenter(content);
     }
 

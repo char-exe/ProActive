@@ -17,14 +17,14 @@ import java.util.ResourceBundle;
 public class SplashPageController implements Initializable {
 
     public SplashPageController(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/splashPage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/SplashPage.fxml"));
         loader.setController(this);
         try {
             loader.load();
         }
         catch(Exception e)
         {
-            System.out.println(e.getMessage() + "Error loading splashPage.fxml");
+            System.out.println(e.getMessage() + "Error loading SplashPage.fxml");
         }
     }
     
@@ -35,20 +35,20 @@ public class SplashPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/splashPage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/SplashPage.fxml"));
         loader.setController(this);
         try {
             loader.load();
         }
         catch(Exception e)
         {
-            System.out.println(e.getMessage() + "Error loading splashPage.fxml");
+            System.out.println(e.getMessage() + "Error loading SplashPage.fxml");
         }
     }
 
     //method for navigating to login page
     public void logInPage(ActionEvent actionEvent) throws IOException {
-        Parent logIn = FXMLLoader.load(getClass().getResource("../FXML/loginPage.fxml"));
+        Parent logIn = FXMLLoader.load(getClass().getResource("../FXML/LoginPage.fxml"));
 
         Scene loginScene = new Scene(logIn);
 
