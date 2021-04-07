@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
 
@@ -22,19 +23,6 @@ public class LoginPageController {
     public void setUsername(String username) { this.username = username; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-
-    public LoginPageController(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/LoginPage.fxml"));
-        loader.setController(this);
-        try {
-            loader.load();
-        }
-        catch(Exception e)
-        {
-            System.out.println(e.getMessage() + "Error loading LoginPage.fxml");
-        }
-    }
-
 
     @FXML private TextField usernameField;
     @FXML private TextField passwordField;
@@ -51,9 +39,9 @@ public class LoginPageController {
             DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
             String serverSidePass = dh.getPassFromUsername(username);
             if (password.equals(serverSidePass)){
-                Parent homePage = FXMLLoader.load(getClass().getResource("../FXML/homePage.fxml"));
+                BorderPane homePage = FXMLLoader.load(getClass().getResource("../FXML/Main.fxml"));
 
-                Scene homeScene = new Scene(homePage);
+                Scene homeScene = new Scene(homePage, 1400, 800);
 
                 Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 

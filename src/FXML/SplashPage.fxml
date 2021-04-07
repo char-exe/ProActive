@@ -1,58 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
-      xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SplashPageController">
 
-    <children>
+  <!-- VBox is used to stack 3 HBoxes on top of each other. This means that the 3 elements are evenly spaced out
+  and allows for a neater display -->
+  <VBox alignment="CENTER" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SplashPageController">
+      <children>
 
-        <!-- VBox is used to stack 3 HBoxes on top of each other. This means that the 3 elements are evenly spaced out
-        and allows for a neater display -->
-        <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0">
-            <children>
+          <!-- ProActive Banner -->
+          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+              <children>
+                  <Label text="ProActive">
+                      <font>
+                          <Font size="36.0" />
+                      </font>
+                  </Label>
+              </children>
+          </HBox>
 
-                <!-- ProActive Banner -->
-                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                    <children>
-                        <Label text="ProActive">
-                            <font>
-                                <Font size="36.0" />
-                            </font>
-                        </Label>
-                    </children>
-                </HBox>
+          <!-- Log In button -->
+          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+              <children>
+                  <Button fx:id="logInNavigateButton" mnemonicParsing="false" onAction="#logInPage" text="Log In">
+                      <font>
+                          <Font size="24.0" />
+                      </font>
+                  </Button>
+              </children>
+          </HBox>
 
-                <!-- Log In button -->
-                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                    <children>
-                        <Button fx:id="logInNavigateButton" mnemonicParsing="false" onAction="#logInPage" text="Log In">
-                            <font>
-                                <Font size="24.0" />
-                            </font>
-                        </Button>
-                    </children>
-                </HBox>
+          <!-- Sign Up Button -->
+          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+              <children>
+                  <Button fx:id="signUpNavigateButton" mnemonicParsing="false" onAction="#signUpPage" text="Sign Up">
+                      <font>
+                          <Font size="24.0" />
+                      </font>
+                  </Button>
+              </children>
+          </HBox>
 
-                <!-- Sign Up Button -->
-                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                    <children>
-                        <Button fx:id="signUpNavigateButton" mnemonicParsing="false" onAction="#signUpPage" text="Sign Up">
-                            <font>
-                                <Font size="24.0" />
-                            </font>
-                        </Button>
-                    </children>
-                </HBox>
-
-            </children>
-        </VBox>
-
-    </children>
-</Pane>
-
+      </children>
+  </VBox>

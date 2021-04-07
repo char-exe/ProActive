@@ -55,26 +55,6 @@ public class SummaryController implements Initializable
     private NumberAxis spentDateAxis;
 
     /**
-     * Class constructor. Loads the Summary.fxml file into the FXMLLoader and sets this as the controller.
-     */
-    public SummaryController()
-    {
-        /*
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/Summary.fxml"));
-        loader.setController(this);
-        try
-        {
-            loader.load();
-        }
-        catch(IOException e)
-        {
-            System.out.println(e.getMessage() + "Error loading Summary.fxml");
-        }
-
-         */
-    }
-
-    /**
      * Initializes the graphs with formatted axes and dummy data.
      *
      * @param url The location used to resolve relative paths for the root object, or null if the location is not known.

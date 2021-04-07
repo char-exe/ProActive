@@ -9,24 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import sample.Main;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class SplashPageController implements Initializable {
-
-    public SplashPageController(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/SplashPage.fxml"));
-        loader.setController(this);
-        try {
-            loader.load();
-        }
-        catch(Exception e)
-        {
-            System.out.println(e.getMessage() + "Error loading SplashPage.fxml");
-        }
-    }
     
     @FXML private TextField usernameField;
     @FXML private void doAction (ActionEvent event) {
@@ -35,22 +24,14 @@ public class SplashPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/SplashPage.fxml"));
-        loader.setController(this);
-        try {
-            loader.load();
-        }
-        catch(Exception e)
-        {
-            System.out.println(e.getMessage() + "Error loading SplashPage.fxml");
-        }
+
     }
 
     //method for navigating to login page
     public void logInPage(ActionEvent actionEvent) throws IOException {
         Parent logIn = FXMLLoader.load(getClass().getResource("../FXML/LoginPage.fxml"));
 
-        Scene loginScene = new Scene(logIn);
+        Scene loginScene = new Scene(logIn, 1400, 800);
 
         Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
@@ -62,7 +43,7 @@ public class SplashPageController implements Initializable {
     public void signUpPage(ActionEvent actionEvent) throws IOException {
         Parent signUp = FXMLLoader.load(getClass().getResource("../FXML/RegForm.fxml"));
 
-        Scene signUpScene = new Scene(signUp);
+        Scene signUpScene = new Scene(signUp, 1400, 800);
 
         Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
