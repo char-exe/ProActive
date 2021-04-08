@@ -91,20 +91,6 @@ public class SummaryController implements Initializable
         intakeChart.getData().add(intakeSeries);
         burnChart.getData().add(burnSeries);
         spentChart.getData().add(spentSeries);
-
-        /*
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../FXML/Summary.fxml"));
-        loader.setController(this);
-        try
-        {
-            loader.load();
-        }
-        catch(IOException e)
-        {
-            System.out.println(e.getMessage() + "Error loading Summary.fxml");
-        }
-
-         */
     }
 
     /**
