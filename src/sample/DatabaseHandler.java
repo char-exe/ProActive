@@ -241,7 +241,7 @@ public class DatabaseHandler
         //Once this has all been completed, we have successfully created a user entry in the database
     }
 
-    public void addTokenEntry(String tokenVal, int timestamp){
+    public void addTokenEntry(String tokenVal, long timestamp){
         String sql = "INSERT INTO regTokens (tokenVal, timeDelay) VALUES" +
                 "('" + tokenVal + "', '" + timestamp+1800 + "')";
 
@@ -323,20 +323,23 @@ public class DatabaseHandler
         return exerciseItem;
     }
 
+    public void deleteToken(String token){
+        String sql = "DELETE FROM regTokens WHERE tokenVal = '" + token + "'";
 
+        try {
+            Statement stmt  = this.conn.createStatement();
+            stmt.executeQuery(sql);
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
 
     public static void main(String[] args) {
         DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
 
-        ResultSet userTable = dh.selectAllFromTable(dbTables.USER);
-
-        try{
-            while (userTable.next()){
-                System.out.println(userTable.getString(dbTables.userColumns.USERNAME.toString().toLowerCase()));
-            }
-        } catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
+        dh.deleteToken("de9d7");
 
     }
 }

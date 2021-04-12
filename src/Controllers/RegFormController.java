@@ -9,10 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import sample.DatabaseHandler;
-import sample.EmailHandler;
-import sample.TokenHandler;
-import sample.User;
+import sample.*;
 
 import javax.mail.Session;
 import java.io.IOException;
@@ -79,11 +76,9 @@ public class RegFormController implements Initializable {
             //tell database handler to create user with the details
             //end
 
-            //Instantiate Database and Email handlers
+            //Instantiate Database Handler
             DatabaseHandler db = new DatabaseHandler("jdbc:sqlite:proactive.db");
-            EmailHandler eh = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
-            Properties prop = eh.SetUpEmailHandler();
-            Session session = eh.createSession(prop);
+
 
             //Read in all of the information from the registration form
             String firstName    = firstNameField.getText();
@@ -97,36 +92,30 @@ public class RegFormController implements Initializable {
             String password     = passwordField.getText();
 
 
+            //Check that username inputted was
             if(!db.checkUserNameUnique(username)){
                 usernamePopUp.setText("Username Not Unique, Please Select a new one");
             }else {
-
-                //Load Captcha, wait for it to complete then move on
-                Parent captcha = FXMLLoader.load(getClass().getResource("/FXML/CaptchaPage.fxml"));
+                Stage parentScene = (Stage) submitButton.getScene().getWindow();
                 Stage stage = new Stage();
-                Scene scene = new Scene(captcha);
-                stage.setScene(scene);
-                stage.showAndWait();
-
-                //Load Email Verification, pass in the email we are using for the user in order to dynamically
-                //Send verification emails
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/FXML/EmailValidation.fxml"));
-                Parent emailValidationParent = loader.load();
-                Scene sceneEmail = new Scene(emailValidationParent);
-
-                //Send an initial token email, after this is done, open the confirmation window
-                EmailValidationController controller = loader.getController();
-                String token = TokenHandler.createUniqueToken(5);
-                eh.sendVerification(session, email, token);
-                db.addTokenEntry(token, (int)System.currentTimeMillis()/1000);
-                stage.setScene(sceneEmail);
-                controller.initData(email);
-                stage.showAndWait();
-
-                //Once Captcha has been confirmed, Create a User Object and in turn, a DB User object
                 User user = new User(firstName, lastName, User.Sex.valueOf(sex.toUpperCase(Locale.ROOT)), height, weight, dob, email, username);
-                db.createUserEntry(user, password);
+
+                FXMLLoader load = new FXMLLoader();
+
+                load.setLocation(getClass().getResource("/FXML/CaptchaPage.fxml"));
+
+                Parent captchaParent = load.load();
+
+                Scene sceneCaptcha = new Scene(captchaParent);
+
+                stage.setScene(sceneCaptcha);
+
+                CaptchaHandler controller = load.getController();
+                stage.setScene(sceneCaptcha);
+                controller.initData(user, password);
+
+                parentScene.close();
+                stage.show();
             }
         }
         else{
