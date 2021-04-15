@@ -201,6 +201,7 @@ public class User {
         this.weight = weight;
     }
 
+
     /**
      *
      * Takes Users DOB and compares it to the current date, calculates and sets the age dynamically
@@ -210,6 +211,12 @@ public class User {
         LocalDate birthday = LocalDate.of(this.dob.getYear(), this.dob.getMonth(), this.dob.getDayOfMonth());
 
         this.age = Period.between(birthday, today).getYears();
+    }
+    public void setAge(LocalDate dob){
+        LocalDate today = LocalDate.now();
+        LocalDate birthday = LocalDate.of(dob.getYear(), dob.getMonth(), dob.getDayOfMonth());
+        this.age = Period.between(birthday, today).getYears();
+
     }
 
     //Class-Specific Methods

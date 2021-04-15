@@ -1677,53 +1677,58 @@
       <DataType>varchar[300]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="570" parent="177" name="user_user_id_uindex">
+    <column id="570" parent="177" name="email">
+      <Position>9</Position>
+      <DataType>varchar[100]|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="571" parent="177" name="user_user_id_uindex">
       <ColNames>user_id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="571" parent="177" name="user_username_uindex">
+    <index id="572" parent="177" name="user_username_uindex">
       <ColNames>username</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="572" parent="177" name="user_pk">
+    <key id="573" parent="177" name="user_pk">
       <ColNames>user_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>user_user_id_uindex</UnderlyingIndexName>
     </key>
-    <column id="573" parent="178" name="entry_id">
+    <column id="574" parent="178" name="entry_id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="574" parent="178" name="user_id">
+    <column id="575" parent="178" name="user_id">
       <Position>2</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="575" parent="178" name="weight">
+    <column id="576" parent="178" name="weight">
       <Position>3</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="576" parent="178" name="date">
+    <column id="577" parent="178" name="date">
       <Position>4</Position>
       <DataType>varchar[11]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="577" parent="178" name="weight_entry_entry_id_uindex">
+    <index id="578" parent="178" name="weight_entry_entry_id_uindex">
       <ColNames>entry_id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="578" parent="178" name="weight_entry_pk">
+    <key id="579" parent="178" name="weight_entry_pk">
       <ColNames>entry_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>weight_entry_entry_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="579" parent="178">
+    <foreign-key id="580" parent="178">
       <ColNames>user_id</ColNames>
       <RefTableName>user</RefTableName>
       <RefKeyName>user_pk</RefKeyName>

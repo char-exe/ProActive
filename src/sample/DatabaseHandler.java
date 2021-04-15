@@ -105,11 +105,12 @@ public class DatabaseHandler
      *                  end location
      */
     public void insertIntoUserTable(User user, String password) {
+        System.out.println(user.getEmail());
         String sql =
-                "INSERT INTO user (first_name, last_name, dob, height, sex, username, password)" +
+                "INSERT INTO user (first_name, last_name, dob, height, sex, username, password, email)" +
                 "VALUES('" + user.getFirstname() + "', '" + user.getSurname() + "','" + user.getDob().toString() +
                         "','" + user.getHeight() + "','" + user.getSex() + "','" + user.getUsername() +
-                        "','" + password + "')";
+                        "','" + password + "','" + user.getEmail() + "')";
 
         try {
              Statement stmt  = this.conn.createStatement();
@@ -336,8 +337,36 @@ public class DatabaseHandler
         }
     }
 
+    /*
+    public User getUserFromUsername(String userName){
+        User user;
+        String sql = "SELECT * FROM user WHERE username = '" + userName + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                user = new User(rs.getString("first_name"), rs.getString("last_name"), User.Sex.valueOf(rs.getString("sex")), LocalDate.parse(rs.getString("dob")), rs.getString(""), userName);
+
+
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return user;
+    }
+
+     */
+
     public static void main(String[] args) {
         DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
+
+        User user = new User("Owen", "Tasker", User.Sex.MALE, 72, 85, LocalDate.of(1998, 4, 25), "owen.tasker@gmail.com", "owenTestEmail");
+
+        dh.insertIntoUserTable(user, "TestPassword");
 
         dh.deleteToken("de9d7");
 
