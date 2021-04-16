@@ -17,6 +17,9 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("../FXML/SplashPage.fxml"));
         primaryStage.setTitle("ProActive");
         primaryStage.setScene(new Scene(root, 1400, 800));
+
+        primaryStage.setMinWidth(1050);
+        primaryStage.setMinHeight(500);
         primaryStage.show();
 
         //VBox content = FXMLLoader.load(getClass().getResource("SplashPage.fxml"));

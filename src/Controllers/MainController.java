@@ -13,6 +13,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * A class to control the sidebar, notification bar and page switching mechanism of the app. Controls which page to
+ * navigate to when a sidebar button is pressed.
+ *
+ * @author Charlie Jones 100234961
+ *
+ * @version 1.0 - Added basic sidebar with switching mechanism to change the focus between FXML pages, also made a last
+ * used button pointer to indicate to the user which page they are on, not allowing them to select the same page again.
+ */
 public class MainController implements Initializable {
 
     //Referencing elements defined in main.fxml
@@ -23,6 +32,7 @@ public class MainController implements Initializable {
     @FXML private Button manageProfileButton;
     @FXML private BorderPane main;
 
+    // Pointer to the button on the sidebar that was last selected (for styling purposes)
     private Button lastUsedButton = new Button();
 
     @Override

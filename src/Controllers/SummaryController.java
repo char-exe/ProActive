@@ -19,7 +19,10 @@ import java.util.ResourceBundle;
  * formatting of x axes from number to date format.
  *
  * @author Samuel Scarfe 100048633
- * @version 1.0 - Simple graphing with a loop for simple dummy data and axis formatting.
+ * @author Charlie Jones 100234961
+ *
+ * @version 1.0 - (SS) Simple graphing with a loop for simple dummy data and axis formatting.
+ * @version 1.1 - (CJ) Added weight chart (still with dummy data) & reformatted fxml.
  */
 public class SummaryController implements Initializable
 {
@@ -39,6 +42,11 @@ public class SummaryController implements Initializable
     @FXML
     private LineChart<Number, Number> spentChart;
     /**
+     * A chart for showing weight gain/loss over the last 7 days
+     */
+    @FXML
+    private LineChart<Number, Number> weightChart;
+    /**
      * The x axis for intakeChart.
      */
     @FXML
@@ -53,6 +61,12 @@ public class SummaryController implements Initializable
      */
     @FXML
     private NumberAxis spentDateAxis;
+    /**
+     * The x axis for weightChart
+     */
+    @FXML
+    private NumberAxis weightDateAxis;
+
 
     /**
      * Initializes the graphs with formatted axes and dummy data.
@@ -68,15 +82,17 @@ public class SummaryController implements Initializable
         formatAxis(intakeDateAxis);
         formatAxis(burnDateAxis);
         formatAxis(spentDateAxis);
+        formatAxis(weightDateAxis);
 
         //Create a data series for each graph and set names
         XYChart.Series<Number, Number> intakeSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> burnSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> spentSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
 
-        intakeSeries.setName("Caloric Intake");
-        burnSeries.setName("Calories Burned via Exercise");
-        spentSeries.setName("Minutes Spent");
+//        intakeSeries.setName("Caloric Intake");
+//        burnSeries.setName("Calories Burned via Exercise");
+//        spentSeries.setName("Minutes Spent");
 
         //Create a datapoint for each day.
         for (int i = 1; i < 8; i++)
@@ -85,12 +101,14 @@ public class SummaryController implements Initializable
             intakeSeries.getData().add(new XYChart.Data<>(i, i));
             burnSeries.getData().add(new XYChart.Data<>(i, i));
             spentSeries.getData().add(new XYChart.Data<>(i, i));
+            weightSeries.getData().add(new XYChart.Data<>(i, i));
         }
 
         //Add series to graphs.
         intakeChart.getData().add(intakeSeries);
         burnChart.getData().add(burnSeries);
         spentChart.getData().add(spentSeries);
+        weightChart.getData().add(weightSeries);
     }
 
     /**
