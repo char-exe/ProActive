@@ -109,5 +109,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="javafx5" level="application" />
+    <orderEntry type="library" name="Mail" level="application" />
   </component>
 </module>
