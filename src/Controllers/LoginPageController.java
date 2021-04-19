@@ -51,7 +51,7 @@ public class LoginPageController {
             DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
             String serverSidePass = dh.getPassFromUsername(username);
             if (password.equals(serverSidePass)){
-                Parent homePage = FXMLLoader.load(getClass().getResource("../FXML/homePage.fxml"));
+                Parent homePage = FXMLLoader.load(getClass().getResource("../FXML/Main.fxml"));
 
                 Scene homeScene = new Scene(homePage);
 
