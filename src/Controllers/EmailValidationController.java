@@ -36,12 +36,14 @@ public class EmailValidationController implements Initializable{
 
     private User user;
     private String initialToken;
-    private String password;
+    private byte[] hash;
+    private byte[] salt;
 
-    public void initData(User user, String initialToken, String password){
+    public void initData(User user, String initialToken, byte[] hash, byte[] salt){
         this.user = user;
         this.initialToken = initialToken;
-        this.password = password;
+        this.hash = hash;
+        this.salt = salt;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class EmailValidationController implements Initializable{
             resendVerification();
         }else{
             codeStatus.setText("Code Correct, User Account has been created");
-            dh.createUserEntry(user, password);
+            dh.createUserEntry(user, hash, salt);
 
             Stage parentScene = (Stage) submitButton.getScene().getWindow();
             Stage stage = new Stage();

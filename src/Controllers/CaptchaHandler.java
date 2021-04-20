@@ -36,7 +36,8 @@ public class CaptchaHandler implements Initializable {
     private Random generator = new Random();
 
     private User user;
-    private String password;
+    private byte[] hash;
+    private byte[] salt;
     private String captcha;
     @FXML ImageView captchaImageBox;
     @FXML TextField captchaInput;
@@ -70,9 +71,10 @@ public class CaptchaHandler implements Initializable {
         captcha = serveCaptcha();
     }
 
-    public void initData(User user, String password){
+    public void initData(User user, byte[] hash, byte[] salt){
         this.user = user;
-        this.password = password;
+        this.hash = hash;
+        this.salt = salt;
     }
 
     //checks to see if user's input matches the captcha content and if so, pass to email validation
@@ -106,7 +108,7 @@ public class CaptchaHandler implements Initializable {
 
             EmailValidationController controller = loader.getController();
             stage.setScene(sceneEmail);
-            controller.initData(user, token, password);
+            controller.initData(user, token, hash, salt);
 
             parentScene.close();
             stage.show();

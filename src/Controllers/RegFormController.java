@@ -11,9 +11,15 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import sample.*;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.mail.Session;
 import java.io.IOException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Properties;
@@ -55,7 +61,7 @@ public class RegFormController implements Initializable {
     @FXML public Label heightPopUp;
     @FXML public Label weightPopUp;
 
-    @FXML protected void handleSubmitButtonAction(ActionEvent event) throws IOException {
+    @FXML protected void handleSubmitButtonAction(ActionEvent event) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         if (
                 CheckFirstName() &&
@@ -91,6 +97,15 @@ public class RegFormController implements Initializable {
             String sex          = sexCombo.getValue().toString();
             String password     = passwordField.getText();
 
+            //Password hashing
+            SecureRandom sr = new SecureRandom();
+            byte[] salt = new byte[16];
+            sr.nextBytes(salt);
+
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+            byte[] hash = factory.generateSecret(spec).getEncoded();
 
             //Check that username inputted was
             if(!db.checkUserNameUnique(username)){
@@ -112,7 +127,7 @@ public class RegFormController implements Initializable {
 
                 CaptchaHandler controller = load.getController();
                 stage.setScene(sceneCaptcha);
-                controller.initData(user, password);
+                controller.initData(user, hash, salt);
 
                 parentScene.close();
                 stage.show();
