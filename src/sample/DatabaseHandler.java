@@ -50,7 +50,7 @@ public class DatabaseHandler
             MEAL_ID, MEAL_CATEGORY, FOOD_ID, USER_ID, DATE, QUANTITY
         }
         public enum userColumns{
-            USER_ID, FIRST_NAME, LAST_NAME, DOB, HEIGHT, SEX, USERNAME, PASSWORD
+            USER_ID, FIRST_NAME, LAST_NAME, DOB, HEIGHT, SEX, USERNAME, PASSWORD, EMAIL
         }
         public enum weightEntryColumns{
             ENTRY_ID, USER_ID, WEIGHT, DATE
@@ -332,7 +332,16 @@ public class DatabaseHandler
 
         try{
             while (userTable.next()){
-                System.out.println(userTable.getString(dbTables.userColumns.USERNAME.toString().toLowerCase()));
+                System.out.print(userTable.getString(dbTables.userColumns.USER_ID.toString().toLowerCase()) + ", ");
+                System.out.print(userTable.getString(dbTables.userColumns.FIRST_NAME.toString().toLowerCase()) + ", ");
+                System.out.print(userTable.getString(dbTables.userColumns.LAST_NAME.toString().toLowerCase()) + ", ");
+                System.out.print(userTable.getString(dbTables.userColumns.DOB.toString().toLowerCase()) + ", ");
+                System.out.print(userTable.getString(dbTables.userColumns.HEIGHT.toString().toLowerCase()) + ", ");
+                System.out.print(userTable.getString(dbTables.userColumns.SEX.toString().toLowerCase()) + ", ");
+                System.out.print(userTable.getString(dbTables.userColumns.USERNAME.toString().toLowerCase()) + ", ");
+                System.out.print(userTable.getString(dbTables.userColumns.PASSWORD.toString().toLowerCase()) + ", ");
+                System.out.print(userTable.getString(dbTables.userColumns.EMAIL.toString().toLowerCase()));
+                System.out.println();
             }
         } catch (SQLException e){
             System.out.println(e.getMessage());

@@ -59,7 +59,7 @@ public class MainController {
 
     @FXML
     private void manageProfileScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/TODO.fxml"));
+        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/ManageProfilePage.fxml"));
         main.setCenter(vBox);
         toggleButtonFocus(manageProfileButton);
     }
