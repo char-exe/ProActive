@@ -331,7 +331,7 @@ public class DatabaseHandler
         String searchName = itemName + '%';
         String sql = "SELECT * FROM food WHERE name LIKE '" + searchName + "'";
 
-        NutritionItem nutritionItem = new NutritionItem();
+        NutritionItem nutritionItem = null;
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
