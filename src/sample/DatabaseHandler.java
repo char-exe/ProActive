@@ -360,13 +360,13 @@ public class DatabaseHandler
         String searchName = itemName + '%';
         String sql = "SELECT * FROM exercise WHERE name LIKE '" + searchName + "'";
 
-        ExerciseItem exerciseItem = new ExerciseItem();
+        ExerciseItem exerciseItem = null;
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
 
             exerciseItem = new ExerciseItem(rs.getString("name"),
-                    rs.getInt("burn_rate"));
+                                            rs.getInt("burn_rate"));
 
         } catch (SQLException e) {
             e.printStackTrace();
