@@ -36,9 +36,9 @@ public class CaptchaHandler implements Initializable {
     private Random generator = new Random();
 
     private User user;
+    private String captcha;
     private byte[] hash;
     private byte[] salt;
-    private String captcha;
     @FXML ImageView captchaImageBox;
     @FXML TextField captchaInput;
     @FXML Label incorrectInputLabel;

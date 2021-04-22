@@ -34,9 +34,8 @@ public class MainController implements Initializable {
     @FXML private Button manageProfileButton;
     @FXML private BorderPane main;
 
-    protected User user;
+    private User user;
 
-    // Pointer to the button on the sidebar that was last selected (for styling purposes)
     private Button lastUsedButton = new Button();
 
     @Override
@@ -46,6 +45,10 @@ public class MainController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void initData(User user){
+        this.user = user;
     }
 
     @FXML
@@ -92,7 +95,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void manageProfileScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/TODO.fxml"));
+        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/ManageProfilePage.fxml"));
         main.setCenter(vBox);
         toggleButtonFocus(manageProfileButton);
     }
@@ -115,5 +118,4 @@ public class MainController implements Initializable {
 
     public void logActivity(ActionEvent actionEvent) {
     }
-
 }

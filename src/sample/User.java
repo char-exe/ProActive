@@ -361,7 +361,7 @@ public class User {
      */
     private void validateRegex(String firstname, String surname, String email, String username) {
         final String EMAILREGEX     = "^\\w+.?\\w+@\\w+[.]\\w+([.]\\w+){0,2}$";
-        final String USERNAMEREGEX  = "^[a-z0-9_-]{5,16}$";
+        final String USERNAMEREGEX  = "^[a-zA-Z0-9_-]{5,16}$";
 
         validateFirstnameRegex(firstname);
         validateSurnameRegex(surname);

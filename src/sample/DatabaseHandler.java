@@ -1,7 +1,10 @@
 package sample;
 
+import org.sqlite.core.DB;
+
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.Locale;
 
 /**
  * Contains ways to interact with the backend database of the ProActive app, contains a number of
@@ -56,7 +59,7 @@ public class DatabaseHandler
             MEAL_ID, MEAL_CATEGORY, FOOD_ID, USER_ID, DATE, QUANTITY
         }
         public enum userColumns{
-            USER_ID, FIRST_NAME, LAST_NAME, DOB, HEIGHT, SEX, USERNAME, HASH, SALT
+            USER_ID, FIRST_NAME, LAST_NAME, DOB, HEIGHT, SEX, USERNAME, HASH, SALT, EMAIL
         }
         public enum weightEntryColumns{
             ENTRY_ID, USER_ID, WEIGHT, DATE
@@ -385,38 +388,41 @@ public class DatabaseHandler
         }
     }
 
-    /*
-    public User getUserFromUsername(String userName){
-        User user;
-        String sql = "SELECT * FROM user WHERE username = '" + userName + "'";
+    public void editValue(String table, String column, String valToUpdateTo, String username){
+    String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
+            " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
+            " WHERE username = " + username + "'";
+
+    //TODO error handling
+}
+
+    public void editValue(String table, String column, int valToUpdateTo, String username){
+        String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
+                " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
+                " WHERE username = " + username + "'";
+    }
+
+    public User createUserObjectFromUsername(String username){
+        String sql = "SELECT * FROM user WHERE username = '" + username + "'";
+
+        User user = null;
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
-                user = new User(rs.getString("first_name"), rs.getString("last_name"), User.Sex.valueOf(rs.getString("sex")), LocalDate.parse(rs.getString("dob")), rs.getString(""), userName);
-
-
-            }
+            user = new User(rs.getString("first_name"),
+                    rs.getString("last_name"),
+                    User.Sex.valueOf(rs.getString("sex").toUpperCase(Locale.ROOT)),
+                    LocalDate.parse(rs.getString("dob")),
+                    rs.getString("email"),
+                    rs.getString("username")
+            );
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            System.out.println("Could Not Find User");
         }
+
         return user;
-    }
-
-     */
-
-    public static void main(String[] args) {
-        //DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
-
-        //User user = new User("Owen", "Tasker", User.Sex.MALE, 72, 85, LocalDate.of(1998, 4, 25), "owen.tasker@gmail.com", "owenTestEmail");
-
-        //dh.insertIntoUserTable(user, "TestPassword");
-
-        //dh.deleteToken("de9d7");
-
     }
 }

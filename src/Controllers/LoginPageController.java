@@ -6,11 +6,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
+import sample.User;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -35,7 +37,6 @@ public class LoginPageController {
     @FXML private Label usernameError;
     @FXML private Label passwordError;
 
-
     //login method
     public void login(ActionEvent actionEvent) {
         username = usernameField.getText();
@@ -56,13 +57,28 @@ public class LoginPageController {
 
             //Compare hashed input to stored hash
             if (Arrays.equals(hash, serverSidePass)){
-                Parent homePage = FXMLLoader.load(getClass().getResource("../FXML/Main.fxml"));
+                Stage parentScene = (Stage) usernameField.getScene().getWindow();
 
-                Scene homeScene = new Scene(homePage);
+                User user = dh.createUserObjectFromUsername(username);
 
-                Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/FXML/Main.fxml"));
+                Stage stage = new Stage();
 
-                window.setScene(homeScene);
+
+                Parent homePageParent = loader.load();
+
+                MainController main = loader.getController();
+
+                Scene homeScene = new Scene(homePageParent);
+
+
+                stage.setScene(homeScene);
+
+                main.initData(user);
+
+                parentScene.close();
+                stage.show();
             }else {
                 displayInvalidPassword();
             }

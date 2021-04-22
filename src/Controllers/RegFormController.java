@@ -32,7 +32,7 @@ public class RegFormController implements Initializable {
     private final String FIRSTNAMEREGEX = "[A-Z][a-z]*";
     private final String LASTNAMEREGEX  = "[a-zA-Z]+([ '-][a-zA-Z]+)*";
     private final String EMAILREGEX     = "^\\w+.?\\w+@\\w+[.]\\w+([.]\\w+){0,2}$";
-    private final String USERNAMEREGEX  = "^[a-z0-9_-]{5,16}$";
+    private final String USERNAMEREGEX  = "^[a-zA-Z0-9_-]{5,16}$";
     private final String PASSWORDREGEX  = "(?=.*\\w)(?=.*[!@#$%^&+='()*,./:;<>?{|}~])(?=\\S+$).{8,}";
 
 
