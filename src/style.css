@@ -54,25 +54,52 @@
     -fx-text-fill: black;
 }
 
-/*.tree-cell{*/
-/*    -fx-font-family: 'monospaced';*/
-/*}*/
+.tabPane {
+    /*-fx-background-color: #94B772;*/
+    /*-fx-border-radius: 60px;*/
+    /*-fx-background-radius: 60px;*/
+    -fx-tab-min-width: 100px;
+    -fx-tab-min-height: 40px;
+}
 
-/*.table-view .table-cell{*/
-/*    -fx-font-family: 'monospaced';*/
-/*}*/
+.tabPane .tab-header-area .tab-header-background{
+    -fx-opacity: 0;
+}
 
-/*#plusIcon{*/
-/*    -fx-background-color: #9af1a0;*/
-/*}*/
+.tabPane .parentTab {
+    -fx-background-color: #4D6666;
+    -fx-background-insets: 0 1 0 1, 0, 0;
+}
 
-/*#minusIcon{*/
-/*    -fx-background-color: #fc7986;*/
-/*}*/
+.tabPane .parentTab-label{
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
 
-/*.tile{*/
-/*    -fx-border-color: #7e6565;*/
-/*    -fx-border-radius: 15px;*/
-/*    -fx-background-color: #BCE5E2;*/
-/*    -fx-background-radius: 15px;*/
-/*}*/
+.tabPane .parentTab:selected .tab-label{
+    -fx-text-fill: black;
+}
+
+.tabPane .parentTab:selected{
+    -fx-background-color: #7e9d9d;
+}
+
+.tabPane .tab-content-area{
+    -fx-background-color: #7e9d9d;
+    -fx-background-radius: 10 60 60 60;
+    -fx-border-radius: 10 60 60 60;
+    -fx-padding: 20px;
+}
+
+.nutritionTabPane .tab-content-area{
+    -fx-background-color: #7e9d9d;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 0;
+}
+
+.nutritionTabPane {
+    -fx-background-color: lightgrey;
+    -fx-background-radius: 5 33 0 0;
+    -fx-background-insets: 0 1 0 1, 0, 0;
+}

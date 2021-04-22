@@ -50,7 +50,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void homeScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/Summary.fxml"));
+        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/SummaryPage.fxml"));
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vBox);
