@@ -330,12 +330,38 @@ public class DatabaseHandler
         String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
                      " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
                      " WHERE username = " + username + "'";
+
+        //TODO error handling
     }
 
     public void editValue(String table, String column, int valToUpdateTo, String username){
         String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
                 " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
                 " WHERE username = " + username + "'";
+    }
+
+    public User createUserObjectFromUsername(String username){
+        String sql = "SELECT * FROM user WHERE username = '" + username + "'";
+
+        User user = null;
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+                user = new User(rs.getString("first_name"),
+                                rs.getString("last_name"),
+                                User.Sex.valueOf(rs.getString("sex").toUpperCase(Locale.ROOT)),
+                                LocalDate.parse(rs.getString("dob")),
+                                rs.getString("email"),
+                                rs.getString("username")
+                );
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Could Not Find User");
+        }
+
+        return user;
     }
 
 

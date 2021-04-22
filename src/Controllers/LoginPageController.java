@@ -6,10 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
+import sample.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -41,7 +43,6 @@ public class LoginPageController {
     @FXML private Label usernameError;
     @FXML private Label passwordError;
 
-
     //login method
     public void login(ActionEvent actionEvent) {
         username = usernameField.getText();
@@ -51,13 +52,29 @@ public class LoginPageController {
             DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
             String serverSidePass = dh.getPassFromUsername(username);
             if (password.equals(serverSidePass)){
-                Parent homePage = FXMLLoader.load(getClass().getResource("../FXML/Main.fxml"));
+                Stage parentScene = (Stage) usernameField.getScene().getWindow();
 
-                Scene homeScene = new Scene(homePage);
+                User user = dh.createUserObjectFromUsername(username);
 
-                Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/FXML/Main.fxml"));
+                Stage stage = new Stage();
 
-                window.setScene(homeScene);
+
+                Parent homePageParent = loader.load();
+
+                MainController main = loader.getController();
+
+                Scene homeScene = new Scene(homePageParent);
+
+
+                stage.setScene(homeScene);
+
+                main.initData(user);
+
+                parentScene.close();
+                stage.show();
+
             }else {
                 displayInvalidPassword();
             }
