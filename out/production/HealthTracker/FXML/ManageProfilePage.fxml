@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="610.0" prefWidth="800.0">
+         <children>
+            <Label layoutX="310.0" layoutY="28.0" text="Manage Profile" textAlignment="CENTER">
+               <font>
+                  <Font size="27.0" />
+               </font>
+            </Label>
+            <AnchorPane layoutY="79.0" prefHeight="456.0" prefWidth="800.0">
+               <children>
+                  <AnchorPane layoutY="58.0" prefHeight="100.0" prefWidth="800.0">
+                     <children>
+                        <Label layoutX="367.0" layoutY="14.0" text="Set Sex">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <ChoiceBox layoutX="313.0" layoutY="50.0" prefHeight="39.0" prefWidth="175.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutY="197.0" prefHeight="100.0" prefWidth="800.0">
+                     <children>
+                        <Label layoutX="319.0" layoutY="14.0" text="Edit Date Of Birth">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <DatePicker editable="false" layoutX="297.0" layoutY="45.0" prefHeight="48.0" prefWidth="206.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutY="334.0" prefHeight="100.0" prefWidth="800.0">
+                     <children>
+                        <Label layoutX="351.0" layoutY="14.0" text="Set Height">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <TextArea layoutX="268.0" layoutY="54.0" prefHeight="48.0" prefWidth="264.0">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </TextArea>
+                        <HBox layoutX="466.0" layoutY="14.0" prefHeight="31.0" prefWidth="142.0">
+                           <children>
+                              <ToggleButton minWidth="46.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="73.0" text="CM">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="height" />
+                                 </toggleGroup>
+                              </ToggleButton>
+                              <ToggleButton minWidth="46.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="72.0" text="Inches" toggleGroup="$height" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutY="542.0" prefHeight="58.0" prefWidth="800.0">
+               <children>
+                  <Button layoutX="343.0" layoutY="13.0" mnemonicParsing="false" text="Submit Changes" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
