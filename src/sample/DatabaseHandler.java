@@ -1,7 +1,10 @@
 package sample;
 
+import org.sqlite.core.DB;
+
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.Locale;
 
 /**
  * Contains ways to interact with the backend database of the ProActive app, contains a number of
@@ -321,6 +324,18 @@ public class DatabaseHandler
         }
 
         return exerciseItem;
+    }
+
+    public void editValue(String table, String column, String valToUpdateTo, String username){
+        String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
+                     " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
+                     " WHERE username = " + username + "'";
+    }
+
+    public void editValue(String table, String column, int valToUpdateTo, String username){
+        String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
+                " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
+                " WHERE username = " + username + "'";
     }
 
 

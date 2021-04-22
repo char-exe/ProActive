@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ManageProfilePageController">
    <children>
       <AnchorPane prefHeight="610.0" prefWidth="800.0">
          <children>
@@ -22,7 +22,7 @@
                               <Font size="21.0" />
                            </font>
                         </Label>
-                        <ChoiceBox layoutX="313.0" layoutY="50.0" prefHeight="39.0" prefWidth="175.0" />
+                        <ChoiceBox fx:id="sexCombo" layoutX="313.0" layoutY="50.0" prefHeight="39.0" prefWidth="175.0" />
                      </children>
                   </AnchorPane>
                   <AnchorPane layoutY="197.0" prefHeight="100.0" prefWidth="800.0">
@@ -32,7 +32,7 @@
                               <Font size="21.0" />
                            </font>
                         </Label>
-                        <DatePicker editable="false" layoutX="297.0" layoutY="45.0" prefHeight="48.0" prefWidth="206.0" />
+                        <DatePicker fx:id="datePick" editable="false" layoutX="297.0" layoutY="45.0" prefHeight="48.0" prefWidth="206.0" />
                      </children>
                   </AnchorPane>
                   <AnchorPane layoutY="334.0" prefHeight="100.0" prefWidth="800.0">
@@ -42,7 +42,7 @@
                               <Font size="21.0" />
                            </font>
                         </Label>
-                        <TextArea layoutX="268.0" layoutY="54.0" prefHeight="48.0" prefWidth="264.0">
+                        <TextArea fx:id="heightField" layoutX="268.0" layoutY="54.0" prefHeight="48.0" prefWidth="264.0">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -63,7 +63,7 @@
             </AnchorPane>
             <AnchorPane layoutY="542.0" prefHeight="58.0" prefWidth="800.0">
                <children>
-                  <Button layoutX="343.0" layoutY="13.0" mnemonicParsing="false" text="Submit Changes" />
+                  <Button fx:id="submitButton" layoutX="343.0" layoutY="13.0" mnemonicParsing="false" text="Submit Changes" />
                </children>
             </AnchorPane>
          </children>

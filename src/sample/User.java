@@ -243,7 +243,9 @@ public class User {
         User user = new User("test","test", Sex.MALE, 0.1f, 0.1f,
                 LocalDate.of(1999, Month.DECEMBER, 28), "test", "test");
 
-        System.out.println(user.getDob().toString());
+        LocalDate date = LocalDate.now();
+
+        System.out.println(date.toString());
 
     }
 }
