@@ -9,14 +9,11 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-//    private static Stage stage;
-
     @Override
     public void start(Stage primaryStage) throws Exception{
-//        stage = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("../FXML/SplashPage.fxml"));
         primaryStage.setTitle("ProActive");
-        primaryStage.setScene(new Scene(root, 1400, 800));
+        primaryStage.setScene(new Scene(root));
 
         primaryStage.setMinWidth(1050);
         primaryStage.setMinHeight(500);
@@ -55,9 +52,4 @@ public class Main extends Application {
 
         launch(args);
     }
-
-//    public static Stage getStage(){
-//        return stage;
-//    }
-
 }

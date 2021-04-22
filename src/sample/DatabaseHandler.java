@@ -31,6 +31,12 @@ import java.time.LocalDate;
  *
  * 1.4 - Added Javadoc comments for all methods
  *
+ * 1.5 - Updated createUserEntry and insertIntoUserTable to take hash and salt rather than password. Updated
+ *       getPasswordFromUsername to getHashFromUsername. Added getSaltFromUsername. Updated userColumns enum to include
+ *       hash and salt. Updated insertIntoUserTable to use PreparedStatement so that data is not converted to String
+ *       before input to database, important for hash and salt which are put into BLOB type on SQLite side meaning they
+ *       will retain the datatype passed in as.
+ *
  */
 public class DatabaseHandler
 {
@@ -50,7 +56,7 @@ public class DatabaseHandler
             MEAL_ID, MEAL_CATEGORY, FOOD_ID, USER_ID, DATE, QUANTITY
         }
         public enum userColumns{
-            USER_ID, FIRST_NAME, LAST_NAME, DOB, HEIGHT, SEX, USERNAME, PASSWORD
+            USER_ID, FIRST_NAME, LAST_NAME, DOB, HEIGHT, SEX, USERNAME, HASH, SALT
         }
         public enum weightEntryColumns{
             ENTRY_ID, USER_ID, WEIGHT, DATE
@@ -97,23 +103,59 @@ public class DatabaseHandler
     }
 
     /**
+     * Method to create a pseudo atomic action of inserting a user into the user table and creating that users initial
+     * weight value, we need ot do this as a method as it will likely be the method that the main registration form
+     * links to
+     *
+     * @param user An object representing a user, containing data needed to create a database entry
+     * @param hash A hashed representation of the user's password
+     * @param salt The salt used to to generate the user's password hash
+     */
+    public void createUserEntry(User user, byte[] hash, byte[] salt){
+
+        //First we want to run the insertIntoUserTable method, this will return true if the action completed successful
+        // and as such, we can make this an atomic action
+        insertIntoUserTable(user, hash, salt);
+
+        System.out.println("User Added To Database Successfully");
+
+        //If the aforementioned method returns true we need to log the userID that it created, we need to do this
+        //because we did not explicitly state the value we are giving the userID and as such need to calculate it
+        int userID = getUserIDFromUsername(user.getUsername());
+
+        //Using the userID previously calculated, we will create the initial entry for the users weight
+        insertWeightValue(userID, user.getWeight(), LocalDate.now());
+
+        System.out.println("User Initial Weight Entry Added To Database Successfully");
+
+        //Once this has all been completed, we have successfully created a user entry in the database
+    }
+
+    /**
      * Method to add a User to the database, this takes information from a filled user class to generate a table entry
      *
-     * @param user      Takes in a user object which will be used to fill out details for the INSERT statement
-     * @param password  Takes in a String representation of a password, this is required as it is not stored within
-     *                  the User class, we do this to reduce the amount of time the password is stored in a front
-     *                  end location
+     * @param user An object representing a user, containing data needed to create a database entry
+     * @param hash A hashed representation of the user's password
+     * @param salt The salt used to to generate the user's password hash
      */
-    public void insertIntoUserTable(User user, String password) {
+    public void insertIntoUserTable(User user, byte[] hash, byte[] salt) {
+        System.out.println(user.getEmail());
         String sql =
-                "INSERT INTO user (first_name, last_name, dob, height, sex, username, password)" +
-                "VALUES('" + user.getFirstname() + "', '" + user.getSurname() + "','" + user.getDob().toString() +
-                        "','" + user.getHeight() + "','" + user.getSex() + "','" + user.getUsername() +
-                        "','" + password + "')";
+                "INSERT INTO user (first_name, last_name, dob, height, sex, username, hash, salt, email)" +
+                "VALUES(?,?,?,?,?,?,?,?,?)";
 
-        try {
-             Statement stmt  = this.conn.createStatement();
-             stmt.executeQuery(sql);
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1,user.getFirstname());
+            pstmt.setString(2, user.getSurname());
+            pstmt.setString(3, user.getDob().toString());
+            pstmt.setFloat(4, user.getHeight());
+            pstmt.setString(5, user.getSex());
+            pstmt.setString(6, user.getUsername());
+            pstmt.setBytes(7, hash);
+            pstmt.setBytes(8, salt);
+            pstmt.setString(9, user.getEmail());
+
+            pstmt.executeUpdate();
         }
         catch (SQLException e)
         {
@@ -150,17 +192,24 @@ public class DatabaseHandler
         return userID;
     }
 
-    public String getPassFromUsername(String username) throws SQLException {
-        String pass = null;
+    /**
+     * Method to retrieve the hashed representation of a user's password from the database.
+     *
+     * @param username A user's unique username
+     * @return A hashed representation of that user's password
+     * @throws SQLException if the connection or query to the database fails
+     */
+    public byte[] getHashFromUsername(String username) throws SQLException {
+        byte[] hash = null;
 
-        String sql = "SELECT username, password FROM user WHERE username = '" + username + "'";
+        String sql = "SELECT hash FROM user WHERE username = '" + username + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
             while (rs.next())
             {
-                pass = rs.getString("password");
+                hash = rs.getBytes("hash");
             }
         }
         catch (SQLException e)
@@ -169,7 +218,36 @@ public class DatabaseHandler
             throw new SQLException();
         }
 
-        return pass;
+        return hash;
+    }
+
+    /**
+     * Method to retrieve the salt used to hash a user's password from the database.
+     *
+     * @param username A user's unique username
+     * @return The salt used for that user's password
+     * @throws SQLException if the connection or query to the database fails
+     */
+    public byte[] getSaltFromUsername(String username) throws SQLException {
+        byte[] salt = null;
+
+        String sql = "SELECT salt FROM user WHERE username = '" + username + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                salt = rs.getBytes("salt");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Could Not Find User");
+            throw new SQLException();
+        }
+
+        return salt;
     }
 
     public boolean checkUserNameUnique(String username){
@@ -205,7 +283,7 @@ public class DatabaseHandler
 
         try {
             Statement stmt  = conn.createStatement();
-            stmt.executeQuery(sql);
+            stmt.executeUpdate(sql);
         }
         catch (SQLException e)
         {
@@ -214,40 +292,13 @@ public class DatabaseHandler
 
     }
 
-    /**
-     * Method to create a pseudo atomic action of inserting a user into the user table and creating that users initial
-     * weight value, we need ot do this as a method as it will likely be the method that the main registration form
-     * links to
-     *
-     * @param user Takes in a User object, this will be used in all methods called by this method.
-     */
-    public void createUserEntry(User user, String password){
-
-        //First we want to run the insertIntoUserTable method, this will return true if the action completed successful
-        // and as such, we can make this an atomic action
-        insertIntoUserTable(user, password);
-
-        System.out.println("User Added To Database Successfully");
-
-        //If the aforementioned method returns true we need to log the userID that it created, we need to do this
-        //because we did not explicitly state the value we are giving the userID and as such need to calculate it
-        int userID = getUserIDFromUsername(user.getUsername());
-
-        //Using the userID previously calculated, we will create the initial entry for the users weight
-        insertWeightValue(userID, user.getWeight(), LocalDate.now());
-
-        System.out.println("User Initial Weight Entry Added To Database Successfully");
-
-        //Once this has all been completed, we have successfully created a user entry in the database
-    }
-
-    public void addTokenEntry(String tokenVal, int timestamp){
+    public void addTokenEntry(String tokenVal, long timestamp){
         String sql = "INSERT INTO regTokens (tokenVal, timeDelay) VALUES" +
                 "('" + tokenVal + "', '" + timestamp+1800 + "')";
 
         try {
             Statement stmt  = this.conn.createStatement();
-            stmt.executeQuery(sql);
+            stmt.executeUpdate(sql);
         }
         catch (SQLException e)
         {
@@ -282,12 +333,11 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
 
-                NutritionItem newNutritionItem = new NutritionItem(rs.getString("name"),
-                        rs.getFloat("kcal"), rs.getFloat("protein"),
-                        rs.getFloat("fat"), rs.getFloat("carbs"),
-                        rs.getFloat("sugar"), rs.getFloat("fibre"),
-                        rs.getFloat("cholesterol"));
-                nutritionItem = newNutritionItem;
+            nutritionItem = new NutritionItem(rs.getString("name"),
+                    rs.getFloat("kcal"), rs.getFloat("protein"),
+                    rs.getFloat("fat"), rs.getFloat("carbs"),
+                    rs.getFloat("sugar"), rs.getFloat("fibre"),
+                    rs.getFloat("cholesterol"));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -312,9 +362,8 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
 
-            ExerciseItem newExerciseItem = new ExerciseItem(rs.getString("name"),
+            exerciseItem = new ExerciseItem(rs.getString("name"),
                     rs.getInt("burn_rate"));
-            exerciseItem = newExerciseItem;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -323,20 +372,51 @@ public class DatabaseHandler
         return exerciseItem;
     }
 
+    public void deleteToken(String token){
+        String sql = "DELETE FROM regTokens WHERE tokenVal = '" + token + "'";
 
-
-    public static void main(String[] args) {
-        DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
-
-        ResultSet userTable = dh.selectAllFromTable(dbTables.USER);
-
-        try{
-            while (userTable.next()){
-                System.out.println(userTable.getString(dbTables.userColumns.USERNAME.toString().toLowerCase()));
-            }
-        } catch (SQLException e){
+        try {
+            Statement stmt  = this.conn.createStatement();
+            stmt.executeQuery(sql);
+        }
+        catch (SQLException e)
+        {
             System.out.println(e.getMessage());
         }
+    }
+
+    /*
+    public User getUserFromUsername(String userName){
+        User user;
+        String sql = "SELECT * FROM user WHERE username = '" + userName + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                user = new User(rs.getString("first_name"), rs.getString("last_name"), User.Sex.valueOf(rs.getString("sex")), LocalDate.parse(rs.getString("dob")), rs.getString(""), userName);
+
+
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return user;
+    }
+
+     */
+
+    public static void main(String[] args) {
+        //DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
+
+        //User user = new User("Owen", "Tasker", User.Sex.MALE, 72, 85, LocalDate.of(1998, 4, 25), "owen.tasker@gmail.com", "owenTestEmail");
+
+        //dh.insertIntoUserTable(user, "TestPassword");
+
+        //dh.deleteToken("de9d7");
 
     }
 }

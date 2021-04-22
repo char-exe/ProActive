@@ -1,7 +1,11 @@
 package Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -13,6 +17,7 @@ import sample.TokenHandler;
 import sample.User;
 
 import javax.mail.Session;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,11 +32,18 @@ public class EmailValidationController implements Initializable{
     @FXML public TextField codeInputBox;
     @FXML public Label codeStatus;
     @FXML public Button resendButton;
+    @FXML public Button homeButton;
 
-    private String email;
+    private User user;
+    private String initialToken;
+    private byte[] hash;
+    private byte[] salt;
 
-    public void initData(String email){
-        this.email = email;
+    public void initData(User user, String initialToken, byte[] hash, byte[] salt){
+        this.user = user;
+        this.initialToken = initialToken;
+        this.hash = hash;
+        this.salt = salt;
     }
 
     @Override
@@ -39,51 +51,72 @@ public class EmailValidationController implements Initializable{
 
     }
 
-    @FXML protected void pushSubmit() throws SQLException {
+    @FXML protected void pushSubmit() throws SQLException, IOException {
         String tokenFromUser = codeInputBox.getText();
         DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
-        int currentTime = (int) (System.currentTimeMillis()/1000);
+        long currentTime = System.currentTimeMillis()/1000;
         ResultSet res = dh.getTokenResult(tokenFromUser);
-        if (res == null){
-            codeStatus.setText("Code Incorrect, Please Try Again");
+        if (res == null || currentTime > Long.parseLong(res.getString("timeDelay")) + 1800000){
+            codeStatus.setText("Code Not Valid Or Has Expired, We have sent another to the specified address");
+            dh.deleteToken(initialToken);
+            resendVerification();
         }else{
-            long serverTime = Long.parseLong(res.getString("timeDelay"));
-            if (serverTime > currentTime + 1800){
-                System.out.println("Server Time: " + serverTime);
-                System.out.println("Current Time: " + currentTime);
-                codeStatus.setText("Code Correct, User Account has been created");
-                Stage stage = (Stage) submitButton.getScene().getWindow();
-                stage.close();
-            }else{
-                codeStatus.setText("Code Has Expired, Another Has Been Sent, Please Try Again");
-                resendVerification();
-            }
+            codeStatus.setText("Code Correct, User Account has been created");
+            dh.createUserEntry(user, hash, salt);
+
+            Stage parentScene = (Stage) submitButton.getScene().getWindow();
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
+
+            Parent splashParent = loader.load();
+
+            Scene sceneSplash = new Scene(splashParent);
+
+            stage.setScene(sceneSplash);
+
+            SplashPageController controller = loader.getController();
+            stage.setScene(sceneSplash);
+
+            parentScene.close();
+            stage.show();
         }
     }
 
-
     @FXML protected void resendVerification(){
-
-        sendStatus.setText("We Have Resent A Code");
-
         DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
         long time = System.currentTimeMillis()/1000;
-        String token = TokenHandler.createUniqueToken(7);
+        initialToken = TokenHandler.createUniqueToken(7);
+
 
         EmailHandler eh = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
         Properties prop = eh.SetUpEmailHandler();
         Session session = eh.createSession(prop);
 
-        String emailToSendTo = email;
-        System.out.println("Email Sending To: " + emailToSendTo);
-        dh.addTokenEntry(token, (int) time);
-        eh.sendVerification(session, emailToSendTo, token);
+        System.out.println("Email Sending To: " + user.getEmail());
+        dh.addTokenEntry(initialToken, time);
+        eh.sendVerification(session, user.getEmail(), initialToken);
+    }
+
+    public void escapeHome(ActionEvent actionEvent) throws IOException {
+        Stage parentScene = (Stage) homeButton.getScene().getWindow();
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
+
+        Parent splashParent = loader.load();
+
+        Scene sceneParent = new Scene(splashParent);
+
+        stage.setScene(sceneParent);
+
+        SplashPageController controller = loader.getController();
+        stage.setScene(sceneParent);
+
+        parentScene.close();
+        stage.show();
     }
 
     public static void main(String[] args) {
-        int t = (int) (System.currentTimeMillis()/1000);
-        long t2 = System.currentTimeMillis()/1000;
-        System.out.println(t);
-        System.out.println(t2);
     }
 }

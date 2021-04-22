@@ -12,8 +12,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class LoginPageController {
     private String username, password;
@@ -37,11 +43,22 @@ public class LoginPageController {
 
         try{
             DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
-            String serverSidePass = dh.getPassFromUsername(username);
-            if (password.equals(serverSidePass)){
-                BorderPane homePage = FXMLLoader.load(getClass().getResource("../FXML/Main.fxml"));
 
-                Scene homeScene = new Scene(homePage, 1400, 800);
+            //Retrieve user's hashed password and salt value
+            byte[] serverSidePass = dh.getHashFromUsername(username);
+            byte[] salt = dh.getSaltFromUsername(username);
+
+            //Hash inputted password
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+
+            //Compare hashed input to stored hash
+            if (Arrays.equals(hash, serverSidePass)){
+                Parent homePage = FXMLLoader.load(getClass().getResource("../FXML/Main.fxml"));
+
+                Scene homeScene = new Scene(homePage);
 
                 Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
@@ -53,6 +70,12 @@ public class LoginPageController {
             displayInvalidUsername();
         } catch (IOException e1){
             System.out.println(e1.getMessage());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            System.out.println("String passed to SecretKeyFactory.getInstance has been spelled incorrectly, or is" +
+                    "otherwise incorrect.");
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
         }
     }
 

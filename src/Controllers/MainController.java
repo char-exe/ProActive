@@ -8,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import sample.DatabaseHandler;
+import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,6 +33,8 @@ public class MainController implements Initializable {
     @FXML private Button goalsButton;
     @FXML private Button manageProfileButton;
     @FXML private BorderPane main;
+
+    protected User user;
 
     // Pointer to the button on the sidebar that was last selected (for styling purposes)
     private Button lastUsedButton = new Button();

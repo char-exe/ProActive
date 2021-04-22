@@ -65,6 +65,7 @@ public class EmailHandler {
         prop.setProperty("mail.smtp.port", "587");
         prop.setProperty("mail.smtp.auth", "true");
         prop.setProperty("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         return prop;
     }
@@ -103,12 +104,35 @@ public class EmailHandler {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email));
             System.out.println(to);
-            message.setRecipients(
-                    Message.RecipientType.TO,
-                    InternetAddress.parse(to)
-            );
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject("Thank you for creating an account with ProActive");
-            message.setText("Thank you for creating an account, type this code into the application to verify your account! " + verificationCode);
+            message.setContent(
+            "<head>" +
+            "   <style>" +
+            "       h1{" +
+            "           background-color:#CCCCCC;" +
+            "           border-radius:20px;" +
+            "           font-size:40px;" +
+            "           text-align:center;" +
+            "           padding:25px;" +
+            "           color:black;" +
+            "       }" +
+            "       p{" +
+            "           background-color:#CCCCCC;" +
+            "           border-radius:20px;" +
+            "           font-size:20px;" +
+            "           text-align:center;" +
+            "           padding:20px;" +
+            "           color:black;" +
+            "       }" +
+            "   </style>" +
+            "</head>" +
+            "<body>" +
+            "   <h1>ProActive</h1>" +
+            "   <p>Thanks For Signing Up With ProActive, Please Enter The Code Below To Verify Your Account</p>" +
+            "   <p><strong> " + verificationCode + " </strong></p>" +
+            "</body>",
+            "text/html");
 
             Transport.send(message);
 
@@ -183,6 +207,18 @@ public class EmailHandler {
     }
 
     public static void main(String[] args) {
-        long t = System.currentTimeMillis()/1000;
+        //General account for use with this application, dont worry about non-secure password as is ultimately
+        //a throwaway account
+        EmailHandler email = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
+
+        //Configure system to send emails, need to run this at start of each session
+        Properties prop = email.SetUpEmailHandler();
+
+        //Create email session
+        Session session = email.createSession(prop);
+
+        //Send a basic verification email
+        email.sendVerification(session, "owen.tasker@gmail.com", TokenHandler.createUniqueToken(5));
+
     }
 }

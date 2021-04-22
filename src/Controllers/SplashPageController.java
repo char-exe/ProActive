@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class SplashPageController implements Initializable {
-    
+
     @FXML private TextField usernameField;
     @FXML private void doAction (ActionEvent event) {
         System.out.println(usernameField.getText());
@@ -30,7 +30,7 @@ public class SplashPageController implements Initializable {
     public void logInPage(ActionEvent actionEvent) throws IOException {
         Parent logIn = FXMLLoader.load(getClass().getResource("../FXML/LoginPage.fxml"));
 
-        Scene loginScene = new Scene(logIn, 1400, 800);
+        Scene loginScene = new Scene(logIn);
 
         Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
@@ -42,7 +42,7 @@ public class SplashPageController implements Initializable {
     public void signUpPage(ActionEvent actionEvent) throws IOException {
         Parent signUp = FXMLLoader.load(getClass().getResource("../FXML/RegForm.fxml"));
 
-        Scene signUpScene = new Scene(signUp, 1400, 800);
+        Scene signUpScene = new Scene(signUp);
 
         Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
