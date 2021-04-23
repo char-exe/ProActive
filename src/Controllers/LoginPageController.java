@@ -23,21 +23,47 @@ import java.security.spec.KeySpec;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+/**
+ * Class for controlling the login page FXML
+ *
+ * @author ??
+ *
+ * @version 1.0
+ */
 public class LoginPageController {
-    private String username, password;
 
-    //getters and setters for username and password
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    private String username, password;
 
     @FXML private TextField usernameField;
     @FXML private TextField passwordField;
     @FXML private Label usernameError;
     @FXML private Label passwordError;
 
-    //login method
+    /**
+     * Getter for username
+     *
+     * @return returns the users username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Getter for password
+     *
+     * @return returns the users password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Method for handling the login event, this will create a connection to the database, hash the password which was
+     * passed in and compare it to the hashed password stored in the database, if they match then it will pass the user
+     * as a persistent object to the main FXML document, close the current scene and open the main scene
+     *
+     * @param actionEvent takes in the event which causes this mathod to be called
+     */
     public void login(ActionEvent actionEvent) {
         username = usernameField.getText();
         password = passwordField.getText();
@@ -95,18 +121,55 @@ public class LoginPageController {
         }
     }
 
-
-    public void displayInvalidUsername() { usernameError.setText("Invalid Username"); }
-    public void clearInvalidUsername() { usernameError.setText(""); }
-    public void displayInvalidPassword() { passwordError.setText("Invalid Password"); }
-    public void clearInvalidPassword() { passwordError.setText(""); }
-
-    //forgot password method
-    public void forgotPassword(ActionEvent actionEvent) {
-
+    /**
+     * Method to edit the text above the username textarea
+     */
+    public void displayInvalidUsername() {
+        usernameError.setText("Invalid Username");
     }
 
-    //forgot username method
+    /**
+     * Method to remove text from above the username textarea
+     */
+    public void clearInvalidUsername() {
+        usernameError.setText("");
+    }
+
+    /**
+     * Method to edit the text above the password textarea
+     */
+    public void displayInvalidPassword() {
+        passwordError.setText("Invalid Password");
+    }
+
+    /**
+     * Method to remove text from above the password textarea
+     */
+    public void clearInvalidPassword() {
+        passwordError.setText("");
+    }
+
+    /**
+     * Method to allow a user to reset their password via a token sent to the email address of a user with the
+     * username that they specify
+     *
+     * May be moved to another controller specific to password retrieval
+     *
+     * @param actionEvent Takes in the event that caused this method to be called
+     */
+    public void forgotPassword(ActionEvent actionEvent) {
+        //TODO create method that allows a user to update their password
+    }
+
+    /**
+     * Method to allow for the application to send an email address a reminder of what their username is, no sensitive
+     * information is passed/shown in this process so it only requires an email address to be provided by the user
+     *
+     * May be moved to another controller specific to username retrieval
+     *
+     * @param actionEvent Takes in the event that caused this method to be called
+     */
     public void forgotUsername(ActionEvent actionEvent) {
+        //TODO create method that reminds users of their username
     }
 }
