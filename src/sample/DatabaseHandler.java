@@ -43,7 +43,8 @@ import java.util.Map;
  *       will retain the datatype passed in as.
  *
  * 1.6 - Updated such that database string no longer needs to be passed as an argument. Added method for getting intake
- *       data for a user from the database. Added method for getting minutes spent data from database.
+ *       data for a user from the database. Added method for getting minutes spent data from database. Added method
+ *       for getting burn rate in calories per minute and calories burned data for user.
  *
  */
 public class DatabaseHandler

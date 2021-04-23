@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
  *
  * @version 1.0 - (SS) Simple graphing with a loop for simple dummy data and axis formatting.
  * @version 1.1 - (CJ) Added weight chart (still with dummy data) & reformatted fxml.
- * @version 1.2 - (SS) Added DateConverter as a nested class. Implemented functionality for pulling real intake data
+ * @version 1.2 - (SS) Added DateConverter as a nested class. Implemented functionality for pulling real data
  *                     from database.
  */
 public class SummaryController implements Initializable
