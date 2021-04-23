@@ -14,19 +14,35 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Class to control the splashpage FXML file
+ *
+ * @author ??
+ *
+ * @version 1.0
+ */
 public class SplashPageController implements Initializable {
 
     @FXML private TextField usernameField;
-    @FXML private void doAction (ActionEvent event) {
-        System.out.println(usernameField.getText());
-    }
 
+    /**
+     * Method to run after all FXML elements have been loaded
+     *
+     * @param url FXML defined resource
+     * @param resourceBundle FXML defined resource
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
-    //method for navigating to login page
+    /**
+     * Method to close current scene and open login form
+     *
+     * @param actionEvent Takes in the event which cause this method to be called
+     *
+     * @throws IOException Throws an IOException whenever there is a chance a file is not present
+     */
     public void logInPage(ActionEvent actionEvent) throws IOException {
         Parent logIn = FXMLLoader.load(getClass().getResource("../FXML/LoginPage.fxml"));
 
@@ -38,7 +54,13 @@ public class SplashPageController implements Initializable {
 
     }
 
-    //method for navigating to signup page
+    /**
+     * Method to close current scene and open registration form
+     *
+     * @param actionEvent Takes in the event which cause this method to be called
+     *
+     * @throws IOException Throws an IOException whenever there is a chance a file is not present
+     */
     public void signUpPage(ActionEvent actionEvent) throws IOException {
         Parent signUp = FXMLLoader.load(getClass().getResource("../FXML/RegForm.fxml"));
 

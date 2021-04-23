@@ -25,7 +25,15 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-
+/**
+ * Class to control the Registration Form FXML file
+ *
+ * @author Andrew Storey
+ * @author Owen Tasker
+ * @author Samuel Scarfe
+ *
+ * @version 1.0
+ */
 public class RegFormController implements Initializable {
 
     //Regexes for checking components
@@ -61,32 +69,23 @@ public class RegFormController implements Initializable {
     @FXML public Label heightPopUp;
     @FXML public Label weightPopUp;
 
+    /**
+     * Method to take the inputs from registration form fields, validate them, hash the password and pass a
+     * constructed User object into the captcha handler
+     *
+     * @param event Takes in the event that causes this method to be called
+     *
+     * @throws IOException Throws an exception whenever it is possible for a file to be missing
+     * @throws NoSuchAlgorithmException Thrown when the specified cryptographic algorithm is not available
+     * @throws InvalidKeySpecException Thrown if the key provided does not meet the specification for the cryptographic
+     *                                 algorithm
+     */
     @FXML protected void handleSubmitButtonAction(ActionEvent event) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-        if (
-                CheckFirstName() &&
-                CheckLastName() &&
-                CheckEmail() &&
-                CheckPassword() &&
-                CheckRepeatPassword() &&
-                CheckTermsBox()
-        ){
-            //checks username with database handler for uniqueness.
-            //checks inputs^ then double checks with user class
-            //validate user inputs with user class
-            //java scenes
-            //call captcha
-            //validate email with email handler
-            //need a resend option
-            //wait on email handler to carry on
-            //tell database handler to create user with the details
-            //end
+        if (checkConditions()){
 
-            //Instantiate Database Handler
             DatabaseHandler db = new DatabaseHandler("jdbc:sqlite:proactive.db");
 
-
-            //Read in all of the information from the registration form
             String firstName    = firstNameField.getText();
             String lastName     = lastNameField.getText();
             String email        = emailField.getText();
@@ -107,7 +106,7 @@ public class RegFormController implements Initializable {
 
             byte[] hash = factory.generateSecret(spec).getEncoded();
 
-            //Check that username inputted was
+            //Check that username inputted was unique
             if(!db.checkUserNameUnique(username)){
                 usernamePopUp.setText("Username Not Unique, Please Select a new one");
             }else {
@@ -138,6 +137,20 @@ public class RegFormController implements Initializable {
         }
     }
 
+    /**
+     * Method to compress registration form checks
+     *
+     * @return Returns true if all checks are true, false otherwise
+     */
+    public boolean checkConditions(){
+        return CheckFirstName() && CheckLastName() && CheckEmail() && CheckPassword() && CheckRepeatPassword() && CheckTermsBox();
+    }
+
+    /**
+     * Method to call a terms and conditions page in another scene if requested
+     *
+     * @throws IOException Throws an IOException if there is a chance a file does not exist
+     */
     public void TermsAndCons() throws IOException {
         Parent part = FXMLLoader.load(getClass().getResource("/FXML/TermsAndCons.fxml"));
         Stage stage = new Stage();
@@ -146,6 +159,11 @@ public class RegFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Method to check firstname field matches in regex
+     *
+     * @return returns true if check is passed
+     */
     @FXML protected boolean CheckFirstName(){
         String name = firstNameField.getText();
         if (name.matches(FIRSTNAMEREGEX)){
@@ -158,6 +176,11 @@ public class RegFormController implements Initializable {
         }
     }
 
+    /**
+     * Method to check lastname field matches in regex
+     *
+     * @return returns true if check is passed
+     */
     @FXML protected boolean CheckLastName(){
         String name = lastNameField.getText();
         if (name.matches(LASTNAMEREGEX)){
@@ -170,6 +193,11 @@ public class RegFormController implements Initializable {
         }
     }
 
+    /**
+     * Method to check email field matches in regex
+     *
+     * @return returns true if check is passed
+     */
     @FXML protected boolean CheckEmail(){
         //needs to check for email ragax
         String email = emailField.getText();
@@ -183,6 +211,11 @@ public class RegFormController implements Initializable {
         }
     }
 
+    /**
+     * Method to check username field matches in regex
+     *
+     * @return returns true if check is passed
+     */
     @FXML protected boolean CheckUsername(){
         String username = usernameField.getText();
         if (username.matches(USERNAMEREGEX)){
@@ -195,6 +228,11 @@ public class RegFormController implements Initializable {
         }
     }
 
+    /**
+     * Method to check password field matches in regex
+     *
+     * @return returns true if check is passed
+     */
     @FXML protected boolean CheckPassword(){
 
         if (repeatPasswordField.getText().length() != 0){CheckRepeatPassword();}
@@ -210,6 +248,11 @@ public class RegFormController implements Initializable {
         }
     }
 
+    /**
+     * Method to check both password and repeat password match
+     *
+     * @return returns true if check is passed
+     */
     @FXML protected boolean CheckRepeatPassword(){
         if (!passwordField.getText().equals(repeatPasswordField.getText())){
             repeatPasswordPopUp.setText("Passwords do not match.");
@@ -223,6 +266,11 @@ public class RegFormController implements Initializable {
         }
     }
 
+    /**
+     * Method to check that user has ticked the T&C box
+     *
+     * @return returns true if check is passed
+     */
     @FXML protected boolean CheckTermsBox(){
         if (termsCheckBox.isSelected()&&!termsConsLink.getTextFill().equals(Paint.valueOf("darkred"))){
             return true;
@@ -239,6 +287,12 @@ public class RegFormController implements Initializable {
         }
     }
 
+    /**
+     * Method to be called once all FXML elements have been loaded
+     *
+     * @param url FXML defined resource
+     * @param resourceBundle FXML defined resource
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sexCombo.getItems().removeAll(sexCombo.getItems());
