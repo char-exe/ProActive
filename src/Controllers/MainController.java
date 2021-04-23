@@ -66,7 +66,7 @@ public class MainController implements Initializable {
 
         SummaryController summaryController = loader.getController();
         summaryController.initData(user);
-        summaryController.setIntakeData();
+        summaryController.setData();
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vBox);

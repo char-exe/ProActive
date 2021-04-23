@@ -13,6 +13,7 @@ import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -148,7 +149,7 @@ public class SummaryController implements Initializable
     /**
      * Sets the data for the caloric intake to the net caloric intake for the past 7 days, including today.
      */
-    public void setIntakeData() {
+    public void setData() {
         //Create a data series for each graph and set names
         XYChart.Series<Number, Number> intakeSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> burnSeries = new XYChart.Series<>();
@@ -164,18 +165,27 @@ public class SummaryController implements Initializable
         {
             //Add data points to series.
             burnSeries.getData().add(new XYChart.Data<>(i, i));
-            spentSeries.getData().add(new XYChart.Data<>(i, i));
             weightSeries.getData().add(new XYChart.Data<>(i, i));
         }
 
         DatabaseHandler dh = new DatabaseHandler();
-        HashMap<String, Integer> intakeData = dh.getIntakeEntries(user.getUsername());
         DateConverter dc = new DateConverter();
+
+        HashMap<String, Integer> intakeData = dh.getIntakeEntries(user.getUsername());
+        HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername());
+        System.out.println(intakeData);
+        System.out.println(spentData);
 
         for (String key : intakeData.keySet())
         {
             System.out.println(dc.fromString(key));
             intakeSeries.getData().add(new XYChart.Data<>(dc.fromString(key), intakeData.get(key)));
+        }
+
+        for (String key : spentData.keySet())
+        {
+            System.out.println(dc.fromString(key));
+            spentSeries.getData().add(new XYChart.Data<>(dc.fromString(key), spentData.get(key)));
         }
 
         //Add series to graphs.

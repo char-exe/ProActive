@@ -1359,380 +1359,385 @@
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="502" parent="170" name="sqlite_autoindex_activity_1">
+    <column id="502" parent="170" name="date_of">
+      <Position>5</Position>
+      <DataType>varchar(10)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="503" parent="170" name="sqlite_autoindex_activity_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>activity_id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="503" parent="170">
+    <key id="504" parent="170">
       <ColNames>activity_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_activity_1</UnderlyingIndexName>
     </key>
-    <key id="504" parent="170">
+    <key id="505" parent="170">
       <ColNames>activity_id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_activity_1</UnderlyingIndexName>
     </key>
-    <foreign-key id="505" parent="170">
+    <foreign-key id="506" parent="170">
       <ColNames>exercise_id</ColNames>
       <RefTableName>exercise</RefTableName>
       <RefColNames>id</RefColNames>
       <OnDelete>set-null</OnDelete>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <check id="506" parent="170">
+    <check id="507" parent="170">
       <Predicate>duration &gt; 0</Predicate>
     </check>
-    <column id="507" parent="171" name="id">
+    <column id="508" parent="171" name="id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="508" parent="171" name="name">
+    <column id="509" parent="171" name="name">
       <Position>2</Position>
       <DataType>VARCHAR(20)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="509" parent="171" name="burn_rate">
+    <column id="510" parent="171" name="burn_rate">
       <Position>3</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="510" parent="171" name="sqlite_autoindex_exercise_1">
+    <index id="511" parent="171" name="sqlite_autoindex_exercise_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="511" parent="171" name="sqlite_autoindex_exercise_2">
+    <index id="512" parent="171" name="sqlite_autoindex_exercise_2">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>name</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="512" parent="171">
+    <key id="513" parent="171">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_exercise_1</UnderlyingIndexName>
     </key>
-    <key id="513" parent="171">
+    <key id="514" parent="171">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_exercise_1</UnderlyingIndexName>
     </key>
-    <key id="514" parent="171">
+    <key id="515" parent="171">
       <ColNames>name</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_exercise_2</UnderlyingIndexName>
     </key>
-    <check id="515" parent="171">
+    <check id="516" parent="171">
       <Predicate>burn_rate &gt; 0</Predicate>
     </check>
-    <column id="516" parent="172" name="id">
+    <column id="517" parent="172" name="id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="517" parent="172" name="name">
+    <column id="518" parent="172" name="name">
       <Position>2</Position>
       <DataType>VARCHAR(20)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="518" parent="172" name="kcal">
+    <column id="519" parent="172" name="kcal">
       <Position>3</Position>
       <DataType>DOUBLE|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="519" parent="172" name="protein">
+    <column id="520" parent="172" name="protein">
       <Position>4</Position>
       <DataType>DOUBLE|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="520" parent="172" name="fat">
+    <column id="521" parent="172" name="fat">
       <Position>5</Position>
       <DataType>DOUBLE|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="521" parent="172" name="carbs">
+    <column id="522" parent="172" name="carbs">
       <Position>6</Position>
       <DataType>DOUBLE|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="522" parent="172" name="sugar">
+    <column id="523" parent="172" name="sugar">
       <Position>7</Position>
       <DataType>DOUBLE|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="523" parent="172" name="fibre">
+    <column id="524" parent="172" name="fibre">
       <Position>8</Position>
       <DataType>DOUBLE|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="524" parent="172" name="cholesterol">
+    <column id="525" parent="172" name="cholesterol">
       <Position>9</Position>
       <DataType>DOUBLE|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="525" parent="172" name="sqlite_autoindex_food_1">
+    <index id="526" parent="172" name="sqlite_autoindex_food_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="526" parent="172" name="sqlite_autoindex_food_2">
+    <index id="527" parent="172" name="sqlite_autoindex_food_2">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>name</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="527" parent="172">
+    <key id="528" parent="172">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_food_1</UnderlyingIndexName>
     </key>
-    <key id="528" parent="172">
+    <key id="529" parent="172">
       <ColNames>id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_food_1</UnderlyingIndexName>
     </key>
-    <key id="529" parent="172">
+    <key id="530" parent="172">
       <ColNames>name</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_food_2</UnderlyingIndexName>
     </key>
-    <check id="530" parent="172">
+    <check id="531" parent="172">
       <Predicate>carbs &gt; - 1</Predicate>
     </check>
-    <check id="531" parent="172">
+    <check id="532" parent="172">
       <Predicate>cholesterol &gt; - 1</Predicate>
     </check>
-    <check id="532" parent="172">
+    <check id="533" parent="172">
       <Predicate>fat &gt; - 1</Predicate>
     </check>
-    <check id="533" parent="172">
+    <check id="534" parent="172">
       <Predicate>fibre &gt; - 1</Predicate>
     </check>
-    <check id="534" parent="172">
+    <check id="535" parent="172">
       <Predicate>kcal &gt; - 1</Predicate>
     </check>
-    <check id="535" parent="172">
+    <check id="536" parent="172">
       <Predicate>protein &gt; - 1</Predicate>
     </check>
-    <check id="536" parent="172">
+    <check id="537" parent="172">
       <Predicate>sugar &gt; - 1</Predicate>
     </check>
-    <column id="537" parent="173" name="meal_id">
+    <column id="538" parent="173" name="meal_id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="538" parent="173" name="meal_category">
+    <column id="539" parent="173" name="meal_category">
       <Position>2</Position>
       <DataType>VARCHAR(20)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="539" parent="173" name="food_id">
+    <column id="540" parent="173" name="food_id">
       <Position>3</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="540" parent="173" name="user_id">
+    <column id="541" parent="173" name="user_id">
       <Position>4</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="541" parent="173" name="date_of">
+    <column id="542" parent="173" name="date_of">
       <Position>5</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="542" parent="173" name="quantity">
+    <column id="543" parent="173" name="quantity">
       <Position>6</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="543" parent="173" name="sqlite_autoindex_meal_1">
+    <index id="544" parent="173" name="sqlite_autoindex_meal_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>meal_id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="544" parent="173">
+    <key id="545" parent="173">
       <ColNames>meal_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_meal_1</UnderlyingIndexName>
     </key>
-    <key id="545" parent="173">
+    <key id="546" parent="173">
       <ColNames>meal_id</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_meal_1</UnderlyingIndexName>
     </key>
-    <foreign-key id="546" parent="173">
+    <foreign-key id="547" parent="173">
       <ColNames>food_id</ColNames>
       <RefTableName>food</RefTableName>
       <RefColNames>id</RefColNames>
       <OnDelete>set-null</OnDelete>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <check id="547" parent="173">
+    <check id="548" parent="173">
       <Predicate>meal_category IN (&quot;Breakfast&quot;, &quot;Lunch&quot;, &quot;Dinner&quot;, &quot;Snack&quot;)</Predicate>
     </check>
-    <check id="548" parent="173">
+    <check id="549" parent="173">
       <Predicate>quantity &gt; 0</Predicate>
     </check>
-    <column id="549" parent="174" name="tokenID">
+    <column id="550" parent="174" name="tokenID">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="550" parent="174" name="tokenVal">
+    <column id="551" parent="174" name="tokenVal">
       <Position>2</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="551" parent="174" name="timeDelay">
+    <column id="552" parent="174" name="timeDelay">
       <Position>3</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="552" parent="174" name="regTokens_tokenID_uindex">
+    <index id="553" parent="174" name="regTokens_tokenID_uindex">
       <ColNames>tokenID</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="553" parent="174" name="regTokens_tokenVal_uindex">
+    <index id="554" parent="174" name="regTokens_tokenVal_uindex">
       <ColNames>tokenVal</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="554" parent="174" name="regTokens_pk">
+    <key id="555" parent="174" name="regTokens_pk">
       <ColNames>tokenID</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>regTokens_tokenID_uindex</UnderlyingIndexName>
     </key>
-    <column id="555" parent="175" name="type">
+    <column id="556" parent="175" name="type">
       <Position>1</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="556" parent="175" name="name">
+    <column id="557" parent="175" name="name">
       <Position>2</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="557" parent="175" name="tbl_name">
+    <column id="558" parent="175" name="tbl_name">
       <Position>3</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="558" parent="175" name="rootpage">
+    <column id="559" parent="175" name="rootpage">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <column id="559" parent="175" name="sql">
+    <column id="560" parent="175" name="sql">
       <Position>5</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="560" parent="176" name="name">
+    <column id="561" parent="176" name="name">
       <Position>1</Position>
     </column>
-    <column id="561" parent="176" name="seq">
+    <column id="562" parent="176" name="seq">
       <Position>2</Position>
     </column>
-    <column id="562" parent="177" name="user_id">
+    <column id="563" parent="177" name="user_id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="563" parent="177" name="first_name">
+    <column id="564" parent="177" name="first_name">
       <Position>2</Position>
       <DataType>varchar[255]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="564" parent="177" name="last_name">
+    <column id="565" parent="177" name="last_name">
       <Position>3</Position>
       <DataType>varchar[255]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="565" parent="177" name="dob">
+    <column id="566" parent="177" name="dob">
       <Position>4</Position>
       <DataType>varchar[11]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="566" parent="177" name="height">
+    <column id="567" parent="177" name="height">
       <Position>5</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="567" parent="177" name="sex">
+    <column id="568" parent="177" name="sex">
       <Position>6</Position>
       <DataType>varchar[255]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="568" parent="177" name="username">
+    <column id="569" parent="177" name="username">
       <Position>7</Position>
       <DataType>varchar[25]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="569" parent="177" name="hash">
+    <column id="570" parent="177" name="hash">
       <Position>8</Position>
       <DataType>BLOB|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="570" parent="177" name="email">
+    <column id="571" parent="177" name="email">
       <Position>9</Position>
       <DataType>varchar[100]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="571" parent="177" name="salt">
+    <column id="572" parent="177" name="salt">
       <Position>10</Position>
       <DataType>BLOB|0s</DataType>
     </column>
-    <index id="572" parent="177" name="user_user_id_uindex">
+    <index id="573" parent="177" name="user_user_id_uindex">
       <ColNames>user_id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="573" parent="177" name="user_username_uindex">
+    <index id="574" parent="177" name="user_username_uindex">
       <ColNames>username</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="574" parent="177" name="user_pk">
+    <key id="575" parent="177" name="user_pk">
       <ColNames>user_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>user_user_id_uindex</UnderlyingIndexName>
     </key>
-    <column id="575" parent="178" name="entry_id">
+    <column id="576" parent="178" name="entry_id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="576" parent="178" name="user_id">
+    <column id="577" parent="178" name="user_id">
       <Position>2</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="577" parent="178" name="weight">
+    <column id="578" parent="178" name="weight">
       <Position>3</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="578" parent="178" name="date">
+    <column id="579" parent="178" name="date">
       <Position>4</Position>
       <DataType>varchar[11]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="579" parent="178" name="weight_entry_entry_id_uindex">
+    <index id="580" parent="178" name="weight_entry_entry_id_uindex">
       <ColNames>entry_id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="580" parent="178" name="weight_entry_pk">
+    <key id="581" parent="178" name="weight_entry_pk">
       <ColNames>entry_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>weight_entry_entry_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="581" parent="178">
+    <foreign-key id="582" parent="178">
       <ColNames>user_id</ColNames>
       <RefTableName>user</RefTableName>
       <RefKeyName>user_pk</RefKeyName>
