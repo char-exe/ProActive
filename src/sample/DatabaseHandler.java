@@ -17,7 +17,7 @@ import java.util.Locale;
  * @author Samuel Scarfe
  * @author Owen Tasker
  *
- * @version 1.4
+ * @version 1.6
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -39,6 +39,8 @@ import java.util.Locale;
  *       hash and salt. Updated insertIntoUserTable to use PreparedStatement so that data is not converted to String
  *       before input to database, important for hash and salt which are put into BLOB type on SQLite side meaning they
  *       will retain the datatype passed in as.
+ *
+ * 1.6 - Added Javadoc for outstanding methods
  *
  */
 public class DatabaseHandler
