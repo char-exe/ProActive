@@ -4,10 +4,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.User;
 
@@ -40,20 +42,27 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
+
+    public void initData(User user){
+        this.user = user;
         try {
             homeScreen();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void initData(User user){
-        this.user = user;
+        System.out.println(user);
     }
 
     @FXML
     private void homeScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/SummaryPage.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/SummaryPage.fxml"));
+        VBox vBox = loader.load();
+
+        SummaryController summaryController = loader.getController();
+        summaryController.initData(user);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vBox);

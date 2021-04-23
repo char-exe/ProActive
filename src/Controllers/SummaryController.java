@@ -6,7 +6,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
@@ -67,6 +69,7 @@ public class SummaryController implements Initializable
     @FXML
     private NumberAxis weightDateAxis;
 
+    private User user;
 
     /**
      * Initializes the graphs with formatted axes and dummy data.
@@ -109,6 +112,11 @@ public class SummaryController implements Initializable
         burnChart.getData().add(burnSeries);
         spentChart.getData().add(spentSeries);
         weightChart.getData().add(weightSeries);
+    }
+
+    public void initData(User user) {
+        this.user = user;
+        System.out.println(user);
     }
 
     /**
