@@ -548,4 +548,32 @@ public class DatabaseHandler
         System.out.println(entries);
         return entries;
     }
+
+    public HashMap<String, Integer> getWeightEntries(String username)
+    {
+        HashMap<String, Integer> entries = new HashMap<>();
+        LocalDate today = LocalDate.now();
+        LocalDate lastWeek = today.minusDays(6);
+
+        String sql = "SELECT date_of, weight FROM weight_entry WHERE user_id = '" +
+                getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
+                "' AND '" + today.toString() + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                String date = rs.getString("date_of");
+
+                entries.put(date, rs.getInt("weight"));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(entries);
+        return entries;
+    }
 }

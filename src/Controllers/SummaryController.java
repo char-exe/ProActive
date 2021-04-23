@@ -156,26 +156,17 @@ public class SummaryController implements Initializable
         XYChart.Series<Number, Number> spentSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
 
-//        intakeSeries.setName("Caloric Intake");
-//        burnSeries.setName("Calories Burned via Exercise");
-//        spentSeries.setName("Minutes Spent");
-
-        //Create a datapoint for each day.
-        for (int i = 1; i < 8; i++)
-        {
-            //Add data points to series.
-            weightSeries.getData().add(new XYChart.Data<>(i, i));
-        }
-
         DatabaseHandler dh = new DatabaseHandler();
         DateConverter dc = new DateConverter();
 
         HashMap<String, Integer> intakeData = dh.getIntakeEntries(user.getUsername());
         HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername());
         HashMap<String, Float> burnedData = dh.getBurnedEntries(user.getUsername());
+        HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername());
         System.out.println(intakeData);
         System.out.println(spentData);
         System.out.println(burnedData);
+        System.out.println(weightData);
 
         for (String key : intakeData.keySet())
         {
@@ -193,6 +184,12 @@ public class SummaryController implements Initializable
         {
             System.out.println(dc.fromString(key));
             burnSeries.getData().add(new XYChart.Data<>(dc.fromString(key), burnedData.get(key)));
+        }
+
+        for (String key : weightData.keySet())
+        {
+            System.out.println(dc.fromString(key));
+            weightSeries.getData().add(new XYChart.Data<>(dc.fromString(key), weightData.get(key)));
         }
 
         //Add series to graphs.

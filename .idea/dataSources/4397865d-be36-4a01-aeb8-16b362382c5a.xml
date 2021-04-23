@@ -1722,9 +1722,9 @@
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="579" parent="178" name="date">
+    <column id="579" parent="178" name="date_of">
       <Position>4</Position>
-      <DataType>varchar[11]|0s</DataType>
+      <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
     <index id="580" parent="178" name="weight_entry_entry_id_uindex">
