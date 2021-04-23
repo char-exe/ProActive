@@ -83,7 +83,7 @@ public class RegFormController implements Initializable {
             //end
 
             //Instantiate Database Handler
-            DatabaseHandler db = new DatabaseHandler("jdbc:sqlite:proactive.db");
+            DatabaseHandler db = new DatabaseHandler();
 
 
             //Read in all of the information from the registration form

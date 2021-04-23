@@ -43,6 +43,7 @@ import java.util.Locale;
  */
 public class DatabaseHandler
 {
+
     public enum dbTables{
         ACTIVITY, EXERCISE, FOOD, MEAL, USER, WEIGHT_ENTRY;
 
@@ -69,14 +70,11 @@ public class DatabaseHandler
     private Connection conn;
 
     /**
-     * Only accepted constructor for the database handler, takes in the path of the database and dynamically
-     * connects to that in order to avoid having to connect every time this object runs a SQL method
-     *
-     * @param database Path to the database
+     * Only accepted constructor for the database handler.
      */
-    public DatabaseHandler(String database){
+    public DatabaseHandler(){
         try{
-            conn = DriverManager.getConnection(database);
+            conn = DriverManager.getConnection("jdbc:sqlite:proactive.db");
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }

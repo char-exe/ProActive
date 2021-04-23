@@ -43,7 +43,7 @@ public class LoginPageController {
         password = passwordField.getText();
 
         try{
-            DatabaseHandler dh = new DatabaseHandler("jdbc:sqlite:proactive.db");
+            DatabaseHandler dh = new DatabaseHandler();
 
             //Retrieve user's hashed password and salt value
             byte[] serverSidePass = dh.getHashFromUsername(username);

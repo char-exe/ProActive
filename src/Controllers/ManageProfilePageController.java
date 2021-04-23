@@ -40,7 +40,7 @@ public class ManageProfilePageController implements Initializable {
     //TODO link to the submit button in the FXML document
     @FXML public void submitButtonAction(ActionEvent event) throws IOException {
         System.out.println("submitButton");
-        DatabaseHandler dbh = new DatabaseHandler("jdbc:sqlite:proactive.db");
+        DatabaseHandler dbh = new DatabaseHandler();
 
         //Take in the value provided by the datepicker
         LocalDate date = datePick.getValue();
