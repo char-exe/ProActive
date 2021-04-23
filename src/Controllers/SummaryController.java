@@ -164,7 +164,6 @@ public class SummaryController implements Initializable
         for (int i = 1; i < 8; i++)
         {
             //Add data points to series.
-            burnSeries.getData().add(new XYChart.Data<>(i, i));
             weightSeries.getData().add(new XYChart.Data<>(i, i));
         }
 
@@ -173,8 +172,10 @@ public class SummaryController implements Initializable
 
         HashMap<String, Integer> intakeData = dh.getIntakeEntries(user.getUsername());
         HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername());
+        HashMap<String, Float> burnedData = dh.getBurnedEntries(user.getUsername());
         System.out.println(intakeData);
         System.out.println(spentData);
+        System.out.println(burnedData);
 
         for (String key : intakeData.keySet())
         {
@@ -186,6 +187,12 @@ public class SummaryController implements Initializable
         {
             System.out.println(dc.fromString(key));
             spentSeries.getData().add(new XYChart.Data<>(dc.fromString(key), spentData.get(key)));
+        }
+
+        for (String key : burnedData.keySet())
+        {
+            System.out.println(dc.fromString(key));
+            burnSeries.getData().add(new XYChart.Data<>(dc.fromString(key), burnedData.get(key)));
         }
 
         //Add series to graphs.

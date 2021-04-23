@@ -41,6 +41,7 @@ import java.util.Map;
  *       hash and salt. Updated insertIntoUserTable to use PreparedStatement so that data is not converted to String
  *       before input to database, important for hash and salt which are put into BLOB type on SQLite side meaning they
  *       will retain the datatype passed in as.
+ *
  * 1.6 - Updated such that database string no longer needs to be passed as an argument. Added method for getting intake
  *       data for a user from the database. Added method for getting minutes spent data from database.
  *
@@ -377,9 +378,9 @@ public class DatabaseHandler
         return exerciseItem;
     }
 
-    public int getBurnRate(int exerciseId) {
+    public float getBurnRate(int exerciseId) {
         String sql = "SELECT burn_rate FROM exercise WHERE id = '" + exerciseId + "'";
-        int burnRate= 0;
+        float burnRate= 0;
 
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs   = stmt.executeQuery(sql)) {
@@ -389,7 +390,7 @@ public class DatabaseHandler
             throwables.printStackTrace();
         }
 
-        return burnRate;
+        return burnRate/30;
     }
 
     public void deleteToken(String token){
@@ -483,8 +484,8 @@ public class DatabaseHandler
         LocalDate lastWeek = today.minusDays(6);
 
         String sql = "SELECT date_of, duration FROM activity WHERE user_id = '" +
-                      getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
-                      "' AND '" + today.toString() + "'";
+                getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
+                "' AND '" + today.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
@@ -500,6 +501,42 @@ public class DatabaseHandler
                 else
                 {
                     entries.put(date, rs.getInt("duration"));
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(entries);
+        return entries;
+    }
+
+    public HashMap<String, Float> getBurnedEntries(String username)
+    {
+        HashMap<String, Float> entries = new HashMap<>();
+        LocalDate today = LocalDate.now();
+        LocalDate lastWeek = today.minusDays(6);
+
+        String sql = "SELECT date_of, duration, exercise_id FROM activity WHERE user_id = '" +
+                getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
+                "' AND '" + today.toString() + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                String date = rs.getString("date_of");
+                int exerciseId = rs.getInt("exercise_id");
+
+                if (entries.containsKey(date))
+                {
+                    entries.put(date, entries.get(date) + rs.getInt("duration") * getBurnRate(exerciseId));
+                }
+                else
+                {
+                    entries.put(date, rs.getInt("duration") * getBurnRate(exerciseId));
                 }
             }
         }
