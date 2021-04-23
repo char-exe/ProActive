@@ -8,12 +8,15 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import sample.DatabaseHandler;
 import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 /**
@@ -25,6 +28,8 @@ import java.util.ResourceBundle;
  *
  * @version 1.0 - (SS) Simple graphing with a loop for simple dummy data and axis formatting.
  * @version 1.1 - (CJ) Added weight chart (still with dummy data) & reformatted fxml.
+ * @version 1.2 - (SS) Added DateConverter as a nested class. Implemented functionality for pulling real intake data
+ *                     from database.
  */
 public class SummaryController implements Initializable
 {
@@ -86,32 +91,6 @@ public class SummaryController implements Initializable
         formatAxis(burnDateAxis);
         formatAxis(spentDateAxis);
         formatAxis(weightDateAxis);
-
-        //Create a data series for each graph and set names
-        XYChart.Series<Number, Number> intakeSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> burnSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> spentSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
-
-//        intakeSeries.setName("Caloric Intake");
-//        burnSeries.setName("Calories Burned via Exercise");
-//        spentSeries.setName("Minutes Spent");
-
-        //Create a datapoint for each day.
-        for (int i = 1; i < 8; i++)
-        {
-            //Add data points to series.
-            intakeSeries.getData().add(new XYChart.Data<>(i, i));
-            burnSeries.getData().add(new XYChart.Data<>(i, i));
-            spentSeries.getData().add(new XYChart.Data<>(i, i));
-            weightSeries.getData().add(new XYChart.Data<>(i, i));
-        }
-
-        //Add series to graphs.
-        intakeChart.getData().add(intakeSeries);
-        burnChart.getData().add(burnSeries);
-        spentChart.getData().add(spentSeries);
-        weightChart.getData().add(weightSeries);
     }
 
     public void initData(User user) {
@@ -128,37 +107,82 @@ public class SummaryController implements Initializable
     private void formatAxis(NumberAxis DateAxis)
     {
         //Set tick labels by calling the formatter method and passing an anonymous StringConverter.
-        DateAxis.setTickLabelFormatter(new StringConverter<>()
+        DateAxis.setTickLabelFormatter(new DateConverter());
+    }
+
+    /**
+     * Private nested utility class for converting dates represented by strings to ordinals and vice versa.
+     */
+    private static class DateConverter extends StringConverter<Number>
+    {
+        /**
+         * Converts a Number to a String representing a date.
+         * @param number The numeric tick mark.
+         * @return A string representation of a date with 7 equal to today's date.
+         */
+        @Override
+        public String toString(Number number)
         {
-            /**
-             * Converts a Number to a String representing a date.
-             * @param number The numeric tick mark.
-             * @return A string representation of a date with 7 equal to today's date.
-             */
-            @Override
-            public String toString(Number number)
-            {
-                //https://stackoverflow.com/questions/11882926/how-to-subtract-x-day-from-a-date-object-in-java
-                return LocalDate.now().minusDays(7 - number.intValue()).toString();
-            }
+            //https://stackoverflow.com/questions/11882926/how-to-subtract-x-day-from-a-date-object-in-java
+            return LocalDate.now().minusDays(7 - number.intValue()).toString();
+        }
 
-            /**
-             * Converts a String representation of a date to an ordinal by comparing the date to today.
-             *
-             * @param s A string representing a date.
-             * @return An ordinal representation of the date, 7 equals today.
-             */
-            //https://stackoverflow.com/questions/13037654/subtract-two-dates-in-java
-            @Override
-            public Number fromString(String s)
-            {
-                LocalDate d1 = LocalDate.now();
-                LocalDate d2 = LocalDate.parse(s);
-                Duration diff = Duration.between(d1.atStartOfDay(), d2.atStartOfDay());
+        /**
+         * Converts a String representation of a date to an ordinal by comparing the date to today.
+         *
+         * @param s A string representing a date.
+         * @return An ordinal representation of the date, 7 equals today.
+         */
+        //https://stackoverflow.com/questions/13037654/subtract-two-dates-in-java
+        @Override
+        public Number fromString(String s)
+        {
+            LocalDate d1 = LocalDate.now();
+            LocalDate d2 = LocalDate.parse(s);
+            Duration diff = Duration.between(d1.atStartOfDay(), d2.atStartOfDay());
 
-                return diff.toDays();
-            }
-        });
+            return diff.toDays() + 7;
+        }
+    }
+
+    /**
+     * Sets the data for the caloric intake to the net caloric intake for the past 7 days, including today.
+     */
+    public void setIntakeData() {
+        //Create a data series for each graph and set names
+        XYChart.Series<Number, Number> intakeSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> burnSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> spentSeries = new XYChart.Series<>();
+        XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
+
+//        intakeSeries.setName("Caloric Intake");
+//        burnSeries.setName("Calories Burned via Exercise");
+//        spentSeries.setName("Minutes Spent");
+
+        //Create a datapoint for each day.
+        for (int i = 1; i < 8; i++)
+        {
+            //Add data points to series.
+            burnSeries.getData().add(new XYChart.Data<>(i, i));
+            spentSeries.getData().add(new XYChart.Data<>(i, i));
+            weightSeries.getData().add(new XYChart.Data<>(i, i));
+        }
+
+        DatabaseHandler dh = new DatabaseHandler();
+        HashMap<String, Integer> intakeData = dh.getIntakeEntries(user.getUsername());
+        DateConverter dc = new DateConverter();
+
+        for (String key : intakeData.keySet())
+        {
+            System.out.println(dc.fromString(key));
+            intakeSeries.getData().add(new XYChart.Data<>(dc.fromString(key), intakeData.get(key)));
+        }
+
+        //Add series to graphs.
+        intakeChart.getData().add(intakeSeries);
+        burnChart.getData().add(burnSeries);
+        spentChart.getData().add(spentSeries);
+        weightChart.getData().add(weightSeries);
     }
 
 }

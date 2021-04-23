@@ -4,7 +4,9 @@ import org.sqlite.core.DB;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Contains ways to interact with the backend database of the ProActive app, contains a number of
@@ -17,7 +19,7 @@ import java.util.Locale;
  * @author Samuel Scarfe
  * @author Owen Tasker
  *
- * @version 1.4
+ * @version 1.6
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -39,6 +41,8 @@ import java.util.Locale;
  *       hash and salt. Updated insertIntoUserTable to use PreparedStatement so that data is not converted to String
  *       before input to database, important for hash and salt which are put into BLOB type on SQLite side meaning they
  *       will retain the datatype passed in as.
+ * 1.6 - Updated such that database string no longer needs to be passed as an argument. Added method for getting intake
+ *       data for a user from the database.
  *
  */
 public class DatabaseHandler
@@ -57,7 +61,7 @@ public class DatabaseHandler
             ID, NAME, KCAL, PROTEIN, FAT, CARBS, SUGAR, FIBRE, CHOLESTEROL
         }
         public enum mealColumns{
-            MEAL_ID, MEAL_CATEGORY, FOOD_ID, USER_ID, DATE, QUANTITY
+            MEAL_ID, MEAL_CATEGORY, FOOD_ID, USER_ID, DATE_OF, QUANTITY
         }
         public enum userColumns{
             USER_ID, FIRST_NAME, LAST_NAME, DOB, HEIGHT, SEX, USERNAME, HASH, SALT, EMAIL
@@ -422,5 +426,38 @@ public class DatabaseHandler
         }
 
         return user;
+    }
+
+    public HashMap<String, Integer> getIntakeEntries(String username)
+    {
+        HashMap<String, Integer> entries = new HashMap<>();
+        LocalDate today = LocalDate.now();
+        LocalDate lastWeek = today.minusDays(6);
+
+        String sql = "SELECT date_of, quantity FROM meal WHERE user_id = '" + getUserIDFromUsername(username) + "' " +
+                "AND date_of BETWEEN '" + lastWeek.toString() + "' AND '" + today.toString() + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                String date = rs.getString("date_of");
+                if (entries.containsKey(date))
+                {
+                    entries.put(date, entries.get(date) + rs.getInt("quantity"));
+                }
+                else
+                {
+                    entries.put(date, rs.getInt("quantity"));
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(entries);
+        return entries;
     }
 }

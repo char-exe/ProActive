@@ -24,7 +24,10 @@ import java.util.ResourceBundle;
  * @author Charlie Jones 100234961
  *
  * @version 1.0 - Added basic sidebar with switching mechanism to change the focus between FXML pages, also made a last
- * used button pointer to indicate to the user which page they are on, not allowing them to select the same page again.
+ *                used button pointer to indicate to the user which page they are on, not allowing them to select the
+ *                same page again.
+ *          1.1 - Minor update to logic to ensure User object is set before being passed on to other controllers.
+ *                Possibly a hacky solution, as method calls have been moved from initialise to initData.
  */
 public class MainController implements Initializable {
 
@@ -63,6 +66,7 @@ public class MainController implements Initializable {
 
         SummaryController summaryController = loader.getController();
         summaryController.initData(user);
+        summaryController.setIntakeData();
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vBox);
