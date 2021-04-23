@@ -44,7 +44,8 @@ import java.util.Map;
  *
  * 1.6 - Updated such that database string no longer needs to be passed as an argument. Added method for getting intake
  *       data for a user from the database. Added method for getting minutes spent data from database. Added method
- *       for getting burn rate in calories per minute and calories burned data for user.
+ *       for getting burn rate in calories per minute and calories burned data for user. Added method for getting
+ *       weight entries for a user from the database.
  *
  */
 public class DatabaseHandler
@@ -445,6 +446,13 @@ public class DatabaseHandler
         return user;
     }
 
+    /**
+     * Method to get the past seven days of caloric intake for the user in a Map with keys as String representations
+     * of each day's date.
+     *
+     * @param username The user's username.
+     * @return A Map of String representation of a date against calories intaken.
+     */
     public HashMap<String, Integer> getIntakeEntries(String username)
     {
         HashMap<String, Integer> entries = new HashMap<>();
@@ -478,6 +486,13 @@ public class DatabaseHandler
         return entries;
     }
 
+    /**
+     * Method to get the past seven days of minutes spent exercising for the user in a Map with keys as String
+     * representations of each day's date.
+     *
+     * @param username The user's username.
+     * @return A Map of String representation of a date against minutes spent exercising.
+     */
     public HashMap<String, Integer> getSpentEntries(String username)
     {
         HashMap<String, Integer> entries = new HashMap<>();
@@ -513,6 +528,13 @@ public class DatabaseHandler
         return entries;
     }
 
+    /**
+     * Method to get the past seven days of calories burned for the user in a Map with keys as String representations
+     * of each day's date.
+     *
+     * @param username The user's username.
+     * @return A Map of String representation of a date against calories burned.
+     */
     public HashMap<String, Float> getBurnedEntries(String username)
     {
         HashMap<String, Float> entries = new HashMap<>();
@@ -549,6 +571,13 @@ public class DatabaseHandler
         return entries;
     }
 
+    /**
+     * Method to get the past seven days of weight entries for the user in a Map with keys as String representations
+     * of each day's date.
+     *
+     * @param username The user's username.
+     * @return A Map of String representation of a date against weight entries.
+     */
     public HashMap<String, Integer> getWeightEntries(String username)
     {
         HashMap<String, Integer> entries = new HashMap<>();

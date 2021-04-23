@@ -156,39 +156,34 @@ public class SummaryController implements Initializable
         XYChart.Series<Number, Number> spentSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
 
+        //Get data for each series from the database.
         DatabaseHandler dh = new DatabaseHandler();
-        DateConverter dc = new DateConverter();
 
         HashMap<String, Integer> intakeData = dh.getIntakeEntries(user.getUsername());
         HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername());
         HashMap<String, Float> burnedData = dh.getBurnedEntries(user.getUsername());
         HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername());
-        System.out.println(intakeData);
-        System.out.println(spentData);
-        System.out.println(burnedData);
-        System.out.println(weightData);
+
+        //Add data to each series.
+        DateConverter dc = new DateConverter();
 
         for (String key : intakeData.keySet())
         {
-            System.out.println(dc.fromString(key));
             intakeSeries.getData().add(new XYChart.Data<>(dc.fromString(key), intakeData.get(key)));
         }
 
         for (String key : spentData.keySet())
         {
-            System.out.println(dc.fromString(key));
             spentSeries.getData().add(new XYChart.Data<>(dc.fromString(key), spentData.get(key)));
         }
 
         for (String key : burnedData.keySet())
         {
-            System.out.println(dc.fromString(key));
             burnSeries.getData().add(new XYChart.Data<>(dc.fromString(key), burnedData.get(key)));
         }
 
         for (String key : weightData.keySet())
         {
-            System.out.println(dc.fromString(key));
             weightSeries.getData().add(new XYChart.Data<>(dc.fromString(key), weightData.get(key)));
         }
 
