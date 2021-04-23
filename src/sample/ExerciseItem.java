@@ -1,23 +1,90 @@
 package sample;
 
+/**
+ * Class to represent an exercise undertaken by the User in the Application.
+ *
+ * @author Evan Clayton?
+ * @author Samuel Scarfe
+ *
+ * @version 1.1
+ *
+ * 1.0 - First working version
+ * 1.1 - Added Javadoc, exceptions, and a separate JUnit test class.
+ */
+
 public class ExerciseItem {
+
+    /**
+     * The name of the exercise.
+     */
     private String name;
-    private int burn_rate;
 
-    public String getName() { return name; }
-    public int getBurn_rate() { return burn_rate; }
+    /**
+     * The burn rate of the exercise in calories per minute.
+     */
+    private int burnRate;
 
-    public ExerciseItem(String name, int burn_rate) {
+    /**
+     * Constructs an exercise from a name and a caloric burn rate.
+     *
+     * @param name The name of the exercise.
+     * @param burnRate The burn rate of the exercise in calories per minute.
+     */
+    public ExerciseItem(String name, int burnRate) {
+        if (name == null) {
+            throw new NullPointerException();
+        }
+        if (name.length() < 1)
+        {
+            throw new IllegalArgumentException();
+        }
+        if (burnRate < 0) {
+            throw new IllegalArgumentException();
+        }
+
         this.name = name;
-        this.burn_rate = burn_rate;
+        this.burnRate = burnRate;
     }
 
-    public ExerciseItem() {
-        this.name = "Default";
-        this.burn_rate = 0;
+    /**
+     * Returns the name of this exercise.
+     *
+     * @return The name of this exercise.
+     */
+    public String getName() {
+        return name;
     }
 
-    public double calculateBurn(int minutes) { return this.burn_rate*minutes; }
+    /**
+     * Returns the caloric burn rate of this exercise.
+     *
+     * @return The caloric burn rate of this exercise.
+     */
+    public int getBurnRate() {
+        return burnRate;
+    }
+
+    /**
+     * Returns the number of calories burned by undertaking this exercise for a provided number of minutes.
+     *
+     * @param minutes The number of minutes for which the exercise was undertaken.
+     * @return The number of calories burned.
+     */
+    public int calculateBurn(int minutes) {
+        if (minutes <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        return this.burnRate*minutes;
+    }
+
+    /**
+     * Returns the number of calories burned by undertaking this exercise for one hour.
+     * @return the number of calories burned by undertaking this exercise for one hour.
+     */
+    public int calculateBurn() {
+        return this.burnRate*60;
+    }
 
 }
 

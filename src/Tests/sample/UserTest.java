@@ -10,300 +10,350 @@ class UserTest {
 
     @Test
     void nullFirstnameConstruction() {
-        assertThrows(NullPointerException.class, () -> new User(null,
+        assertThrows(NullPointerException.class, () -> new User(
+                null,
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void emptyFirstnameConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void numbersFirstnameConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruc3",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruc3",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void specialCharactersFirstnameConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce!",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce!",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void nullSurnameConstruction() {
-        assertThrows(NullPointerException.class, () -> new User("Bruce",
+        assertThrows(NullPointerException.class, () -> new User(
+                "Bruce",
                 null,
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void emptySurnameConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void numbersSurnameConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "W4yne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void specialCharactersSurnameConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne?",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void nullSexConstruction() {
-        assertThrows(NullPointerException.class, () -> new User("Bruce",
+        assertThrows(NullPointerException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 null,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void nullDobConstruction() {
-        assertThrows(NullPointerException.class, () -> new User("Bruce",
+        assertThrows(NullPointerException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 null,
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void nullEmailConstruction() {
-        assertThrows(NullPointerException.class, () -> new User("Bruce",
+        assertThrows(NullPointerException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 null,
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void noDomainEmailConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void noServerEmailConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void noAtEmailConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbatgmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void noUserEmailConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void nullUsernameConstruction() {
-        assertThrows(NullPointerException.class, () -> new User("Bruce",
+        assertThrows(NullPointerException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                null));
+                null
+        ));
     }
 
     @Test
     void shortUsernameConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bway"));
+                "bway"
+        ));
     }
 
     @Test
     void longUsernameConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "brucewayneforever"));
+                "brucewayneforever"
+        ));
     }
 
     @Test
     void specialCharsUsernameConstruction() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998!"));
+                "bwayne1998!"
+        ));
     }
 
     @Test
     void zeroHeightConstructor() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 0,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void negativeHeightConstructor() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 -1,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void zeroWeightConstructor() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 0,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void negativeWeightConstructor() {
-        assertThrows(IllegalArgumentException.class, () -> new User("Bruce",
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 -1,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void successfulLongConstruction() {
-        assertDoesNotThrow(() -> new User("Bruce",
+        assertDoesNotThrow(() -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 180,
                 120,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
     void successfulShortConstruction() {
-        assertDoesNotThrow(() -> new User("Bruce",
+        assertDoesNotThrow(() -> new User(
+                "Bruce",
                 "Wayne",
                 User.Sex.MALE,
                 LocalDate.of(1998, 3, 9),
                 "manbat@gmail.com",
-                "bwayne1998"));
+                "bwayne1998"
+        ));
     }
 
     @Test
