@@ -25,6 +25,10 @@ import java.util.*;
 
 /**
  * Class to control the FXML document for Captcha Validation
+ *
+ * @author Evan Clayton
+ *
+ * @version 1.0
  */
 public class CaptchaHandler implements Initializable {
 
