@@ -17,6 +17,7 @@ import java.util.UUID;
 public class TokenHandler {
 
     /**
+     * Method for creating a unique token
      *
      * @return Returns a unique token for confirming a user has intentionally registered for the ProActive app
      */

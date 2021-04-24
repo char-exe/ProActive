@@ -85,6 +85,4 @@ public class ExerciseItem {
     public int calculateBurn() {
         return this.burnRate*60;
     }
-
 }
-

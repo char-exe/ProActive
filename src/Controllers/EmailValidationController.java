@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
@@ -21,10 +20,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+/**
+ * Class for controlling the email validation FXML document
+ *
+ * @author Owen Tasker
+ *
+ * @version 1.0
+ */
 public class EmailValidationController implements Initializable{
     @FXML public Label header;
     @FXML public Button submitButton;
@@ -39,6 +44,16 @@ public class EmailValidationController implements Initializable{
     private byte[] hash;
     private byte[] salt;
 
+    /**
+     * Pseudo constructor for FXML, allows for passing information between scenes
+     *
+     * @param user  Takes in the persistent user object, will be used to create a database object if validation is
+     *              successful
+     * @param initialToken The first validation email was sent prior to this scene opening, this takes in the token
+     *                     that was used for that purpose
+     * @param hash The password hash
+     * @param salt The password salt
+     */
     public void initData(User user, String initialToken, byte[] hash, byte[] salt){
         this.user = user;
         this.initialToken = initialToken;
@@ -46,11 +61,27 @@ public class EmailValidationController implements Initializable{
         this.salt = salt;
     }
 
+    /**
+     * Method for stuff to run after FXML elements are initialized, allows for events to be called as soon as this
+     * controller takes over, empty as required for initializable implementation which allows for the initData method
+     * to function correctly
+     *
+     * @param url Called via FXML resource
+     * @param resourceBundle Called via FXML resource
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
+    /**
+     * Method to handle the submit button action, after clicking the submit button, if the token matches the
+     * expected value, the application will create a user object in the database, close the current window and reopen
+     * the splash page.
+     *
+     * @throws SQLException throws an SQLException, this primarily occurs when a SQL query is incorrectly typed
+     * @throws IOException throws an IOException, this primarily occurs when a file is not recognized
+     */
     @FXML protected void pushSubmit() throws SQLException, IOException {
         String tokenFromUser = codeInputBox.getText();
         DatabaseHandler dh = DatabaseHandler.getInstance();
@@ -83,6 +114,9 @@ public class EmailValidationController implements Initializable{
         }
     }
 
+    /**
+     * Method to resend a verification email in the case of request or a failed verification
+     */
     @FXML protected void resendVerification(){
         DatabaseHandler dh = DatabaseHandler.getInstance();
         long time = System.currentTimeMillis()/1000;
@@ -98,7 +132,14 @@ public class EmailValidationController implements Initializable{
         eh.sendVerification(session, user.getEmail(), initialToken);
     }
 
-    public void escapeHome(ActionEvent actionEvent) throws IOException {
+    /**
+     * Method to cancel registration and send user back to the splash page
+     *
+     * @param actionEvent This refers to the button that will cause this method to be called
+     *
+     * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
+     */
+    @FXML protected void escapeHome(ActionEvent actionEvent) throws IOException {
         Stage parentScene = (Stage) homeButton.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();

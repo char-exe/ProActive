@@ -43,11 +43,22 @@ public class MainController implements Initializable {
 
     private Button lastUsedButton = new Button();
 
+    /**
+     * Method to be called once all FXML elements have been loaded, combined with initData acts as a pseudo-constructor
+     *
+     * @param url FXML defined parameter
+     * @param resourceBundle FXML defined parameter
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
+    /**
+     * Method to allow data to be passed into this scene from another
+     *
+     * @param user Takes in a user object
+     */
     public void initData(User user){
         this.user = user;
         try {
@@ -58,6 +69,11 @@ public class MainController implements Initializable {
         System.out.println(user);
     }
 
+    /**
+     * Method to manage the default scene that is loaded when the main FXML scene is opened
+     *
+     * @throws IOException Throws an IOException whenever there is a chance that a file can be missing
+     */
     @FXML
     private void homeScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -78,15 +94,23 @@ public class MainController implements Initializable {
         toggleButtonFocus(homeButton);
     }
 
-    @FXML
-    private void logActivityScreen() throws IOException {
+    /**
+     * Method to set the log activity scene to the main screen when called
+     *
+     * @throws IOException Throws an IOException whenever it is possible a file could be missing
+     */
+    @FXML private void logActivityScreen() throws IOException {
         VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/LogActivity.fxml"));
         main.setCenter(vBox);
         toggleButtonFocus(logActivityButton);
     }
 
-    @FXML
-    private void groupsScreen() throws IOException {
+    /**
+     * Method to set the group scene to the main screen when called
+     *
+     * @throws IOException Throws an IOException whenever it is possible a file could be missing
+     */
+    @FXML private void groupsScreen() throws IOException {
         VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/TODO.fxml"));
 
 //        ScrollPane scrollPane = new ScrollPane();
@@ -99,20 +123,34 @@ public class MainController implements Initializable {
         toggleButtonFocus(groupsButton);
     }
 
-    @FXML
-    private void goalsScreen() throws IOException {
+    /**
+     * Method to set the goals scene to the main screen when called
+     *
+     * @throws IOException Throws an IOException whenever it is possible a file could be missing
+     */
+    @FXML private void goalsScreen() throws IOException {
         VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/TODO.fxml"));
         main.setCenter(vBox);
         toggleButtonFocus(goalsButton);
     }
 
-    @FXML
-    private void manageProfileScreen() throws IOException {
+    /**
+     * Method to set the manage profile scene to the main screen when called
+     *
+     * @throws IOException Throws an IOException whenever it is possible a file could be missing
+     */
+    @FXML private void manageProfileScreen() throws IOException {
         VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/ManageProfilePage.fxml"));
         main.setCenter(vBox);
         toggleButtonFocus(manageProfileButton);
     }
 
+    /**
+     * Method to manage the sidebar of the main scene, this will modify button colours when a scene is selected and
+     * disallow buttons when they are active
+     *
+     * @param selectedButton Takes in a button object, this will allow for disabling/enabling
+     */
     private void toggleButtonFocus(Button selectedButton){
         lastUsedButton.setDisable(false);
 
@@ -129,6 +167,7 @@ public class MainController implements Initializable {
 
     }
 
+    //Not sure what this is for? - Owen
     public void logActivity(ActionEvent actionEvent) {
     }
 }

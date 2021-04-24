@@ -12,7 +12,7 @@ import java.time.Period;
  * @author Charlie Jones
  * @author Samuel Scarfe
  *
- * @version 1.4
+ * @version 1.5
  *
  * 1.0 - Initial user class structure and their variables.
  * 1.1 - Added constructor, getters and setters.
@@ -20,6 +20,7 @@ import java.time.Period;
  * 1.3 - Updated Javadoc.
  * 1.4 - Added methods to check constructor inputs and throw necessary exceptions. Updated setAge to throw
  *       an exception if the dob passed is in the future.
+ * 1.5 - Updated Javadoc.
  */
 public class User {
 
@@ -45,7 +46,6 @@ public class User {
     //private Set<Group> groupMemberships = new ArrayList();  To be added in sprint 2 group not a suitable name, object in Swing may be OK though
     private final String username;
 
-    //Constructors
     /**
      * Constructs a User object with all fields initialised.
      *
@@ -96,9 +96,8 @@ public class User {
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
 
-    //Getters
     /**
-     * Returns the user's firstname.
+     * Getter for firstname
      *
      * @return returns the User's firstname
      */
@@ -107,7 +106,7 @@ public class User {
     }
 
     /**
-     * Returns the User's surname.
+     * Getter for surname
      *
      * @return returns the User's surname
      */
@@ -116,7 +115,7 @@ public class User {
     }
 
     /**
-     * Returns the User's Age.
+     * Getter for age
      *
      * @return returns the User's age
      */
@@ -125,7 +124,7 @@ public class User {
     }
 
     /**
-     * Returns the User's sex as a String.
+     * Getter for sex
      *
      * @return returns the User's sex in String format
      */
@@ -134,7 +133,7 @@ public class User {
     }
 
     /**
-     * Returns the User's height.
+     * Getter for height
      *
      * @return returns the User's height
      */
@@ -143,7 +142,7 @@ public class User {
     }
 
     /**
-     * Returns the User's weight.
+     * Getter for weight
      *
      * @return returns the User's weight
      */
@@ -152,7 +151,7 @@ public class User {
     }
 
     /**
-     * Returns the User's date of birth.
+     * Getter for Date Of Birth
      *
      * @return returns the User's date of birth
      */
@@ -161,7 +160,7 @@ public class User {
     }
 
     /**
-     * Returns the User's email address.
+     * Getter for email address
      *
      * @return returns the User's email address
      */
@@ -170,7 +169,7 @@ public class User {
     }
 
     /**
-     * Returns the User's username.
+     * Getter for username
      *
      * @return returns the User's username
      */
@@ -179,15 +178,14 @@ public class User {
     }
 
     /**
-     * Returns the User's firstname then surname space separated.
+     * Method for getting the full name of a user based on their first and last name
      *
-     * @return returns the users real name, formed by concatenating the first and last name
+     * @return returns the users full name
      */
     public String getRealName(){
         return firstname + " " + surname;
     }
 
-    //Setters
     /**
      * Sets the User's firstname to the passed parameter.
      *
@@ -301,8 +299,8 @@ public class User {
      * @param email Stores the unique email address of the User
      * @param username Stores the unique username of the User
      */
-    private void checkConstructorInputs(String firstname, String surname, Sex sex, float height, float weight, LocalDate dob, String email,
-                                        String username) {
+    private void checkConstructorInputs(String firstname, String surname, Sex sex, float height, float weight,
+                                        LocalDate dob, String email, String username) {
         checkConstructorInputs(firstname, surname, sex, dob, email, username);
 
         if (height <= 0) {
@@ -323,7 +321,8 @@ public class User {
      * @param email Stores the unique email address of the User
      * @param username Stores the unique username of the User
      */
-    private void checkConstructorInputs(String firstname, String surname, Sex sex, LocalDate dob, String email, String username) {
+    private void checkConstructorInputs(String firstname, String surname, Sex sex, LocalDate dob, String email,
+                                        String username) {
         if (firstname == null) {
             throw new NullPointerException();
         }

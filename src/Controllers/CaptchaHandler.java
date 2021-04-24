@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
 import sample.DatabaseHandler;
 import sample.EmailHandler;
 import sample.TokenHandler;
@@ -20,9 +21,15 @@ import sample.User;
 import javax.mail.Session;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.*;
 
+/**
+ * Class to control the FXML document for Captcha Validation
+ *
+ * @author Evan Clayton
+ *
+ * @version 1.0
+ */
 public class CaptchaHandler implements Initializable {
 
     /* This initialises an array list of the sample captcha names.
@@ -45,12 +52,20 @@ public class CaptchaHandler implements Initializable {
     @FXML Button captchaSubmit;
     @FXML Button homeButton;
 
-    public String serveCaptcha() {
+    /**
+     * Method to randomly select a Captcha image and serve it to the user
+     *
+     * @return returns the String representation of the captcha
+     */
+    public String serveCaptcha(){
+
+        //Randomly select a captcha to serve
         int captchaIndex = generator.nextInt(captchaList.size());
         String captcha = captchaList.get(captchaIndex);
+
+        //Print the string representation of the captcha, for diagnostic purposes, will be removed in production
         System.out.println(captcha);
 
-        //displays captcha image
         File file = new File("src/Resources/CaptchaImages/" +captcha+".JPG");
 
         InputStream captchaFileStream = null;
@@ -60,24 +75,48 @@ public class CaptchaHandler implements Initializable {
             e.printStackTrace();
         }
         Image captchaImage = new Image(captchaFileStream);
+
+        //Set the captcha image
         captchaImageBox.setImage(captchaImage);
         return captcha;
     }
 
     //this is executed after the FXML elements are initialized and thus the image is served here
+
+    /**
+     * Method to run after FXML elements are initialized
+     *
+     * @param url Called via FXML resource
+     * @param resourceBundle Called via the FXML resource
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         captchaList.addAll(Arrays.asList(tempArray));
         captcha = serveCaptcha();
     }
 
+    /**
+     * Pseudo constructor, allows for passing information from one FXML scene to another
+     *
+     * @param user Takes in a user object, this is to be passed from scene to scene in this fashion
+     * @param hash Takes in the password hash
+     * @param salt Takes in the password salt
+     */
     public void initData(User user, byte[] hash, byte[] salt){
         this.user = user;
         this.hash = hash;
         this.salt = salt;
     }
 
-    //checks to see if user's input matches the captcha content and if so, pass to email validation
+    /**
+     * Method to validate whether user input matches the captcha, if it does, send a preliminary validation email,
+     * close the current scene and open the email validation scene
+     *
+     * @param actionEvent Takes in an event that causes this method to fire
+     *
+     * @throws IOException throws an exception if there is an input/output error, occurs primarily when a scene is
+     *                     not recognized
+     */
     public void validateCaptcha(ActionEvent actionEvent) throws IOException {
         //Instantiate Email and Database Handlers, will need email as the initial verification token will be sent from
         //this class at time of submission whereon forward it will be handled by the EmailValidationController
@@ -121,6 +160,14 @@ public class CaptchaHandler implements Initializable {
         }
     }
 
+    /**
+     * Method to take the user back to the splash page
+     *
+     * @param actionEvent Takes in an event that causes this method to fire
+     *
+     * @throws IOException throws an exception if there is an input/output error, occurs primarily when a scene is
+     *                     not recognized
+     */
     public void escapeHome(ActionEvent actionEvent) throws IOException {
         Stage parentScene = (Stage) homeButton.getScene().getWindow();
         Stage stage = new Stage();
