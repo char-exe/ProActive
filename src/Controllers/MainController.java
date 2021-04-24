@@ -66,7 +66,6 @@ public class MainController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(user);
     }
 
     /**

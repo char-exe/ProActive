@@ -96,7 +96,6 @@ public class SummaryController implements Initializable
 
     public void initData(User user) {
         this.user = user;
-        System.out.println(user);
     }
 
     /**
