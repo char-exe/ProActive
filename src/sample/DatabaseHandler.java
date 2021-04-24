@@ -575,7 +575,6 @@ public class DatabaseHandler
             e.printStackTrace();
         }
 
-        System.out.println(entries);
         return entries;
     }
 
@@ -617,7 +616,6 @@ public class DatabaseHandler
             e.printStackTrace();
         }
 
-        System.out.println(entries);
         return entries;
     }
 
@@ -660,7 +658,6 @@ public class DatabaseHandler
             e.printStackTrace();
         }
 
-        System.out.println(entries);
         return entries;
     }
 
@@ -695,7 +692,6 @@ public class DatabaseHandler
             e.printStackTrace();
         }
 
-        System.out.println(entries);
         return entries;
     }
 }
