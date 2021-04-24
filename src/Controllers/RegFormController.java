@@ -83,7 +83,7 @@ public class RegFormController implements Initializable {
             //end
 
             //Instantiate Database Handler
-            DatabaseHandler db = new DatabaseHandler();
+            DatabaseHandler db = DatabaseHandler.getInstance();
 
 
             //Read in all of the information from the registration form

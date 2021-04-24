@@ -81,7 +81,7 @@ public class CaptchaHandler implements Initializable {
     public void validateCaptcha(ActionEvent actionEvent) throws IOException {
         //Instantiate Email and Database Handlers, will need email as the initial verification token will be sent from
         //this class at time of submission whereon forward it will be handled by the EmailValidationController
-        DatabaseHandler db = new DatabaseHandler();
+        DatabaseHandler db = DatabaseHandler.getInstance();
         EmailHandler eh = EmailHandler.getInstance();
         Properties prop = eh.SetUpEmailHandler();
         Session session = eh.createSession(prop);

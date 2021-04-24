@@ -19,7 +19,7 @@ import java.util.Map;
  * @author Samuel Scarfe
  * @author Owen Tasker
  *
- * @version 1.6
+ * @version 1.7
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -47,9 +47,13 @@ import java.util.Map;
  *       for getting burn rate in calories per minute and calories burned data for user. Added method for getting
  *       weight entries for a user from the database.
  *
+ * 1.7 - Minor refactor to enforce the Singleton pattern.
+ *
  */
 public class DatabaseHandler
 {
+    private static final DatabaseHandler INSTANCE = new DatabaseHandler();
+    private static final String CONNECTION = "jdbc:sqlite:proactive.db";
 
     public enum dbTables{
         ACTIVITY, EXERCISE, FOOD, MEAL, USER, WEIGHT_ENTRY;
@@ -77,14 +81,23 @@ public class DatabaseHandler
     private Connection conn;
 
     /**
-     * Only accepted constructor for the database handler.
+     * Private default constructor. Enforces the Singleton pattern.
      */
-    public DatabaseHandler(){
+    private DatabaseHandler(){
         try{
-            conn = DriverManager.getConnection("jdbc:sqlite:proactive.db");
+            conn = DriverManager.getConnection(CONNECTION);
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    /**
+     * Static method to get the single DatabaseHandler instance.
+     *
+     * @return the DatabaseHandler instance.
+     */
+    public static DatabaseHandler getInstance() {
+        return INSTANCE;
     }
 
     /**

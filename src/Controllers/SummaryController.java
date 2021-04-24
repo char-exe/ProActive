@@ -157,7 +157,7 @@ public class SummaryController implements Initializable
         XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
 
         //Get data for each series from the database.
-        DatabaseHandler dh = new DatabaseHandler();
+        DatabaseHandler dh = DatabaseHandler.getInstance();
 
         HashMap<String, Integer> intakeData = dh.getIntakeEntries(user.getUsername());
         HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername());

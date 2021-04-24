@@ -53,7 +53,7 @@ public class EmailValidationController implements Initializable{
 
     @FXML protected void pushSubmit() throws SQLException, IOException {
         String tokenFromUser = codeInputBox.getText();
-        DatabaseHandler dh = new DatabaseHandler();
+        DatabaseHandler dh = DatabaseHandler.getInstance();
         long currentTime = System.currentTimeMillis()/1000;
         ResultSet res = dh.getTokenResult(tokenFromUser);
         if (res == null || currentTime > Long.parseLong(res.getString("timeDelay")) + 1800000){
@@ -84,7 +84,7 @@ public class EmailValidationController implements Initializable{
     }
 
     @FXML protected void resendVerification(){
-        DatabaseHandler dh = new DatabaseHandler();
+        DatabaseHandler dh = DatabaseHandler.getInstance();
         long time = System.currentTimeMillis()/1000;
         initialToken = TokenHandler.createUniqueToken(7);
 
