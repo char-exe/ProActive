@@ -35,9 +35,9 @@
                               </Label>
                               <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                                  <children>
-                                    <ComboBox prefHeight="35.0" prefWidth="150.0" promptText="Select exercise" HBox.hgrow="ALWAYS" />
-                                    <Spinner editable="true" prefHeight="35.0" prefWidth="75.0" />
-                                    <Button mnemonicParsing="false" prefHeight="35.0" text="Enter" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="exerciseComboBox" editable="true" prefHeight="35.0" prefWidth="150.0" promptText="Select exercise..." HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="exerciseMinutesField" prefHeight="34.0" prefWidth="66.0" promptText="Minutes..." />
+                                    <Button fx:id="exerciseSubmit" mnemonicParsing="false" onAction="#submitExercise" prefHeight="35.0" text="Enter" HBox.hgrow="ALWAYS" />
                                  </children>
                                  <padding>
                                     <Insets top="25.0" />
@@ -288,8 +288,8 @@
                                                                <children>
                                                                   <TableView fx:id="snackTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                                                      <columns>
-                                                                        <TableColumn prefWidth="222.0" text="Food" />
-                                                                        <TableColumn prefWidth="124.0" text="Calories" />
+                                                                        <TableColumn prefWidth="146.39996033906937" text="Food" />
+                                                                        <TableColumn prefWidth="199.99998474121094" text="Calories" />
                                                                      </columns>
                                                                   </TableView>
                                                                   <HBox alignment="CENTER" spacing="5.0">

@@ -99,7 +99,12 @@ public class MainController implements Initializable {
      * @throws IOException Throws an IOException whenever it is possible a file could be missing
      */
     @FXML private void logActivityScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/LogActivity.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/LogActivity.fxml"));
+        VBox vBox = loader.load();
+
+        LogActivityController logActivityController = loader.getController();
+        logActivityController.initData(user);
         main.setCenter(vBox);
         toggleButtonFocus(logActivityButton);
     }

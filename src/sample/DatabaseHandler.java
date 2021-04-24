@@ -4,6 +4,7 @@ import org.sqlite.core.DB;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -693,5 +694,78 @@ public class DatabaseHandler
         }
 
         return entries;
+    }
+
+    public ArrayList<String> getExerciseNames() {
+        ArrayList<String> exercises = new ArrayList<>();
+
+        String sql = "SELECT name FROM exercise";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                exercises.add(rs.getString("name"));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(exercises);
+        return exercises;
+    }
+
+    public ArrayList<String> getFoodNames() {
+        ArrayList<String> foods = new ArrayList<>();
+
+        String sql = "SELECT name FROM food";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                foods.add(rs.getString("name"));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return foods;
+    }
+
+    public int getExerciseId(String name)  {
+        String searchName = name + '%';
+        String sql = "SELECT id FROM exercise WHERE name LIKE '" + name + "'";
+        int exerciseId = -1;
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+
+            exerciseId = rs.getInt("id");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return exerciseId;
+    }
+
+    public void insertExercise(String username, String exercise, int duration) {
+
+        String sql = "INSERT INTO activity (exercise_id, user_id, duration, date_of)" +
+                "VALUES('" + getExerciseId(exercise)  + "', '" + getUserIDFromUsername(username) +
+                        "','" + duration + "','" + LocalDate.now().toString() + "')";
+
+        try {
+            Statement stmt  = conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -98,7 +98,6 @@ public class LoginPageController {
 
                 Scene homeScene = new Scene(homePageParent);
 
-
                 stage.setScene(homeScene);
 
                 main.initData(user);
