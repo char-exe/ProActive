@@ -36,6 +36,7 @@ public class LogActivityController implements Initializable {
     @FXML private ComboBox<String> exerciseComboBox;
     @FXML private TextField exerciseMinutesField;
     @FXML private TextField weightField;
+    @FXML private ChoiceBox<String> weightUnits;
     @FXML private DatePicker weightDateField;
 
     private DatabaseHandler dh;
@@ -68,6 +69,8 @@ public class LogActivityController implements Initializable {
         dh = DatabaseHandler.getInstance();
 
         exerciseComboBox.getItems().addAll(dh.getExerciseNames());
+        weightUnits.getItems().add("kg");
+        weightUnits.getItems().add("lbs");
         breakfastTable.setPlaceholder(new Label("Add food item or custom item"));
         lunchTable.setPlaceholder(new Label("Add food item or custom item"));
         dinnerTable.setPlaceholder(new Label("Add food item or custom item"));
@@ -104,6 +107,10 @@ public class LogActivityController implements Initializable {
     public void submitWeight(ActionEvent actionEvent) {
         float weight = Float.parseFloat(weightField.getText());
         LocalDate date = weightDateField.getValue();
+
+        if (weightUnits.getValue() == "lbs") {
+            weight = (float) (weight / 2.205);
+        }
 
         dh.insertWeightValue(user.getUsername(), weight, date);
     }
