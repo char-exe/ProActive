@@ -89,7 +89,7 @@ public class EmailValidationController implements Initializable{
         initialToken = TokenHandler.createUniqueToken(7);
 
 
-        EmailHandler eh = new EmailHandler();
+        EmailHandler eh = EmailHandler.getInstance();
         Properties prop = eh.SetUpEmailHandler();
         Session session = eh.createSession(prop);
 

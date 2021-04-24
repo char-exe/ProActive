@@ -18,17 +18,24 @@ import javax.mail.internet.*;
  * 1.2 - Added additional email methods as well as finished documenting all methods with Javadoc
  * 1.3 - Made email and password static final values, no longer passed as arguments. Removed getters for
  *       email and password.
+ * 1.4 - Minor refactor to enforce the Singleton pattern, thereby ensuring that only one instance is created and
+ *       that there is only one smtp connection.
  *
  */
 public class EmailHandler {
 
+    private static final EmailHandler INSTANCE = new EmailHandler();
     private static final String EMAIL = "proactivese13@gmail.com";
     private static final String PASS = "f45d09mFAcHr";
 
     /**
      * Create an EmailHandler object, this will store a sending email and the password
      */
-    public EmailHandler(){
+    private EmailHandler(){
+    }
+
+    public static EmailHandler getInstance() {
+        return INSTANCE;
     }
 
     /**
