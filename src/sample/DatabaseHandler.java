@@ -776,7 +776,6 @@ public class DatabaseHandler
      * @return the exercise_id.
      */
     public int getExerciseId(String name)  {
-        String searchName = name + '%';
         String sql = "SELECT id FROM exercise WHERE name LIKE '" + name + "'";
         int exerciseId = -1;
 
@@ -814,5 +813,53 @@ public class DatabaseHandler
             System.out.println(e.getMessage());
         }
         System.out.println("Added " + exercise + " to database for " + username);
+    }
+
+    /**
+     * Method to get an food_id for a food given by name.
+     *
+     * @param name the name of the food.
+     * @return the food_id.
+     */
+    public int getFoodId(String name)  {
+        String sql = "SELECT id FROM food WHERE name LIKE '" + name + "'";
+        int foodId = -1;
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+
+            foodId = rs.getInt("id");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return foodId;
+    }
+
+    /**
+     * Method to insert a meal entry into the meal table for a user.
+     *
+     * @param username the user's username.
+     * @param meal     the meal at which this food was consumed.
+     * @param food     the food consumed.
+     * @param quantity the quantity consumed.
+     * @param date     the date of consumption.
+     */
+    public void addFoodEntry(String username, String meal, String food, int quantity, LocalDate date) {
+
+        String sql = "INSERT INTO meal (meal_category, food_id, user_id, date_of, quantity)" +
+                     "VALUES('" + meal  + "', '" + getFoodId(food) + "','" + getUserIDFromUsername(username) +
+                     "','" + date.toString() + "','" + quantity + "')";
+
+        try {
+            Statement stmt  = conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Added " + food + " to database for " + username);
     }
 }
