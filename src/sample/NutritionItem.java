@@ -119,7 +119,6 @@ public class NutritionItem {
         return cholesterol;
     }
 
-
     private void checkConstructorInputs(String name, double kcal, double protein, double fat,
                                         double carbs, double sugar, double fibre, double cholesterol) {
         if (name == null) {
