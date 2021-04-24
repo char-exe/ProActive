@@ -29,11 +29,16 @@ public class EmailHandler {
     private static final String PASS = "f45d09mFAcHr";
 
     /**
-     * Create an EmailHandler object, this will store a sending email and the password
+     * Private default constructor. Enforces the Singleton pattern.
      */
     private EmailHandler(){
     }
 
+    /**
+     * Static method to get the single instance of EmailHandler.
+     *
+     * @return the EmailHandler instance.
+     */
     public static EmailHandler getInstance() {
         return INSTANCE;
     }
