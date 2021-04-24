@@ -20,7 +20,7 @@ import java.util.Map;
  * @author Samuel Scarfe
  * @author Owen Tasker
  *
- * @version 1.8
+ * @version 1.9
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -52,6 +52,7 @@ import java.util.Map;
  *
  * 1.8 - Added Javadoc for outstanding methods
  *
+ * 1.9 - Added methods to assist with activity logging.
  */
 public class DatabaseHandler
 {
@@ -306,8 +307,29 @@ public class DatabaseHandler
      *               LocalDate.now()
      */
     public void insertWeightValue(int userID, float weight, LocalDate date){
-        String sql = "INSERT INTO weight_entry (user_id, weight, date)" +
-                     "VALUES('" + userID + "', '" + weight + "','" + date.toString() + "')";
+        String sql = "INSERT INTO weight_entry (user_id, weight, date_of)" +
+                "VALUES('" + userID + "', '" + weight + "','" + date.toString() + "')";
+
+        try {
+            Statement stmt  = conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Method to insert a weight value into the weight_entry database table
+     *
+     * @param username The user's username.
+     * @param weight   Takes in the current weight of the user in kg
+     * @param date     Takes in the time in which the user wants to set this date to.
+     */
+    public void insertWeightValue(String username, float weight, LocalDate date){
+        String sql = "INSERT INTO weight_entry (user_id, weight, date_of)" +
+                "VALUES('" + getUserIDFromUsername(username) + "', '" + weight + "','" + date.toString() + "')";
 
         try {
             Statement stmt  = conn.createStatement();
@@ -318,6 +340,7 @@ public class DatabaseHandler
             System.out.println(e.getMessage());
         }
 
+        System.out.println("Weight entry added for " + username);
     }
 
     /**
@@ -696,6 +719,11 @@ public class DatabaseHandler
         return entries;
     }
 
+    /**
+     * Method to get a list of all exercise names in the database.
+     *
+     * @return an ArrayList containing every exercise name as a String.
+     */
     public ArrayList<String> getExerciseNames() {
         ArrayList<String> exercises = new ArrayList<>();
 
@@ -716,6 +744,11 @@ public class DatabaseHandler
         return exercises;
     }
 
+    /**
+     * A method to get a list of all food names in the database.
+     *
+     * @return an ArrayList containing every food name as a String.
+     */
     public ArrayList<String> getFoodNames() {
         ArrayList<String> foods = new ArrayList<>();
 
@@ -736,6 +769,12 @@ public class DatabaseHandler
         return foods;
     }
 
+    /**
+     * Method to get an exercise_id for an exercise given by name.
+     *
+     * @param name the name of the exercise.
+     * @return the exercise_id.
+     */
     public int getExerciseId(String name)  {
         String searchName = name + '%';
         String sql = "SELECT id FROM exercise WHERE name LIKE '" + name + "'";
@@ -753,6 +792,13 @@ public class DatabaseHandler
         return exerciseId;
     }
 
+    /**
+     * Method to insert an exercise entry for a user into the activity table.
+     *
+     * @param username the user's username.
+     * @param exercise the exercise undertaken.
+     * @param duration the duration undertaken for.
+     */
     public void insertExercise(String username, String exercise, int duration) {
 
         String sql = "INSERT INTO activity (exercise_id, user_id, duration, date_of)" +
@@ -767,5 +813,6 @@ public class DatabaseHandler
         {
             System.out.println(e.getMessage());
         }
+        System.out.println("Added " + exercise + " to database for " + username);
     }
 }

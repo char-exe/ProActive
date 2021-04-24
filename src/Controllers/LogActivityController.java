@@ -11,7 +11,21 @@ import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+
+/**
+ * A controller for the activity logging page of the app.
+ *
+ * @author Evan Clayton?
+ * @author Samuel Scarfe
+ *
+ * @version 1.2
+ *
+ * 1.0 - Initial commit, dummy file.
+ * 1.1 - Implemented simple exercise logging to database.
+ * 1.2 - Implemented simple weight logging to database.
+ */
 
 public class LogActivityController implements Initializable {
 
@@ -21,7 +35,8 @@ public class LogActivityController implements Initializable {
     @FXML private TableView snackTable;
     @FXML private ComboBox<String> exerciseComboBox;
     @FXML private TextField exerciseMinutesField;
-    @FXML private Button exerciseSubmit;
+    @FXML private TextField weightField;
+    @FXML private DatePicker weightDateField;
 
     private DatabaseHandler dh;
     private User user;
@@ -36,6 +51,16 @@ public class LogActivityController implements Initializable {
                                 String newValue) {
                 if (!newValue.matches("\\d*")) {
                     exerciseMinutesField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
+        weightField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    weightField.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             }
         });
@@ -59,10 +84,27 @@ public class LogActivityController implements Initializable {
         this.user = user;
     }
 
+    /**
+     * Method for submitting an exercise entry from the app to the database.
+     *
+     * @param actionEvent a mouseclick event on the submit button.
+     */
     public void submitExercise(ActionEvent actionEvent) {
         String exercise = exerciseComboBox.getValue();
         int minutes = Integer.parseInt(exerciseMinutesField.getText());
 
         dh.insertExercise(user.getUsername(), exercise, minutes);
+    }
+
+    /**
+     * Method for submitting a weight entry from the app to the database.
+     *
+     * @param actionEvent a mouseclick event on the submit button.
+     */
+    public void submitWeight(ActionEvent actionEvent) {
+        float weight = Float.parseFloat(weightField.getText());
+        LocalDate date = weightDateField.getValue();
+
+        dh.insertWeightValue(user.getUsername(), weight, date);
     }
 }

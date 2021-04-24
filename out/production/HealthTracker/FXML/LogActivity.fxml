@@ -76,12 +76,12 @@
                                  </padding>
                               </HBox>
                               <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
-                                 <children>
-                                    <Spinner editable="true" prefHeight="50.0" prefWidth="100.0" />
-                                 </children>
                                  <padding>
                                     <Insets top="25.0" />
                                  </padding>
+                                 <children>
+                                    <TextField fx:id="weightField" prefHeight="50.0" prefWidth="95.0" promptText="New weight..." />
+                                 </children>
                               </HBox>
                               <Label layoutX="295.0" layoutY="10.0" text="Entry date">
                                  <font>
@@ -96,12 +96,10 @@
                                     <Insets top="25.0" />
                                  </padding>
                                  <children>
-                                    <ComboBox prefHeight="35.0" prefWidth="75.0" promptText="*day*" />
-                                    <ComboBox layoutX="323.0" layoutY="35.0" prefHeight="35.0" prefWidth="150.0" promptText="*month*" />
-                                    <ComboBox layoutX="370.0" layoutY="35.0" prefHeight="35.0" prefWidth="100.0" promptText="*year*" />
+                                    <DatePicker fx:id="weightDateField" prefHeight="39.0" prefWidth="174.0" />
                                  </children>
                               </HBox>
-                              <Button mnemonicParsing="false" text="Submit" VBox.vgrow="ALWAYS">
+                              <Button mnemonicParsing="false" onAction="#submitWeight" text="Submit" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
