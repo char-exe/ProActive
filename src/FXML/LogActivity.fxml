@@ -43,24 +43,6 @@
                                     <Insets top="25.0" />
                                  </padding>
                               </HBox>
-                              <Label layoutX="295.0" layoutY="10.0" text="Log custom exercise">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                                 <padding>
-                                    <Insets top="25.0" />
-                                 </padding>
-                              </Label>
-                              <HBox alignment="TOP_CENTER" layoutX="10.0" layoutY="70.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
-                                 <children>
-                                    <TextField prefHeight="35.0" prefWidth="150.0" promptText="Exercise name..." />
-                                    <Spinner editable="true" prefHeight="35.0" prefWidth="75.0" />
-                                    <Button mnemonicParsing="false" prefHeight="35.0" text="Enter" HBox.hgrow="ALWAYS" />
-                                 </children>
-                                 <padding>
-                                    <Insets top="25.0" />
-                                 </padding>
-                              </HBox>
                            </children>
                         </VBox>
                      </center>
