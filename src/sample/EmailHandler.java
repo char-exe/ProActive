@@ -9,46 +9,26 @@ import javax.mail.internet.*;
  *  A class to allow for the emailing of codes and other information to users of the ProActive app
  *
  * @author Owen Tasker
+ * @author Samuel Scarfe
  *
- * @version 1.2
+ * @version 1.3
  *
  * 1.0 - Initial EmailHandler class.
  * 1.1 - Added Object oriented functionality and Javadoc comments.
  * 1.2 - Added additional email methods as well as finished documenting all methods with Javadoc
+ * 1.3 - Made email and password static final values, no longer passed as arguments. Removed getters for
+ *       email and password.
  *
  */
 public class EmailHandler {
 
-    private final String email;
-    private final String pass;
+    private static final String EMAIL = "proactivese13@gmail.com";
+    private static final String PASS = "f45d09mFAcHr";
 
     /**
      * Create an EmailHandler object, this will store a sending email and the password
-     *
-     * @param email Email Address that will be used to send from
-     * @param pass  Password of the aforementioned email address
      */
-    public EmailHandler(String email, String pass){
-        this.email = email;
-        this.pass = pass;
-    }
-
-    /**
-     * Email accessor method
-     *
-     * @return Returns the Users email field
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * Pass accessor method
-     *
-     * @return Returns the Users password field
-     */
-    public String getPass() {
-        return pass;
+    public EmailHandler(){
     }
 
     /**
@@ -78,14 +58,12 @@ public class EmailHandler {
      * @return returns a Session object, this is a persistent object required in all mail sending methods
      */
     public Session createSession(Properties prop){
-        String email = this.getEmail();
-        String pass = this.getPass();
 
         //Create a session to send this email
         return Session.getInstance(prop,
                 new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(email, pass);
+                        return new PasswordAuthentication(EMAIL, PASS);
                     }
                 });
     }
@@ -102,7 +80,7 @@ public class EmailHandler {
         //Send Verification Email
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(email));
+            message.setFrom(new InternetAddress(EMAIL));
             System.out.println(to);
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject("Thank you for creating an account with ProActive");
@@ -158,7 +136,7 @@ public class EmailHandler {
         //Send an email as an invite to join a goal
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(email));
+            message.setFrom(new InternetAddress(EMAIL));
             System.out.println(to);
             message.setRecipients(
                     Message.RecipientType.TO,
@@ -189,7 +167,7 @@ public class EmailHandler {
         //Send an email as an invite to join a goal
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(email));
+            message.setFrom(new InternetAddress(EMAIL));
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(to)
@@ -209,7 +187,7 @@ public class EmailHandler {
     public static void main(String[] args) {
         //General account for use with this application, dont worry about non-secure password as is ultimately
         //a throwaway account
-        EmailHandler email = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
+        EmailHandler email = new EmailHandler();
 
         //Configure system to send emails, need to run this at start of each session
         Properties prop = email.SetUpEmailHandler();

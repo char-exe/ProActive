@@ -82,7 +82,7 @@ public class CaptchaHandler implements Initializable {
         //Instantiate Email and Database Handlers, will need email as the initial verification token will be sent from
         //this class at time of submission whereon forward it will be handled by the EmailValidationController
         DatabaseHandler db = new DatabaseHandler();
-        EmailHandler eh = new EmailHandler("proactivese13@gmail.com", "f45d09mFAcHr");
+        EmailHandler eh = new EmailHandler();
         Properties prop = eh.SetUpEmailHandler();
         Session session = eh.createSession(prop);
 
