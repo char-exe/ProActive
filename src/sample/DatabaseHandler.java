@@ -484,20 +484,13 @@ public class DatabaseHandler
      * @param valToUpdateTo This specifies the value that this method will use to overwrite existing data with
      * @param username This specifies the username that will make up the 'WHERE' clause of the SQL Statement
      */
-    public void editValue(String table, String column, String valToUpdateTo, String username){
-    String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
-                 " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
-                 " WHERE username = '" + username + "'";
+    public void editValue(String table, String column, String valToUpdateTo, String username) throws SQLException {
+        String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
+                     " SET " + column.toUpperCase(Locale.ROOT) + " = '" + valToUpdateTo +
+                     "' WHERE username = '" + username + "'";
 
-        try {
-            Statement stmt  = this.conn.createStatement();
-            stmt.executeUpdate(sql);
-        }
-        catch (SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-
+        Statement stmt  = this.conn.createStatement();
+        stmt.executeUpdate(sql);
     //TODO error handling
     }
 
@@ -510,19 +503,14 @@ public class DatabaseHandler
      * @param valToUpdateTo This specifies the value that this method will use to overwrite existing data with
      * @param username This specifies the username that will make up the 'WHERE' clause of the SQL Statement
      */
-    public void editValue(String table, String column, int valToUpdateTo, String username){
+    public void editValue(String table, String column, int valToUpdateTo, String username) throws SQLException {
         String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
                      " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
                      " WHERE username = '" + username + "'";
 
-        try {
             Statement stmt  = this.conn.createStatement();
             stmt.executeUpdate(sql);
-        }
-        catch (SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
+
     }
 
     /**
@@ -532,10 +520,9 @@ public class DatabaseHandler
      *
      * @return returns a complete user object for use as a persistent user throughout application
      */
-    public User createUserObjectFromUsername(String username){
-        //TODO modify so that only the specific information is pulled from the table - High Priority
-        //TODO remove try/catch block and instead throw as exception
-        String sql = "SELECT * FROM user WHERE username = '" + username + "'";
+    public User createUserObjectFromUsername(String username) throws SQLException {
+        String sql = "SELECT first_name, last_name, sex, dob, email, username " +
+                "FROM user WHERE username = '" + username + "'";
 
         User user = null;
 
@@ -549,10 +536,6 @@ public class DatabaseHandler
                     rs.getString("email"),
                     rs.getString("username")
             );
-        }
-        catch (SQLException e)
-        {
-            System.out.println("Could Not Find User");
         }
 
         return user;

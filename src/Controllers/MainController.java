@@ -143,7 +143,13 @@ public class MainController implements Initializable {
      * @throws IOException Throws an IOException whenever it is possible a file could be missing
      */
     @FXML private void manageProfileScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/ManageProfilePage.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        //loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
+        loader.setLocation(getClass().getResource("/FXML/ManageProfilePage.fxml"));
+        VBox vBox = loader.load();
+
+        ManageProfilePageController mppc = loader.getController();
+        mppc.initData(user);
         main.setCenter(vBox);
         toggleButtonFocus(manageProfileButton);
     }

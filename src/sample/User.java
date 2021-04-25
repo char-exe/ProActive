@@ -41,7 +41,7 @@ public class User {
     private Sex sex;
     private float height;  //Changed from int on class description storing in CM
     private float weight;  //Changed from int on class description storing in KG
-    private final LocalDate dob;
+    private LocalDate dob;
     private final String email;
     //private Set<Group> groupMemberships = new ArrayList();  To be added in sprint 2 group not a suitable name, object in Swing may be OK though
     private final String username;
@@ -253,6 +253,16 @@ public class User {
         }
 
         this.weight = weight;
+    }
+
+    /**
+     * Sets the User's dob to the passed parameter.
+     *
+     * @param dob the user's new date of birth.
+     */
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+        this.setAge();
     }
 
     /**

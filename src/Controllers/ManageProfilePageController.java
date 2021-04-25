@@ -1,17 +1,16 @@
 package Controllers;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import sample.DatabaseHandler;
 import sample.User;
 
-import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -20,17 +19,25 @@ import java.util.ResourceBundle;
  * Class to control the Manage Profile Page FXML file
  *
  * @author Owen Tasker
+ * @author Samuel Scarfe
  *
- * @version 1.0
+ * @version 1.1
+ *
+ * 1.0 - Initial commit
+ * 1.1 - Connected to database, added simple error checking.
  */
 public class ManageProfilePageController implements Initializable {
 
     private User user;
+    private DatabaseHandler dh;
 
-    @FXML public ChoiceBox sexCombo;
+    @FXML public ChoiceBox<String> sexCombo;
     @FXML public DatePicker datePick;
-    @FXML public TextArea heightField;
-    @FXML public Button submitButton;
+    @FXML public TextField heightField;
+    @FXML public ChoiceBox<String> heightUnits;
+    @FXML public Label dobLabel;
+    @FXML public Label heightLabel;
+    @FXML public Label sexLabel;
 
     /**
      * Pseudo-constructor for controllers, runs after FXML elements have been loaded in and as such allows for
@@ -41,8 +48,24 @@ public class ManageProfilePageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        dh = DatabaseHandler.getInstance();
+
         sexCombo.getItems().removeAll(sexCombo.getItems());
         sexCombo.getItems().addAll("Male", "Female", "Other");
+        heightUnits.getItems().removeAll(heightUnits.getItems());
+        heightUnits.getItems().addAll("cm", "inches");
+
+        //Set heightField to digits only
+        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+        heightField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    heightField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
     }
 
     /**
@@ -52,47 +75,130 @@ public class ManageProfilePageController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
+        System.out.println(user);
     }
 
     /**
      * Method that handles the submit button action, checks to see which values have been modified, then performs
      * update operations directly on the database user object
      *
-     * @param event Takes in the event that causes this method to be called
-     * @throws IOException Throws an IOException whenever there is a chance for a file to be missing
+     * @param actionEvent Takes in the event that causes this method to be called
      */
-    //TODO link to the submit button in the FXML document
-    @FXML public void submitButtonAction(ActionEvent event) throws IOException {
+    public void submitButtonAction(ActionEvent actionEvent) {
         System.out.println("submitButton");
-        DatabaseHandler dbh = DatabaseHandler.getInstance();
+        sexLabel.setText("");
+        dobLabel.setText("");
+        heightLabel.setText("");
 
         //Take in the value provided by the datepicker
         LocalDate date = datePick.getValue();
-        if (date != null) {
-            //TODO add some error checking here to make sure that the date is not past the current day and if it is,
-            // before making a database request, show an error to the user and prompt a change
-            dbh.editValue("user", "dob", date.toString(), user.getUsername());
+
+        //Try to update database then user. Show appropriate success/fail message to user.
+        if (checkDob(date)){
+            try {
+                dh.editValue("user", "dob", date.toString(), user.getUsername());
+                user.setDob(date);
+                dobLabel.setText("Date of Birth updated to " + date.toString());
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                dobLabel.setText("Date of Birth update failed");
+            }
         }
 
         //Take in the value provided to height value
-        //TODO Ensure that only numbers can be inputted, TextFormatter seems to be the solution to this
         String updatedHeight = heightField.getText();
-        if (updatedHeight != null) {
-            dbh.editValue("user", "height", Integer.parseInt(updatedHeight), user.getUsername());
+        String heightUnit = heightUnits.getValue();
+
+        //Check inputs
+        if (checkHeightFields(updatedHeight, heightUnit)) {
+            float heightValue = Float.parseFloat(updatedHeight);
+
+            //Convert units and prepare string for printing
+            if (heightUnit.equals("inches")) {
+                heightValue = (float) (heightValue * 2.5);
+                heightUnit = " " + heightUnit;
+            }
+
+            //Try to update database then user. Show appropriate success/fail message to user.
+            try {
+                dh.editValue("user", "height", Integer.parseInt(updatedHeight), user.getUsername());
+                user.setHeight(heightValue);
+                heightLabel.setText("Height updated to " + updatedHeight + heightUnit);
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                heightLabel.setText("Height update failed");
+            }
         }
 
         //Takes in the value provided by sexCombo
-        Enum<User.Sex> userSex;
-        try {
-            userSex = User.Sex.valueOf(sexCombo.getValue().toString().toUpperCase(Locale.ROOT));
-        } catch (EnumConstantNotPresentException e1) {
-            userSex = null;
+        String sex = sexCombo.getValue();
+
+        if (sex != null) {
+            User.Sex userSex = User.Sex.valueOf(sex.toUpperCase(Locale.ROOT));
+
+            //Try to update database then user. Show appropriate success/fail message to user.
+            try {
+                dh.editValue("user", "sex", userSex.toString(), user.getUsername());
+                user.setSex(userSex);
+                sexLabel.setText("Sex updated to " + userSex.toString());
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                sexLabel.setText("Sex update failed");
+            }
         }
-        if (userSex != null) {
-            dbh.editValue("user", "sex", userSex.toString(), user.getUsername());
+    }
+
+    /**
+     * Private helper method to check values in the dob field.
+     *
+     * @param dob the user's new date of birth.
+     * @return a boolean value representing whether the inputted values are suitable
+     */
+    private boolean checkDob(LocalDate dob) {
+        if (dob == null) { //Dob not entered, no action needed
+            return false;
+        }
+        else if (dob.isAfter(LocalDate.now())) { //Future date
+            dobLabel.setText("Date of Birth cannot be in the future");
+            return false;
         }
 
+        return true;
+    }
 
+    /**
+     * Private helper method for checking the height input fields.
+     *
+     * @param heightText the user's new height.
+     * @param heightUnits the user's chosen units for height.
+     * @return a boolean value representing whether the inputted values are suitable.
+     */
+    private boolean checkHeightFields(String heightText, String heightUnits)
+    {
+        //Both null, no action needed.
+        if ((heightText == null || heightText.equals("")) && (heightUnits == null || heightUnits.equals(""))) {
+            return false;
+        }
+        //Units selected but height not filled
+        else if (heightText == null || heightText.equals("")) {
+            heightLabel.setText("Please input height");
+            return false;
+        }
+        //Height input as 0
+        else if (Integer.parseInt(heightText) == 0) {
+            heightLabel.setText("Height cannot be 0");
+            return false;
+        }
+        //Height input correctly but units not selected
+        else if (heightUnits == null || heightUnits.equals("")) {
+            heightLabel.setText("Please select units");
+            return false;
+        }
+
+        return true;
     }
 }
 
