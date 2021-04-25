@@ -565,13 +565,13 @@ public class DatabaseHandler
      * @param username The user's username.
      * @return A Map of String representation of a date against calories intaken.
      */
-    public HashMap<String, Integer> getIntakeEntries(String username)
+    public HashMap<String, Double> getIntakeEntries(String username)
     {
-        HashMap<String, Integer> entries = new HashMap<>();
+        HashMap<String, Double> entries = new HashMap<>();
         LocalDate today = LocalDate.now();
         LocalDate lastWeek = today.minusDays(6);
 
-        String sql = "SELECT date_of, quantity FROM meal WHERE user_id = '" + getUserIDFromUsername(username) + "' " +
+        String sql = "SELECT date_of, quantity, food_id FROM meal WHERE user_id = '" + getUserIDFromUsername(username) + "' " +
                      "AND date_of BETWEEN '" + lastWeek.toString() + "' AND '" + today.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
@@ -580,13 +580,15 @@ public class DatabaseHandler
             while (rs.next())
             {
                 String date = rs.getString("date_of");
+                int quantity = rs.getInt("quantity");
+                int foodId = rs.getInt("food_id");
                 if (entries.containsKey(date))
                 {
-                    entries.put(date, entries.get(date) + rs.getInt("quantity"));
+                    entries.put(date, entries.get(date) + (quantity * getKcal(foodId))/100);
                 }
                 else
                 {
-                    entries.put(date, rs.getInt("quantity"));
+                    entries.put(date, (quantity * getKcal(foodId))/100);
                 }
             }
         }
@@ -856,6 +858,27 @@ public class DatabaseHandler
      */
     public double getKcal(String foodName) {
         String sql = "SELECT kcal FROM food WHERE name LIKE '" + foodName + "'";
+        double kcal = -1;
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+
+            kcal = rs.getDouble("kcal");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return kcal;
+    }
+
+    /**
+     * Method to get the kcal value for a food item
+     * @param foodId the food item requested
+     * @return the kcal value for the food item
+     */
+    public double getKcal(int foodId) {
+        String sql = "SELECT kcal FROM food WHERE id = '" + foodId + "'";
         double kcal = -1;
 
         try (Statement stmt  = this.conn.createStatement();

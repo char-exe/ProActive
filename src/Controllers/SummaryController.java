@@ -158,7 +158,7 @@ public class SummaryController implements Initializable
         //Get data for each series from the database.
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        HashMap<String, Integer> intakeData = dh.getIntakeEntries(user.getUsername());
+        HashMap<String, Double> intakeData = dh.getIntakeEntries(user.getUsername());
         HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername());
         HashMap<String, Float> burnedData = dh.getBurnedEntries(user.getUsername());
         HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername());
