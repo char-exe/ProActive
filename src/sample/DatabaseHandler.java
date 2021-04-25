@@ -848,4 +848,20 @@ public class DatabaseHandler
         stmt.executeUpdate(sql);
         System.out.println("Added " + food + " to database for " + username);
     }
+
+    public double getKcal(String foodName) {
+        String sql = "SELECT kcal FROM food WHERE name LIKE '" + foodName + "'";
+        double kcal = -1;
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+
+            kcal = rs.getDouble("kcal");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return kcal;
+    }
 }

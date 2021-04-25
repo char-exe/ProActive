@@ -167,8 +167,8 @@
                                                                <children>
                                                                   <TableView fx:id="breakfastTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                                                     <columns>
-                                                                      <TableColumn prefWidth="144.40002137422562" text="Food" />
-                                                                      <TableColumn prefWidth="201.99998474121094" text="Calories" />
+                                                                      <TableColumn fx:id="breakfastFoodColumn" prefWidth="144.40002137422562" text="Food" />
+                                                                      <TableColumn fx:id="breakfastCaloriesColumn" prefWidth="201.99998474121094" text="Calories" />
                                                                     </columns>
                                                                   </TableView>
                                                                   <Label text="To delete food entry: select item and press DEL key" textFill="#ffb247">
@@ -198,8 +198,8 @@
                                                                <children>
                                                                   <TableView fx:id="lunchTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                                                      <columns>
-                                                                        <TableColumn prefWidth="150.40002137422562" text="Food" />
-                                                                        <TableColumn prefWidth="195.99998474121094" text="Calories" />
+                                                                        <TableColumn fx:id="lunchFoodColumn" prefWidth="150.40002137422562" text="Food" />
+                                                                        <TableColumn fx:id="lunchCaloriesColumn" prefWidth="195.99998474121094" text="Calories" />
                                                                      </columns>
                                                                   </TableView>
                                                                   <HBox alignment="CENTER" spacing="5.0" />
@@ -222,8 +222,8 @@
                                                                <children>
                                                                   <TableView fx:id="dinnerTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                                                      <columns>
-                                                                        <TableColumn prefWidth="148.59997254610062" text="Food" />
-                                                                        <TableColumn prefWidth="199.40000915527344" text="Calories" />
+                                                                        <TableColumn fx:id="dinnerFoodColumn" prefWidth="148.59997254610062" text="Food" />
+                                                                        <TableColumn fx:id="dinnerCaloriesColumn" prefWidth="199.40000915527344" text="Calories" />
                                                                      </columns>
                                                                   </TableView>
                                                                   <HBox alignment="CENTER" spacing="5.0" />
@@ -246,8 +246,8 @@
                                                                <children>
                                                                   <TableView fx:id="snackTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                                                      <columns>
-                                                                        <TableColumn prefWidth="146.39996033906937" text="Food" />
-                                                                        <TableColumn prefWidth="199.99998474121094" text="Calories" />
+                                                                        <TableColumn fx:id="snacksFoodColumn" prefWidth="146.39996033906937" text="Food" />
+                                                                        <TableColumn fx:id="snacksCaloriesColumn" prefWidth="199.99998474121094" text="Calories" />
                                                                      </columns>
                                                                   </TableView>
                                                                   <HBox alignment="CENTER" spacing="5.0" />

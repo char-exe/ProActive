@@ -1,11 +1,16 @@
 package Controllers;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import sample.DatabaseHandler;
 import sample.User;
 
@@ -23,32 +28,30 @@ import java.util.ResourceBundle;
  * @author Evan Clayton?
  * @author Samuel Scarfe
  *
- * @version 1.2
+ * @version 1.5
  *
  * 1.0 - Initial commit, dummy file.
  * 1.1 - Implemented simple exercise logging to database.
  * 1.2 - Implemented simple weight logging to database.
  * 1.3 - Implemented simple food logging to database.
  * 1.4 - Implemented value checking for logging, preventing null values and future dates.
+ * 1.5 - Implemented table view for added foods. General commenting
  */
-
 public class LogActivityController implements Initializable {
 
-    @FXML private TableView breakfastTable;
-    @FXML private TableView lunchTable;
-    @FXML private TableView dinnerTable;
-    @FXML private TableView snackTable;
-
+    //Exercise tab fields
     @FXML private ComboBox<String> exerciseComboBox;
     @FXML private TextField exerciseMinutesField;
     @FXML private Label exercisePopUp;
 
+    //Weight tab fields
     @FXML private TextField weightField;
     @FXML private ChoiceBox<String> weightUnits;
     @FXML private DatePicker weightDateField;
     @FXML private Label weightFieldsLabel;
     @FXML private Label weightDateLabel;
 
+    //Food tab fields
     @FXML private ComboBox<String> mealSelect;
     @FXML private ComboBox<String> foodComboBox;
     @FXML private TextField foodQuantity;
@@ -56,17 +59,33 @@ public class LogActivityController implements Initializable {
     @FXML private Label foodFieldsLabel;
     @FXML private Label foodDateLabel;
 
+    //Food tab tables
+    @FXML private TableView<TableRow> breakfastTable;
+    @FXML private TableView<TableRow> lunchTable;
+    @FXML private TableView<TableRow> dinnerTable;
+    @FXML private TableView<TableRow> snackTable;
+    @FXML private TableColumn<TableRow, String> breakfastFoodColumn;
+    @FXML private TableColumn<TableRow, Double> breakfastCaloriesColumn;
+    @FXML private TableColumn<TableRow, String> lunchFoodColumn;
+    @FXML private TableColumn<TableRow, Double> lunchCaloriesColumn;
+    @FXML private TableColumn<TableRow, String> dinnerFoodColumn;
+    @FXML private TableColumn<TableRow, Double> dinnerCaloriesColumn;
+    @FXML private TableColumn<TableRow, String> snacksFoodColumn;
+    @FXML private TableColumn<TableRow, Double> snacksCaloriesColumn;
 
-    private DatabaseHandler dh;
-    private User user;
+    //Meal maps
     private HashMap<String, Integer> breakfast;
     private HashMap<String, Integer> lunch;
     private HashMap<String, Integer> snack;
     private HashMap<String, Integer> dinner;
 
+    private DatabaseHandler dh;
+    private User user;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        //Set exerciseMinutesField to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         exerciseMinutesField.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -78,6 +97,8 @@ public class LogActivityController implements Initializable {
             }
         });
 
+        //Set weightField to digits only
+        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         weightField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -88,6 +109,8 @@ public class LogActivityController implements Initializable {
             }
         });
 
+        //Set foodQuantity to digits only
+        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         foodQuantity.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -98,23 +121,36 @@ public class LogActivityController implements Initializable {
             }
         });
 
+        //Get DatabaseHandler instance
         dh = DatabaseHandler.getInstance();
 
+        //Instantiate meal maps
         breakfast = new HashMap<>();
         lunch = new HashMap<>();
         snack = new HashMap<>();
         dinner = new HashMap<>();
 
+        //Instantiate dropdowns
         exerciseComboBox.getItems().addAll(dh.getExerciseNames());
-        weightUnits.getItems().add("kg");
-        weightUnits.getItems().add("lbs");
+        weightUnits.getItems().addAll("kg", "lbs");
         mealSelect.getItems().addAll("Breakfast", "Lunch", "Dinner", "Snacks");
         foodComboBox.getItems().addAll(dh.getFoodNames());
+
+        //Instantiate table placeholder texts
         breakfastTable.setPlaceholder(new Label("Add food item or custom item"));
         lunchTable.setPlaceholder(new Label("Add food item or custom item"));
         dinnerTable.setPlaceholder(new Label("Add food item or custom item"));
         snackTable.setPlaceholder(new Label("Add food item or custom item"));
 
+        //Instantiate table columns
+        breakfastFoodColumn.setCellValueFactory(new PropertyValueFactory<>("FoodName"));
+        breakfastCaloriesColumn.setCellValueFactory(new PropertyValueFactory<>("Calories"));
+        lunchFoodColumn.setCellValueFactory(new PropertyValueFactory<>("FoodName"));
+        lunchCaloriesColumn.setCellValueFactory(new PropertyValueFactory<>("Calories"));
+        dinnerFoodColumn.setCellValueFactory(new PropertyValueFactory<>("FoodName"));
+        dinnerCaloriesColumn.setCellValueFactory(new PropertyValueFactory<>("Calories"));
+        snacksFoodColumn.setCellValueFactory(new PropertyValueFactory<>("FoodName"));
+        snacksCaloriesColumn.setCellValueFactory(new PropertyValueFactory<>("Calories"));
     }
 
     /**
@@ -132,12 +168,17 @@ public class LogActivityController implements Initializable {
      * @param actionEvent a mouseclick event on the submit button.
      */
     public void submitExercise(ActionEvent actionEvent) {
+        //Empty message to user
         exercisePopUp.setText("");
+
+        //Get user inputs
         String exercise = exerciseComboBox.getValue();
         String minutesText = (exerciseMinutesField.getText());
 
         if (checkExerciseFields(exercise, minutesText)) {
-            int minutes = Integer.parseInt(minutesText);
+            int minutes = Integer.parseInt(minutesText); //Convert after checking as empty string needs to be checked
+
+            //Try to add to database and show appropriate success/fail message to user
             try {
                 dh.insertExercise(user.getUsername(), exercise, minutes);
                 exercisePopUp.setText(exercise + " for " + minutesText + " minutes added to database");
@@ -157,15 +198,15 @@ public class LogActivityController implements Initializable {
      * @return a boolean representing whether the fields have been correctly completed.
      */
     private boolean checkExerciseFields(String exercise, String minutesText) {
-        if (exercise == null || exercise.equals("")) {
+        if (exercise == null || exercise.equals("")) { //No exercise entered
             exercisePopUp.setText("Please enter an exercise");
             return false;
         }
-        else if (minutesText == null || minutesText.equals("")) {
+        else if (minutesText == null || minutesText.equals("")) { //No minutes entered
             exercisePopUp.setText("Please enter how many minutes for");
             return false;
         }
-        else if (Integer.parseInt(minutesText) == 0) {
+        else if (Integer.parseInt(minutesText) == 0) { //0 entered for minutes
             exercisePopUp.setText("Minutes must be greater than 0");
             return false;
         }
@@ -178,19 +219,22 @@ public class LogActivityController implements Initializable {
      * @param actionEvent a mouseclick event on the submit button.
      */
     public void submitWeight(ActionEvent actionEvent) {
+        //Empty messages to user
         weightFieldsLabel.setText("");
         weightDateLabel.setText("");
 
+        //Get user inputs
         String weightText = weightField.getText();
         String weightUnit = weightUnits.getValue();
         LocalDate date = weightDateField.getValue();
 
         if (checkWeightFields(weightText, weightUnit, date)) {
-            float weight = Float.parseFloat(weightText);
-            if (weightUnit.equals("lbs")) {
+            float weight = Float.parseFloat(weightText); //Convert after checking as empty string needs to be checked
+            if (weightUnit.equals("lbs")) { //Convert to lbs
                 weight = (float) (weight / 2.205);
             }
 
+            //Try to add to database and show appropriate success/fail message
             try {
                 dh.insertWeightValue(user.getUsername(), weight, date);
                 weightFieldsLabel.setText(weightText + " added to database on " + date);
@@ -211,23 +255,23 @@ public class LogActivityController implements Initializable {
      * @return a boolean value representing whether the update was successful.
      */
     private boolean checkWeightFields(String weightText, String weightUnit, LocalDate date) {
-        if (weightText == null || weightText.equals("")) {
+        if (weightText == null || weightText.equals("")) { //No weight entered
             weightFieldsLabel.setText("Please enter a weight value");
             return false;
         }
-        else if (Float.parseFloat(weightText) == 0) {
+        else if (Float.parseFloat(weightText) == 0) { //0 weight entered
             weightFieldsLabel.setText("Weight cannot be 0");
             return false;
         }
-        else if (weightUnit == null || weightUnit.equals("")) {
+        else if (weightUnit == null || weightUnit.equals("")) { //No unit selected
             weightFieldsLabel.setText("Please select a unit");
             return false;
         }
-        else if (date == null) {
+        else if (date == null) { //No date selected
             weightDateLabel.setText("Please select a date");
             return false;
         }
-        else if (date.isAfter(LocalDate.now())) {
+        else if (date.isAfter(LocalDate.now())) { //Future date selected
             weightDateLabel.setText("Date cannot be in the future");
             return false;
         }
@@ -241,53 +285,55 @@ public class LogActivityController implements Initializable {
      * @param actionEvent a mouseclick on the add button.
      */
     public void addFoodToMeal(ActionEvent actionEvent) {
+        //Empty messages to user
         foodFieldsLabel.setText("");
         foodDateLabel.setText("");
-        //get meal
+
+        //Get user inputs
         String meal = mealSelect.getValue();
-        //get food
         String food = foodComboBox.getValue();
-        //get quantity
         String quantityText = foodQuantity.getText();
 
         if (checkFoodFields(meal, food, quantityText)) {
-            int quantity = Integer.parseInt(quantityText);
-
+            int quantity = Integer.parseInt(quantityText); //Convert after checking as empty string needs to be checked
             //add to map
             switch (meal) {
                 case "Breakfast":
                     if (breakfast.containsKey(food)) {
-                        breakfast.put(food, breakfast.get(food) + quantity);
+                        breakfast.put(food, breakfast.get(food) + quantity); //Increment existing
                     } else {
-                        breakfast.put(food, quantity);
+                        breakfast.put(food, quantity); //Add new
                     }
                     break;
                 case "Lunch":
                     if (lunch.containsKey(food)) {
-                        lunch.put(food, lunch.get(food) + quantity);
+                        lunch.put(food, lunch.get(food) + quantity); //Increment existing
                     } else {
-                        lunch.put(food, quantity);
+                        lunch.put(food, quantity); //Add new
                     }
                     break;
                 case "Dinner":
                     if (dinner.containsKey(food)) {
-                        dinner.put(food, dinner.get(food) + quantity);
+                        dinner.put(food, dinner.get(food) + quantity); //Increment existing
                     } else {
-                        dinner.put(food, quantity);
+                        dinner.put(food, quantity); //Add new
                     }
                     break;
                 case "Snacks":
                     if (snack.containsKey(food)) {
-                        snack.put(food, snack.get(food) + quantity);
+                        snack.put(food, snack.get(food) + quantity); //Increment existing
                     } else {
-                        snack.put(food, quantity);
+                        snack.put(food, quantity); //Add new
                     }
                     break;
             }
 
+            //Show success message to user
             System.out.println(food + " added to " + meal);
             foodFieldsLabel.setText(food + " added to " + meal);
+
             //update table
+            setTableData();
         }
     }
 
@@ -300,19 +346,19 @@ public class LogActivityController implements Initializable {
      * @return a boolean value representing whether the input was successful.
      */
     private boolean checkFoodFields(String meal, String food, String quantityText) {
-        if (meal == null || meal.equals("")) {
+        if (meal == null || meal.equals("")) { //No meal entered
             foodFieldsLabel.setText("Please select a valid meal");
             return false;
         }
-        else if (food == null || food.equals("")) {
+        else if (food == null || food.equals("")) { //No food entered
             foodFieldsLabel.setText("Please select a valid food");
             return false;
         }
-        else if (quantityText == null || quantityText.equals("")) {
+        else if (quantityText == null || quantityText.equals("")) { //No quantity entered
             foodFieldsLabel.setText("Please enter an amount consumed");
             return false;
         }
-        else if (Integer.parseInt(quantityText) == 0) {
+        else if (Integer.parseInt(quantityText) == 0) { //0 entered for quantity
             foodFieldsLabel.setText("Quantity cannot be 0");
             return false;
         }
@@ -326,15 +372,17 @@ public class LogActivityController implements Initializable {
      * @param actionEvent a mouseclick on the save changes button.
      */
     public void submitFood(ActionEvent actionEvent) {
+        //Empty messages to user
         foodFieldsLabel.setText("");
         foodDateLabel.setText("");
-        //get date
+
+        //Get user input
         LocalDate date = foodEntryDate.getValue();
 
         if (checkFoodDate(date)) {
-            //for each map
-            //for each key
-            //submit food entry
+            //For each map
+                //For each key
+                    //Submit food entry to database
             for (String key : breakfast.keySet()) {
                 try {
                     dh.addFoodEntry(user.getUsername(), "Breakfast", key, breakfast.get(key), date);
@@ -368,14 +416,16 @@ public class LogActivityController implements Initializable {
                 }
             }
 
-            //clear maps
+            //Clear maps.
             breakfast = new HashMap<>();
             lunch = new HashMap<>();
             dinner = new HashMap<>();
             snack = new HashMap<>();
 
-            //update table
+            //Empty tables
+            setTableData();
 
+            //Show success message to user.
             foodDateLabel.setText("Meals added to database on " + date);
         }
     }
@@ -387,15 +437,102 @@ public class LogActivityController implements Initializable {
      * @return a boolean value representing whether the update was successful.
      */
     private boolean checkFoodDate(LocalDate date) {
-        if (date == null) {
+        if (date == null) { //No date selected
             foodDateLabel.setText("Please enter a date");
             return false;
         }
-        else if (date.isAfter(LocalDate.now())) {
+        else if (date.isAfter(LocalDate.now())) { //Future date selected
             foodDateLabel.setText("Date cannot be in the future");
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Method to set the table contents on each of the meal tabs to the content of their respective
+     * maps.
+     */
+    public void setTableData() {
+        //Create data holders for the tables
+        ObservableList<TableRow> breakfastRows = FXCollections.observableArrayList();
+        ObservableList<TableRow> lunchRows = FXCollections.observableArrayList();
+        ObservableList<TableRow> dinnerRows = FXCollections.observableArrayList();
+        ObservableList<TableRow> snacksRows = FXCollections.observableArrayList();
+
+        //Add each key to its holder with its calorie amount
+        for (String key : breakfast.keySet()) {
+            breakfastRows.add(new TableRow(key, breakfast.get(key)));
+        }
+        for (String key : lunch.keySet()) {
+            lunchRows.add(new TableRow(key, lunch.get(key)));
+        }
+        for (String key : dinner.keySet()) {
+            dinnerRows.add(new TableRow(key, dinner.get(key)));
+        }
+        for (String key : snack.keySet()) {
+            snacksRows.add(new TableRow(key, snack.get(key)));
+        }
+
+        //Add data to the tables
+        breakfastTable.setItems(breakfastRows);
+        lunchTable.setItems(lunchRows);
+        dinnerTable.setItems(dinnerRows);
+        snackTable.setItems(snacksRows);
+    }
+
+    /**
+     * Wrapper class for table rows, wraps food name and calories into one class.
+     */
+    public class TableRow {
+        SimpleStringProperty foodName;
+        SimpleDoubleProperty calories;
+
+        /**
+         * Constructs a table row comprised of food name and calories.
+         * @param foodName the name of the food.
+         * @param quantity the amount consumed in grams.
+         */
+        TableRow(String foodName, int quantity) {
+            this.foodName = new SimpleStringProperty(foodName);
+            double kcal = dh.getKcal(foodName); //stored in the database as kcal per 100g
+            calories = new SimpleDoubleProperty(((kcal * quantity) / 100));
+        }
+
+        /**
+         * Gets the food name for this table row.
+         *
+         * @return the food name for this table row.
+         */
+        public String getFoodName() {
+            return foodName.get();
+        }
+
+        /**
+         * Sets the food name for this table row.
+         *
+         * @param foodName the food name for this table row.
+         */
+        public void setFoodName(String foodName) {
+            this.foodName = new SimpleStringProperty(foodName);
+        }
+
+        /**
+         * Gets the calories value for this table row.
+         *
+         * @return the calories value for this table row.
+         */
+        public Double getCalories() {
+            return calories.get();
+        }
+
+        /**
+         * Sets the calories value for this table row.
+         *
+         * @param calories the calories value for this table row.
+         */
+        public void setCalories(double calories) {
+            this.calories = new SimpleDoubleProperty(calories);
+        }
     }
 }
