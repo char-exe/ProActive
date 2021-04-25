@@ -11,6 +11,7 @@ import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import java.util.ResourceBundle;
  * 1.1 - Implemented simple exercise logging to database.
  * 1.2 - Implemented simple weight logging to database.
  * 1.3 - Implemented simple food logging to database.
+ * 1.4 - Implemented value checking for logging, preventing null values and future dates.
  */
 
 public class LogActivityController implements Initializable {
@@ -36,15 +38,24 @@ public class LogActivityController implements Initializable {
     @FXML private TableView lunchTable;
     @FXML private TableView dinnerTable;
     @FXML private TableView snackTable;
+
     @FXML private ComboBox<String> exerciseComboBox;
     @FXML private TextField exerciseMinutesField;
+    @FXML private Label exercisePopUp;
+
     @FXML private TextField weightField;
     @FXML private ChoiceBox<String> weightUnits;
     @FXML private DatePicker weightDateField;
+    @FXML private Label weightFieldsLabel;
+    @FXML private Label weightDateLabel;
+
     @FXML private ComboBox<String> mealSelect;
     @FXML private ComboBox<String> foodComboBox;
     @FXML private TextField foodQuantity;
     @FXML private DatePicker foodEntryDate;
+    @FXML private Label foodFieldsLabel;
+    @FXML private Label foodDateLabel;
+
 
     private DatabaseHandler dh;
     private User user;
@@ -121,10 +132,44 @@ public class LogActivityController implements Initializable {
      * @param actionEvent a mouseclick event on the submit button.
      */
     public void submitExercise(ActionEvent actionEvent) {
+        exercisePopUp.setText("");
         String exercise = exerciseComboBox.getValue();
-        int minutes = Integer.parseInt(exerciseMinutesField.getText());
+        String minutesText = (exerciseMinutesField.getText());
 
-        dh.insertExercise(user.getUsername(), exercise, minutes);
+        if (checkExerciseFields(exercise, minutesText)) {
+            int minutes = Integer.parseInt(minutesText);
+            try {
+                dh.insertExercise(user.getUsername(), exercise, minutes);
+                exercisePopUp.setText(exercise + " for " + minutesText + " minutes added to database");
+            }
+            catch (SQLException e) {
+                exercisePopUp.setText("Error adding " + exercise + " for " + minutesText + " minutes to database");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Private helper method for checking input values to exercise fields and setting a label.
+     *
+     * @param exercise the exercise value entered.
+     * @param minutesText the minutes value entered.
+     * @return a boolean representing whether the fields have been correctly completed.
+     */
+    private boolean checkExerciseFields(String exercise, String minutesText) {
+        if (exercise == null || exercise.equals("")) {
+            exercisePopUp.setText("Please enter an exercise");
+            return false;
+        }
+        else if (minutesText == null || minutesText.equals("")) {
+            exercisePopUp.setText("Please enter how many minutes for");
+            return false;
+        }
+        else if (Integer.parseInt(minutesText) == 0) {
+            exercisePopUp.setText("Minutes must be greater than 0");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -133,14 +178,61 @@ public class LogActivityController implements Initializable {
      * @param actionEvent a mouseclick event on the submit button.
      */
     public void submitWeight(ActionEvent actionEvent) {
-        float weight = Float.parseFloat(weightField.getText());
+        weightFieldsLabel.setText("");
+        weightDateLabel.setText("");
+
+        String weightText = weightField.getText();
+        String weightUnit = weightUnits.getValue();
         LocalDate date = weightDateField.getValue();
 
-        if (weightUnits.getValue() == "lbs") {
-            weight = (float) (weight / 2.205);
+        if (checkWeightFields(weightText, weightUnit, date)) {
+            float weight = Float.parseFloat(weightText);
+            if (weightUnit.equals("lbs")) {
+                weight = (float) (weight / 2.205);
+            }
+
+            try {
+                dh.insertWeightValue(user.getUsername(), weight, date);
+                weightFieldsLabel.setText(weightText + " added to database on " + date);
+            }
+            catch (SQLException e) {
+                weightFieldsLabel.setText("Error adding " + weightText + " to database on " + date);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Private helper method for checking weight entry input values.
+     *
+     * @param weightText the weight value entered.
+     * @param weightUnit the weight unit entered.
+     * @param date the entry date entered.
+     * @return a boolean value representing whether the update was successful.
+     */
+    private boolean checkWeightFields(String weightText, String weightUnit, LocalDate date) {
+        if (weightText == null || weightText.equals("")) {
+            weightFieldsLabel.setText("Please enter a weight value");
+            return false;
+        }
+        else if (Float.parseFloat(weightText) == 0) {
+            weightFieldsLabel.setText("Weight cannot be 0");
+            return false;
+        }
+        else if (weightUnit == null || weightUnit.equals("")) {
+            weightFieldsLabel.setText("Please select a unit");
+            return false;
+        }
+        else if (date == null) {
+            weightDateLabel.setText("Please select a date");
+            return false;
+        }
+        else if (date.isAfter(LocalDate.now())) {
+            weightDateLabel.setText("Date cannot be in the future");
+            return false;
         }
 
-        dh.insertWeightValue(user.getUsername(), weight, date);
+        return true;
     }
 
     /**
@@ -149,52 +241,83 @@ public class LogActivityController implements Initializable {
      * @param actionEvent a mouseclick on the add button.
      */
     public void addFoodToMeal(ActionEvent actionEvent) {
+        foodFieldsLabel.setText("");
+        foodDateLabel.setText("");
         //get meal
         String meal = mealSelect.getValue();
         //get food
         String food = foodComboBox.getValue();
         //get quantity
-        int quantity = Integer.parseInt(foodQuantity.getText());
+        String quantityText = foodQuantity.getText();
 
-        //add to map
-        switch (meal)
-        {
-            case "Breakfast":
-                if (breakfast.containsKey(food)) {
-                    breakfast.put(food, breakfast.get(food) + quantity);
-                }
-                else {
-                    breakfast.put(food, quantity);
-                }
-                break;
-            case "Lunch":
-                if (lunch.containsKey(food)) {
-                    lunch.put(food, lunch.get(food) + quantity);
-                }
-                else {
-                    lunch.put(food, quantity);
-                }
-                break;
-            case "Dinner":
-                if (dinner.containsKey(food)) {
-                    dinner.put(food, dinner.get(food) + quantity);
-                }
-                else {
-                    dinner.put(food, quantity);
-                }
-                break;
-            case "Snacks":
-                if (snack.containsKey(food)) {
-                    snack.put(food, snack.get(food) + quantity);
-                }
-                else {
-                    snack.put(food, quantity);
-                }
-                break;
+        if (checkFoodFields(meal, food, quantityText)) {
+            int quantity = Integer.parseInt(quantityText);
+
+            //add to map
+            switch (meal) {
+                case "Breakfast":
+                    if (breakfast.containsKey(food)) {
+                        breakfast.put(food, breakfast.get(food) + quantity);
+                    } else {
+                        breakfast.put(food, quantity);
+                    }
+                    break;
+                case "Lunch":
+                    if (lunch.containsKey(food)) {
+                        lunch.put(food, lunch.get(food) + quantity);
+                    } else {
+                        lunch.put(food, quantity);
+                    }
+                    break;
+                case "Dinner":
+                    if (dinner.containsKey(food)) {
+                        dinner.put(food, dinner.get(food) + quantity);
+                    } else {
+                        dinner.put(food, quantity);
+                    }
+                    break;
+                case "Snacks":
+                    if (snack.containsKey(food)) {
+                        snack.put(food, snack.get(food) + quantity);
+                    } else {
+                        snack.put(food, quantity);
+                    }
+                    break;
+            }
+
+            System.out.println(food + " added to " + meal);
+            foodFieldsLabel.setText(food + " added to " + meal);
+            //update table
+        }
+    }
+
+    /**
+     * Private helper method for checking the input values for adding foods to meals.
+     *
+     * @param meal the meal selected.
+     * @param food the food entered.
+     * @param quantityText the quantity consumed.
+     * @return a boolean value representing whether the input was successful.
+     */
+    private boolean checkFoodFields(String meal, String food, String quantityText) {
+        if (meal == null || meal.equals("")) {
+            foodFieldsLabel.setText("Please select a valid meal");
+            return false;
+        }
+        else if (food == null || food.equals("")) {
+            foodFieldsLabel.setText("Please select a valid food");
+            return false;
+        }
+        else if (quantityText == null || quantityText.equals("")) {
+            foodFieldsLabel.setText("Please enter an amount consumed");
+            return false;
+        }
+        else if (Integer.parseInt(quantityText) == 0) {
+            foodFieldsLabel.setText("Quantity cannot be 0");
+            return false;
         }
 
-        System.out.println(food + " added to " + meal);
-        //update table
+        return true;
     }
 
     /**
@@ -203,34 +326,76 @@ public class LogActivityController implements Initializable {
      * @param actionEvent a mouseclick on the save changes button.
      */
     public void submitFood(ActionEvent actionEvent) {
+        foodFieldsLabel.setText("");
+        foodDateLabel.setText("");
         //get date
         LocalDate date = foodEntryDate.getValue();
-        //for each map
+
+        if (checkFoodDate(date)) {
+            //for each map
             //for each key
-                //submit food entry
-        for (String key : breakfast.keySet())
-        {
-            dh.addFoodEntry(user.getUsername(), "Breakfast", key, breakfast.get(key), date);
+            //submit food entry
+            for (String key : breakfast.keySet()) {
+                try {
+                    dh.addFoodEntry(user.getUsername(), "Breakfast", key, breakfast.get(key), date);
+                }
+                catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            for (String key : lunch.keySet()) {
+                try {
+                dh.addFoodEntry(user.getUsername(), "Lunch", key, lunch.get(key), date);
+                }
+                catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            for (String key : dinner.keySet()) {
+                try {
+                dh.addFoodEntry(user.getUsername(), "Dinner", key, dinner.get(key), date);
+                }
+                catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            for (String key : snack.keySet()) {
+                try {
+                dh.addFoodEntry(user.getUsername(), "Snack", key, snack.get(key), date);
+                }
+                catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //clear maps
+            breakfast = new HashMap<>();
+            lunch = new HashMap<>();
+            dinner = new HashMap<>();
+            snack = new HashMap<>();
+
+            //update table
+
+            foodDateLabel.setText("Meals added to database on " + date);
         }
-        for (String key : lunch.keySet())
-        {
-            dh.addFoodEntry(user.getUsername(), "Lunch", key, lunch.get(key), date);
+    }
+
+    /**
+     * Private helper method for checking whether the date value for adding a food value is suitable.
+     *
+     * @param date the date entered.
+     * @return a boolean value representing whether the update was successful.
+     */
+    private boolean checkFoodDate(LocalDate date) {
+        if (date == null) {
+            foodDateLabel.setText("Please enter a date");
+            return false;
         }
-        for (String key : dinner.keySet())
-        {
-            dh.addFoodEntry(user.getUsername(), "Dinner", key, dinner.get(key), date);
-        }
-        for (String key : snack.keySet())
-        {
-            dh.addFoodEntry(user.getUsername(), "Snack", key, snack.get(key), date);
+        else if (date.isAfter(LocalDate.now())) {
+            foodDateLabel.setText("Date cannot be in the future");
+            return false;
         }
 
-        //clear maps
-        breakfast = new HashMap<>();
-        lunch = new HashMap<>();
-        dinner = new HashMap<>();
-        snack = new HashMap<>();
-
-        //update table
+        return true;
     }
 }

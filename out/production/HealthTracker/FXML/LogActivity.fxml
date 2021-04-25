@@ -43,6 +43,7 @@
                                     <Insets top="25.0" />
                                  </padding>
                               </HBox>
+                              <Label fx:id="exercisePopUp" />
                            </children>
                         </VBox>
                      </center>
@@ -82,7 +83,8 @@
                                     <ChoiceBox fx:id="weightUnits" prefHeight="51.0" prefWidth="60.0" />
                                  </children>
                               </HBox>
-                              <Label layoutX="295.0" layoutY="10.0" text="Entry date">
+                              <Label fx:id="weightFieldsLabel" />
+                              <Label layoutX="295.0" layoutY="10.0" prefWidth="108.0" text="Entry date">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
@@ -98,6 +100,7 @@
                                     <DatePicker fx:id="weightDateField" prefHeight="39.0" prefWidth="174.0" />
                                  </children>
                               </HBox>
+                              <Label fx:id="weightDateLabel" />
                               <Button mnemonicParsing="false" onAction="#submitWeight" text="Submit" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font size="18.0" />
@@ -149,6 +152,7 @@
                                              </padding>
                                           </Label>
                                           <DatePicker fx:id="foodEntryDate" />
+                                          <Label fx:id="foodDateLabel" text="Label" />
                                        </children>
                                     </VBox>
                                     <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
@@ -167,6 +171,14 @@
                                                                       <TableColumn prefWidth="201.99998474121094" text="Calories" />
                                                                     </columns>
                                                                   </TableView>
+                                                                  <Label text="To delete food entry: select item and press DEL key" textFill="#ffb247">
+                                                                     <VBox.margin>
+                                                                        <Insets />
+                                                                     </VBox.margin>
+                                                                     <font>
+                                                                        <Font name="System Bold" size="12.0" />
+                                                                     </font>
+                                                                  </Label>
                                                                   <HBox alignment="CENTER">
                                                                      <VBox.margin>
                                                                         <Insets />
@@ -259,16 +271,13 @@
                                                 <TextField fx:id="foodQuantity" prefHeight="26.0" prefWidth="87.0" promptText="Quantity (g)" />
                                              </children>
                                           </HBox>
-                                          <Button mnemonicParsing="false" onAction="#addFoodToMeal" prefHeight="35.0" text="Add" />
-                                          <Button mnemonicParsing="false" prefHeight="35.0" text="Add custom item" />
-                                          <Label text="To delete food entry: select item and press DEL key" textFill="#ffb247">
-                                             <VBox.margin>
-                                                <Insets />
-                                             </VBox.margin>
-                                             <font>
-                                                <Font name="System Bold" size="12.0" />
-                                             </font>
-                                          </Label>
+                                          <HBox prefHeight="38.0" prefWidth="299.0">
+                                             <children>
+                                                <Button mnemonicParsing="false" onAction="#addFoodToMeal" prefHeight="35.0" text="Add" />
+                                                <Button mnemonicParsing="false" prefHeight="35.0" text="Add custom item" />
+                                             </children>
+                                          </HBox>
+                                          <Label fx:id="foodFieldsLabel" text="Label" />
                                        </children>
                                     </VBox>
                                  </children>

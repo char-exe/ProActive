@@ -326,19 +326,14 @@ public class DatabaseHandler
      * @param username The user's username.
      * @param weight   Takes in the current weight of the user in kg
      * @param date     Takes in the time in which the user wants to set this date to.
+     * @throws SQLException when a database error occurs.
      */
-    public void insertWeightValue(String username, float weight, LocalDate date){
+    public void insertWeightValue(String username, float weight, LocalDate date) throws SQLException {
         String sql = "INSERT INTO weight_entry (user_id, weight, date_of)" +
                 "VALUES('" + getUserIDFromUsername(username) + "', '" + weight + "','" + date.toString() + "')";
 
-        try {
-            Statement stmt  = conn.createStatement();
-            stmt.executeUpdate(sql);
-        }
-        catch (SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
+        Statement stmt  = conn.createStatement();
+        stmt.executeUpdate(sql);
 
         System.out.println("Weight entry added for " + username);
     }
@@ -797,21 +792,17 @@ public class DatabaseHandler
      * @param username the user's username.
      * @param exercise the exercise undertaken.
      * @param duration the duration undertaken for.
+     * @throws SQLException when a database access error occurs.
      */
-    public void insertExercise(String username, String exercise, int duration) {
+    public void insertExercise(String username, String exercise, int duration) throws SQLException{
 
         String sql = "INSERT INTO activity (exercise_id, user_id, duration, date_of)" +
                 "VALUES('" + getExerciseId(exercise)  + "', '" + getUserIDFromUsername(username) +
                         "','" + duration + "','" + LocalDate.now().toString() + "')";
 
-        try {
-            Statement stmt  = conn.createStatement();
-            stmt.executeUpdate(sql);
-        }
-        catch (SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
+        Statement stmt  = conn.createStatement();
+        stmt.executeUpdate(sql);
+
         System.out.println("Added " + exercise + " to database for " + username);
     }
 
@@ -846,20 +837,15 @@ public class DatabaseHandler
      * @param quantity the quantity consumed.
      * @param date     the date of consumption.
      */
-    public void addFoodEntry(String username, String meal, String food, int quantity, LocalDate date) {
+    public void addFoodEntry(String username, String meal, String food, int quantity, LocalDate date)
+    throws SQLException {
 
         String sql = "INSERT INTO meal (meal_category, food_id, user_id, date_of, quantity)" +
                      "VALUES('" + meal  + "', '" + getFoodId(food) + "','" + getUserIDFromUsername(username) +
                      "','" + date.toString() + "','" + quantity + "')";
 
-        try {
-            Statement stmt  = conn.createStatement();
-            stmt.executeUpdate(sql);
-        }
-        catch (SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
+        Statement stmt  = conn.createStatement();
+        stmt.executeUpdate(sql);
         System.out.println("Added " + food + " to database for " + username);
     }
 }
