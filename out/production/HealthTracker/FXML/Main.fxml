@@ -73,7 +73,7 @@
          <children>
             <HBox alignment="CENTER" maxHeight="50.0" maxWidth="200.0" minHeight="50.0" minWidth="200.0" styleClass="sideBar" stylesheets="@../style.css">
                <children>
-                  <ImageView fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.8" scaleY="0.8" translateY="25.0">
+                  <ImageView fx:id="logo" fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.8" scaleY="0.8" translateY="25.0">
                      <image>
                         <Image url="@../Resources/proactive.png" />
                      </image>

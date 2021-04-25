@@ -7,6 +7,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -32,6 +34,7 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     //Referencing elements defined in main.fxml
+    @FXML private ImageView logo;
     @FXML private Button homeButton;
     @FXML private Button logActivityButton;
     @FXML private Button groupsButton;
@@ -51,7 +54,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        logo.setImage(new Image("src/Resources/proactive.png"));
     }
 
     /**
@@ -76,7 +79,7 @@ public class MainController implements Initializable {
     @FXML
     private void homeScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/FXML/SummaryPage.fxml"));
+        loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
         VBox vBox = loader.load();
 
         SummaryController summaryController = loader.getController();

@@ -6,10 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/Tests" isTestSource="true" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="openjdk-15" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="JavaFX" level="application" />
-    <orderEntry type="library" name="Mail" level="application" />
     <orderEntry type="module-library">
       <library name="JUnit5.4">
         <CLASSES>
@@ -26,5 +24,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="javafx15" level="application" />
+    <orderEntry type="library" name="mail" level="application" />
+    <orderEntry type="library" name="sqlite" level="application" />
   </component>
 </module>
