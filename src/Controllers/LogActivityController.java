@@ -62,18 +62,18 @@ public class LogActivityController implements Initializable {
     @FXML private Label foodDateLabel;
 
     //Food tab tables
-    @FXML private TableView<TableRow> breakfastTable;
-    @FXML private TableView<TableRow> lunchTable;
-    @FXML private TableView<TableRow> dinnerTable;
-    @FXML private TableView<TableRow> snackTable;
-    @FXML private TableColumn<TableRow, String> breakfastFoodColumn;
-    @FXML private TableColumn<TableRow, Double> breakfastCaloriesColumn;
-    @FXML private TableColumn<TableRow, String> lunchFoodColumn;
-    @FXML private TableColumn<TableRow, Double> lunchCaloriesColumn;
-    @FXML private TableColumn<TableRow, String> dinnerFoodColumn;
-    @FXML private TableColumn<TableRow, Double> dinnerCaloriesColumn;
-    @FXML private TableColumn<TableRow, String> snacksFoodColumn;
-    @FXML private TableColumn<TableRow, Double> snacksCaloriesColumn;
+    @FXML private TableView<FoodItem> breakfastTable;
+    @FXML private TableView<FoodItem> lunchTable;
+    @FXML private TableView<FoodItem> dinnerTable;
+    @FXML private TableView<FoodItem> snackTable;
+    @FXML private TableColumn<FoodItem, String> breakfastFoodColumn;
+    @FXML private TableColumn<FoodItem, Double> breakfastCaloriesColumn;
+    @FXML private TableColumn<FoodItem, String> lunchFoodColumn;
+    @FXML private TableColumn<FoodItem, Double> lunchCaloriesColumn;
+    @FXML private TableColumn<FoodItem, String> dinnerFoodColumn;
+    @FXML private TableColumn<FoodItem, Double> dinnerCaloriesColumn;
+    @FXML private TableColumn<FoodItem, String> snacksFoodColumn;
+    @FXML private TableColumn<FoodItem, Double> snacksCaloriesColumn;
 
     //Meal maps
     private HashMap<String, Integer> breakfast;
@@ -457,23 +457,23 @@ public class LogActivityController implements Initializable {
      */
     public void setTableData() {
         //Create data holders for the tables
-        ObservableList<TableRow> breakfastRows = FXCollections.observableArrayList();
-        ObservableList<TableRow> lunchRows = FXCollections.observableArrayList();
-        ObservableList<TableRow> dinnerRows = FXCollections.observableArrayList();
-        ObservableList<TableRow> snacksRows = FXCollections.observableArrayList();
+        ObservableList<FoodItem> breakfastRows = FXCollections.observableArrayList();
+        ObservableList<FoodItem> lunchRows = FXCollections.observableArrayList();
+        ObservableList<FoodItem> dinnerRows = FXCollections.observableArrayList();
+        ObservableList<FoodItem> snacksRows = FXCollections.observableArrayList();
 
         //Add each key to its holder with its calorie amount
         for (String key : breakfast.keySet()) {
-            breakfastRows.add(new TableRow(key, breakfast.get(key)));
+            breakfastRows.add(new FoodItem(key, breakfast.get(key)));
         }
         for (String key : lunch.keySet()) {
-            lunchRows.add(new TableRow(key, lunch.get(key)));
+            lunchRows.add(new FoodItem(key, lunch.get(key)));
         }
         for (String key : dinner.keySet()) {
-            dinnerRows.add(new TableRow(key, dinner.get(key)));
+            dinnerRows.add(new FoodItem(key, dinner.get(key)));
         }
         for (String key : snack.keySet()) {
-            snacksRows.add(new TableRow(key, snack.get(key)));
+            snacksRows.add(new FoodItem(key, snack.get(key)));
         }
 
         //Add data to the tables
@@ -486,7 +486,7 @@ public class LogActivityController implements Initializable {
     /**
      * Wrapper class for table rows, wraps food name and calories into one class.
      */
-    public class TableRow {
+    public class FoodItem {
         SimpleStringProperty foodName;
         SimpleDoubleProperty calories;
 
@@ -495,7 +495,7 @@ public class LogActivityController implements Initializable {
          * @param foodName the name of the food.
          * @param quantity the amount consumed in grams.
          */
-        TableRow(String foodName, int quantity) {
+        FoodItem(String foodName, int quantity) {
             this.foodName = new SimpleStringProperty(foodName);
             double kcal = dh.getKcal(foodName); //stored in the database as kcal per 100g
             calories = new SimpleDoubleProperty(((kcal * quantity) / 100));
