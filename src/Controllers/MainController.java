@@ -64,11 +64,6 @@ public class MainController implements Initializable {
      */
     public void initData(User user){
         this.user = user;
-        try {
-            homeScreen();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -77,7 +72,7 @@ public class MainController implements Initializable {
      * @throws IOException Throws an IOException whenever there is a chance that a file can be missing
      */
     @FXML
-    private void homeScreen() throws IOException {
+    public void homeScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         //loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
         loader.setLocation(getClass().getResource("/FXML/SummaryPage.fxml"));
@@ -173,9 +168,5 @@ public class MainController implements Initializable {
         selectedButton.setBackground(new Background(
                 new BackgroundFill(Color.rgb(120,120,120), null, null)));
 
-    }
-
-    //Not sure what this is for? - Owen
-    public void logActivity(ActionEvent actionEvent) {
     }
 }

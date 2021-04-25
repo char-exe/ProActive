@@ -101,6 +101,7 @@ public class LoginPageController {
                 stage.setScene(homeScene);
 
                 main.initData(user);
+                main.homeScreen();
 
                 parentScene.close();
                 stage.show();
