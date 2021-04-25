@@ -261,6 +261,12 @@ public class User {
      * @param dob the user's new date of birth.
      */
     public void setDob(LocalDate dob) {
+        if (dob == null) {
+            throw new NullPointerException();
+        }
+        if (dob.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException();
+        }
         this.dob = dob;
         this.setAge();
     }
