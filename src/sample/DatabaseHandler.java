@@ -849,6 +849,11 @@ public class DatabaseHandler
         System.out.println("Added " + food + " to database for " + username);
     }
 
+    /**
+     * Method to get the kcal value for a food item
+     * @param foodName the food item requested
+     * @return the kcal value for the food item
+     */
     public double getKcal(String foodName) {
         String sql = "SELECT kcal FROM food WHERE name LIKE '" + foodName + "'";
         double kcal = -1;
