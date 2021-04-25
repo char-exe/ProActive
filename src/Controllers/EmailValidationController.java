@@ -39,6 +39,7 @@ public class EmailValidationController implements Initializable{
     @FXML public Button resendButton;
     @FXML public Button homeButton;
 
+    private DatabaseHandler dh;
     private User user;
     private String initialToken;
     private byte[] hash;
@@ -63,15 +64,14 @@ public class EmailValidationController implements Initializable{
 
     /**
      * Method for stuff to run after FXML elements are initialized, allows for events to be called as soon as this
-     * controller takes over, empty as required for initializable implementation which allows for the initData method
-     * to function correctly
+     * controller takes over.
      *
      * @param url Called via FXML resource
      * @param resourceBundle Called via FXML resource
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        dh = DatabaseHandler.getInstance();
     }
 
     /**
@@ -84,33 +84,20 @@ public class EmailValidationController implements Initializable{
      */
     @FXML protected void pushSubmit() throws SQLException, IOException {
         String tokenFromUser = codeInputBox.getText();
-        DatabaseHandler dh = DatabaseHandler.getInstance();
         long currentTime = System.currentTimeMillis()/1000;
+
         ResultSet res = dh.getTokenResult(tokenFromUser);
-        if (res == null || currentTime > Long.parseLong(res.getString("timeDelay")) + 1800000){
+
+        if (res == null || currentTime > Long.parseLong(res.getString("timeDelay")) + 1800000) {
             codeStatus.setText("Code Not Valid Or Has Expired, We have sent another to the specified address");
             dh.deleteToken(initialToken);
             resendVerification();
-        }else{
+        }
+        else {
             codeStatus.setText("Code Correct, User Account has been created");
             dh.createUserEntry(user, hash, salt);
 
-            Stage parentScene = (Stage) submitButton.getScene().getWindow();
-            Stage stage = new Stage();
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
-
-            Parent splashParent = loader.load();
-
-            Scene sceneSplash = new Scene(splashParent);
-
-            stage.setScene(sceneSplash);
-
-            SplashPageController controller = loader.getController();
-            stage.setScene(sceneSplash);
-
-            parentScene.close();
-            stage.show();
+            escapeHome(new ActionEvent());
         }
     }
 
@@ -146,12 +133,7 @@ public class EmailValidationController implements Initializable{
         loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
 
         Parent splashParent = loader.load();
-
         Scene sceneParent = new Scene(splashParent);
-
-        stage.setScene(sceneParent);
-
-        SplashPageController controller = loader.getController();
         stage.setScene(sceneParent);
 
         parentScene.close();

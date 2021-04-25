@@ -76,6 +76,7 @@ public class SummaryController implements Initializable
     private NumberAxis weightDateAxis;
 
     private User user;
+    private DatabaseHandler dh;
 
     /**
      * Initializes the graphs with formatted axes and dummy data.
@@ -92,6 +93,8 @@ public class SummaryController implements Initializable
         formatAxis(burnDateAxis);
         formatAxis(spentDateAxis);
         formatAxis(weightDateAxis);
+
+        dh = DatabaseHandler.getInstance();
     }
 
     public void initData(User user) {
@@ -154,9 +157,6 @@ public class SummaryController implements Initializable
         XYChart.Series<Number, Number> burnSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> spentSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
-
-        //Get data for each series from the database.
-        DatabaseHandler dh = DatabaseHandler.getInstance();
 
         HashMap<String, Double> intakeData = dh.getIntakeEntries(user.getUsername());
         HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername());

@@ -140,18 +140,13 @@ public class CaptchaHandler implements Initializable {
             loader.setLocation(getClass().getResource("/FXML/EmailValidation.fxml"));
 
             Parent emailParent = loader.load();
-
             Scene sceneEmail = new Scene(emailParent);
-
-            stage.setScene(sceneEmail);
-
             EmailValidationController controller = loader.getController();
             stage.setScene(sceneEmail);
             controller.initData(user, token, hash, salt);
 
             parentScene.close();
             stage.show();
-
         }
         //display error if invalid
         else {
@@ -175,12 +170,7 @@ public class CaptchaHandler implements Initializable {
         loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
 
         Parent splashParent = loader.load();
-
         Scene sceneParent = new Scene(splashParent);
-
-        stage.setScene(sceneParent);
-
-        SplashPageController controller = loader.getController();
         stage.setScene(sceneParent);
 
         parentScene.close();
