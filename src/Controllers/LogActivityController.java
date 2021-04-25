@@ -35,7 +35,9 @@ import java.util.ResourceBundle;
  * 1.2 - Implemented simple weight logging to database.
  * 1.3 - Implemented simple food logging to database.
  * 1.4 - Implemented value checking for logging, preventing null values and future dates.
- * 1.5 - Implemented table view for added foods. General commenting
+ * 1.5 - Implemented table view for added foods, with reference to
+ *       https://medium.com/@keeptoo/adding-data-to-javafx-tableview-stepwise-df582acbae4f.
+ *       General commenting.
  */
 public class LogActivityController implements Initializable {
 
