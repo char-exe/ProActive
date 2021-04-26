@@ -3,6 +3,7 @@ package sample;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
+import java.util.ArrayList;
 
 /**
  * A class to represent a user in a health tracking application, most/all error checking is completed
@@ -12,7 +13,7 @@ import java.time.Period;
  * @author Charlie Jones
  * @author Samuel Scarfe
  *
- * @version 1.5
+ * @version 1.6
  *
  * 1.0 - Initial user class structure and their variables.
  * 1.1 - Added constructor, getters and setters.
@@ -21,6 +22,7 @@ import java.time.Period;
  * 1.4 - Added methods to check constructor inputs and throw necessary exceptions. Updated setAge to throw
  *       an exception if the dob passed is in the future.
  * 1.5 - Updated Javadoc.
+ * 1.6 - Implemented adding and updating goals.
  */
 public class User {
 
@@ -44,6 +46,7 @@ public class User {
     private LocalDate dob;
     private final String email;
     //private Set<Group> groupMemberships = new ArrayList();  To be added in sprint 2 group not a suitable name, object in Swing may be OK though
+    private ArrayList<Goal> goals;
     private final String username;
 
     /**
@@ -71,6 +74,11 @@ public class User {
         this.email = email;
         this.username = username;
 
+        this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
+
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
 
@@ -92,6 +100,11 @@ public class User {
         this.dob = dob;
         this.email = email;
         this.username = username;
+
+        this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -279,6 +292,33 @@ public class User {
         LocalDate birthday = LocalDate.of(this.dob.getYear(), this.dob.getMonth(), this.dob.getDayOfMonth());
 
         this.age = Period.between(birthday, today).getYears();
+    }
+
+    /**
+     * Adds a goal to this user's goal list and then to the database.
+     *
+     * @param goal the goal to be added.
+     */
+    public void addGoal(Goal goal) {
+        this.goals.add(goal);
+        DatabaseHandler.getInstance().insertGoal(this.getUsername(), goal);
+    }
+
+    /**
+     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
+     *
+     * @param unit   the unit which has been input as part of a logged activity.
+     * @param amount the amount of the unit which has been logged.
+     */
+    public void updateGoals(Goal.Unit unit, int amount) {
+        //for each goal
+        for (Goal goal : goals) {
+            //if the goal is updated
+            if (goal.updateProgress(unit, amount)) {
+                //update the goal in the database
+                DatabaseHandler.getInstance().updateGoal(username, goal);
+            }
+        }
     }
 
     //Class-Specific Methods

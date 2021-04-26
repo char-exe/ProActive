@@ -5,6 +5,12 @@ import java.time.LocalDate;
 /**
  * Abstract class for modelling a user goal in the ProActive app by its target amount, concerned units, end date,
  * current progress, and completion status.
+ *
+ * @author Samuel Scarfe
+ *
+ * @version 1.0
+ *
+ * 1.0 - First working version.
  */
 public abstract class Goal {
 
@@ -13,37 +19,35 @@ public abstract class Goal {
      * protein, or an exercise unit of a specific exercise or all exercise.
      */
     public enum Unit {
-        CALORIES, PROTEIN, EXERCISE, WALKING, JOGGING, RUNNING, FOOTBALL, RUGBY, YOGA,
+        CALORIES, PROTEIN, BURN, EXERCISE, WALKING, JOGGING, RUNNING, FOOTBALL, RUGBY, YOGA,
         TENNIS, SWIMMING, CYCLING, KARATE, HIKING, CLEANING, BOXING, BILLIARDS, JUDO
-    }
-
-    /**
-     * Enum class representing the completion status of a goal.
-     */
-    public enum Status {
-        ONGOING, COMPLETED, FAILED
     }
 
     /**
      * The target amount for the goal.
      */
-    protected int target;
+    protected final int target;
     /**
      * The units the goal is concerned with.
      */
-    protected Unit unit;
+    protected final Unit unit;
     /**
      * The end date of the goal.
      */
-    protected LocalDate endDate;
+    protected final LocalDate endDate;
     /**
      * The current progress of the goal.
      */
     protected int progress;
     /**
-     * The completion status of the goal.
+     * The active status of the goal.
      */
-    protected Status status;
+    protected boolean active;
+    /**
+     * The completion status of the goal
+     */
+    protected boolean completed;
+
 
     /**
      * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
@@ -54,29 +58,30 @@ public abstract class Goal {
      * @param endDate the end date of the goal.
      */
     public Goal(int target, Unit unit, LocalDate endDate) {
-        this.target   = target;
-        this.unit     = unit;
-        this.endDate  = endDate;
-        this.progress = 0;
-        this.status   = Status.ONGOING;
+        this.target    = target;
+        this.unit      = unit;
+        this.endDate   = endDate;
+        this.progress  = 0;
+        this.active    = endDate.isAfter(LocalDate.now());
+        this.completed = progress >= target;
     }
 
     /**
      * Constructs a goal from a target amount, unit, end date, progress amount, and current status. Intended for use
      * when pulling user goals from the database.
      *
-     * @param target   the target amount of the goal.
-     * @param unit     the units targeted by the goal.
-     * @param endDate  the end date of the goal.
-     * @param progress the current progress of the goal.
-     * @param status   the completion status of the goal.
+     * @param target    the target amount of the goal.
+     * @param unit      the units targeted by the goal.
+     * @param endDate   the end date of the goal.
+     * @param progress  the current progress of the goal.
      */
-    public Goal(int target, Unit unit, LocalDate endDate, int progress, Status status) {
-        this.target   = target;
-        this.unit     = unit;
-        this.endDate  = endDate;
-        this.progress = progress;
-        this.status   = status;
+    public Goal(int target, Unit unit, LocalDate endDate, int progress) {
+        this.target    = target;
+        this.unit      = unit;
+        this.endDate   = endDate;
+        this.progress  = progress;
+        this.active    = endDate.isAfter(LocalDate.now());
+        this.completed = progress >= target;
     }
 
     /**
@@ -116,21 +121,21 @@ public abstract class Goal {
     }
 
     /**
-     * Gets the current status of this goal.
+     * Gets the active status of this goal.
      *
-     * @return the current status of this goal.
+     * @return the active status of this goal.
      */
-    public Status getStatus() {
-        return this.status;
+    public boolean isActive() {
+        return this.active;
     }
 
     /**
-     * Sets the current status of this goal to the passed value.
+     * Gets the completed status of this goal.
      *
-     * @param status the new status for this goal.
+     * @return the completed status of this goal.
      */
-    public void setStatus(Status status) {
-        this.status = status;
+    public boolean isCompleted() {
+        return this.completed;
     }
 
     /**
@@ -139,13 +144,20 @@ public abstract class Goal {
      *
      * @param update the amount to increment progress by
      */
-    public void updateProgress(int update) {
-        if (this.status == Status.ONGOING) {
+    public boolean updateProgress(Unit unit, int update) {
+        if (this.active && !this.completed && this.unit == unit) {
+
             this.progress = this.progress + update;
 
-            if (this.progress >= this.target) {
-                this.status = Status.COMPLETED;
+            if (this.progress > this.target) {
+                this.completed = true;
             }
+            return true;
         }
+        return false;
+    }
+
+    public String toString() {
+        return this.target + " of " + this.unit + " by " + this.endDate;
     }
 }

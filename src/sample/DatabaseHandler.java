@@ -46,6 +46,7 @@ import java.util.Map;
  * 1.9  - Added methods to assist with activity logging.
  * 1.10 - Rewrote getBurnedEntries and getIntakeEntries as JOIN statements to fix exception originating from having
  *        nested ResultSets.
+ * 1.11 - Implemented adding and updating goals.
  */
 public class DatabaseHandler
 {
@@ -821,5 +822,81 @@ public class DatabaseHandler
         }
 
         return kcal;
+    }
+
+    /**
+     * Adds a new goal to the database for a user.
+     *
+     * @param username the user's username.
+     * @param goal the user's new goal.
+     */
+    public void insertGoal(String username, Goal goal) {
+        String sql = "INSERT INTO goal (user_id, target, unit, progress, end_date) VALUES('" +
+                      getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
+                     "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "')";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Retrieves all of a user's goals from the database.
+     *
+     * @param username the user's username.
+     * @return the user's goals in an ArrayList.
+     */
+    public ArrayList<Goal> selectGoals(String username) {
+        String sql = "SELECT target, unit, progress, end_date FROM goal WHERE user_id = " +
+                getUserIDFromUsername(username);
+
+        ArrayList<Goal> goals = new ArrayList<>();
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            while (rs.next()) {
+                int target = rs.getInt("target");
+                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                int progress = rs.getInt("progress");
+                LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
+
+                goals.add(new IndividualGoal(target, unit, endDate, progress));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return goals;
+    }
+
+    /**
+     * Updates a user's goal in the database.
+     *
+     * @param username the user's username.
+     * @param goal the updated goal to be updated in the database.
+     */
+    public void updateGoal(String username, Goal goal) {
+        int target = goal.getTarget();
+        String unit = goal.getUnit().toString();
+        String endDate = goal.getEndDate().toString();
+        int progress = goal.getProgress();
+
+        String sql = "UPDATE goal SET progress = " + progress + " WHERE user_id = '" +
+                getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
+                "' AND end_date = '" + endDate + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

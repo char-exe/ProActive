@@ -38,10 +38,10 @@
                                     <TextField fx:id="dietAmountField" prefHeight="37.0" prefWidth="149.0" />
                                     <ComboBox fx:id="dietUnitSelect" prefHeight="36.0" prefWidth="150.0" />
                                     <DatePicker fx:id="dietDateField" prefHeight="38.0" prefWidth="125.0" />
-                                    <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="33.0" text="Set" />
+                                    <Button mnemonicParsing="false" onAction="#setDietGoal" prefHeight="33.0" prefWidth="33.0" text="Set" />
                                  </children>
                               </HBox>
-                              <Label fx:id="dietGoalLabel" text="Label" />
+                              <Label fx:id="dietGoalLabel" />
                               <Label text="Calorie Burn">
                                  <font>
                                     <Font size="24.0" />
@@ -54,10 +54,10 @@
                                  <children>
                                     <TextField fx:id="calorieAmountField" prefHeight="38.0" prefWidth="149.0" />
                                     <DatePicker fx:id="calorieDateField" prefHeight="38.0" prefWidth="125.0" />
-                                    <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="33.0" text="Set" />
+                                    <Button mnemonicParsing="false" onAction="#setCaloriesGoal" prefHeight="36.0" prefWidth="33.0" text="Set" />
                                  </children>
                                         </HBox>
-                              <Label fx:id="calorieGoalLabel" text="Label" />
+                              <Label fx:id="calorieGoalLabel" />
                                         <Label fx:id="exercisePopUp" />
                               <Label text="Time Exercising">
                                  <font>
@@ -69,13 +69,13 @@
                                                 <ComboBox fx:id="exerciseSelect" editable="true" prefHeight="35.0" prefWidth="150.0" promptText="Select exercise..." HBox.hgrow="ALWAYS" />
                                                 <TextField fx:id="exerciseMinutesField" prefHeight="37.0" prefWidth="66.0" promptText="Minutes..." />
                                     <DatePicker fx:id="exerciseDateField" prefHeight="36.0" prefWidth="126.0" />
-                                                <Button mnemonicParsing="false" prefHeight="35.0" text="Set" HBox.hgrow="ALWAYS" />
+                                                <Button mnemonicParsing="false" onAction="#setExerciseGoal" prefHeight="35.0" text="Set" HBox.hgrow="ALWAYS" />
                                  </children>
                                  <padding>
                                     <Insets top="25.0" />
                                  </padding>
                               </HBox>
-                              <Label fx:id="timeExercisingLabel" text="Label" />
+                              <Label fx:id="exerciseGoalLabel" />
                                     </children>
                                 </VBox>
                             </center>

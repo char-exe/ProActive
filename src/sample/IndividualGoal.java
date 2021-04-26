@@ -2,6 +2,18 @@ package sample;
 
 import java.time.LocalDate;
 
+/**
+ * Class for modelling an individual user goal in the ProActive app by its target amount, concerned units, end date,
+ * current progress, and completion status.
+ *
+ * @author Samuel Scarfe
+ *
+ * @version 1.0
+ *
+ * @see Goal
+ *
+ * 1.0 - First working version.
+ */
 public class IndividualGoal extends Goal {
 
     /**
@@ -24,9 +36,8 @@ public class IndividualGoal extends Goal {
      * @param unit     the units targeted by the goal.
      * @param endDate  the end date of the goal.
      * @param progress the current progress of the goal.
-     * @param status   the completion status of the goal.
      */
-    public IndividualGoal(int target, Unit unit, LocalDate endDate, int progress, Status status) {
-        super(target, unit, endDate, progress, status);
+    public IndividualGoal(int target, Unit unit, LocalDate endDate, int progress) {
+        super(target, unit, endDate, progress);
     }
 }
