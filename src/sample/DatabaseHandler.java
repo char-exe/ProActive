@@ -20,39 +20,32 @@ import java.util.Map;
  * @author Samuel Scarfe
  * @author Owen Tasker
  *
- * @version 1.9
+ * @version 1.10
  *
- * 1.0 - Initial handler created, methods with ability to select all information from a table added
- *
- * 1.1 - Added methods to insert a user to a table as well as add their weight with supporting methods such as finding
- *       the userID based on a username
- *
- * 1.2 - Refactored code to a more OOP approach, created the constructor and created a method to (as much as possible)
- *       make the creation of a user an atomic action of creating the user and creating an initial weight entry, this
- *       reinforces the principle of DRY in that instead of connecting to the database every query, we only connect
- *       once at the initial creation, this improves response time significantly
- *
- * 1.3 - Added enums for all db tables and columns, this means that we can limit the values passed into methods to
- *       ensure type safety
- *
- * 1.4 - Added Javadoc comments for all methods
- *
- * 1.5 - Updated createUserEntry and insertIntoUserTable to take hash and salt rather than password. Updated
- *       getPasswordFromUsername to getHashFromUsername. Added getSaltFromUsername. Updated userColumns enum to include
- *       hash and salt. Updated insertIntoUserTable to use PreparedStatement so that data is not converted to String
- *       before input to database, important for hash and salt which are put into BLOB type on SQLite side meaning they
- *       will retain the datatype passed in as.
- *
- * 1.6 - Updated such that database string no longer needs to be passed as an argument. Added method for getting intake
- *       data for a user from the database. Added method for getting minutes spent data from database. Added method
- *       for getting burn rate in calories per minute and calories burned data for user. Added method for getting
- *       weight entries for a user from the database.
- *
- * 1.7 - Minor refactor to enforce the Singleton pattern.
- *
- * 1.8 - Added Javadoc for outstanding methods
- *
- * 1.9 - Added methods to assist with activity logging.
+ * 1.0  - Initial handler created, methods with ability to select all information from a table added
+ * 1.1  - Added methods to insert a user to a table as well as add their weight with supporting methods such as finding
+ *        the userID based on a username
+ * 1.2  - Refactored code to a more OOP approach, created the constructor and created a method to (as much as possible)
+ *        make the creation of a user an atomic action of creating the user and creating an initial weight entry, this
+ *        reinforces the principle of DRY in that instead of connecting to the database every query, we only connect
+ *        once at the initial creation, this improves response time significantly
+ * 1.3  - Added enums for all db tables and columns, this means that we can limit the values passed into methods to
+ *        ensure type safety
+ * 1.4  - Added Javadoc comments for all methods
+ * 1.5  - Updated createUserEntry and insertIntoUserTable to take hash and salt rather than password. Updated
+ *        getPasswordFromUsername to getHashFromUsername. Added getSaltFromUsername. Updated userColumns enum to include
+ *        hash and salt. Updated insertIntoUserTable to use PreparedStatement so that data is not converted to String
+ *        before input to database, important for hash and salt which are put into BLOB type on SQLite side meaning they
+ *        will retain the datatype passed in as.
+ * 1.6  - Updated such that database string no longer needs to be passed as an argument. Added method for getting intake
+ *        data for a user from the database. Added method for getting minutes spent data from database. Added method
+ *        for getting burn rate in calories per minute and calories burned data for user. Added method for getting
+ *        weight entries for a user from the database.
+ * 1.7  - Minor refactor to enforce the Singleton pattern.
+ * 1.8  - Added Javadoc for outstanding methods
+ * 1.9  - Added methods to assist with activity logging.
+ * 1.10 - Rewrote getBurnedEntries and getIntakeEntries as JOIN statements to fix exception originating from having
+ *        nested ResultSets.
  */
 public class DatabaseHandler
 {
@@ -441,21 +434,6 @@ public class DatabaseHandler
         return exerciseItem;
     }
 
-    public float getBurnRate(int exerciseId) {
-        String sql = "SELECT burn_rate FROM exercise WHERE id = '" + exerciseId + "'";
-        float burnRate= 0;
-
-        try (Statement stmt = this.conn.createStatement();
-             ResultSet rs   = stmt.executeQuery(sql)) {
-
-            burnRate =  rs.getInt("burn_rate");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return burnRate/30;
-    }
-
     /**
      * Method to delete tokens from the regtokens table, this occurs when a token has been used to ensure we minimize
      * database bloat
@@ -554,24 +532,23 @@ public class DatabaseHandler
         LocalDate today = LocalDate.now();
         LocalDate lastWeek = today.minusDays(6);
 
-        String sql = "SELECT date_of, quantity, food_id FROM meal WHERE user_id = '" + getUserIDFromUsername(username) + "' " +
-                     "AND date_of BETWEEN '" + lastWeek.toString() + "' AND '" + today.toString() + "'";
+        String sql = "SELECT date_of, quantity, kcal FROM meal INNER JOIN food ON meal.food_id = food.id " +
+                     "WHERE user_id = '" + getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" +
+                      lastWeek.toString() + "' AND '" + today.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 String date = rs.getString("date_of");
                 int quantity = rs.getInt("quantity");
-                int foodId = rs.getInt("food_id");
-                if (entries.containsKey(date))
-                {
-                    entries.put(date, entries.get(date) + (quantity * getKcal(foodId))/100);
+                double kcal = rs.getDouble("kcal");
+
+                if (entries.containsKey(date)) {
+                    entries.put(date, entries.get(date) + (quantity * kcal/100));
                 }
-                else
-                {
-                    entries.put(date, (quantity * getKcal(foodId))/100);
+                else {
+                    entries.put(date, (quantity * kcal)/100);
                 }
             }
         }
@@ -596,22 +573,19 @@ public class DatabaseHandler
         LocalDate lastWeek = today.minusDays(6);
 
         String sql = "SELECT date_of, duration FROM activity WHERE user_id = '" +
-                getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
-                "' AND '" + today.toString() + "'";
+                      getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
+                     "' AND '" + today.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 String date = rs.getString("date_of");
 
-                if (entries.containsKey(date))
-                {
+                if (entries.containsKey(date)) {
                     entries.put(date, entries.get(date) + rs.getInt("duration"));
                 }
-                else
-                {
+                else {
                     entries.put(date, rs.getInt("duration"));
                 }
             }
@@ -636,25 +610,22 @@ public class DatabaseHandler
         LocalDate today = LocalDate.now();
         LocalDate lastWeek = today.minusDays(6);
 
-        String sql = "SELECT date_of, duration, exercise_id FROM activity WHERE user_id = '" +
-                getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
-                "' AND '" + today.toString() + "'";
+        String sql = "SELECT date_of, duration, burn_rate FROM activity INNER JOIN exercise " +
+                     " ON activity.exercise_id = exercise.id WHERE user_id = '" + getUserIDFromUsername(username) +
+                     "' " + "AND date_of BETWEEN '" + lastWeek.toString() + "' AND '" + today.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 String date = rs.getString("date_of");
-                int exerciseId = rs.getInt("exercise_id");
+                float burnRate = rs.getFloat("burn_rate");
 
-                if (entries.containsKey(date))
-                {
-                    entries.put(date, entries.get(date) + rs.getInt("duration") * getBurnRate(exerciseId));
+                if (entries.containsKey(date)) {
+                    entries.put(date, entries.get(date) + rs.getInt("duration") * burnRate/30);
                 }
-                else
-                {
-                    entries.put(date, rs.getInt("duration") * getBurnRate(exerciseId));
+                else {
+                    entries.put(date, rs.getInt("duration") * burnRate/30);
                 }
             }
         }
@@ -685,8 +656,7 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 String date = rs.getString("date_of");
 
                 entries.put(date, rs.getInt("weight"));
@@ -712,15 +682,14 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 exercises.add(rs.getString("name"));
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(exercises);
+
         return exercises;
     }
 
@@ -737,8 +706,7 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 foods.add(rs.getString("name"));
             }
         }
@@ -841,27 +809,6 @@ public class DatabaseHandler
      */
     public double getKcal(String foodName) {
         String sql = "SELECT kcal FROM food WHERE name LIKE '" + foodName + "'";
-        double kcal = -1;
-
-        try (Statement stmt  = this.conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql)) {
-
-            kcal = rs.getDouble("kcal");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return kcal;
-    }
-
-    /**
-     * Method to get the kcal value for a food item
-     * @param foodId the food item requested
-     * @return the kcal value for the food item
-     */
-    public double getKcal(int foodId) {
-        String sql = "SELECT kcal FROM food WHERE id = '" + foodId + "'";
         double kcal = -1;
 
         try (Statement stmt  = this.conn.createStatement();
