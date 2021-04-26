@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="10.0" styleClass="base" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GoalController">
+    <children>
+        <Label text="Goals">
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+            <padding>
+                <Insets left="10.0" top="10.0" />
+            </padding>
+            <font>
+                <Font size="22.0" />
+            </font></Label>
+        <TabPane prefHeight="200.0" prefWidth="200.0" styleClass="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <tabs>
+                <Tab closable="false" styleClass="parentTab" text="Set Goals">
+                    <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                            <center>
+                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                                    <children>
+                              <Label text="Dietary">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                 <padding>
+                                    <Insets top="25.0" />
+                                 </padding>
+                                 <children>
+                                    <TextField fx:id="dietAmountField" prefHeight="37.0" prefWidth="149.0" />
+                                    <ComboBox fx:id="dietUnitSelect" prefHeight="36.0" prefWidth="150.0" />
+                                    <DatePicker fx:id="dietDateField" prefHeight="38.0" prefWidth="125.0" />
+                                    <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="33.0" text="Set" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="dietGoalLabel" text="Label" />
+                              <Label text="Calorie Burn">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                                        <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                            <padding>
+                                                <Insets top="25.0" />
+                                            </padding>
+                                 <children>
+                                    <TextField fx:id="calorieAmountField" prefHeight="38.0" prefWidth="149.0" />
+                                    <DatePicker fx:id="calorieDateField" prefHeight="38.0" prefWidth="125.0" />
+                                    <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="33.0" text="Set" />
+                                 </children>
+                                        </HBox>
+                              <Label fx:id="calorieGoalLabel" text="Label" />
+                                        <Label fx:id="exercisePopUp" />
+                              <Label text="Time Exercising">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                 <children>
+                                                <ComboBox fx:id="exerciseSelect" editable="true" prefHeight="35.0" prefWidth="150.0" promptText="Select exercise..." HBox.hgrow="ALWAYS" />
+                                                <TextField fx:id="exerciseMinutesField" prefHeight="37.0" prefWidth="66.0" promptText="Minutes..." />
+                                    <DatePicker fx:id="exerciseDateField" prefHeight="36.0" prefWidth="126.0" />
+                                                <Button mnemonicParsing="false" prefHeight="35.0" text="Set" HBox.hgrow="ALWAYS" />
+                                 </children>
+                                 <padding>
+                                    <Insets top="25.0" />
+                                 </padding>
+                              </HBox>
+                              <Label fx:id="timeExercisingLabel" text="Label" />
+                                    </children>
+                                </VBox>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+                <Tab closable="false" styleClass="parentTab" text="Current Goals">
+                    <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                            <center>
+                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="TOP_CENTER">
+                                    <children>
+                                        <HBox alignment="CENTER">
+                                            <children>
+                                                <Label text="Weight">
+                                                    <font>
+                                                        <Font size="24.0" />
+                                                    </font>
+                                                    <padding>
+                                                        <Insets right="20.0" />
+                                                    </padding>
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                            </children>
+                                            <padding>
+                                                <Insets top="25.0" />
+                                            </padding>
+                                        </HBox>
+                                        <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                            <padding>
+                                                <Insets top="25.0" />
+                                            </padding>
+                                            <children>
+                                                <TextField fx:id="weightField" prefHeight="50.0" prefWidth="95.0" promptText="New weight..." />
+                                                <ChoiceBox fx:id="weightUnits" prefHeight="51.0" prefWidth="60.0" />
+                                            </children>
+                                        </HBox>
+                                        <Label fx:id="weightFieldsLabel" />
+                                        <Label layoutX="295.0" layoutY="10.0" prefWidth="108.0" text="Entry date">
+                                            <font>
+                                                <Font size="24.0" />
+                                            </font>
+                                            <padding>
+                                                <Insets top="25.0" />
+                                            </padding>
+                                        </Label>
+                                        <HBox alignment="TOP_CENTER" layoutX="10.0" layoutY="70.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                            <padding>
+                                                <Insets top="25.0" />
+                                            </padding>
+                                            <children>
+                                                <DatePicker fx:id="weightDateField" prefHeight="39.0" prefWidth="174.0" />
+                                            </children>
+                                        </HBox>
+                                        <Label fx:id="weightDateLabel" />
+                                        <Button mnemonicParsing="false" text="Submit" VBox.vgrow="ALWAYS">
+                                            <font>
+                                                <Font size="18.0" />
+                                            </font>
+                                        </Button>
+                                    </children>
+                                </VBox>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+                <Tab closable="false" styleClass="parentTab" text="Past Goals">
+                    <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                            <center>
+                                <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="Water intake">
+                                                            <font>
+                                                                <Font size="24.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <VBox alignment="CENTER">
+                                                            <children>
+                                                                <HBox alignment="CENTER" spacing="25.0">
+                                                                    <children>
+                                                                        <Button mnemonicParsing="false" text="minusIconHere" />
+                                                                        <Label text="noCupsPlaceholder">
+                                                                            <HBox.margin>
+                                                                                <Insets />
+                                                                            </HBox.margin>
+                                                                        </Label>
+                                                                        <Button layoutX="108.0" layoutY="48.0" mnemonicParsing="false" text="plusIconHere" />
+                                                                    </children>
+                                                                </HBox>
+                                                                <Label text="(250ml)" />
+                                                            </children>
+                                                        </VBox>
+                                                        <Label layoutX="119.0" layoutY="206.0" text="Date">
+                                                            <font>
+                                                                <Font size="24.0" />
+                                                            </font>
+                                                            <padding>
+                                                                <Insets top="20.0" />
+                                                            </padding>
+                                                        </Label>
+                                                        <DatePicker fx:id="foodEntryDate" />
+                                                        <Label fx:id="foodDateLabel" />
+                                                    </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <TabPane fx:id="mealTabPane" prefHeight="200.0" prefWidth="200.0" styleClass="nutritionTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                                                            <tabs>
+                                                                <Tab text="Breakfast">
+                                                                    <content>
+                                                                        <BorderPane>
+                                                                            <center>
+                                                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                                                                    <children>
+                                                                                        <TableView fx:id="breakfastTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                                                                            <columns>
+                                                                                                <TableColumn fx:id="breakfastFoodColumn" prefWidth="144.40002137422562" text="Food" />
+                                                                                                <TableColumn fx:id="breakfastCaloriesColumn" prefWidth="201.99998474121094" text="Calories" />
+                                                                                            </columns>
+                                                                                        </TableView>
+                                                                                        <Label text="To delete food entry: select item and press DEL key" textFill="#ffb247">
+                                                                                            <VBox.margin>
+                                                                                                <Insets />
+                                                                                            </VBox.margin>
+                                                                                            <font>
+                                                                                                <Font name="System Bold" size="12.0" />
+                                                                                            </font>
+                                                                                        </Label>
+                                                                                        <HBox alignment="CENTER">
+                                                                                            <VBox.margin>
+                                                                                                <Insets />
+                                                                                            </VBox.margin>
+                                                                                        </HBox>
+                                                                                    </children>
+                                                                                </VBox>
+                                                                            </center>
+                                                                        </BorderPane>
+                                                                    </content>
+                                                                </Tab>
+                                                                <Tab text="Lunch">
+                                                                    <content>
+                                                                        <BorderPane>
+                                                                            <center>
+                                                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                                                                    <children>
+                                                                                        <TableView fx:id="lunchTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                                                                            <columns>
+                                                                                                <TableColumn fx:id="lunchFoodColumn" prefWidth="150.40002137422562" text="Food" />
+                                                                                                <TableColumn fx:id="lunchCaloriesColumn" prefWidth="195.99998474121094" text="Calories" />
+                                                                                            </columns>
+                                                                                        </TableView>
+                                                                                        <HBox alignment="CENTER" spacing="5.0" />
+                                                                                        <HBox alignment="CENTER">
+                                                                                            <VBox.margin>
+                                                                                                <Insets />
+                                                                                            </VBox.margin>
+                                                                                        </HBox>
+                                                                                    </children>
+                                                                                </VBox>
+                                                                            </center>
+                                                                        </BorderPane>
+                                                                    </content>
+                                                                </Tab>
+                                                                <Tab text="Dinner">
+                                                                    <content>
+                                                                        <BorderPane>
+                                                                            <center>
+                                                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                                                                    <children>
+                                                                                        <TableView fx:id="dinnerTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                                                                            <columns>
+                                                                                                <TableColumn fx:id="dinnerFoodColumn" prefWidth="148.59997254610062" text="Food" />
+                                                                                                <TableColumn fx:id="dinnerCaloriesColumn" prefWidth="199.40000915527344" text="Calories" />
+                                                                                            </columns>
+                                                                                        </TableView>
+                                                                                        <HBox alignment="CENTER" spacing="5.0" />
+                                                                                        <HBox alignment="CENTER">
+                                                                                            <VBox.margin>
+                                                                                                <Insets />
+                                                                                            </VBox.margin>
+                                                                                        </HBox>
+                                                                                    </children>
+                                                                                </VBox>
+                                                                            </center>
+                                                                        </BorderPane>
+                                                                    </content>
+                                                                </Tab>
+                                                                <Tab text="Snacks">
+                                                                    <content>
+                                                                        <BorderPane>
+                                                                            <center>
+                                                                                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                                                                    <children>
+                                                                                        <TableView fx:id="snackTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                                                                            <columns>
+                                                                                                <TableColumn fx:id="snacksFoodColumn" prefWidth="146.39996033906937" text="Food" />
+                                                                                                <TableColumn fx:id="snacksCaloriesColumn" prefWidth="199.99998474121094" text="Calories" />
+                                                                                            </columns>
+                                                                                        </TableView>
+                                                                                        <HBox alignment="CENTER" spacing="5.0" />
+                                                                                        <HBox alignment="CENTER">
+                                                                                            <VBox.margin>
+                                                                                                <Insets />
+                                                                                            </VBox.margin>
+                                                                                        </HBox>
+                                                                                    </children>
+                                                                                </VBox>
+                                                                            </center>
+                                                                        </BorderPane>
+                                                                    </content>
+                                                                </Tab>
+                                                            </tabs>
+                                                        </TabPane>
+                                                        <HBox alignment="CENTER" spacing="5.0">
+                                                            <children>
+                                                                <ComboBox fx:id="mealSelect" prefHeight="26.0" prefWidth="81.0" promptText="Meal" />
+                                                                <ComboBox fx:id="foodComboBox" editable="true" prefHeight="35.0" prefWidth="150.0" promptText="Select food item..." />
+                                                                <TextField fx:id="foodQuantity" prefHeight="26.0" prefWidth="87.0" promptText="Quantity (g)" />
+                                                            </children>
+                                                        </HBox>
+                                                        <HBox prefHeight="38.0" prefWidth="299.0">
+                                                            <children>
+                                                                <Button mnemonicParsing="false" prefHeight="35.0" text="Add" />
+                                                                <Button mnemonicParsing="false" prefHeight="35.0" text="Add custom item" />
+                                                            </children>
+                                                        </HBox>
+                                                        <Label fx:id="foodFieldsLabel" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                        <Button mnemonicParsing="false" text="Save changes">
+                                            <font>
+                                                <Font size="18.0" />
+                                            </font>
+                                        </Button>
+                                    </children>
+                                </VBox>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+            </tabs>
+            <VBox.margin>
+                <Insets bottom="50.0" left="50.0" right="50.0" />
+            </VBox.margin>
+            <padding>
+                <Insets bottom="25.0" left="40.0" right="40.0" top="25.0" />
+            </padding>
+        </TabPane>
+    </children>
+</VBox>
