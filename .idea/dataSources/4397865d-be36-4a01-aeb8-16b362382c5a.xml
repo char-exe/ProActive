@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="proactive.db">
+<dataSource name="SQLite - proactive.db">
   <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.20">
     <root id="1">
       <ServerVersion>3.34.0</ServerVersion>
