@@ -285,7 +285,7 @@ public class GoalController implements Initializable {
 
         //Load rows into holder
         for (Goal goal : user.getGoals()) {
-            if (!goal.isActive()) { //if end date has passed for goal
+            if (!goal.isActive() || goal.isCompleted()) { //if end date has passed for goal or goal is complete
                 goalRows.add(new GoalItem(goal));
             }
         }
