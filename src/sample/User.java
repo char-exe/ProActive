@@ -200,6 +200,15 @@ public class User {
     }
 
     /**
+     * Gets the list of goals for this user.
+     *
+     * @return this user's goals as an ArrayList.
+     */
+    public ArrayList<Goal> getGoals() {
+        return this.goals;
+    }
+
+    /**
      * Sets the User's firstname to the passed parameter.
      *
      * @param firstname the User's new firstname

@@ -487,15 +487,15 @@ public class LogActivityController implements Initializable {
      * Wrapper class for table rows, wraps food name and calories into one class.
      */
     public class FoodItem {
-        SimpleStringProperty foodName;
-        SimpleDoubleProperty calories;
+        private SimpleStringProperty foodName;
+        private SimpleDoubleProperty calories;
 
         /**
          * Constructs a table row comprised of food name and calories.
          * @param foodName the name of the food.
          * @param quantity the amount consumed in grams.
          */
-        FoodItem(String foodName, int quantity) {
+        public FoodItem(String foodName, int quantity) {
             this.foodName = new SimpleStringProperty(foodName);
             double kcal = dh.getKcal(foodName); //stored in the database as kcal per 100g
             calories = new SimpleDoubleProperty(((kcal * quantity) / 100));

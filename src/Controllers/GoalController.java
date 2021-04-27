@@ -1,13 +1,16 @@
 package Controllers;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import sample.DatabaseHandler;
 import sample.Goal;
 import sample.IndividualGoal;
@@ -24,13 +27,16 @@ import javafx.fxml.FXML;
  *
  * @author Samuel Scarfe
  *
- * @version 1.0
+ * @version 1.1
  *
  * 1.0 - First working version. Functionality for adding goals implemented with simple error checking.
+ * 1.1 - Implemented functionality for checking current and past goals.
  *
  */
 
 public class GoalController implements Initializable {
+
+    @FXML private TabPane tabPane;
 
     //Set Goals tab
     @FXML private TextField dietAmountField;
@@ -44,6 +50,21 @@ public class GoalController implements Initializable {
     @FXML private TextField exerciseMinutesField;
     @FXML private DatePicker exerciseDateField;
     @FXML private Label exerciseGoalLabel;
+
+    //Current Goals tab
+    @FXML private TableView<GoalItem> currentGoalsTable;
+    @FXML private TableColumn<GoalItem, Integer> currentTargetColumn;
+    @FXML private TableColumn<GoalItem, String> currentUnitColumn;
+    @FXML private TableColumn<GoalItem, Integer> currentProgressColumn;
+    @FXML private TableColumn<GoalItem, String> currentEndDateColumn;
+
+    //Past Goals tab
+    @FXML private TableView<GoalItem> pastGoalsTable;
+    @FXML private TableColumn<GoalItem, Integer> pastTargetColumn;
+    @FXML private TableColumn<GoalItem, String> pastUnitColumn;
+    @FXML private TableColumn<GoalItem, Integer> pastProgressColumn;
+    @FXML private TableColumn<GoalItem, String> pastEndDateColumn;
+    @FXML private TableColumn<GoalItem, Boolean> pastCompletedColumn;
 
     private User user;
     private DatabaseHandler dh;
@@ -98,6 +119,49 @@ public class GoalController implements Initializable {
         dietUnitSelect.getItems().addAll("Calories", "Protein (g)");
         exerciseSelect.getItems().add("Any Exercise");
         exerciseSelect.getItems().addAll(dh.getExerciseNames());
+
+        //Set tab selection action for Current Goals
+        //https://stackoverflow.com/questions/43092588/how-to-perform-some-action-when-the-tab-is-selected-in-javafx-scene-builder
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1)
+            {
+                if ("Current Goals".equals(t1.getText()))
+                {
+                    loadCurrentGoals(new ActionEvent());
+                }
+            }
+        });
+
+        //Set tab selection action for Past Goals
+        //https://stackoverflow.com/questions/43092588/how-to-perform-some-action-when-the-tab-is-selected-in-javafx-scene-builder
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1)
+            {
+                if ("Past Goals".equals(t1.getText()))
+                {
+                    loadPastGoals(new ActionEvent());
+                }
+            }
+        });
+
+        //Instantiate table placeholder texts
+        currentGoalsTable.setPlaceholder(new Label("No current goals, set some in Set Goals"));
+        pastGoalsTable.setPlaceholder(new Label("No past goals, view current goals in Current Goals"));
+
+        //Instantiate table columns
+        currentTargetColumn.setCellValueFactory(new PropertyValueFactory<>("Target"));
+        currentUnitColumn.setCellValueFactory(new PropertyValueFactory<>("Unit"));
+        currentProgressColumn.setCellValueFactory(new PropertyValueFactory<>("Progress"));
+        currentEndDateColumn.setCellValueFactory(new PropertyValueFactory<>("EndDate"));
+        pastTargetColumn.setCellValueFactory(new PropertyValueFactory<>("Target"));
+        pastUnitColumn.setCellValueFactory(new PropertyValueFactory<>("Unit"));
+        pastProgressColumn.setCellValueFactory(new PropertyValueFactory<>("Progress"));
+        pastEndDateColumn.setCellValueFactory(new PropertyValueFactory<>("EndDate"));
+        pastCompletedColumn.setCellValueFactory(new PropertyValueFactory<>("Completed"));
     }
 
     /**
@@ -191,6 +255,46 @@ public class GoalController implements Initializable {
     }
 
     /**
+     * Method for loading a user's current goals into the current goals table.
+     *
+     * @param actionEvent a mouseclick on the current goals tab.
+     */
+    public void loadCurrentGoals(ActionEvent actionEvent) {
+        //Create holder for the table rows
+        ObservableList<GoalItem> goalRows = FXCollections.observableArrayList();
+
+        //Load rows into holder
+        for (Goal goal : user.getGoals()) {
+            if (goal.isActive() && !goal.isCompleted()) { //If goal is active active and not completed
+                goalRows.add(new GoalItem(goal));
+            }
+        }
+
+        //Add rows to table
+        currentGoalsTable.setItems(goalRows);
+    }
+
+    /**
+     * Method for loading a user's past goals into the past goals table.
+     *
+     * @param actionEvent a mouseclick on the past goals tab.
+     */
+    public void loadPastGoals(ActionEvent actionEvent) {
+        //Create holder for table rows
+        ObservableList<GoalItem> goalRows = FXCollections.observableArrayList();
+
+        //Load rows into holder
+        for (Goal goal : user.getGoals()) {
+            if (!goal.isActive()) { //if end date has passed for goal
+                goalRows.add(new GoalItem(goal));
+            }
+        }
+
+        //Add rows to table
+        pastGoalsTable.setItems(goalRows);
+    }
+
+    /**
      * Private helper method for checking diet fields and presenting user prompts.
      *
      * @param amount the amount to consume
@@ -281,6 +385,120 @@ public class GoalController implements Initializable {
             return false;
         }
 
-        return true; //All field fine
+        return true; //All fields fine
+    }
+
+    /**
+     * Wrapper class for table rows, wraps target, unit, progress, end date, and completed status into a holding class.
+     */
+    public class GoalItem {
+        private SimpleIntegerProperty target;
+        private SimpleStringProperty unit;
+        private SimpleIntegerProperty progress;
+        private SimpleStringProperty endDate;
+        private SimpleBooleanProperty completed;
+
+        /**
+         * Constructs a goal item from a goal.
+         *
+         * @param goal The goal to be parsed as a goal item.
+         */
+        public GoalItem(Goal goal) {
+            this.target = new SimpleIntegerProperty(goal.getTarget());
+            this.unit = new SimpleStringProperty(goal.getUnit().toString());
+            this.progress = new SimpleIntegerProperty(goal.getProgress());
+            this.endDate = new SimpleStringProperty(goal.getEndDate().toString());
+            this.completed = new SimpleBooleanProperty(goal.isCompleted());
+        }
+
+        /**
+         * Gets the target for this goal item.
+         *
+         * @return the target for this goal item.
+         */
+        public Integer getTarget() {
+            return this.target.get();
+        }
+
+        /**
+         * Sets the target for this goal item to the passed value.
+         *
+         * @param target the new target value.
+         */
+        public void setTarget(int target) {
+            this.target = new SimpleIntegerProperty(target);
+        }
+
+        /**
+         * Gets the unit for this goal item.
+         *
+         * @return the nit for this goal item.
+         */
+        public String getUnit() {
+            return this.unit.get();
+        }
+
+        /**
+         * Sets the unit for this goal item to the passed value.
+         *
+         * @param unit the new unit value.
+         */
+        public void setUnit(String unit) {
+            this.unit = new SimpleStringProperty(unit);
+        }
+
+        /**
+         * Gets the progress for this goal item.
+         *
+         * @return the progress for this goal item.
+         */
+        public Integer getProgress() {
+            return this.progress.get();
+        }
+
+        /**
+         * Sets the progress for this goal item to the passed value.
+         *
+         * @param progress the new progress value.
+         */
+        public void setProgress(int progress) {
+            this.progress = new SimpleIntegerProperty(progress);
+        }
+
+        /**
+         * Gets the end date for this goal item.
+         *
+         * @return the end date for this goal item.
+         */
+        public String getEndDate() {
+            return this.endDate.get();
+        }
+
+        /**
+         * Sets the end date for this goal item to the passed value.
+         *
+         * @param endDate the new end date value.
+         */
+        public void setEndDate(String endDate) {
+            this.endDate = new SimpleStringProperty(endDate);
+        }
+
+        /**
+         * Gets the completed status for this goal item.
+         *
+         * @return the completed status for this goal item.
+         */
+        public Boolean getCompleted() {
+            return this.completed.get();
+        }
+
+        /**
+         * Sets the completed status for this goal item to the passed value.
+         *
+         * @param completed the new completed status value.
+         */
+        public void setCompleted(boolean completed) {
+            this.completed = new SimpleBooleanProperty(completed);
+        }
     }
 }
