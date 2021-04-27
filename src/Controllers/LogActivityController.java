@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import sample.DatabaseHandler;
+import sample.Goal;
 import sample.User;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -183,6 +185,8 @@ public class LogActivityController implements Initializable {
             //Try to add to database and show appropriate success/fail message to user
             try {
                 dh.insertExercise(user.getUsername(), exercise, minutes);
+                user.updateGoals(Goal.Unit.valueOf(exercise.toUpperCase(Locale.ROOT)), minutes);
+                user.updateGoals(Goal.Unit.EXERCISE, minutes);
                 exercisePopUp.setText(exercise + " for " + minutesText + " minutes added to database");
             }
             catch (SQLException e) {
