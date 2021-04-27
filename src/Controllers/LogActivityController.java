@@ -1,6 +1,7 @@
 package Controllers;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,22 +12,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import sample.DatabaseHandler;
 import sample.User;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
 /**
  * A controller for the activity logging page of the app.
  *
- * @author Evan Clayton?
+ * @author Evan Clayton
  * @author Samuel Scarfe
+ * @author Charlie Jones
  *
  * @version 1.5
  *
@@ -60,6 +61,7 @@ public class LogActivityController implements Initializable {
     @FXML private DatePicker foodEntryDate;
     @FXML private Label foodFieldsLabel;
     @FXML private Label foodDateLabel;
+    @FXML private Label noCupsIndicator;
 
     //Food tab tables
     @FXML private TableView<FoodItem> breakfastTable;
@@ -83,6 +85,11 @@ public class LogActivityController implements Initializable {
 
     private DatabaseHandler dh;
     private User user;
+
+    // Water intake buttons / indicator
+    @FXML private Button minusCup;
+    @FXML private Button addCup;
+    private int noCups = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -153,6 +160,27 @@ public class LogActivityController implements Initializable {
         dinnerCaloriesColumn.setCellValueFactory(new PropertyValueFactory<>("Calories"));
         snacksFoodColumn.setCellValueFactory(new PropertyValueFactory<>("FoodName"));
         snacksCaloriesColumn.setCellValueFactory(new PropertyValueFactory<>("Calories"));
+
+        // Default date set as today
+        foodEntryDate.setValue(LocalDate.now());
+
+        addCup.setOnAction(e -> {
+            noCups++;
+            noCupsIndicator.setText(String.valueOf(noCups));
+        });
+
+        minusCup.setOnAction(e -> {
+            if(noCups > 0){
+                noCups--;
+                noCupsIndicator.setText(String.valueOf(noCups));
+            }
+        });
+
+        foodEntryDate.valueProperty().addListener((obs, old, new_) -> {
+            noCups = dh.getWaterIntakeInCups(user.getUsername(), new_);
+            noCupsIndicator.setText(String.valueOf(noCups));
+        });
+
     }
 
     /**
@@ -162,6 +190,9 @@ public class LogActivityController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
+
+        noCups = dh.getWaterIntakeInCups(user.getUsername(), LocalDate.now());
+        noCupsIndicator.setText(String.valueOf(noCups));
     }
 
     /**
@@ -424,6 +455,12 @@ public class LogActivityController implements Initializable {
             dinner = new HashMap<>();
             snack = new HashMap<>();
 
+            if(!(dh.getWaterIntakeInCups(user.getUsername(), date) == noCups)){
+
+                dh.setWaterIntake(user.getUsername(), date, noCups);
+
+            }
+
             //Empty tables
             setTableData();
 
@@ -482,6 +519,11 @@ public class LogActivityController implements Initializable {
         dinnerTable.setItems(dinnerRows);
         snackTable.setItems(snacksRows);
     }
+
+//    public void updateWaterIntake(String username, LocalDate date){
+//
+//    }
+
 
     /**
      * Wrapper class for table rows, wraps food name and calories into one class.

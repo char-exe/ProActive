@@ -1,13 +1,10 @@
 package sample;
 
-import org.sqlite.core.DB;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Contains ways to interact with the backend database of the ProActive app, contains a number of
@@ -19,6 +16,7 @@ import java.util.Map;
  *
  * @author Samuel Scarfe
  * @author Owen Tasker
+ * @author Charlie Jones
  *
  * @version 1.9
  *
@@ -53,6 +51,8 @@ import java.util.Map;
  * 1.8 - Added Javadoc for outstanding methods
  *
  * 1.9 - Added methods to assist with activity logging.
+ *
+ * 1.95 - Added methods to assist with water intake logging and information retrieval.
  */
 public class DatabaseHandler
 {
@@ -875,4 +875,98 @@ public class DatabaseHandler
 
         return kcal;
     }
+
+    /**
+     * Method to retrieve water intake for user on a certain day, if no entry is found method returns 0
+     *
+     * @param username user's username
+     * @param date the date in which how much water intake has been recorded
+     * @return number of cups of water (250ml) consumed on that day
+     */
+    public int getWaterIntakeInCups(String username, LocalDate date){
+        int userID = -1;
+        int noCups = 0;
+
+        String user_id_sql = "SELECT user_id FROM user WHERE username = '" + username + "'";
+        String sql = "SELECT quantity FROM meal WHERE user_id = '" + userID + "' AND date_of = '" + date +
+                "' AND food_id = 0";
+
+        try{
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(user_id_sql);
+
+            userID = rs.getInt("user_id");
+
+            if(userID != -1) {
+                ResultSet rs1 = stmt.executeQuery(sql);
+
+                if(rs1.next()) {
+
+                    noCups = rs1.getInt("quantity") / 250;
+
+                    System.out.println(userID + ": " + noCups + " cups of water");
+
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return noCups;
+    }
+
+    /**
+     * Method to set the amount of water intake on a given day and store it into the meal table.
+     * It firstly checks if the user ID exists, then checks if there is already an entry into the database for the given
+     * day, if there is it will update the record and if there isn't, a new row will be inserted.
+     *
+     * @param username user's username
+     * @param date the date in which how much water intake has been recorded
+     * @param noCups number of cups of water (250ml) consumed on that day
+     */
+    public void setWaterIntake(String username, LocalDate date, int noCups){
+        int userID = getUserIDFromUsername(username);
+
+//        String user_id_sql = "SELECT user_id FROM user WHERE username = '" + username + "'";
+//        try (Statement stmt  = this.conn.createStatement();
+//             ResultSet rs    = stmt.executeQuery(user_id_sql)) {
+//
+//            userID = rs.getInt("user_id");
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if(userID != -1) {
+
+            String check_if_entry_exists_sql = "SELECT COUNT(*) FROM meal WHERE user_id = '" + userID + "' AND date_of = '" + date + "'";
+
+            try (Statement stmt = this.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(check_if_entry_exists_sql)) {
+
+                int waterQuantity = noCups * 250;
+                String sql;
+
+                if (rs.getInt(1) != 0) {
+                    sql = "UPDATE meal SET quantity = " + waterQuantity + " WHERE user_id = '" + userID +
+                            "' AND date_of = '" + date + "'";
+                    System.out.println("this runs");
+                } else {
+                    System.out.println("this runs 2");
+                    sql = "INSERT INTO meal (meal_category, food_id, user_id, date_of, quantity)" +
+                            "VALUES('Water', '" + 0 + "','" + userID + "','" + date.toString() + "','" +
+                            waterQuantity + "')";
+                }
+
+                stmt.executeUpdate(sql);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+//        }
+    }
+
+
 }
