@@ -1548,7 +1548,7 @@
     </column>
     <column id="542" parent="173" name="date_of">
       <Position>5</Position>
-      <DataType>varchar(10)|0s</DataType>
+      <DataType>varchar(11)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
     <column id="543" parent="173" name="quantity">
@@ -1579,7 +1579,7 @@
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
     <check id="548" parent="173">
-      <Predicate>meal_category IN (&quot;Breakfast&quot;, &quot;Lunch&quot;, &quot;Dinner&quot;, &quot;Snack&quot;)</Predicate>
+      <Predicate>meal_category IN (&quot;Breakfast&quot;, &quot;Lunch&quot;, &quot;Dinner&quot;, &quot;Snack&quot;, &quot;Water&quot;)</Predicate>
     </check>
     <check id="549" parent="173">
       <Predicate>quantity &gt; 0</Predicate>
