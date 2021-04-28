@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -47,7 +48,7 @@ public class User {
     private float weight;  //Changed from int on class description storing in KG
     private LocalDate dob;
     private final String email;
-    private ArrayList<Group> groupMemberships = new ArrayList<Group>();
+    private Set<Group> groupMemberships = new HashSet<Group>();
     private final String username;
 
     /**
@@ -194,7 +195,7 @@ public class User {
      * Method for getting the full list of groups the user belongs to.
      * @return returns the list of group objects
      */
-    public ArrayList<Group> getGroupMemberships() { return groupMemberships; }
+    public Set<Group> getGroupMemberships() { return groupMemberships; }
 
     /**
      * Sets the User's firstname to the passed parameter.
