@@ -396,8 +396,8 @@ public class LogActivityController implements Initializable {
             //Submit food entry to database
             for (NutritionItem key : breakfast.keySet()) {
                 try {
-                    user.updateGoals(Goal.Unit.CALORIES, (int) (breakfast.get(key) * key.getKcal()));
-                    user.updateGoals(Goal.Unit.PROTEIN, (int) (breakfast.get(key) * key.getProtein()));
+                    user.updateGoals(Goal.Unit.CALORIES, (int) (breakfast.get(key) * key.getKcal()/100));
+                    user.updateGoals(Goal.Unit.PROTEIN, (int) (breakfast.get(key) * key.getProtein()/100));
                     dh.addFoodEntry(user.getUsername(), "Breakfast", key.getName(), breakfast.get(key), date);
                 }
                 catch (SQLException e) {
@@ -406,8 +406,8 @@ public class LogActivityController implements Initializable {
             }
             for (NutritionItem key : lunch.keySet()) {
                 try {
-                    user.updateGoals(Goal.Unit.CALORIES, (int) (breakfast.get(key) * key.getKcal()));
-                    user.updateGoals(Goal.Unit.PROTEIN, (int) (breakfast.get(key) * key.getProtein()));
+                    user.updateGoals(Goal.Unit.CALORIES, (int) (breakfast.get(key) * key.getKcal()/100));
+                    user.updateGoals(Goal.Unit.PROTEIN, (int) (breakfast.get(key) * key.getProtein()/100));
                     dh.addFoodEntry(user.getUsername(), "Lunch", key.getName(), lunch.get(key), date);
                 }
                 catch (SQLException e) {
@@ -416,8 +416,8 @@ public class LogActivityController implements Initializable {
             }
             for (NutritionItem key : dinner.keySet()) {
                 try {
-                    user.updateGoals(Goal.Unit.CALORIES, (int) (breakfast.get(key) * key.getKcal()));
-                    user.updateGoals(Goal.Unit.PROTEIN, (int) (breakfast.get(key) * key.getProtein()));
+                    user.updateGoals(Goal.Unit.CALORIES, (int) (breakfast.get(key) * key.getKcal()/100));
+                    user.updateGoals(Goal.Unit.PROTEIN, (int) (breakfast.get(key) * key.getProtein()/100));
                     dh.addFoodEntry(user.getUsername(), "Dinner", key.getName(), dinner.get(key), date);
                 }
                 catch (SQLException e) {
@@ -426,8 +426,8 @@ public class LogActivityController implements Initializable {
             }
             for (NutritionItem key : snack.keySet()) {
                 try {
-                    user.updateGoals(Goal.Unit.CALORIES, (int) (breakfast.get(key) * key.getKcal()));
-                    user.updateGoals(Goal.Unit.PROTEIN, (int) (breakfast.get(key) * key.getProtein()));
+                    user.updateGoals(Goal.Unit.CALORIES, (int) (breakfast.get(key) * key.getKcal()/100));
+                    user.updateGoals(Goal.Unit.PROTEIN, (int) (breakfast.get(key) * key.getProtein()/100));
                     dh.addFoodEntry(user.getUsername(), "Snack", key.getName(), snack.get(key), date);
                 }
                 catch (SQLException e) {
