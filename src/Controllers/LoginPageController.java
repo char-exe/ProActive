@@ -39,6 +39,7 @@ public class LoginPageController {
     @FXML private PasswordField passwordField;
     @FXML private Label usernameError;
     @FXML private Label passwordError;
+    @FXML private Button escapeHome;
 
     /**
      * Getter for username
@@ -171,5 +172,31 @@ public class LoginPageController {
      */
     public void forgotUsername(ActionEvent actionEvent) {
         //TODO create method that reminds users of their username
+    }
+
+    /**
+     * Method to cancel registration and send user back to the splash page
+     *
+     * @param actionEvent This refers to the button that will cause this method to be called
+     *
+     * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
+     */
+    @FXML protected void escapeHomeAction(ActionEvent actionEvent) throws IOException {
+        Stage parentScene = (Stage) escapeHome.getScene().getWindow();
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
+
+        Parent splashParent = loader.load();
+
+        Scene sceneParent = new Scene(splashParent);
+
+        stage.setScene(sceneParent);
+
+        SplashPageController controller = loader.getController();
+        stage.setScene(sceneParent);
+
+        parentScene.close();
+        stage.show();
     }
 }

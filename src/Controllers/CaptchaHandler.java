@@ -50,7 +50,7 @@ public class CaptchaHandler implements Initializable {
     @FXML TextField captchaInput;
     @FXML Label incorrectInputLabel;
     @FXML Button captchaSubmit;
-    @FXML Button homeButton;
+    @FXML Button cancelButton;
 
     /**
      * Method to randomly select a Captcha image and serve it to the user
@@ -168,8 +168,8 @@ public class CaptchaHandler implements Initializable {
      * @throws IOException throws an exception if there is an input/output error, occurs primarily when a scene is
      *                     not recognized
      */
-    public void escapeHome(ActionEvent actionEvent) throws IOException {
-        Stage parentScene = (Stage) homeButton.getScene().getWindow();
+    public void cancelButtonAction(ActionEvent actionEvent) throws IOException {
+        Stage parentScene = (Stage) cancelButton.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
