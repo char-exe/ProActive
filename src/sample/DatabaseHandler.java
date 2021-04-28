@@ -930,9 +930,7 @@ public class DatabaseHandler
             if (rs.getInt(1) != 0) {
                 sql = "UPDATE meal SET quantity = " + waterQuantity + " WHERE user_id = '" + userID +
                         "' AND date_of = '" + date + "'";
-                System.out.println("this runs");
             } else {
-                System.out.println("this runs 2");
                 sql = "INSERT INTO meal (meal_category, food_id, user_id, date_of, quantity)" +
                         "VALUES('Water', '" + 0 + "','" + userID + "','" + date.toString() + "','" +
                         waterQuantity + "')";

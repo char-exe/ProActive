@@ -177,11 +177,7 @@ public class LogActivityController implements Initializable {
         });
 
         foodEntryDate.valueProperty().addListener(e -> {
-            System.out.println("change detected");
-            System.out.println(noCups);
             noCups = dh.getWaterIntakeInCups(user.getUsername(), foodEntryDate.getValue());
-            System.out.println(noCups);
-            System.out.println();
             noCupsIndicator.setText(String.valueOf(noCups));
         });
 
@@ -523,10 +519,6 @@ public class LogActivityController implements Initializable {
         dinnerTable.setItems(dinnerRows);
         snackTable.setItems(snacksRows);
     }
-
-//    public void updateWaterIntake(String username, LocalDate date){
-//
-//    }
 
 
     /**
