@@ -176,8 +176,12 @@ public class LogActivityController implements Initializable {
             }
         });
 
-        foodEntryDate.valueProperty().addListener((obs, old, new_) -> {
-            noCups = dh.getWaterIntakeInCups(user.getUsername(), new_);
+        foodEntryDate.valueProperty().addListener(e -> {
+            System.out.println("change detected");
+            System.out.println(noCups);
+            noCups = dh.getWaterIntakeInCups(user.getUsername(), foodEntryDate.getValue());
+            System.out.println(noCups);
+            System.out.println();
             noCupsIndicator.setText(String.valueOf(noCups));
         });
 

@@ -74,8 +74,8 @@ public class MainController implements Initializable {
     @FXML
     public void homeScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
-//        loader.setLocation(getClass().getResource("/FXML/SummaryPage.fxml"));
+//        loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
+        loader.setLocation(getClass().getResource("/src/FXML/SummaryPage.fxml"));
         VBox vBox = loader.load();
 
         SummaryController summaryController = loader.getController();
