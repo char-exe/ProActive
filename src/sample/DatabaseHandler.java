@@ -2,6 +2,7 @@ package sample;
 
 import org.sqlite.core.DB;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -441,6 +442,13 @@ public class DatabaseHandler
         return exerciseItem;
     }
 
+    /**
+     * Method to evaluate burnrate of an exercise over 30 minutes based on an exerciseID provided
+     *
+     * @param exerciseId the database ID of an exercise
+     *
+     * @return returns the caloric burn over 30 minutes
+     */
     public float getBurnRate(int exerciseId) {
         String sql = "SELECT burn_rate FROM exercise WHERE id = '" + exerciseId + "'";
         float burnRate= 0;
@@ -852,7 +860,8 @@ public class DatabaseHandler
     }
 
     /**
-     * Method to get the kcal value for a food item
+     * Method to get the kcal value for a food item based on food name
+     *
      * @param foodName the food item requested
      * @return the kcal value for the food item
      */
@@ -873,7 +882,7 @@ public class DatabaseHandler
     }
 
     /**
-     * Method to get the kcal value for a food item
+     * Method to get the kcal value for a food item based on foodID
      * @param foodId the food item requested
      * @return the kcal value for the food item
      */
@@ -891,5 +900,40 @@ public class DatabaseHandler
         }
 
         return kcal;
+    }
+
+    /**
+     * Method to add a nutrition item to the food database, this will be used for custom nutrition item creation,
+     * everything here is measured in terms of 1 gram due to how meals are created
+     *
+     * @param name The name of the nutrition item
+     * @param kcal The kilocaloric value of the nutrition item
+     * @param protein The protein content of the item
+     * @param fat The fat content of the item
+     * @param carbs The carbohydrate content of the item
+     * @param sugar The sugar content of the item
+     * @param fibre The fibre content of the item
+     * @param cholesterol The cholesterol content of the item
+     *
+     * @throws SQLException Throws an SQLException whenever it is possible that an external error could interrupt
+     *                      the running of an SQL statement
+     */
+    public void addNutritionItem(String name, double kcal, double protein, double fat, double carbs, double sugar,
+                                 double fibre, double cholesterol) throws SQLException {
+        String sql = "INSERT INTO food (name, kcal, protein, fat, carbs, sugar, fibre, cholesterol)" +
+                     "VALUES('" + name  + "', " + kcal + ", " + protein + ", " + fat + ", " + carbs + ", " + sugar +
+                              ", " + fibre + ", " + cholesterol  + ")";
+
+        Statement stmt  = conn.createStatement();
+        stmt.executeUpdate(sql);
+
+        System.out.println("Added " + name + " to food database");
+
+    }
+
+    public static void main(String[] args) {
+        System.out.println("INSERT INTO food " +
+                "VALUES('" + "name"  + "', " + "kcal" + ", " + "protein" + ", " + "fat" + ", " + "carbs" + ", " + "sugar" + ", "
+                + "fibre" + ", " + "cholesterol"  + ")");
     }
 }

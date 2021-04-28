@@ -26,7 +26,7 @@
                <children>
                   <HBox prefHeight="30.0" prefWidth="600.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="300.0">
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="245.0">
                            <children>
                               <Label text="Item Name:">
                                  <font>
@@ -35,13 +35,18 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox prefHeight="68.0" prefWidth="300.0">
+                        <HBox prefHeight="37.0" prefWidth="340.0">
                            <children>
-                              <TextArea fx:id="nameInput" prefHeight="39.0" prefWidth="179.0">
+                              <TextArea fx:id="nameInput" prefHeight="39.0" prefWidth="176.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                               </TextArea>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="nameInputPopUp" />
+                                 </children>
+                              </HBox>
                            </children>
                            <HBox.margin>
                               <Insets bottom="5.0" top="5.0" />
@@ -51,7 +56,7 @@
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="600.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="300.0">
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="245.0">
                            <children>
                               <Label text="Kcal (kj):">
                                  <font>
@@ -60,13 +65,18 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox prefHeight="55.0" prefWidth="300.0">
+                        <HBox prefHeight="55.0" prefWidth="340.0">
                            <children>
                               <TextArea fx:id="kcalInput" prefHeight="39.0" prefWidth="179.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                               </TextArea>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="kcalInputPopUp" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>
@@ -76,7 +86,7 @@
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="600.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="300.0">
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="245.0">
                            <children>
                               <Label text="Protein (g):">
                                  <font>
@@ -85,13 +95,18 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox prefHeight="55.0" prefWidth="300.0">
+                        <HBox prefHeight="55.0" prefWidth="340.0">
                            <children>
                               <TextArea fx:id="proteinInput" prefHeight="39.0" prefWidth="179.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                               </TextArea>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="proteinInputPopUp" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>
@@ -101,7 +116,7 @@
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="600.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="300.0">
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="245.0">
                            <children>
                               <Label text="Fat (g):">
                                  <font>
@@ -110,13 +125,18 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox prefHeight="55.0" prefWidth="300.0">
+                        <HBox prefHeight="55.0" prefWidth="340.0">
                            <children>
                               <TextArea fx:id="fatInput" prefHeight="39.0" prefWidth="179.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                               </TextArea>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="fatInputPopUp" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>
@@ -126,7 +146,7 @@
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="600.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="300.0">
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="245.0">
                            <children>
                               <Label text="Carbohydrates (g):">
                                  <font>
@@ -135,13 +155,18 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox prefHeight="55.0" prefWidth="300.0">
+                        <HBox prefHeight="55.0" prefWidth="340.0">
                            <children>
                               <TextArea fx:id="carbsInput" prefHeight="39.0" prefWidth="179.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                               </TextArea>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="carbsInputPopUp" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>
@@ -151,7 +176,7 @@
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="600.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="300.0">
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="245.0">
                            <children>
                               <Label text="Sugar (g):">
                                  <font>
@@ -160,13 +185,18 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox prefHeight="55.0" prefWidth="300.0">
+                        <HBox prefHeight="55.0" prefWidth="340.0">
                            <children>
                               <TextArea fx:id="sugarInput" prefHeight="39.0" prefWidth="179.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                               </TextArea>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="sugarInputPopUp" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>
@@ -176,7 +206,7 @@
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="600.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="300.0">
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="245.0">
                            <children>
                               <Label text="Fibre (g):">
                                  <font>
@@ -185,13 +215,18 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox prefHeight="55.0" prefWidth="300.0">
+                        <HBox prefHeight="55.0" prefWidth="340.0">
                            <children>
                               <TextArea fx:id="fibreInput" prefHeight="39.0" prefWidth="179.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                               </TextArea>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="fibreInputPopUp" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>
@@ -201,7 +236,7 @@
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="600.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="300.0">
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="68.0" prefWidth="245.0">
                            <children>
                               <Label text="Cholesterol (mg):">
                                  <font>
@@ -210,13 +245,18 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox prefHeight="55.0" prefWidth="300.0">
+                        <HBox prefHeight="55.0" prefWidth="340.0">
                            <children>
                               <TextArea fx:id="cholesterolInput" prefHeight="39.0" prefWidth="179.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                               </TextArea>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="cholesterolInputPopUp" />
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>

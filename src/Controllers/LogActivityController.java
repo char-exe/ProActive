@@ -8,9 +8,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.User;
 
@@ -80,6 +84,9 @@ public class LogActivityController implements Initializable {
     private HashMap<String, Integer> lunch;
     private HashMap<String, Integer> snack;
     private HashMap<String, Integer> dinner;
+
+    //Custom Item button
+    @FXML private Button addCustomItem;
 
     private DatabaseHandler dh;
     private User user;
@@ -536,5 +543,13 @@ public class LogActivityController implements Initializable {
         public void setCalories(double calories) {
             this.calories = new SimpleDoubleProperty(calories);
         }
+    }
+
+    public void customItemButtonAction() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateItem.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(part);
+        stage.setScene(scene);
+        stage.show();
     }
 }
