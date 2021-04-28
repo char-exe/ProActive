@@ -78,8 +78,8 @@ public class CreateNutritionItemController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    proteinInput.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("^\\d*\\.?\\d*")) {
+                    proteinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
                 }
             }
         });
