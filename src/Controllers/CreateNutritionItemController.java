@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
+import sample.NutritionItem;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -58,7 +59,7 @@ public class CreateNutritionItemController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //TODO restrict to numeric and decimal point
+        //TODO Update regex to match protein, add error checking for multiple decimal points in the checks methods
 
         //Set kcalInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
@@ -66,8 +67,8 @@ public class CreateNutritionItemController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    kcalInput.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("^\\d*\\.?\\d*")) {
+                    kcalInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
                 }
             }
         });
@@ -90,8 +91,8 @@ public class CreateNutritionItemController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    fatInput.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("^\\d*\\.?\\d*")) {
+                    fatInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
                 }
             }
         });
@@ -102,8 +103,8 @@ public class CreateNutritionItemController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    carbsInput.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("^\\d*\\.?\\d*")) {
+                    carbsInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
                 }
             }
         });
@@ -114,8 +115,8 @@ public class CreateNutritionItemController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    sugarInput.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("^\\d*\\.?\\d*")) {
+                    sugarInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
                 }
             }
         });
@@ -126,8 +127,8 @@ public class CreateNutritionItemController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    fibreInput.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("^\\d*\\.?\\d*")) {
+                    fibreInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
                 }
             }
         });
@@ -138,8 +139,8 @@ public class CreateNutritionItemController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    cholesterolInput.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("^\\d*\\.?\\d*")) {
+                    cholesterolInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
                 }
             }
         });
@@ -156,14 +157,17 @@ public class CreateNutritionItemController implements Initializable {
 
         if (checkInputs()){
             Stage parentScene = (Stage) submitButton.getScene().getWindow();
-            dbh.addNutritionItem(nameInput.getText(),
-                                Double.parseDouble(kcalInput.getText()),
-                                Double.parseDouble(proteinInput.getText()),
-                                Double.parseDouble(fatInput.getText()),
-                                Double.parseDouble(carbsInput.getText()),
-                                Double.parseDouble(sugarInput.getText()),
-                                Double.parseDouble(fibreInput.getText()),
-                                Double.parseDouble(cholesterolInput.getText()));
+
+            NutritionItem n = new NutritionItem(nameInput.getText(),
+                                                Double.parseDouble(kcalInput.getText()),
+                                                Double.parseDouble(proteinInput.getText()),
+                                                Double.parseDouble(fatInput.getText()),
+                                                Double.parseDouble(carbsInput.getText()),
+                                                Double.parseDouble(sugarInput.getText()),
+                                                Double.parseDouble(fibreInput.getText()),
+                                                Double.parseDouble(cholesterolInput.getText()));
+
+            dbh.addNutritionItem(n);
 
             System.out.println("Item Created: " + nameInput.getText());
 
@@ -171,6 +175,31 @@ public class CreateNutritionItemController implements Initializable {
 
         }
 
+    }
+
+    /**
+     * Method to check that a string representing a double is a valid double before casting, copied and adapted from
+     * https://stackoverflow.com/questions/767759/occurrences-of-substring-in-a-string
+     *
+     * @param str String that we are checking
+     * @param valToFind Value that we are checking for
+     *
+     * @return Returns true if value is a valid double value (has less than 2 decimal points)
+     *
+     */
+    public boolean checkValidDouble(String str, String valToFind){
+        int lastIndex = 0;
+        int count = 0;
+
+        while(lastIndex != -1){
+            lastIndex = str.indexOf(valToFind, lastIndex);
+
+            if (lastIndex != -1){
+                count++;
+                lastIndex+=valToFind.length();
+            }
+        }
+        return count <= 1;
     }
 
     /**
@@ -207,7 +236,7 @@ public class CreateNutritionItemController implements Initializable {
      */
     @FXML protected boolean checkKcalInput(){
         String kcal = kcalInput.getText();
-        if (kcal.matches(DOUBLEINPUTREGEX)){
+        if (kcal.matches(DOUBLEINPUTREGEX) && checkValidDouble(kcal, ".")){
             kcalInputPopUp.setText("");
             return true;
         }
@@ -224,7 +253,7 @@ public class CreateNutritionItemController implements Initializable {
      */
     @FXML protected boolean checkProteinInput(){
         String protein = proteinInput.getText();
-        if (protein.matches(DOUBLEINPUTREGEX)){
+        if (protein.matches(DOUBLEINPUTREGEX) && checkValidDouble(protein, ".")){
             proteinInputPopUp.setText("");
             return true;
         }
@@ -241,7 +270,7 @@ public class CreateNutritionItemController implements Initializable {
      */
     @FXML protected boolean checkFatInput(){
         String fat = fatInput.getText();
-        if (fat.matches(DOUBLEINPUTREGEX)){
+        if (fat.matches(DOUBLEINPUTREGEX) && checkValidDouble(fat, ".")){
             fatInputPopUp.setText("");
             return true;
         }
@@ -258,7 +287,7 @@ public class CreateNutritionItemController implements Initializable {
      */
     @FXML protected boolean checkCarbsInput(){
         String carbs = carbsInput.getText();
-        if (carbs.matches(DOUBLEINPUTREGEX)){
+        if (carbs.matches(DOUBLEINPUTREGEX) && checkValidDouble(carbs, ".")){
             carbsInputPopUp.setText("");
             return true;
         }
@@ -275,7 +304,7 @@ public class CreateNutritionItemController implements Initializable {
      */
     @FXML protected boolean checkSugarInput(){
         String sugar = sugarInput.getText();
-        if (sugar.matches(DOUBLEINPUTREGEX)){
+        if (sugar.matches(DOUBLEINPUTREGEX) && checkValidDouble(sugar, ".")){
             sugarInputPopUp.setText("");
             return true;
         }
@@ -292,7 +321,7 @@ public class CreateNutritionItemController implements Initializable {
      */
     @FXML protected boolean checkFibreInput(){
         String fibre = fibreInput.getText();
-        if (fibre.matches(DOUBLEINPUTREGEX)){
+        if (fibre.matches(DOUBLEINPUTREGEX) && checkValidDouble(fibre, ".")){
             fibreInputPopUp.setText("");
             return true;
         }
@@ -309,7 +338,7 @@ public class CreateNutritionItemController implements Initializable {
      */
     @FXML protected boolean checkCholesterolInput(){
         String cholesterol = cholesterolInput.getText();
-        if (cholesterol.matches(DOUBLEINPUTREGEX)){
+        if (cholesterol.matches(DOUBLEINPUTREGEX) && checkValidDouble(cholesterol, ".")){
             cholesterolInputPopUp.setText("");
             return true;
         }
@@ -318,5 +347,4 @@ public class CreateNutritionItemController implements Initializable {
             return false;
         }
     }
-
 }

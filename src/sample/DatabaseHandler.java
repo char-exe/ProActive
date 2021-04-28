@@ -908,28 +908,21 @@ public class DatabaseHandler
      * Method to add a nutrition item to the food database, this will be used for custom nutrition item creation,
      * everything here is measured in terms of 1 gram due to how meals are created
      *
-     * @param name The name of the nutrition item
-     * @param kcal The kilocaloric value of the nutrition item
-     * @param protein The protein content of the item
-     * @param fat The fat content of the item
-     * @param carbs The carbohydrate content of the item
-     * @param sugar The sugar content of the item
-     * @param fibre The fibre content of the item
-     * @param cholesterol The cholesterol content of the item
+     * @param n Nutrition Item passed in, will use this to build the SQL query
      *
      * @throws SQLException Throws an SQLException whenever it is possible that an external error could interrupt
      *                      the running of an SQL statement
      */
-    public void addNutritionItem(String name, double kcal, double protein, double fat, double carbs, double sugar,
-                                 double fibre, double cholesterol) throws SQLException {
+    public void addNutritionItem(NutritionItem n) throws SQLException {
         String sql = "INSERT INTO food (name, kcal, protein, fat, carbs, sugar, fibre, cholesterol)" +
-                     "VALUES('" + name  + "', " + kcal + ", " + protein + ", " + fat + ", " + carbs + ", " + sugar +
-                              ", " + fibre + ", " + cholesterol  + ")";
+                     "VALUES('" + n.getName()  + "', " + n.getKcal() + ", " + n.getProtein() + ", " + n.getFat() + ", "
+                                + n.getCarbs() + ", " + n.getSugar() + ", " + n.getFibre() + ", " + n.getCholesterol()
+                                + ")";
 
         Statement stmt  = conn.createStatement();
         stmt.executeUpdate(sql);
 
-        System.out.println("Added " + name + " to food database");
+        System.out.println("Added " + n.getName() + " to food database");
 
     }
 
