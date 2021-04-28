@@ -30,8 +30,9 @@ import java.util.ResourceBundle;
  *
  * @author Evan Clayton?
  * @author Samuel Scarfe
+ * @author Owen Tasker
  *
- * @version 1.5
+ * @version 1.6
  *
  * 1.0 - Initial commit, dummy file.
  * 1.1 - Implemented simple exercise logging to database.
@@ -41,6 +42,7 @@ import java.util.ResourceBundle;
  * 1.5 - Implemented table view for added foods, with reference to
  *       https://medium.com/@keeptoo/adding-data-to-javafx-tableview-stepwise-df582acbae4f.
  *       General commenting.
+ * 1.6 - Implemented ability to create custom exercise and food items
  */
 public class LogActivityController implements Initializable {
 
@@ -90,6 +92,13 @@ public class LogActivityController implements Initializable {
     private DatabaseHandler dh;
     private User user;
 
+    /**
+     * Method to be ran after all FXML elements have been loaded, used to impose restrictions and populate these
+     * elements
+     *
+     * @param url FXML defined parameter
+     * @param resourceBundle FXML defined parameter
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -544,6 +553,11 @@ public class LogActivityController implements Initializable {
         }
     }
 
+    /**
+     * Method to handle custom nutrition item creation
+     *
+     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
+     */
     public void customNutritionItemButtonAction() throws IOException {
         Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateNutritionItem.fxml"));
         Stage stage = new Stage();
@@ -551,6 +565,12 @@ public class LogActivityController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
+    /**
+     * Method to handle custom exercise item creation
+     *
+     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
+     */
     public void customExerciseItemButtonAction() throws IOException {
         Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateExerciseItem.fxml"));
         Stage stage = new Stage();

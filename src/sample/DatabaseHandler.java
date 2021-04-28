@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Samuel Scarfe
  * @author Owen Tasker
  *
- * @version 1.9
+ * @version 1.10
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -54,6 +54,8 @@ import java.util.Map;
  * 1.8 - Added Javadoc for outstanding methods
  *
  * 1.9 - Added methods to assist with activity logging.
+ *
+ * 1.10 - Added methods for adding elements to exercise and food tables, used for custom item creation
  */
 public class DatabaseHandler
 {
