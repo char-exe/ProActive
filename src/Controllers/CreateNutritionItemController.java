@@ -4,19 +4,24 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
 
-import javax.xml.crypto.Data;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class CreateItemController implements Initializable {
+/**
+ * Class to allow for the creation of custom nutrition items
+ *
+ * @author Owen Tasker
+ *
+ * @version 1.0
+ */
+public class CreateNutritionItemController implements Initializable {
     @FXML public TextArea nameInput;
     @FXML public TextArea kcalInput;
     @FXML public TextArea proteinInput;
@@ -44,6 +49,13 @@ public class CreateItemController implements Initializable {
     //Regex for inputfields that will take doubles
     private final String DOUBLEINPUTREGEX = "[-+]?[0-9]*\\.?[0-9]+";
 
+    /**
+     * Method to be ran after all FXML elements have been loaded, used for imposing restrictions on these FXML
+     * elements
+     *
+     * @param url FXML defined parameter
+     * @param resourceBundle FXML defined parameter
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //TODO restrict to numeric and decimal point
@@ -133,6 +145,12 @@ public class CreateItemController implements Initializable {
         });
     }
 
+    /**
+     * Method to handle the submit button event
+     *
+     * @throws SQLException Throws an SQLException whenever it is possible for an external force to affect SQL
+     *                      execution
+     */
     @FXML public void submitButtonAction() throws SQLException {
         DatabaseHandler dbh = DatabaseHandler.getInstance();
 
@@ -155,6 +173,11 @@ public class CreateItemController implements Initializable {
 
     }
 
+    /**
+     * Method to clean up regex checks
+     *
+     * @return Returns true if all checks are passed, false otherwise
+     */
     public boolean checkInputs(){
         return checkFirstName() && checkKcalInput() && checkProteinInput() && checkFatInput() && checkCarbsInput() &&
                checkSugarInput() && checkFibreInput() && checkCholesterolInput();

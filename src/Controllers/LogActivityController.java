@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -545,8 +544,15 @@ public class LogActivityController implements Initializable {
         }
     }
 
-    public void customItemButtonAction() throws IOException {
-        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateItem.fxml"));
+    public void customNutritionItemButtonAction() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateNutritionItem.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(part);
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void customExerciseItemButtonAction() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateExerciseItem.fxml"));
         Stage stage = new Stage();
         Scene scene = new Scene(part);
         stage.setScene(scene);

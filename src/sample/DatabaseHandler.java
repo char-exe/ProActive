@@ -931,6 +931,23 @@ public class DatabaseHandler
 
     }
 
+    /**
+     * Method to add an exercise item to the exercise database, this will be used for custom exercise item creation
+     *
+     * @param name Name of the exercise being added
+     * @param burnRate caloric burn over a period of 30 minutes
+     */
+    public void addExerciseItem(String name, int burnRate) throws SQLException {
+        String sql = "INSERT INTO exercise (name, burn_rate)" +
+                "VALUES('" + name  + "', " + burnRate + ")";
+
+        Statement stmt  = conn.createStatement();
+        stmt.executeUpdate(sql);
+
+        System.out.println("Added " + name + " to exercise database");
+
+    }
+
     public static void main(String[] args) {
         System.out.println("INSERT INTO food " +
                 "VALUES('" + "name"  + "', " + "kcal" + ", " + "protein" + ", " + "fat" + ", " + "carbs" + ", " + "sugar" + ", "

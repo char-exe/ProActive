@@ -55,6 +55,11 @@
                                  </padding>
                               </HBox>
                               <Label fx:id="exercisePopUp" />
+                              <HBox alignment="CENTER" prefHeight="46.0" prefWidth="580.0">
+                                 <children>
+                                    <Button fx:id="createCustomItemButton" mnemonicParsing="false" onAction="#customExerciseItemButtonAction" prefHeight="36.0" prefWidth="126.0" text="Create Custom Item" />
+                                 </children>
+                              </HBox>
                            </children>
                         </VBox>
                      </center>
@@ -285,7 +290,7 @@
                                           <HBox prefHeight="38.0" prefWidth="299.0">
                                              <children>
                                                 <Button mnemonicParsing="false" onAction="#addFoodToMeal" prefHeight="35.0" text="Add" />
-                                                <Button fx:id="addCustomItem" mnemonicParsing="false" onAction="#customItemButtonAction" prefHeight="35.0" text="Add custom item" />
+                                                <Button fx:id="addCustomItem" mnemonicParsing="false" onAction="#customNutritionItemButtonAction" prefHeight="35.0" text="Add custom item" />
                                              </children>
                                           </HBox>
                                           <Label fx:id="foodFieldsLabel" />
