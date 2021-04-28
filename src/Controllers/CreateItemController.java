@@ -23,6 +23,8 @@ public class CreateItemController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //TODO restrict to numeric and decimal point
+
         //Set kcalInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         kcalInput.textProperty().addListener(new ChangeListener<String>() {
