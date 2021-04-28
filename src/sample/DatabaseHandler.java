@@ -881,15 +881,16 @@ public class DatabaseHandler
      * @param username the user's username.
      * @param goal the updated goal to be updated in the database.
      */
-    public void updateGoal(String username, Goal goal) {
+    public void updateGoal(String username, Goal goal, int amount) {
         int target = goal.getTarget();
         String unit = goal.getUnit().toString();
         String endDate = goal.getEndDate().toString();
-        int progress = goal.getProgress();
+        int newProgress = goal.getProgress();
+        int previousProgress = newProgress - amount;
 
-        String sql = "UPDATE goal SET progress = " + progress + " WHERE user_id = '" +
-                getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
-                "' AND end_date = '" + endDate + "'";
+        String sql = "UPDATE goal SET progress = " + newProgress + " WHERE user_id = '" +
+                      getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
+                     "' AND progress = '" + previousProgress + "' AND end_date = '" + endDate + "'";
 
         try {
             Statement stmt = this.conn.createStatement();

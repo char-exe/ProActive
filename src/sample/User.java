@@ -325,7 +325,7 @@ public class User {
             //if the goal is updated
             if (goal.updateProgress(unit, amount)) {
                 //update the goal in the database
-                DatabaseHandler.getInstance().updateGoal(username, goal);
+                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
             }
         }
     }
