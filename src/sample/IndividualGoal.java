@@ -24,7 +24,7 @@ public class IndividualGoal extends Goal {
      * @param unit    the units targeted by the goal.
      * @param endDate the end date of the goal.
      */
-    public IndividualGoal(int target, Unit unit, LocalDate endDate) {
+    public IndividualGoal(float target, Unit unit, LocalDate endDate) {
         super(target, unit, endDate);
     }
 
@@ -37,7 +37,11 @@ public class IndividualGoal extends Goal {
      * @param endDate  the end date of the goal.
      * @param progress the current progress of the goal.
      */
-    public IndividualGoal(int target, Unit unit, LocalDate endDate, int progress) {
+    public IndividualGoal(float target, Unit unit, LocalDate endDate, int progress) {
         super(target, unit, endDate, progress);
+    }
+
+    public IndividualGoal(SystemGoal systemGoal) {
+        super(systemGoal.getTarget(), systemGoal.getUnit(), systemGoal.getEndDate());
     }
 }

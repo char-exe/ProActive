@@ -19,7 +19,20 @@
             </font></Label>
         <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" styleClass="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
             <tabs>
-                <Tab closable="false" styleClass="parentTab" text="Set Goals">
+            <Tab styleClass="parentTab" text="Our Goals For You">
+               <content>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                           <content>
+                              <VBox fx:id="ourGoalsVbox" prefHeight="357.0" prefWidth="576.0" />
+                           </content>
+                        </ScrollPane>
+                     </center>
+                  </BorderPane>
+               </content>
+            </Tab>
+                <Tab closable="false" styleClass="parentTab" text="Set Your Own">
                     <content>
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
                             <center>

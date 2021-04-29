@@ -26,7 +26,7 @@ public abstract class Goal {
     /**
      * The target amount for the goal.
      */
-    protected final int target;
+    protected final float target;
     /**
      * The units the goal is concerned with.
      */
@@ -57,7 +57,7 @@ public abstract class Goal {
      * @param unit    the units targeted by the goal.
      * @param endDate the end date of the goal.
      */
-    public Goal(int target, Unit unit, LocalDate endDate) {
+    public Goal(float target, Unit unit, LocalDate endDate) {
         this.target    = target;
         this.unit      = unit;
         this.endDate   = endDate;
@@ -75,7 +75,7 @@ public abstract class Goal {
      * @param endDate   the end date of the goal.
      * @param progress  the current progress of the goal.
      */
-    public Goal(int target, Unit unit, LocalDate endDate, int progress) {
+    public Goal(float target, Unit unit, LocalDate endDate, int progress) {
         this.target    = target;
         this.unit      = unit;
         this.endDate   = endDate;
@@ -89,7 +89,7 @@ public abstract class Goal {
      *
      * @return the target amount for this goal.
      */
-    public int getTarget() {
+    public float getTarget() {
         return this.target;
     }
 
