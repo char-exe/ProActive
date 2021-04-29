@@ -18,7 +18,7 @@ import java.util.Locale;
  * @author Owen Tasker
  * @author Charlie Jones
  *
- * @version 1.9
+ * @version 1.10
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -53,6 +53,10 @@ import java.util.Locale;
  * 1.9 - Added methods to assist with activity logging.
  *
  * 1.95 - Added methods to assist with water intake logging and information retrieval.
+ *
+ * 1.10 - Rewrote getBurnedEntries and getIntakeEntries as JOIN statements to fix exception originating from having
+ *        nested ResultSets.
+ * 1.11 - Implemented adding and updating goals.
  */
 public class DatabaseHandler
 {
@@ -441,21 +445,6 @@ public class DatabaseHandler
         return exerciseItem;
     }
 
-    public float getBurnRate(int exerciseId) {
-        String sql = "SELECT burn_rate FROM exercise WHERE id = '" + exerciseId + "'";
-        float burnRate= 0;
-
-        try (Statement stmt = this.conn.createStatement();
-             ResultSet rs   = stmt.executeQuery(sql)) {
-
-            burnRate =  rs.getInt("burn_rate");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return burnRate/30;
-    }
-
     /**
      * Method to delete tokens from the regtokens table, this occurs when a token has been used to ensure we minimize
      * database bloat
@@ -554,24 +543,23 @@ public class DatabaseHandler
         LocalDate today = LocalDate.now();
         LocalDate lastWeek = today.minusDays(6);
 
-        String sql = "SELECT date_of, quantity, food_id FROM meal WHERE user_id = '" + getUserIDFromUsername(username) + "' " +
-                     "AND date_of BETWEEN '" + lastWeek.toString() + "' AND '" + today.toString() + "'";
+        String sql = "SELECT date_of, quantity, kcal FROM meal INNER JOIN food ON meal.food_id = food.id " +
+                     "WHERE user_id = '" + getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" +
+                      lastWeek.toString() + "' AND '" + today.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 String date = rs.getString("date_of");
                 int quantity = rs.getInt("quantity");
-                int foodId = rs.getInt("food_id");
-                if (entries.containsKey(date))
-                {
-                    entries.put(date, entries.get(date) + (quantity * getKcal(foodId))/100);
+                double kcal = rs.getDouble("kcal");
+
+                if (entries.containsKey(date)) {
+                    entries.put(date, entries.get(date) + (quantity * kcal/100));
                 }
-                else
-                {
-                    entries.put(date, (quantity * getKcal(foodId))/100);
+                else {
+                    entries.put(date, (quantity * kcal)/100);
                 }
             }
         }
@@ -596,22 +584,19 @@ public class DatabaseHandler
         LocalDate lastWeek = today.minusDays(6);
 
         String sql = "SELECT date_of, duration FROM activity WHERE user_id = '" +
-                getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
-                "' AND '" + today.toString() + "'";
+                      getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
+                     "' AND '" + today.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 String date = rs.getString("date_of");
 
-                if (entries.containsKey(date))
-                {
+                if (entries.containsKey(date)) {
                     entries.put(date, entries.get(date) + rs.getInt("duration"));
                 }
-                else
-                {
+                else {
                     entries.put(date, rs.getInt("duration"));
                 }
             }
@@ -636,25 +621,22 @@ public class DatabaseHandler
         LocalDate today = LocalDate.now();
         LocalDate lastWeek = today.minusDays(6);
 
-        String sql = "SELECT date_of, duration, exercise_id FROM activity WHERE user_id = '" +
-                getUserIDFromUsername(username) + "' " + "AND date_of BETWEEN '" + lastWeek.toString() +
-                "' AND '" + today.toString() + "'";
+        String sql = "SELECT date_of, duration, burn_rate FROM activity INNER JOIN exercise " +
+                     " ON activity.exercise_id = exercise.id WHERE user_id = '" + getUserIDFromUsername(username) +
+                     "' " + "AND date_of BETWEEN '" + lastWeek.toString() + "' AND '" + today.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 String date = rs.getString("date_of");
-                int exerciseId = rs.getInt("exercise_id");
+                float burnRate = rs.getFloat("burn_rate");
 
-                if (entries.containsKey(date))
-                {
-                    entries.put(date, entries.get(date) + rs.getInt("duration") * getBurnRate(exerciseId));
+                if (entries.containsKey(date)) {
+                    entries.put(date, entries.get(date) + rs.getInt("duration") * burnRate/30);
                 }
-                else
-                {
-                    entries.put(date, rs.getInt("duration") * getBurnRate(exerciseId));
+                else {
+                    entries.put(date, rs.getInt("duration") * burnRate/30);
                 }
             }
         }
@@ -685,8 +667,7 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 String date = rs.getString("date_of");
 
                 entries.put(date, rs.getInt("weight"));
@@ -712,15 +693,14 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 exercises.add(rs.getString("name"));
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(exercises);
+
         return exercises;
     }
 
@@ -737,8 +717,7 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql))
         {
-            while (rs.next())
-            {
+            while (rs.next()) {
                 foods.add(rs.getString("name"));
             }
         }
@@ -856,24 +835,80 @@ public class DatabaseHandler
     }
 
     /**
-     * Method to get the kcal value for a food item
-     * @param foodId the food item requested
-     * @return the kcal value for the food item
+     * Adds a new goal to the database for a user.
+     *
+     * @param username the user's username.
+     * @param goal the user's new goal.
      */
-    public double getKcal(int foodId) {
-        String sql = "SELECT kcal FROM food WHERE id = '" + foodId + "'";
-        double kcal = -1;
+    public void insertGoal(String username, Goal goal) {
+        String sql = "INSERT INTO goal (user_id, target, unit, progress, end_date) VALUES('" +
+                      getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
+                     "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "')";
 
-        try (Statement stmt  = this.conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql)) {
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-            kcal = rs.getDouble("kcal");
+    /**
+     * Retrieves all of a user's goals from the database.
+     *
+     * @param username the user's username.
+     * @return the user's goals in an ArrayList.
+     */
+    public ArrayList<Goal> selectGoals(String username) {
+        String sql = "SELECT target, unit, progress, end_date FROM goal WHERE user_id = " +
+                getUserIDFromUsername(username);
 
-        } catch (SQLException e) {
+        ArrayList<Goal> goals = new ArrayList<>();
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            while (rs.next()) {
+                int target = rs.getInt("target");
+                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                int progress = rs.getInt("progress");
+                LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
+
+                goals.add(new IndividualGoal(target, unit, endDate, progress));
+            }
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return kcal;
+        return goals;
+    }
+
+    /**
+     * Updates a user's goal in the database.
+     *
+     * @param username the user's username.
+     * @param goal the updated goal to be updated in the database.
+     */
+    public void updateGoal(String username, Goal goal, int amount) {
+        int target = goal.getTarget();
+        String unit = goal.getUnit().toString();
+        String endDate = goal.getEndDate().toString();
+        int newProgress = goal.getProgress();
+        int previousProgress = newProgress - amount;
+
+        String sql = "UPDATE goal SET progress = " + newProgress + " WHERE user_id = '" +
+                      getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
+                     "' AND progress = '" + previousProgress + "' AND end_date = '" + endDate + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

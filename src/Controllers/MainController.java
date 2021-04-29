@@ -135,7 +135,13 @@ public class MainController implements Initializable {
      * @throws IOException Throws an IOException whenever it is possible a file could be missing
      */
     @FXML private void goalsScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/TODO.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        //VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/GoalPage.FXML"));
+        loader.setLocation(getClass().getResource("/FXML/GoalPage.fxml"));
+        VBox vBox = loader.load();
+
+        GoalController gc = loader.getController();
+        gc.initData(user);
         main.setCenter(vBox);
         toggleButtonFocus(goalsButton);
     }
@@ -147,7 +153,7 @@ public class MainController implements Initializable {
      */
     @FXML private void manageProfileScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        //loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
+        //loader.setLocation(getClass().getClassLoader().getResource("src/FXML/ManageProfilePage.fxml"));
         loader.setLocation(getClass().getResource("/FXML/ManageProfilePage.fxml"));
         VBox vBox = loader.load();
 

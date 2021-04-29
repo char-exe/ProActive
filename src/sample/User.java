@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Samuel Scarfe
  * @author Evan Clayton
  *
- * @version 1.5
+ * @version 1.7
  *
  * 1.0 - Initial user class structure and their variables.
  * 1.1 - Added constructor, getters and setters.
@@ -26,6 +26,7 @@ import java.util.Set;
  *       an exception if the dob passed is in the future.
  * 1.5 - Updated Javadoc.
  * 1.6 - Added groupMembership array and corresponding methods
+ * 1.7 - Implemented adding and updating goals.
  */
 public class User {
 
@@ -49,6 +50,7 @@ public class User {
     private LocalDate dob;
     private final String email;
     private Set<Group> groupMemberships = new HashSet<Group>();
+    private ArrayList<Goal> goals;
     private final String username;
 
     /**
@@ -76,6 +78,11 @@ public class User {
         this.email = email;
         this.username = username;
 
+        this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
+
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
 
@@ -97,6 +104,11 @@ public class User {
         this.dob = dob;
         this.email = email;
         this.username = username;
+
+        this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -198,6 +210,15 @@ public class User {
     public Set<Group> getGroupMemberships() { return groupMemberships; }
 
     /**
+     * Gets the list of goals for this user.
+     *
+     * @return this user's goals as an ArrayList.
+     */
+    public ArrayList<Goal> getGoals() {
+        return this.goals;
+    }
+
+    /**
      * Sets the User's firstname to the passed parameter.
      *
      * @param firstname the User's new firstname
@@ -290,6 +311,33 @@ public class User {
         LocalDate birthday = LocalDate.of(this.dob.getYear(), this.dob.getMonth(), this.dob.getDayOfMonth());
 
         this.age = Period.between(birthday, today).getYears();
+    }
+
+    /**
+     * Adds a goal to this user's goal list and then to the database.
+     *
+     * @param goal the goal to be added.
+     */
+    public void addGoal(Goal goal) {
+        this.goals.add(goal);
+        DatabaseHandler.getInstance().insertGoal(this.getUsername(), goal);
+    }
+
+    /**
+     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
+     *
+     * @param unit   the unit which has been input as part of a logged activity.
+     * @param amount the amount of the unit which has been logged.
+     */
+    public void updateGoals(Goal.Unit unit, int amount) {
+        //for each goal
+        for (Goal goal : goals) {
+            //if the goal is updated
+            if (goal.updateProgress(unit, amount)) {
+                //update the goal in the database
+                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+            }
+        }
     }
 
     //Class-Specific Methods

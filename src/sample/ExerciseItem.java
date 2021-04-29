@@ -10,6 +10,7 @@ package sample;
  *
  * 1.0 - First working version
  * 1.1 - Added Javadoc, exceptions, and a separate JUnit test class.
+ * 1.2 - Corrected bug in calculate burn methods. Previously assumed burn rate was per minute, but it is per 30 minutes.
  */
 
 public class ExerciseItem {
@@ -75,7 +76,7 @@ public class ExerciseItem {
             throw new IllegalArgumentException();
         }
 
-        return this.burnRate*minutes;
+        return this.burnRate*minutes/30;
     }
 
     /**
@@ -83,6 +84,6 @@ public class ExerciseItem {
      * @return the number of calories burned by undertaking this exercise for one hour.
      */
     public int calculateBurn() {
-        return this.burnRate*60;
+        return this.burnRate*2;
     }
 }
