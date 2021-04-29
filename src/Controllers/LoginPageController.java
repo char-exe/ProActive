@@ -103,8 +103,6 @@ public class LoginPageController {
 
                 stage.setScene(homeScene);
 
-                GoalGenerator gg = new GoalGenerator(user);
-                user.setSystemGoals(gg.updateGoals());
                 main.initData(user);
                 main.homeScreen();
 

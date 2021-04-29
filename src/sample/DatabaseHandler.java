@@ -1046,19 +1046,22 @@ public class DatabaseHandler
         System.out.println("Added " + name + " to exercise database");
     }
 
-    private float getDailyIntakeTarget(User user, Goal.Unit unit) {
-        String sql = "SELECT amount FROM daily_intake WHERE gender = '" + user.getSex().toUpperCase(Locale.ROOT) +
-                "' AND min_age <= '" + user.getAge() + "' AND max_age >= '" + user.getAge() + "' AND unit = " +
+    private float getDailyIntakeTarget(User user, Goal.Unit unit) throws SQLException{
+        String sql = "SELECT amount FROM daily_intake WHERE gender = '" + user.getSex() +
+                "' AND min_age <= '" + user.getAge() + "' AND max_age >= '" + user.getAge() + "' AND unit = '" +
                 unit.toString() + "'";
 
         float target = -1;
 
-        try (Statement stmt = this.conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
             target = rs.getFloat("amount");
         }
         catch (SQLException e) {
             e.printStackTrace();
+            throw new SQLException();
         }
 
         return target;
@@ -1067,6 +1070,7 @@ public class DatabaseHandler
     public void updateDayToDayGoals(User user) throws SQLException {
 
         Goal.Unit[] units = {Goal.Unit.CALORIES, Goal.Unit.PROTEIN};
+
         for (Goal.Unit unit : units) {
             float target = getDailyIntakeTarget(user, unit);
 

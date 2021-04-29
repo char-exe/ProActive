@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.Goal;
+import sample.GoalGenerator;
 import sample.User;
 
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        logo.setImage(new Image("src/Resources/proactive.png"));
+        //logo.setImage(new Image("src/Resources/proactive.png"));
     }
 
     /**
@@ -79,12 +80,15 @@ public class MainController implements Initializable {
     public void homeScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
 //        loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
-        loader.setLocation(getClass().getResource("/src/FXML/SummaryPage.fxml"));
+        loader.setLocation(getClass().getResource("/FXML/SummaryPage.fxml"));
         VBox vBox = loader.load();
 
         SummaryController summaryController = loader.getController();
         summaryController.initData(user);
         summaryController.setData();
+
+        GoalGenerator gg = new GoalGenerator(user);
+        user.setSystemGoals(gg.updateGoals());
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vBox);
