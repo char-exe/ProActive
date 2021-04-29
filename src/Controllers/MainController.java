@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,6 +31,7 @@ import java.util.ResourceBundle;
  *                same page again.
  *          1.1 - Minor update to logic to ensure User object is set before being passed on to other controllers.
  *                Possibly a hacky solution, as method calls have been moved from initialise to initData.
+ *          1.2 - Added method to display notifications.
  */
 public class MainController implements Initializable {
 
@@ -41,6 +43,7 @@ public class MainController implements Initializable {
     @FXML private Button goalsButton;
     @FXML private Button manageProfileButton;
     @FXML private BorderPane main;
+    @FXML private Label notification;
 
     private User user;
 
@@ -174,5 +177,14 @@ public class MainController implements Initializable {
         selectedButton.setBackground(new Background(
                 new BackgroundFill(Color.rgb(120,120,120), null, null)));
 
+    }
+
+    /**
+     * Method to display text in the notification bar. This method is called by the notification handler.
+     *
+     * @param message Text to be displayed in the notification bar.
+     */
+    public void showNotification(String message){
+        notification.setText(message);
     }
 }
