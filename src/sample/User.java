@@ -3,6 +3,9 @@ package sample;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A class to represent a user in a health tracking application, most/all error checking is completed
@@ -11,6 +14,7 @@ import java.time.Period;
  * @author Owen Tasker
  * @author Charlie Jones
  * @author Samuel Scarfe
+ * @author Evan Clayton
  *
  * @version 1.5
  *
@@ -21,6 +25,7 @@ import java.time.Period;
  * 1.4 - Added methods to check constructor inputs and throw necessary exceptions. Updated setAge to throw
  *       an exception if the dob passed is in the future.
  * 1.5 - Updated Javadoc.
+ * 1.6 - Added groupMembership array and corresponding methods
  */
 public class User {
 
@@ -43,7 +48,7 @@ public class User {
     private float weight;  //Changed from int on class description storing in KG
     private LocalDate dob;
     private final String email;
-    //private Set<Group> groupMemberships = new ArrayList();  To be added in sprint 2 group not a suitable name, object in Swing may be OK though
+    private Set<Group> groupMemberships = new HashSet<Group>();
     private final String username;
 
     /**
@@ -185,6 +190,12 @@ public class User {
     public String getRealName(){
         return firstname + " " + surname;
     }
+
+    /**
+     * Method for getting the full list of groups the user belongs to.
+     * @return returns the list of group objects
+     */
+    public Set<Group> getGroupMemberships() { return groupMemberships; }
 
     /**
      * Sets the User's firstname to the passed parameter.
@@ -411,6 +422,42 @@ public class User {
             throw new IllegalArgumentException("First name contains illegal characters.");
         }
     }
+
+    /**
+     * Public method for adding a group membership to the user's list of memberships.
+     *
+     * @param group Takes a the group object for the group being joined.
+     */
+    public void joinGroup(Group group) {
+        if (groupMemberships.contains(group) == false) {
+            groupMemberships.add(group);
+        }
+    }
+
+    /**
+     * Method for removing a user from a group
+     * @param group Group object for the group the user is to leave.
+     */
+    public void leaveGroup(Group group) {
+        if (groupMemberships.contains(group)){
+            groupMemberships.remove(group);
+        }
+    }
+
+    /**
+     * Method to check for group membership.
+     * @param group Group object for the group you are checking the user is a member of.
+     * @return returns true if they are a member, false if they are not.
+     */
+    public boolean isGroupMemberOf(Group group){
+        if (groupMemberships.contains(group)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 
     /**
      * Test Harness
