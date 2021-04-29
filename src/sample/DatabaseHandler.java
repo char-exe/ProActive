@@ -1,5 +1,8 @@
 package sample;
 
+import org.sqlite.core.DB;
+
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,7 +21,7 @@ import java.util.Locale;
  * @author Owen Tasker
  * @author Charlie Jones
  *
- * @version 1.10
+ * @version 1.12
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -51,12 +54,12 @@ import java.util.Locale;
  * 1.8 - Added Javadoc for outstanding methods
  *
  * 1.9 - Added methods to assist with activity logging.
- *
  * 1.95 - Added methods to assist with water intake logging and information retrieval.
  *
  * 1.10 - Rewrote getBurnedEntries and getIntakeEntries as JOIN statements to fix exception originating from having
  *        nested ResultSets.
  * 1.11 - Implemented adding and updating goals.
+ * 1.12 - Added methods for adding elements to exercise and food tables, used for custom item creation
  */
 public class DatabaseHandler
 {
@@ -814,12 +817,34 @@ public class DatabaseHandler
     }
 
     /**
-     * Method to get the kcal value for a food item
+     * Method to get the kcal value for a food item based on food name
+     *
      * @param foodName the food item requested
      * @return the kcal value for the food item
      */
     public double getKcal(String foodName) {
         String sql = "SELECT kcal FROM food WHERE name LIKE '" + foodName + "'";
+        double kcal = -1;
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+
+            kcal = rs.getDouble("kcal");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return kcal;
+    }
+
+    /**
+     * Method to get the kcal value for a food item based on foodID
+     * @param foodId the food item requested
+     * @return the kcal value for the food item
+     */
+    public double getKcal(int foodId) {
+        String sql = "SELECT kcal FROM food WHERE id = '" + foodId + "'";
         double kcal = -1;
 
         try (Statement stmt  = this.conn.createStatement();
@@ -980,4 +1005,49 @@ public class DatabaseHandler
     }
 
 
+
+    /**
+     * Method to add a nutrition item to the food database, this will be used for custom nutrition item creation,
+     * everything here is measured in terms of 1 gram due to how meals are created
+     *
+     * @param n Nutrition Item passed in, will use this to build the SQL query
+     *
+     * @throws SQLException Throws an SQLException whenever it is possible that an external error could interrupt
+     *                      the running of an SQL statement
+     */
+    public void addNutritionItem(NutritionItem n) throws SQLException {
+        String sql = "INSERT INTO food (name, kcal, protein, fat, carbs, sugar, fibre, cholesterol)" +
+                     "VALUES('" + n.getName()  + "', " + n.getKcal() + ", " + n.getProtein() + ", " + n.getFat() + ", "
+                                + n.getCarbs() + ", " + n.getSugar() + ", " + n.getFibre() + ", " + n.getCholesterol()
+                                + ")";
+
+        Statement stmt  = conn.createStatement();
+        stmt.executeUpdate(sql);
+
+        System.out.println("Added " + n.getName() + " to food database");
+
+    }
+
+    /**
+     * Method to add an exercise item to the exercise database, this will be used for custom exercise item creation
+     *
+     * @param name Name of the exercise being added
+     * @param burnRate caloric burn over a period of 30 minutes
+     */
+    public void addExerciseItem(String name, int burnRate) throws SQLException {
+        String sql = "INSERT INTO exercise (name, burn_rate)" +
+                "VALUES('" + name  + "', " + burnRate + ")";
+
+        Statement stmt  = conn.createStatement();
+        stmt.executeUpdate(sql);
+
+        System.out.println("Added " + name + " to exercise database");
+
+    }
+
+    public static void main(String[] args) {
+        System.out.println("INSERT INTO food " +
+                "VALUES('" + "name"  + "', " + "kcal" + ", " + "protein" + ", " + "fat" + ", " + "carbs" + ", " + "sugar" + ", "
+                + "fibre" + ", " + "cholesterol"  + ")");
+    }
 }

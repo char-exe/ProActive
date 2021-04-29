@@ -9,27 +9,32 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import sample.*;
+import javafx.stage.Stage;
+import sample.DatabaseHandler;
+import sample.User;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
  * A controller for the activity logging page of the app.
  *
- * @author Evan Clayton
  * @author Samuel Scarfe
+ * @author Owen Tasker
  * @author Charlie Jones
  *
- * @version 1.6
+ * @version 1.7
  *
  * 1.0 - Initial commit, dummy file.
  * 1.1 - Implemented simple exercise logging to database.
@@ -40,6 +45,7 @@ import java.util.ResourceBundle;
  *       https://medium.com/@keeptoo/adding-data-to-javafx-tableview-stepwise-df582acbae4f.
  *       General commenting.
  * 1.6 - Implemented goal updating.
+ * 1.7 - Implemented ability to create custom exercise and food items
  */
 public class LogActivityController implements Initializable {
 
@@ -84,6 +90,9 @@ public class LogActivityController implements Initializable {
     private HashMap<NutritionItem, Integer> snack;
     private HashMap<NutritionItem, Integer> dinner;
 
+    //Custom Item button
+    @FXML private Button addCustomItem;
+
     private DatabaseHandler dh;
     private User user;
 
@@ -92,6 +101,13 @@ public class LogActivityController implements Initializable {
     @FXML private Button addCup;
     private int noCups = 0;
 
+    /**
+     * Method to be ran after all FXML elements have been loaded, used to impose restrictions and populate these
+     * elements
+     *
+     * @param url FXML defined parameter
+     * @param resourceBundle FXML defined parameter
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -590,5 +606,31 @@ public class LogActivityController implements Initializable {
         public void setCalories(double calories) {
             this.calories = new SimpleDoubleProperty(calories);
         }
+    }
+
+    /**
+     * Method to handle custom nutrition item creation
+     *
+     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
+     */
+    public void customNutritionItemButtonAction() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateNutritionItem.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(part);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /**
+     * Method to handle custom exercise item creation
+     *
+     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
+     */
+    public void customExerciseItemButtonAction() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateExerciseItem.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(part);
+        stage.setScene(scene);
+        stage.show();
     }
 }

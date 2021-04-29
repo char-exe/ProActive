@@ -15,8 +15,6 @@ public class Main extends Application {
         primaryStage.setTitle("ProActive");
         primaryStage.setScene(new Scene(root));
 
-        primaryStage.setMinWidth(1050);
-        primaryStage.setMinHeight(500);
         primaryStage.show();
 
         //VBox content = FXMLLoader.load(getClass().getResource("SplashPage.fxml"));
