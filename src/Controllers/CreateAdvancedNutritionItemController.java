@@ -3,10 +3,7 @@ package Controllers;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -14,7 +11,6 @@ import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.NutritionItem;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -26,7 +22,7 @@ import java.util.ResourceBundle;
  *
  * @version 1.0
  */
-public class CreateNutritionItemController implements Initializable {
+public class CreateAdvancedNutritionItemController implements Initializable {
     @FXML public TextArea nameInput;
     @FXML public TextArea kcalInput;
     @FXML public TextArea proteinInput;
@@ -45,8 +41,6 @@ public class CreateNutritionItemController implements Initializable {
     @FXML public Label sugarInputPopUp;
     @FXML public Label fibreInputPopUp;
     @FXML public Label cholesterolInputPopUp;
-
-    @FXML public Button advancedCreationButton;
 
     private NutritionItem n;
     
@@ -67,7 +61,6 @@ public class CreateNutritionItemController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //TODO Update regex to match protein, add error checking for multiple decimal points in the checks methods
 
         //Set kcalInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
@@ -155,6 +148,15 @@ public class CreateNutritionItemController implements Initializable {
     }
 
     /**
+     * Method to act as a pseudo constructor for
+     *
+     * @param n Nutrition Item object to be passed in
+     */
+    public void initData(NutritionItem n){
+        this.n = n;
+    }
+
+    /**
      * Method to handle the submit button event
      *
      * @throws SQLException Throws an SQLException whenever it is possible for an external force to affect SQL
@@ -163,17 +165,14 @@ public class CreateNutritionItemController implements Initializable {
     @FXML public void submitButtonAction() throws SQLException {
         DatabaseHandler dbh = DatabaseHandler.getInstance();
 
-        if (checkInputs()){
+        //if (checkInputs()){
+
+            System.out.println(n);
+            /*
             Stage parentScene = (Stage) submitButton.getScene().getWindow();
 
-            n = new NutritionItem(nameInput.getText(),
-                                  Double.parseDouble(kcalInput.getText()),
-                                  Double.parseDouble(proteinInput.getText()),
-                                  Double.parseDouble(fatInput.getText()),
-                                  Double.parseDouble(carbsInput.getText()),
-                                  Double.parseDouble(sugarInput.getText()),
-                                  Double.parseDouble(fibreInput.getText()),
-                                  Double.parseDouble(cholesterolInput.getText()));
+            //TODO determine new inputs for nutrition items, once determined, create getters and setters in
+            // NutritionItem class then set up on this controller
 
             dbh.addNutritionItem(n);
 
@@ -181,7 +180,9 @@ public class CreateNutritionItemController implements Initializable {
 
             parentScene.close();
 
-        }
+             */
+
+       // }
 
     }
 
@@ -355,25 +356,4 @@ public class CreateNutritionItemController implements Initializable {
             return false;
         }
     }
-
-    @FXML private void advancedCreationButtonAction() throws IOException {
-        Stage parentScene = (Stage) advancedCreationButton.getScene().getWindow();
-        Stage stage = new Stage();
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/FXML/CreateAdvancedNutritionItem.fxml"));
-
-        Parent advancedParent = loader.load();
-
-        Scene sceneEmail = new Scene(advancedParent);
-
-        stage.setScene(sceneEmail);
-
-        CreateAdvancedNutritionItemController controller = loader.getController();
-        stage.setScene(sceneEmail);
-        controller.initData(n);
-
-        parentScene.close();
-        stage.show();
-    }
-
 }
