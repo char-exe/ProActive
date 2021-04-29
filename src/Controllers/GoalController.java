@@ -1,6 +1,7 @@
 package Controllers;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -8,13 +9,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import sample.DatabaseHandler;
-import sample.Goal;
-import sample.IndividualGoal;
-import sample.User;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import sample.*;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -38,7 +39,10 @@ public class GoalController implements Initializable {
 
     @FXML private TabPane tabPane;
 
-    //Set Goals tab
+    //Our Goals For You tab
+    @FXML private VBox ourGoalsVbox;
+
+    //Set Your Own tab
     @FXML private TextField dietAmountField;
     @FXML private ComboBox<String> dietUnitSelect;
     @FXML private DatePicker dietDateField;
@@ -53,14 +57,14 @@ public class GoalController implements Initializable {
 
     //Current Goals tab
     @FXML private TableView<GoalItem> currentGoalsTable;
-    @FXML private TableColumn<GoalItem, Integer> currentTargetColumn;
+    @FXML private TableColumn<GoalItem, Float> currentTargetColumn;
     @FXML private TableColumn<GoalItem, String> currentUnitColumn;
     @FXML private TableColumn<GoalItem, Integer> currentProgressColumn;
     @FXML private TableColumn<GoalItem, String> currentEndDateColumn;
 
     //Past Goals tab
     @FXML private TableView<GoalItem> pastGoalsTable;
-    @FXML private TableColumn<GoalItem, Integer> pastTargetColumn;
+    @FXML private TableColumn<GoalItem, Float> pastTargetColumn;
     @FXML private TableColumn<GoalItem, String> pastUnitColumn;
     @FXML private TableColumn<GoalItem, Integer> pastProgressColumn;
     @FXML private TableColumn<GoalItem, String> pastEndDateColumn;
@@ -85,8 +89,8 @@ public class GoalController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    dietAmountField.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("(\\d\\.\\d)*")) {
+                    dietAmountField.setText(newValue.replaceAll("[^(\\d\\.\\d)]", ""));
                 }
             }
         });
@@ -171,6 +175,35 @@ public class GoalController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
+        //Grab System Goals
+        //For goal in system goals
+        //add hbox
+        //add label to hbox
+        //add goal.tostring to label
+        //add button to hbox
+        //add event listener to button where handle is user.addgoal(goal)
+        //update button? remove hbox? something to indicate that goal is accepted.
+        for (SystemGoal systemGoal : user.getSystemGoals()) {
+            HBox hbox = new HBox();
+
+            ourGoalsVbox.getChildren().add(hbox);
+
+            hbox.getChildren().add(new Label(systemGoal.toString()));
+
+            Button b = new Button();
+
+            EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent e)
+                {
+                    user.addGoal(new IndividualGoal(systemGoal));
+                    systemGoal.setAccepted(true);
+                }
+            };
+
+            b.setOnAction(event);
+
+            hbox.getChildren().add(b);
+        }
     }
 
     /**
@@ -187,7 +220,7 @@ public class GoalController implements Initializable {
         //Check field values
         if (checkDietInputs(amountText, unitsText, dateText)) {
 
-            int amount = Integer.parseInt(amountText); //Need to check as a string first to check for empty input.
+            float amount = Float.parseFloat(amountText); //Need to check as a string first to check for empty input.
 
             //Create goal and present message to user
             if (unitsText.equals("Calories")) {
@@ -392,7 +425,7 @@ public class GoalController implements Initializable {
      * Wrapper class for table rows, wraps target, unit, progress, end date, and completed status into a holding class.
      */
     public class GoalItem {
-        private SimpleIntegerProperty target;
+        private SimpleFloatProperty target;
         private SimpleStringProperty unit;
         private SimpleIntegerProperty progress;
         private SimpleStringProperty endDate;
@@ -404,7 +437,7 @@ public class GoalController implements Initializable {
          * @param goal The goal to be parsed as a goal item.
          */
         public GoalItem(Goal goal) {
-            this.target = new SimpleIntegerProperty(goal.getTarget());
+            this.target = new SimpleFloatProperty(goal.getTarget());
             this.unit = new SimpleStringProperty(goal.getUnit().toString());
             this.progress = new SimpleIntegerProperty(goal.getProgress());
             this.endDate = new SimpleStringProperty(goal.getEndDate().toString());
@@ -416,7 +449,7 @@ public class GoalController implements Initializable {
          *
          * @return the target for this goal item.
          */
-        public Integer getTarget() {
+        public Float getTarget() {
             return this.target.get();
         }
 
@@ -426,7 +459,7 @@ public class GoalController implements Initializable {
          * @param target the new target value.
          */
         public void setTarget(int target) {
-            this.target = new SimpleIntegerProperty(target);
+            this.target = new SimpleFloatProperty(target);
         }
 
         /**

@@ -17,6 +17,11 @@ import java.util.Locale;
  * Initial creation was with heavy reference to https://www.sqlitetutorial.net/sqlite-java/select/ though the class
  * has changed significantly since its inception.
  *
+ * Data for the food table can be found at
+ * https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid.
+ * as per page 37 of the pdf available for download, it is available on an Open Government Licence, details of which
+ * can be found at https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+ *
  * @author Samuel Scarfe
  * @author Owen Tasker
  * @author Charlie Jones
@@ -895,7 +900,7 @@ public class DatabaseHandler
              ResultSet rs = stmt.executeQuery(sql))
         {
             while (rs.next()) {
-                int target = rs.getInt("target");
+                float target = rs.getFloat("target");
                 Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
                 int progress = rs.getInt("progress");
                 LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
@@ -917,7 +922,7 @@ public class DatabaseHandler
      * @param goal the updated goal to be updated in the database.
      */
     public void updateGoal(String username, Goal goal, int amount) {
-        int target = goal.getTarget();
+        float target = goal.getTarget();
         String unit = goal.getUnit().toString();
         String endDate = goal.getEndDate().toString();
         int newProgress = goal.getProgress();
@@ -998,13 +1003,11 @@ public class DatabaseHandler
 
             stmt.executeUpdate(sql);
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
-
-
 
     /**
      * Method to add a nutrition item to the food database, this will be used for custom nutrition item creation,
@@ -1025,7 +1028,6 @@ public class DatabaseHandler
         stmt.executeUpdate(sql);
 
         System.out.println("Added " + n.getName() + " to food database");
-
     }
 
     /**
@@ -1042,7 +1044,74 @@ public class DatabaseHandler
         stmt.executeUpdate(sql);
 
         System.out.println("Added " + name + " to exercise database");
+    }
 
+    private float getDailyIntakeTarget(User user, Goal.Unit unit) {
+        String sql = "SELECT amount FROM daily_intake WHERE gender = '" + user.getSex().toUpperCase(Locale.ROOT) +
+                "' AND min_age <= '" + user.getAge() + "' AND max_age >= '" + user.getAge() + "' AND unit = " +
+                unit.toString() + "'";
+
+        float target = -1;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            target = rs.getFloat("amount");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return target;
+    }
+
+    public void updateDayToDayGoals(User user) throws SQLException {
+
+        Goal.Unit[] units = {Goal.Unit.CALORIES, Goal.Unit.PROTEIN};
+        for (Goal.Unit unit : units) {
+            float target = getDailyIntakeTarget(user, unit);
+
+            String sql = "UPDATE system_goal SET end_date = '" + LocalDate.now().plusDays(1).toString() +
+                    "', target = '" + target + "' WHERE " + "end_date != '" + LocalDate.now().plusDays(1).toString() +
+                    "' AND category = 'DAY_TO_DAY' AND user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
+
+            try {
+                Statement stmt = this.conn.createStatement();
+                stmt.executeUpdate(sql);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new SQLException();
+            }
+        }
+    }
+
+    public ArrayList<SystemGoal> selectSystemGoals(User user) throws SQLException {
+
+        ArrayList<SystemGoal> goals = new ArrayList<>();
+
+        String sql = "SELECT target, unit, end_date, update_period, category, accepted FROM system_goal WHERE " +
+                "(category = 'DAY_TO_DAY' AND min_age <= '" + user.getAge() + "' AND max_age >= '" + user.getAge() +
+                "' AND gender = '" + user.getSex() + "') OR user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            while (rs.next()) {
+                float target = rs.getFloat("target");
+                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
+                SystemGoal.UpdatePeriod updatePeriod = SystemGoal.UpdatePeriod.valueOf(rs.getString("update_period"));
+                SystemGoal.Category category = SystemGoal.Category.valueOf(rs.getString("category"));
+                boolean accepted = rs.getBoolean("accepted");
+
+                goals.add(new SystemGoal(target, unit, endDate, updatePeriod, category, accepted));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException();
+        }
+
+        return goals;
     }
 
     public static void main(String[] args) {

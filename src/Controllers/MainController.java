@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
+import sample.Goal;
 import sample.User;
 
 import java.io.IOException;
@@ -93,6 +94,9 @@ public class MainController implements Initializable {
 
         main.setCenter(scrollPane);
         toggleButtonFocus(homeButton);
+        for (Goal goal : user.getSystemGoals()) {
+            System.out.println(goal);
+        }
     }
 
     /**

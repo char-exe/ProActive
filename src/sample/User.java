@@ -51,6 +51,7 @@ public class User {
     private final String email;
     private Set<Group> groupMemberships = new HashSet<Group>();
     private ArrayList<Goal> goals;
+    private ArrayList<SystemGoal> systemGoals;
     private final String username;
 
     /**
@@ -218,6 +219,10 @@ public class User {
         return this.goals;
     }
 
+    public ArrayList<SystemGoal> getSystemGoals() {
+        return this.systemGoals;
+    }
+
     /**
      * Sets the User's firstname to the passed parameter.
      *
@@ -311,6 +316,10 @@ public class User {
         LocalDate birthday = LocalDate.of(this.dob.getYear(), this.dob.getMonth(), this.dob.getDayOfMonth());
 
         this.age = Period.between(birthday, today).getYears();
+    }
+
+    public void setSystemGoals(ArrayList<SystemGoal> systemGoals) {
+        this.systemGoals = systemGoals;
     }
 
     /**
