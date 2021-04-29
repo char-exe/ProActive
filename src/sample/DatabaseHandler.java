@@ -502,8 +502,8 @@ public class DatabaseHandler
      */
     public void editValue(String table, String column, int valToUpdateTo, String username) throws SQLException {
         String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
-                     " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
-                     " WHERE username = '" + username + "'";
+                     " SET " + column.toUpperCase(Locale.ROOT) + " = '" + valToUpdateTo +
+                     "' WHERE username = '" + username + "'";
 
             Statement stmt  = this.conn.createStatement();
             stmt.executeUpdate(sql);
@@ -1089,8 +1089,7 @@ public class DatabaseHandler
         ArrayList<SystemGoal> goals = new ArrayList<>();
 
         String sql = "SELECT target, unit, end_date, update_period, category, accepted FROM system_goal WHERE " +
-                "(category = 'DAY_TO_DAY' AND min_age <= '" + user.getAge() + "' AND max_age >= '" + user.getAge() +
-                "' AND gender = '" + user.getSex() + "') OR user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
+                "user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
 
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql))

@@ -21,10 +21,12 @@ import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.User;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
