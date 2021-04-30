@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -44,8 +45,10 @@ public class MainController implements Initializable {
     @FXML private Button groupsButton;
     @FXML private Button goalsButton;
     @FXML private Button manageProfileButton;
+    @FXML private Button logOutButton;
     @FXML private BorderPane main;
     @FXML private Label notification;
+
 
     private User user;
 
@@ -201,4 +204,31 @@ public class MainController implements Initializable {
     public void showNotification(String message){
         notification.setText(message);
     }
+
+    /**
+     * Method to log out and send user back to the splash page
+     *
+     * @param actionEvent This refers to the button that will cause this method to be called
+     *
+     * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
+     */
+    @FXML protected void logOutAction(ActionEvent actionEvent) throws IOException {
+        Stage parentScene = (Stage) logOutButton.getScene().getWindow();
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
+
+        Parent splashParent = loader.load();
+
+        Scene sceneParent = new Scene(splashParent);
+
+        stage.setScene(sceneParent);
+
+        SplashPageController controller = loader.getController();
+        stage.setScene(sceneParent);
+
+        parentScene.close();
+        stage.show();
+    }
+
 }
