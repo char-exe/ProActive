@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Samuel Scarfe
  * @author Evan Clayton
  *
- * @version 1.7
+ * @version 1.8
  *
  * 1.0 - Initial user class structure and their variables.
  * 1.1 - Added constructor, getters and setters.
@@ -27,6 +27,7 @@ import java.util.Set;
  * 1.5 - Updated Javadoc.
  * 1.6 - Added groupMembership array and corresponding methods
  * 1.7 - Implemented adding and updating goals.
+ * 1.8 - Implemented automatic goal generation.
  */
 public class User {
 
@@ -318,6 +319,11 @@ public class User {
         this.age = Period.between(birthday, today).getYears();
     }
 
+    /**
+     * Method to set this user's system goals to the provided ArrayList.
+     *
+     * @param systemGoals this user's system goals.
+     */
     public void setSystemGoals(ArrayList<SystemGoal> systemGoals) {
         this.systemGoals = systemGoals;
     }
@@ -347,6 +353,83 @@ public class User {
                 DatabaseHandler.getInstance().updateGoal(username, goal, amount);
             }
         }
+    }
+
+    /**
+     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
+     *
+     * @param unit   the unit which has been input as part of a logged activity.
+     * @param amount the amount of the unit which has been logged.
+     */
+    public void updateGoals(Goal.Unit unit, float amount) {
+        //for each goal
+        for (Goal goal : goals) {
+            //if the goal is updated
+            if (goal.updateProgress(unit, amount)) {
+                //update the goal in the database
+                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+            }
+        }
+    }
+
+    /**
+     * Method to query the database for this user's day to day system goals.
+     * @return an ArrayList of SystemGoals for this user's day to day system goals.
+     */
+    public ArrayList<SystemGoal> getDayToDayGoals() {
+        return DatabaseHandler.getInstance().selectSystemGoals(
+                this.username, LocalDate.now().plusDays(1), SystemGoal.Category.DAY_TO_DAY
+        );
+    }
+
+    /**
+     * Method to query the database for this user's daily fitness system goals.
+     * @return an ArrayList of SystemGoals for this user's daily fitness system goals.
+     */
+    public ArrayList<SystemGoal> getDailyFitness() {
+        return DatabaseHandler.getInstance().selectSystemGoals(
+                this.username, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY
+        );
+    }
+
+    /**
+     * Method to query the database for this user's weekly fitness system goals.
+     * @return an ArrayList of SystemGoals for this user's weekly fitness system goals.
+     */
+    public ArrayList<SystemGoal> getWeeklyFitness() {
+        return DatabaseHandler.getInstance().selectSystemGoals(
+                this.username, LocalDate.now().plusDays(7), SystemGoal.UpdatePeriod.WEEKLY
+        );
+    }
+
+    /**
+     * Method to query the database for this user's goal of each unit with the maximum achieved target within a
+     * date range.
+     *
+     * @param earliest The number of days prior to today to query
+     * @return an ArrayList of SystemGoals.
+     */
+    public ArrayList<IndividualGoal> getMaxCompletedGoals(LocalDate earliest) {
+        return DatabaseHandler.getInstance().selectMaxCompletedGoals(this.username, earliest);
+    }
+
+    /**
+     * Method to get a user's average work rate in a particular activity within a date range.
+     *
+     * @param unit the activity to be queried.
+     * @param daysEarlier the earliest date to be queried.
+     * @return a float representing the average work rate for that unit over the time period.
+     */
+    public float getAverageWorkRate(Goal.Unit unit, int daysEarlier) {
+        return DatabaseHandler.getInstance().selectAverageWorkRate(this.username, unit, daysEarlier);
+    }
+
+    /**
+     * Method to save this user's system goals in the database. Intended for use whenever their values change such
+     * that their state will persist between logins.
+     */
+    public void saveSystemGoals() {
+        DatabaseHandler.getInstance().refreshSystemGoals(this.username, this.systemGoals);
     }
 
     //Class-Specific Methods
@@ -514,7 +597,6 @@ public class User {
             return false;
         }
     }
-
 
     /**
      * Test Harness

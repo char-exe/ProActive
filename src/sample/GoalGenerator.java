@@ -1,47 +1,157 @@
 package sample;
 
-
-//https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/618167/government_dietary_recommendations.pdf
-
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Random;
 
+/**
+ * Class to automatically generate goals for user's. Generates nutritional goals based on the UK government's
+ * dietary recommendations, and fitness goals based on the user's prior activity.
+ *
+ * @author Samuel Scarfe
+ *
+ * @version 1.0
+ *
+ * 1.0 - First working version
+ */
 public class GoalGenerator {
 
-    private User user;
-    private DatabaseHandler db;
+    /**
+     * The user that the goals are generated for.
+     */
+    private final User user;
 
+    /**
+     * A database handler with which to engage the database.
+     */
+    private final DatabaseHandler db;
+
+    /**
+     * Constructs a GoalGenerator from a passed User instance. Initialises a DatabaseHandler instance.
+     * @param user the user to generate goals for
+     */
     public GoalGenerator(User user) {
         this.user = user;
         this.db = DatabaseHandler.getInstance();
     }
 
-    public void generateGoals() {
+    /**
+     * Method to retrieve from the database or generate new SystemGoals for this GoalGenerator's User. If no fitness
+     * goals have been completed, then no Daily or Weekly fitness goals will be generated.
+     *
+     * @return an ArrayList of generated SystemGoals.
+     */
+    public ArrayList<SystemGoal> generateGoals() {
+        //Check if Day to Day exist
+        ArrayList<SystemGoal> dayToDay = user.getDayToDayGoals();
+        if (dayToDay.size() == 0) { //If not, generate
+            dayToDay = generateDayToDay();
+        }
+
+        ArrayList<SystemGoal> goals = new ArrayList<>(dayToDay);
+
+        //Check if Daily fitness exist
+        ArrayList<SystemGoal> dailyFitness = user.getDailyFitness();
+        if (dailyFitness.size() == 0) { //If not, attempt to generate.
+            dailyFitness = generateDailyFitness();
+        }
+
+        //Check if Daily fitness were retrieved or generated
+        if (dailyFitness.size() > 0) { //User has completed fitness goals
+            //Check if weekly fitness exist
+            ArrayList<SystemGoal> weeklyFitness = user.getWeeklyFitness();
+
+            if (weeklyFitness.size() == 0) { //if not, generate
+                weeklyFitness = generateWeeklyFitness(dailyFitness);
+            }
+
+            goals.addAll(dailyFitness);
+            goals.addAll(weeklyFitness);
+        }
+        
+        return goals;
+    }
+
+    /**
+     * Private helper method to generate day to day goals for this GoalGenerator's User.
+     * @return An ArrayList of SystemGoals with nutritional target's in line with the UK Governments dietary
+     * recommendations for age and gender.
+     */
+    private ArrayList<SystemGoal> generateDayToDay() {
+        ArrayList<SystemGoal> goals = new ArrayList<>();
+        Goal.Unit[] units = {Goal.Unit.CALORIES, Goal.Unit.PROTEIN};
+
+        //For each unit
+        for (Goal.Unit unit : units) {
+            //get the Users RDI
+            float target = db.getRecommendedIntake(unit, user.getAge(), user.getSex());
+            //generate a goal for today with the RDI
+            goals.add(new SystemGoal(target, unit, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY, SystemGoal.Category.DAY_TO_DAY));
+        }
+
+        return goals;
+    }
+
+    /**
+     * Private helper method to generate Daily fitness goals for this GoalGenerator's User. Generates goals based
+     * on user's previously completed goals considering both activity and target. If the user has completed no goals
+     * then no goals will be generated. If the calculated target is below the activity's threshold then it is set
+     * to the threshold.
+     *
+     * @return An ArrayList of System goals containing daily fitness targets.
+     */
+    private ArrayList<SystemGoal> generateDailyFitness() {
+        //Get user's completed exercise goals for the past month with max target
+        Random random = new Random();
         ArrayList<SystemGoal> systemGoals = new ArrayList<>();
+        ArrayList<IndividualGoal> completedGoals = user.getMaxCompletedGoals(LocalDate.now().minusDays(28));
 
-        //generate day to day goals
-        //generate fitness goals
-            //
+        //Select up to three at random
+        while (systemGoals.size() < 3 && completedGoals.size() > 0) {
+            int index = random.nextInt(completedGoals.size());
+            IndividualGoal current = completedGoals.remove(index);
+            Goal.Unit unit = current.getUnit();
+            System.out.println("call");
+            //Create new SystemGoals by checking the user's average work rate in that task
+            float averageWorkRate = user.getAverageWorkRate(unit, 28);
+
+            if (averageWorkRate < unit.getMinimum()) {
+                averageWorkRate = unit.getMinimum();
+            }
+            systemGoals.add(new SystemGoal(
+                    averageWorkRate,
+                    unit,
+                    LocalDate.now().plusDays(1),
+                    SystemGoal.UpdatePeriod.DAILY,
+                    SystemGoal.Category.STAY)
+            );
+        }
+
+        return systemGoals;
     }
 
-    public void updateDaytoDay() {
-        try {
-            db.updateDayToDayGoals(user);
-        }
-        catch (SQLException e) {
-            System.out.println("Day to day update failed!");
-        }
-    }
+    /**
+     * Private helper method to generate weekly fitness goals for this Goal Generator's User based on the provided
+     * daily goals.
+     *
+     * @param dailyGoals the generated daily goals.
+     * @return An ArrayList of SystemGoals equivalent to the passed daily goals but with a week to achieve them and
+     * target's 5 times larger.
+     */
+    private ArrayList<SystemGoal> generateWeeklyFitness(ArrayList<SystemGoal> dailyGoals) {
+        ArrayList<SystemGoal> weeklyGoals = new ArrayList<>();
 
-    public ArrayList<SystemGoal> updateGoals() {
-        updateDaytoDay();
+        for (SystemGoal goal : dailyGoals) {
+            weeklyGoals.add(new SystemGoal(
+                    goal.getTarget()*5,
+                    goal.getUnit(),
+                    goal.getEndDate().plusDays(6),
+                    SystemGoal.UpdatePeriod.WEEKLY,
+                    SystemGoal.Category.STAY)
+            );
+        }
 
-        try {
-            return db.selectSystemGoals(user);
-        }
-        catch (SQLException e) {
-            System.out.println("Goal retrieval failed");
-        }
-        return new ArrayList<>();
+        return weeklyGoals;
     }
 }

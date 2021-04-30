@@ -13,6 +13,7 @@ import java.time.LocalDate;
  * @see Goal
  *
  * 1.0 - First working version.
+ * 1.1 - Implemented automatic goal generation
  */
 public class IndividualGoal extends Goal {
 
@@ -37,10 +38,15 @@ public class IndividualGoal extends Goal {
      * @param endDate  the end date of the goal.
      * @param progress the current progress of the goal.
      */
-    public IndividualGoal(float target, Unit unit, LocalDate endDate, int progress) {
+    public IndividualGoal(float target, Unit unit, LocalDate endDate, float progress) {
         super(target, unit, endDate, progress);
     }
 
+    /**
+     * Constructs an IndividualGoal from a SystemGoal.
+     *
+     * @param systemGoal a goal generated automatically by the system and accepted by the user.
+     */
     public IndividualGoal(SystemGoal systemGoal) {
         super(systemGoal.getTarget(), systemGoal.getUnit(), systemGoal.getEndDate());
     }

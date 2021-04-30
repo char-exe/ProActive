@@ -88,7 +88,8 @@ public class MainController implements Initializable {
         summaryController.setData();
 
         GoalGenerator gg = new GoalGenerator(user);
-        user.setSystemGoals(gg.updateGoals());
+        user.setSystemGoals(gg.generateGoals());
+        user.saveSystemGoals();
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vBox);
@@ -150,6 +151,7 @@ public class MainController implements Initializable {
 
         GoalController gc = loader.getController();
         gc.initData(user);
+        gc.showSystemGoals();
         main.setCenter(vBox);
         toggleButtonFocus(goalsButton);
     }

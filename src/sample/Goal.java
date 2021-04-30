@@ -8,9 +8,10 @@ import java.time.LocalDate;
  *
  * @author Samuel Scarfe
  *
- * @version 1.0
+ * @version 1.1
  *
  * 1.0 - First working version.
+ * 1.1 - Updated with minimum target amounts as part of automatic goal generation.
  */
 public abstract class Goal {
 
@@ -19,8 +20,47 @@ public abstract class Goal {
      * protein, or an exercise unit of a specific exercise or all exercise.
      */
     public enum Unit {
-        CALORIES, PROTEIN, BURN, EXERCISE, WALKING, JOGGING, RUNNING, FOOTBALL, RUGBY, YOGA,
-        TENNIS, SWIMMING, CYCLING, KARATE, HIKING, CLEANING, BOXING, BILLIARDS, JUDO
+        CALORIES(-1),
+        PROTEIN(-1),
+        BURN(-1),
+        EXERCISE(30),
+        WALKING(30),
+        JOGGING(30),
+        RUNNING(30),
+        FOOTBALL(30),
+        RUGBY(30),
+        YOGA(30),
+        TENNIS(30),
+        SWIMMING(30),
+        CYCLING(30),
+        KARATE(30),
+        HIKING(30),
+        CLEANING(30),
+        BOXING(30),
+        BILLIARDS(30),
+        JUDO(30);
+
+        /**
+         * The minimum target amount set by the system for a daily goal of this unit.
+         */
+        public final int minimum;
+
+        /**
+         * Constructs a Unit with its minimum value.
+         * @param minimum the minimum target amount set by the system for a daily got of this unit.
+         */
+        Unit(int minimum) {
+            this.minimum = minimum;
+        }
+
+        /**
+         * Gets the minimum value for this unit.
+         *
+         * @return the minimum value for this unit.
+         */
+        public int getMinimum() {
+            return this.minimum;
+        }
     }
 
     /**
@@ -38,7 +78,7 @@ public abstract class Goal {
     /**
      * The current progress of the goal.
      */
-    protected int progress;
+    protected float progress;
     /**
      * The active status of the goal.
      */
@@ -75,7 +115,7 @@ public abstract class Goal {
      * @param endDate   the end date of the goal.
      * @param progress  the current progress of the goal.
      */
-    public Goal(float target, Unit unit, LocalDate endDate, int progress) {
+    public Goal(float target, Unit unit, LocalDate endDate, float progress) {
         this.target    = target;
         this.unit      = unit;
         this.endDate   = endDate;
@@ -116,7 +156,7 @@ public abstract class Goal {
      *
      * @return the progress amount for this goal.
      */
-    public int getProgress() {
+    public float getProgress() {
         return this.progress;
     }
 
@@ -144,7 +184,7 @@ public abstract class Goal {
      *
      * @param update the amount to increment progress by
      */
-    public boolean updateProgress(Unit unit, int update) {
+    public boolean updateProgress(Unit unit, float update) {
         if (this.active && !this.completed && this.unit == unit) {
 
             this.progress = this.progress + update;

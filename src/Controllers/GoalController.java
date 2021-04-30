@@ -28,11 +28,11 @@ import javafx.fxml.FXML;
  *
  * @author Samuel Scarfe
  *
- * @version 1.1
+ * @version 1.2
  *
  * 1.0 - First working version. Functionality for adding goals implemented with simple error checking.
  * 1.1 - Implemented functionality for checking current and past goals.
- *
+ * 1.2 - Implemented automatic goal generation.
  */
 
 public class GoalController implements Initializable {
@@ -59,14 +59,14 @@ public class GoalController implements Initializable {
     @FXML private TableView<GoalItem> currentGoalsTable;
     @FXML private TableColumn<GoalItem, Float> currentTargetColumn;
     @FXML private TableColumn<GoalItem, String> currentUnitColumn;
-    @FXML private TableColumn<GoalItem, Integer> currentProgressColumn;
+    @FXML private TableColumn<GoalItem, Float> currentProgressColumn;
     @FXML private TableColumn<GoalItem, String> currentEndDateColumn;
 
     //Past Goals tab
     @FXML private TableView<GoalItem> pastGoalsTable;
     @FXML private TableColumn<GoalItem, Float> pastTargetColumn;
     @FXML private TableColumn<GoalItem, String> pastUnitColumn;
-    @FXML private TableColumn<GoalItem, Integer> pastProgressColumn;
+    @FXML private TableColumn<GoalItem, Float> pastProgressColumn;
     @FXML private TableColumn<GoalItem, String> pastEndDateColumn;
     @FXML private TableColumn<GoalItem, Boolean> pastCompletedColumn;
 
@@ -175,34 +175,46 @@ public class GoalController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
-        //Grab System Goals
-        //For goal in system goals
-        //add hbox
-        //add label to hbox
-        //add goal.tostring to label
-        //add button to hbox
-        //add event listener to button where handle is user.addgoal(goal)
-        //update button? remove hbox? something to indicate that goal is accepted.
+    }
+
+    /**
+     * Method to instantiate Our Goals for You tab. Assigns a row to each goal, with a button to accept the goal on
+     * the row.
+     */
+    public void showSystemGoals() {
+        //For goal in user's system goals
         for (SystemGoal systemGoal : user.getSystemGoals()) {
+
+            //Add label and button for goal
             HBox hbox = new HBox();
-
             ourGoalsVbox.getChildren().add(hbox);
-
             hbox.getChildren().add(new Label(systemGoal.toString()));
+            Button button = new Button();
 
-            Button b = new Button();
+            //Set button text based on goal status
+            if (systemGoal.isAccepted()) {
+                button.setText("Accepted");
+            }
+            else {
+                button.setText("Click to accept");
+            }
 
+            //Set button action such that if the goal is not accepted it is added to the user's goals, set to
+            //accepted, updated in the database, and then the button updated.
             EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent e)
-                {
-                    user.addGoal(new IndividualGoal(systemGoal));
-                    systemGoal.setAccepted(true);
+                public void handle(ActionEvent e) {
+                    if (!systemGoal.isAccepted()) {
+                        user.addGoal(new IndividualGoal(systemGoal));
+                        systemGoal.setAccepted(true);
+                        user.saveSystemGoals();
+                        button.setText("Accepted");
+                    }
                 }
             };
 
-            b.setOnAction(event);
+            button.setOnAction(event);
 
-            hbox.getChildren().add(b);
+            hbox.getChildren().add(button);
         }
     }
 
@@ -427,7 +439,7 @@ public class GoalController implements Initializable {
     public class GoalItem {
         private SimpleFloatProperty target;
         private SimpleStringProperty unit;
-        private SimpleIntegerProperty progress;
+        private SimpleFloatProperty progress;
         private SimpleStringProperty endDate;
         private SimpleBooleanProperty completed;
 
@@ -439,7 +451,7 @@ public class GoalController implements Initializable {
         public GoalItem(Goal goal) {
             this.target = new SimpleFloatProperty(goal.getTarget());
             this.unit = new SimpleStringProperty(goal.getUnit().toString());
-            this.progress = new SimpleIntegerProperty(goal.getProgress());
+            this.progress = new SimpleFloatProperty(goal.getProgress());
             this.endDate = new SimpleStringProperty(goal.getEndDate().toString());
             this.completed = new SimpleBooleanProperty(goal.isCompleted());
         }
@@ -485,7 +497,7 @@ public class GoalController implements Initializable {
          *
          * @return the progress for this goal item.
          */
-        public Integer getProgress() {
+        public Float getProgress() {
             return this.progress.get();
         }
 
@@ -494,8 +506,8 @@ public class GoalController implements Initializable {
          *
          * @param progress the new progress value.
          */
-        public void setProgress(int progress) {
-            this.progress = new SimpleIntegerProperty(progress);
+        public void setProgress(float progress) {
+            this.progress = new SimpleFloatProperty(progress);
         }
 
         /**
