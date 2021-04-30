@@ -12,6 +12,7 @@ import java.time.LocalDate;
  *
  * 1.0 - First working version.
  * 1.1 - Updated with minimum target amounts as part of automatic goal generation.
+ * 1.2 - Increased units to include vitamins and minerals.
  */
 public abstract class Goal {
 
@@ -20,25 +21,20 @@ public abstract class Goal {
      * protein, or an exercise unit of a specific exercise or all exercise.
      */
     public enum Unit {
-        CALORIES(-1),
-        PROTEIN(-1),
-        BURN(-1),
-        EXERCISE(30),
-        WALKING(30),
-        JOGGING(30),
-        RUNNING(30),
-        FOOTBALL(30),
-        RUGBY(30),
-        YOGA(30),
-        TENNIS(30),
-        SWIMMING(30),
-        CYCLING(30),
-        KARATE(30),
-        HIKING(30),
-        CLEANING(30),
-        BOXING(30),
-        BILLIARDS(30),
-        JUDO(30);
+        CALORIES(-1),    PROTEIN(-1),   CARBS(-1),
+        FIBRE(-1),       VITAMIN_A(-1), THIAMIN(-1),
+        RIBOFLAVIN(-1),  NIACIN(-1),    VITAMIN_B6(-1),
+        VITAMIN_B12(-1), FOLATE(-1),    VITAMIN_C(-1),
+        VITAMIN_D(-1),   IRON(-1),      CALCIUM(-1),
+        MAGNESIUM(-1),   POTASSIUM(-1), ZINC(-1),
+        COPPER(-1),      IODINE(-1),    SELENIUM(-1),
+        PHOSPHORUS(-1),  CHLORIDE(-1),  SODIUM(-1),
+        BURN(-1),        EXERCISE(30),  WALKING(30),
+        JOGGING(30),     RUNNING(30),   FOOTBALL(30),
+        RUGBY(30),       YOGA(30),      TENNIS(30),
+        SWIMMING(30),    CYCLING(30),   KARATE(30),
+        HIKING(30),      CLEANING(30),  BOXING(30),
+        BILLIARDS(30),   JUDO(30);
 
         /**
          * The minimum target amount set by the system for a daily goal of this unit.

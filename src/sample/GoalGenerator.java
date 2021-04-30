@@ -11,9 +11,10 @@ import java.util.Random;
  *
  * @author Samuel Scarfe
  *
- * @version 1.0
+ * @version 1.1
  *
  * 1.0 - First working version
+ * 1.1 - Added day to day goal setting for a much wider range of nutrients.
  */
 public class GoalGenerator {
 
@@ -80,7 +81,14 @@ public class GoalGenerator {
      */
     private ArrayList<SystemGoal> generateDayToDay() {
         ArrayList<SystemGoal> goals = new ArrayList<>();
-        Goal.Unit[] units = {Goal.Unit.CALORIES, Goal.Unit.PROTEIN};
+        Goal.Unit[] units = {
+                Goal.Unit.CALORIES,   Goal.Unit.PROTEIN,     Goal.Unit.CARBS,      Goal.Unit.FIBRE,
+                Goal.Unit.SODIUM,     Goal.Unit.POTASSIUM,   Goal.Unit.CALCIUM,    Goal.Unit.MAGNESIUM,
+                Goal.Unit.PHOSPHORUS, Goal.Unit.IRON,        Goal.Unit.COPPER,     Goal.Unit.ZINC,
+                Goal.Unit.CHLORIDE,   Goal.Unit.SELENIUM,    Goal.Unit.IODINE,     Goal.Unit.VITAMIN_A,
+                Goal.Unit.VITAMIN_D,  Goal.Unit.THIAMIN,     Goal.Unit.RIBOFLAVIN, Goal.Unit.NIACIN,
+                Goal.Unit.VITAMIN_B6, Goal.Unit.VITAMIN_B12, Goal.Unit.FOLATE,     Goal.Unit.VITAMIN_C
+        };
 
         //For each unit
         for (Goal.Unit unit : units) {

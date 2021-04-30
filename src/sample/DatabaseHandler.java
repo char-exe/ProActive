@@ -1,8 +1,5 @@
 package sample;
 
-import org.sqlite.core.DB;
-
-import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ import java.util.Locale;
  * @author Owen Tasker
  * @author Charlie Jones
  *
- * @version 1.12
+ * @version 1.13
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -420,11 +417,22 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
 
-            nutritionItem = new NutritionItem(rs.getString("name"),
-                    rs.getFloat("kcal"), rs.getFloat("protein"),
-                    rs.getFloat("fat"), rs.getFloat("carbs"),
-                    rs.getFloat("sugar"), rs.getFloat("fibre"),
-                    rs.getFloat("cholesterol"));
+            nutritionItem = new NutritionItem(
+                    rs.getString("name"),          rs.getDouble("kcal"),
+                    rs.getDouble("protein_g"),     rs.getDouble("fat_g"),
+                    rs.getDouble("carbs_g"),       rs.getDouble("sugar_g"),
+                    rs.getDouble("fibre_g"),       rs.getDouble("cholesterol_mg"),
+                    rs.getDouble("sodium_mg"),     rs.getDouble("potassium_mg"),
+                    rs.getDouble("calcium_mg"),    rs.getDouble("magnesium_mg"),
+                    rs.getDouble("phosphorus_mg"), rs.getDouble("iron_mg"),
+                    rs.getDouble("copper_mg"),     rs.getDouble("zinc_mg"),
+                    rs.getDouble("chloride_mg"),   rs.getDouble("selenium_ug"),
+                    rs.getDouble("iodine_ug"),     rs.getDouble("vit_a_ug"),
+                    rs.getDouble("vit_d_ug"),      rs.getDouble("thiamin_mg"),
+                    rs.getDouble("riboflavin_mg"), rs.getDouble("niacin_mg"),
+                    rs.getDouble("vit_b6_mg"),     rs.getDouble("vit_b12_ug"),
+                    rs.getDouble("folate_ug"),     rs.getDouble("vit_c_mg")
+            );
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1029,7 +1037,7 @@ public class DatabaseHandler
                         "' AND date_of = '" + date + "'";
             } else {
                 sql = "INSERT INTO meal (meal_category, food_id, user_id, date_of, quantity)" +
-                        "VALUES('Water', '" + 0 + "','" + userID + "','" + date.toString() + "','" +
+                        "VALUES('Water', '" + getFoodId("Water") + "','" + userID + "','" + date.toString() + "','" +
                         waterQuantity + "')";
             }
 
@@ -1051,10 +1059,20 @@ public class DatabaseHandler
      *                      the running of an SQL statement
      */
     public void addNutritionItem(NutritionItem n) throws SQLException {
-        String sql = "INSERT INTO food (name, kcal, protein, fat, carbs, sugar, fibre, cholesterol)" +
-                     "VALUES('" + n.getName()  + "', " + n.getKcal() + ", " + n.getProtein() + ", " + n.getFat() + ", "
-                                + n.getCarbs() + ", " + n.getSugar() + ", " + n.getFibre() + ", " + n.getCholesterol()
-                                + ")";
+        String sql = "INSERT INTO food (name, kcal, protein_g, fat_g, carbs_g, sugar_g, fibre_g, cholesterol_mg, " +
+                "sodium_mg, potassium_mg, calcium_mg, magnesium_mg, phosphorus_mg, iron_mg, copper_mg, zinc_mg, " +
+                "chloride_mg, selenium_ug, iodine_ug, vit_a_ug, vit_d_ug, thiamin_mg, riboflavin_mg, niacin_mg, " +
+                "vit_b6_mg, vit_b12_ug, folate_ug, vit_c_mg)" + "VALUES('" +
+                n.getName()         + "', " + n.getKcal()          + ", " + n.getProteinG()     + ", " +
+                n.getFatG()         + ", "  + n.getCarbsG()        + ", " + n.getSugarG()       + ", " +
+                n.getFibreG()       + ", "  + n.getCholesterolMg() + ", " + n.getSodiumMg()     + ", " +
+                n.getPotassiumMg()  + ", "  + n.getCalciumMg()     + ", " + n.getMagnesiumMg()  + ", " +
+                n.getPhosphorusMg() + ", "  + n.getIronMg()        + ", " + n.getCopperMg()     + ", " +
+                n.getZincMg()       + ", "  + n.getChlorideMg()    + ", " + n.getSeleniumUg()   + ", " +
+                n.getIodineUg()     + ", "  + n.getVitAUg()        + ", " + n.getVitDUg()       + ", " +
+                n.getThiaminMg()    + ", "  + n.getRiboflavinMg()  + ", " + n.getNiacinMg()     + ", " +
+                n.getVitB6Mg()      + ", "  + n.getVitB12Ug()      + ", " + n.getFolateUg()     + ", " +
+                n.getVitCMg()       + ")";
 
         Statement stmt  = conn.createStatement();
         stmt.executeUpdate(sql);
@@ -1076,35 +1094,6 @@ public class DatabaseHandler
         stmt.executeUpdate(sql);
 
         System.out.println("Added " + name + " to exercise database");
-    }
-
-    /**
-     * Retrieves the daily intake target for the a passed unit and user.
-     *
-     * @param user the user for whom the target concerns.
-     * @param unit the unit of the target, e.g. protein
-     * @return a float representing the intake target for this user
-     * @throws SQLException if a SQL error occurs such as a database error.
-     */
-    private float getDailyIntakeTarget(User user, Goal.Unit unit) throws SQLException{
-        String sql = "SELECT amount FROM daily_intake WHERE gender = '" + user.getSex() +
-                "' AND min_age <= '" + user.getAge() + "' AND max_age >= '" + user.getAge() + "' AND unit = '" +
-                unit.toString() + "'";
-
-        float target = -1;
-
-        try {
-            Statement stmt = this.conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            target = rs.getFloat("amount");
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException();
-        }
-
-        return target;
     }
 
     /**
