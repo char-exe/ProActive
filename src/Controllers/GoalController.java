@@ -19,6 +19,7 @@ import sample.*;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -32,7 +33,7 @@ import javafx.fxml.FXML;
  *
  * 1.0 - First working version. Functionality for adding goals implemented with simple error checking.
  * 1.1 - Implemented functionality for checking current and past goals.
- * 1.2 - Implemented automatic goal generation.
+ * 1.2 - Implemented automatic goal generation. Extended goal setting for vitamins and minerals.
  */
 
 public class GoalController implements Initializable {
@@ -72,6 +73,8 @@ public class GoalController implements Initializable {
 
     private User user;
     private DatabaseHandler dh;
+
+    private static HashMap<String, Goal.Unit> nutrientsMap;
 
     /**
      * Method to be called once all FXML elements have been loaded, combined with initData acts as a pseudo-constructor.
@@ -119,8 +122,24 @@ public class GoalController implements Initializable {
             }
         });
 
+        nutrientsMap = new HashMap<>();
+
+        nutrientsMap.put("Calories (kcal)", Goal.Unit.CALORIES); nutrientsMap.put("Protein (g)", Goal.Unit.PROTEIN);
+        nutrientsMap.put("Carbs (g)", Goal.Unit.CARBS); nutrientsMap.put("Fibre (g)", Goal.Unit.FIBRE);
+        nutrientsMap.put("Sodium (mg)", Goal.Unit.SODIUM); nutrientsMap.put("Potassium (mg)", Goal.Unit.POTASSIUM);
+        nutrientsMap.put("Calcium (mg)", Goal.Unit.CALCIUM); nutrientsMap.put("Magnesium (mg)", Goal.Unit.MAGNESIUM);
+        nutrientsMap.put("Phosphorus (mg)", Goal.Unit.PHOSPHORUS); nutrientsMap.put("Iron (mg)", Goal.Unit.IRON);
+        nutrientsMap.put("Copper (mg)", Goal.Unit.COPPER); nutrientsMap.put("Zinc (mg)", Goal.Unit.ZINC);
+        nutrientsMap.put("Chloride (mg)", Goal.Unit.CHLORIDE); nutrientsMap.put("Selenium (ug)", Goal.Unit.SELENIUM);
+        nutrientsMap.put("Iodine (ug)", Goal.Unit.IODINE); nutrientsMap.put("Vitamin A (ug)", Goal.Unit.VITAMIN_A);
+        nutrientsMap.put("Vitamin D (ug)", Goal.Unit.VITAMIN_D); nutrientsMap.put("Thiamin (mg)", Goal.Unit.THIAMIN);
+        nutrientsMap.put("Riboflavin (mg)", Goal.Unit.RIBOFLAVIN); nutrientsMap.put("Niacin (mg)", Goal.Unit.NIACIN);
+        nutrientsMap.put("Vitamin B6 (mg)", Goal.Unit.VITAMIN_B6); nutrientsMap.put("Vitamin B12 (ug)", Goal.Unit.VITAMIN_B12);
+        nutrientsMap.put("Folate (ug)", Goal.Unit.FOLATE); nutrientsMap.put("Vitamin C (mg)", Goal.Unit.VITAMIN_C);
+
         //Instantiate dropdowns
-        dietUnitSelect.getItems().addAll("Calories", "Protein (g)");
+        dietUnitSelect.getItems().addAll(nutrientsMap.keySet());
+
         exerciseSelect.getItems().add("Any Exercise");
         exerciseSelect.getItems().addAll(dh.getExerciseNames());
 
@@ -234,17 +253,9 @@ public class GoalController implements Initializable {
 
             float amount = Float.parseFloat(amountText); //Need to check as a string first to check for empty input.
 
-            //Create goal and present message to user
-            if (unitsText.equals("Calories")) {
-                Goal goal = new IndividualGoal(amount, Goal.Unit.CALORIES, dateText);
-                user.addGoal(goal);
-                dietGoalLabel.setText("Goal added : " + goal);
-            }
-            else if (unitsText.equals("Protein (g)")) {
-                Goal goal = new IndividualGoal(amount, Goal.Unit.PROTEIN, dateText);
-                user.addGoal(goal);
-                dietGoalLabel.setText("Goal added : " + goal);
-            }
+            Goal goal = new IndividualGoal(amount, nutrientsMap.get(unitsText), dateText);
+            user.addGoal(goal);
+            dietGoalLabel.setText("Goal added : " + goal);
         }
     }
 
