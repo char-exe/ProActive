@@ -237,7 +237,7 @@ public class LogActivityController implements Initializable {
                 dh.insertExercise(user.getUsername(), exercise, minutes);
                 user.updateGoals(Goal.Unit.valueOf(exercise.toUpperCase(Locale.ROOT)), minutes);
                 user.updateGoals(Goal.Unit.EXERCISE, minutes);
-                user.updateGoals(Goal.Unit.BURN, exerciseItem.calculateBurn(minutes));
+                user.updateGoals(Goal.Unit.BURNED, exerciseItem.calculateBurn(minutes));
                 exercisePopUp.setText(exercise + " for " + minutesText + " minutes added to database");
             }
             catch (SQLException e) {

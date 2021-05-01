@@ -993,7 +993,7 @@ public class DatabaseHandler
         int noCups = 0;
 
         String sql = "SELECT quantity FROM meal WHERE user_id = '" + userID + "' AND date_of = '" + date +
-                "' AND food_id = 0";
+                "' AND food_id = " + getFoodId("Water");
 
         try(Statement stmt = this.conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
@@ -1184,7 +1184,9 @@ public class DatabaseHandler
 
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            amount = rs.getFloat("amount");
+            while (rs.next()) {
+                amount = rs.getFloat("amount");
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -1206,7 +1208,20 @@ public class DatabaseHandler
 
         String sql = "SELECT MAX(target) as target, unit, end_date, progress FROM goal WHERE user_id = '" +
                 getUserIDFromUsername(username)  + "' AND end_date >= '" + earliest + "' AND progress > target " +
-                "GROUP BY unit HAVING unit NOT IN ('CALORIES', 'PROTEIN', 'BURN')";
+                "GROUP BY unit HAVING unit NOT IN ('" +
+                Goal.Unit.CALORIES.toString() +    "', '" + Goal.Unit.PROTEIN.toString() +    "', '" +
+                Goal.Unit.BURNED.toString() +      "', '" + Goal.Unit.CARBS.toString() +      "', '" +
+                Goal.Unit.FIBRE.toString() +       "', '" + Goal.Unit.SODIUM.toString() +     "', '" +
+                Goal.Unit.POTASSIUM.toString() +   "', '" + Goal.Unit.CALCIUM.toString() +    "', '" +
+                Goal.Unit.MAGNESIUM.toString() +   "', '" + Goal.Unit.PHOSPHORUS.toString() + "', '" +
+                Goal.Unit.IRON.toString() +        "', '" + Goal.Unit.COPPER.toString() +     "', '" +
+                Goal.Unit.ZINC.toString() +        "', '" + Goal.Unit.CHLORIDE.toString() +   "', '" +
+                Goal.Unit.SELENIUM.toString() +    "', '" + Goal.Unit.IODINE.toString() +     "', '" +
+                Goal.Unit.VITAMIN_A.toString() +   "', '" + Goal.Unit.VITAMIN_D.toString() +  "', '" +
+                Goal.Unit.THIAMIN.toString() +     "', '" + Goal.Unit.RIBOFLAVIN.toString() + "', '" +
+                Goal.Unit.NIACIN.toString() +      "', '" + Goal.Unit.VITAMIN_B6.toString() + "', '" +
+                Goal.Unit.VITAMIN_B12.toString() + "', '" + Goal.Unit.FOLATE.toString() +     "', '" +
+                Goal.Unit.VITAMIN_C.toString() +   "')";
 
 
 

@@ -8,11 +8,12 @@ import java.time.LocalDate;
  *
  * @author Samuel Scarfe
  *
- * @version 1.1
+ * @version 1.2
  *
  * 1.0 - First working version.
  * 1.1 - Updated with minimum target amounts as part of automatic goal generation.
- * 1.2 - Increased units to include vitamins and minerals.
+ * 1.2 - Increased units to include vitamins and minerals. Updated all units with a unit string, this is preferable
+ *       over a to string due to the variable nature of translation from unit to unit string.
  */
 public abstract class Goal {
 
@@ -21,32 +22,42 @@ public abstract class Goal {
      * protein, or an exercise unit of a specific exercise or all exercise.
      */
     public enum Unit {
-        CALORIES(-1),    PROTEIN(-1),   CARBS(-1),
-        FIBRE(-1),       VITAMIN_A(-1), THIAMIN(-1),
-        RIBOFLAVIN(-1),  NIACIN(-1),    VITAMIN_B6(-1),
-        VITAMIN_B12(-1), FOLATE(-1),    VITAMIN_C(-1),
-        VITAMIN_D(-1),   IRON(-1),      CALCIUM(-1),
-        MAGNESIUM(-1),   POTASSIUM(-1), ZINC(-1),
-        COPPER(-1),      IODINE(-1),    SELENIUM(-1),
-        PHOSPHORUS(-1),  CHLORIDE(-1),  SODIUM(-1),
-        BURN(-1),        EXERCISE(30),  WALKING(30),
-        JOGGING(30),     RUNNING(30),   FOOTBALL(30),
-        RUGBY(30),       YOGA(30),      TENNIS(30),
-        SWIMMING(30),    CYCLING(30),   KARATE(30),
-        HIKING(30),      CLEANING(30),  BOXING(30),
-        BILLIARDS(30),   JUDO(30);
+        CALORIES(-1, "calories"),                   PROTEIN(-1, "grams of protein"),
+        CARBS(-1, "grams of carbs"),                FIBRE(-1, "grams of fibre"),
+        VITAMIN_A(-1, "micrograms of vitamin A"),   THIAMIN(-1, "milligrams of thiamin"),
+        RIBOFLAVIN(-1, "milligrams of riboflavin"), NIACIN(-1, "milligrams of niacin"),
+        VITAMIN_B6(-1, "milligrams of vitamin B6"), VITAMIN_B12(-1, "micrograms of vitamin B12"),
+        FOLATE(-1, "micrograms of folate"),         VITAMIN_C(-1, "milligrams of vitamin C"),
+        VITAMIN_D(-1, "micrograms of vitamin D"),   IRON(-1, "milligrams of iron"),
+        CALCIUM(-1, "milligrams of calcium"),       MAGNESIUM(-1, "milligrams of magnesium"),
+        POTASSIUM(-1, "milligrams of potassium"),   ZINC(-1, "milligrams of zinc"),
+        COPPER(-1, "milligrams of copper"),         IODINE(-1, "micrograms of iodine"),
+        SELENIUM(-1, "micrograms of selenium"),     PHOSPHORUS(-1, "milligrams of phosphorus"),
+        CHLORIDE(-1, "milligrams of chloride"),     SODIUM(-1, "milligrams of sodium"),
+        BURNED(-1, "calories burned"),              EXERCISE(30, "minutes of exercise"),
+        WALKING(30, "minutes of walking"),          JOGGING(30, "minutes of jogging"),
+        RUNNING(30, "minutes of running"),          FOOTBALL(30, "minutes of football"),
+        RUGBY(30, "minutes of rugby"),              YOGA(30, "minutes of yoga"),
+        TENNIS(30, "minutes of tennis"),            SWIMMING(30, "minutes of swimming"),
+        CYCLING(30, "minutes of cycling"),          KARATE(30, "minutes of karate"),
+        HIKING(30, "minutes of hiking"),            CLEANING(30, "minutes of cleaning"),
+        BOXING(30, "minutes of boxing"),            BILLIARDS(30, "minutes of billiards"),
+        JUDO(30, "minutes of judo");
 
         /**
          * The minimum target amount set by the system for a daily goal of this unit.
          */
-        public final int minimum;
+        private final int minimum;
+
+        private final String unitString;
 
         /**
          * Constructs a Unit with its minimum value.
          * @param minimum the minimum target amount set by the system for a daily got of this unit.
          */
-        Unit(int minimum) {
+        Unit(int minimum, String unitString) {
             this.minimum = minimum;
+            this.unitString = unitString;
         }
 
         /**
@@ -56,6 +67,10 @@ public abstract class Goal {
          */
         public int getMinimum() {
             return this.minimum;
+        }
+
+        public String getUnitString() {
+            return unitString;
         }
     }
 
@@ -194,6 +209,6 @@ public abstract class Goal {
     }
 
     public String toString() {
-        return this.target + " of " + this.unit + " by " + this.endDate;
+        return this.target + " " + this.unit.getUnitString() + " by " + this.endDate;
     }
 }

@@ -47,7 +47,9 @@ public class GoalGenerator {
         //Check if Day to Day exist
         ArrayList<SystemGoal> dayToDay = user.getDayToDayGoals();
         if (dayToDay.size() == 0) { //If not, generate
-            dayToDay = generateDayToDay();
+            if (user.getAge() > 0) {
+                dayToDay = generateDayToDay();
+            }
         }
 
         ArrayList<SystemGoal> goals = new ArrayList<>(dayToDay);
@@ -57,6 +59,8 @@ public class GoalGenerator {
         if (dailyFitness.size() == 0) { //If not, attempt to generate.
             dailyFitness = generateDailyFitness();
         }
+
+
 
         //Check if Daily fitness were retrieved or generated
         if (dailyFitness.size() > 0) { //User has completed fitness goals
@@ -130,6 +134,17 @@ public class GoalGenerator {
             systemGoals.add(new SystemGoal(
                     averageWorkRate,
                     unit,
+                    LocalDate.now().plusDays(1),
+                    SystemGoal.UpdatePeriod.DAILY,
+                    SystemGoal.Category.STAY)
+            );
+        }
+
+        System.out.println(systemGoals.size());
+        if (systemGoals.size() < 3) {
+            systemGoals.add(new SystemGoal(
+                    30,
+                    Goal.Unit.EXERCISE,
                     LocalDate.now().plusDays(1),
                     SystemGoal.UpdatePeriod.DAILY,
                     SystemGoal.Category.STAY)

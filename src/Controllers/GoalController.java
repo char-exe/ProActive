@@ -275,7 +275,7 @@ public class GoalController implements Initializable {
             int amount = Integer.parseInt(amountText); //Need to check as a string first to check for empty input
 
             //Create goal and present message to user
-            Goal goal = new IndividualGoal(amount, Goal.Unit.BURN, dateText);
+            Goal goal = new IndividualGoal(amount, Goal.Unit.BURNED, dateText);
             user.addGoal(goal);
             calorieGoalLabel.setText("Goal added : " + goal);
         }
