@@ -654,7 +654,7 @@
                               </HBox>
                               <HBox prefHeight="55.0" prefWidth="340.0">
                                  <children>
-                                    <TextField fx:id="VitDInput" text="0">
+                                    <TextField fx:id="vitDInput" text="0">
                                        <HBox.margin>
                                           <Insets left="20.0" top="5.0" />
                                        </HBox.margin>

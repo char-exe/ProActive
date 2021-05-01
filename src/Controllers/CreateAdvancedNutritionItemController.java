@@ -24,64 +24,20 @@ import java.util.ResourceBundle;
  * @version 1.0
  */
 public class CreateAdvancedNutritionItemController implements Initializable {
-    @FXML public TextField nameInput;
-    @FXML public TextField kcalInput;
-    @FXML public TextField proteinInput;
-    @FXML public TextField fatInput;
-    @FXML public TextField carbsInput;
-    @FXML public TextField sugarInput;
-    @FXML public TextField fibreInput;
-    @FXML public TextField cholesterolInput;
-    @FXML public TextField sodiumInput;
-    @FXML public TextField potassiumInput;
-    @FXML public TextField calciumInput;
-    @FXML public TextField magnesiumInput;
-    @FXML public TextField phosphorousInput;
-    @FXML public TextField ironInput;
-    @FXML public TextField copperInput;
-    @FXML public TextField zincInput;
-    @FXML public TextField chlorideInput;
-    @FXML public TextField seleniumInput;
-    @FXML public TextField iodineInput;
-    @FXML public TextField vitAInput;
-    @FXML public TextField vitDInput;
-    @FXML public TextField thiaminInput;
-    @FXML public TextField riboflavinInput;
-    @FXML public TextField niacinInput;
-    @FXML public TextField vitB6Input;
-    @FXML public TextField vitB12Input;
-    @FXML public TextField folateInput;
-    @FXML public TextField vitCInput;
     @FXML public Button submitButton;
 
-    @FXML public Label nameInputPopUp;
-    @FXML public Label kcalInputPopUp;
-    @FXML public Label proteinInputPopUp;
-    @FXML public Label fatInputPopUp;
-    @FXML public Label carbsInputPopUp;
-    @FXML public Label sugarInputPopUp;
-    @FXML public Label fibreInputPopUp;
-    @FXML public Label cholesterolInputPopUp;
-    @FXML public Label sodiumInputPopUp;
-    @FXML public Label potassiumInputPopUp;
-    @FXML public Label calciumInputPopUp;
-    @FXML public Label magnesiumInputPopUp;
-    @FXML public Label phosphorousInputPopUp;
-    @FXML public Label ironInputPopUp;
-    @FXML public Label copperInputPopUp;
-    @FXML public Label zincInputPopUp;
-    @FXML public Label chlorideInputPopUp;
-    @FXML public Label seleniumInputPopUp;
-    @FXML public Label iodineInputPopUp;
-    @FXML public Label vitAInputPopUp;
-    @FXML public Label vitDInputPopUp;
-    @FXML public Label thiaminInputPopUp;
-    @FXML public Label riboflavinInputPopUp;
-    @FXML public Label niacinInputPopUp;
-    @FXML public Label vitB6InputPopUp;
-    @FXML public Label vitB12InputPopUp;
-    @FXML public Label folateInputPopUp;
-    @FXML public Label vitCInputPopUp;
+    @FXML public TextField  nameInput, kcalInput, proteinInput, fatInput, carbsInput, sugarInput, fibreInput,
+                            cholesterolInput, sodiumInput, potassiumInput, calciumInput, magnesiumInput,
+                            phosphorousInput, ironInput, copperInput, zincInput, chlorideInput, seleniumInput,
+                            iodineInput, vitAInput, vitDInput, thiaminInput, riboflavinInput, niacinInput, vitB6Input,
+                            vitB12Input, folateInput, vitCInput;
+
+    @FXML public Label      nameInputPopUp, kcalInputPopUp, proteinInputPopUp, fatInputPopUp, carbsInputPopUp,
+                            sugarInputPopUp, fibreInputPopUp, cholesterolInputPopUp, sodiumInputPopUp,
+                            potassiumInputPopUp,calciumInputPopUp, magnesiumInputPopUp, phosphorousInputPopUp,
+                            ironInputPopUp, copperInputPopUp, zincInputPopUp, chlorideInputPopUp, seleniumInputPopUp,
+                            iodineInputPopUp, vitAInputPopUp, vitDInputPopUp, thiaminInputPopUp, riboflavinInputPopUp,
+                            niacinInputPopUp, vitB6InputPopUp, vitB12InputPopUp, folateInputPopUp, vitCInputPopUp;
 
     private NutritionItem n;
     
@@ -105,300 +61,191 @@ public class CreateAdvancedNutritionItemController implements Initializable {
 
         //Set kcalInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        kcalInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    kcalInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        kcalInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                kcalInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set proteinInput to digits only
-        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        proteinInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    proteinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        proteinInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                proteinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set fatInput to digits only
-        fatInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    fatInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        fatInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                fatInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set carbsInput to digits only
-        carbsInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    carbsInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        carbsInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                carbsInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set sugarInput to digits only
-        sugarInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    sugarInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        sugarInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                sugarInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set fibreInput to digits only
-        fibreInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    fibreInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        fibreInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                fibreInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set cholesterolInput to digits only
-        cholesterolInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    cholesterolInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        cholesterolInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                cholesterolInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set sodiumInput to digits only
-        sodiumInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    sodiumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        sodiumInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                sodiumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set potassiumInput to digits only
-        potassiumInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    potassiumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        potassiumInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                potassiumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set calciumInput to digits only
-        calciumInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    calciumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        calciumInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                calciumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set magnesiumInput to digits only
-        magnesiumInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    magnesiumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        magnesiumInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                magnesiumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set phosphorousInput to digits only
-        phosphorousInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    phosphorousInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        phosphorousInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                phosphorousInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set ironInput to digits only
-        ironInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    ironInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        ironInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                ironInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set copperInput to digits only
-        copperInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    copperInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        copperInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                copperInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set zincInput to digits only
-        zincInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    zincInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        zincInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                zincInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set chlorideInput to digits only
-        chlorideInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    chlorideInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        chlorideInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                chlorideInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set seleniumInput to digits only
-        seleniumInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    seleniumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        seleniumInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                seleniumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set iodineInput to digits only
-        iodineInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    iodineInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        iodineInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                iodineInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set vitAInput to digits only
-        vitAInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    vitAInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        vitAInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                vitAInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set vitDInput to digits only
-        vitDInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    vitDInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        vitDInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                vitDInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set thiaminInput to digits only
-        thiaminInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    thiaminInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        thiaminInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                thiaminInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set riboflavinInput to digits only
-        riboflavinInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    riboflavinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        riboflavinInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                riboflavinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set niacinInput to digits only
-        niacinInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    niacinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        niacinInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                niacinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set vitB6Input to digits only
-        vitB6Input.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    vitB6Input.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        vitB6Input.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                vitB6Input.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set vitB12Input to digits only
-        vitB12Input.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    vitB12Input.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        vitB12Input.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                vitB12Input.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set folateInput to digits only
-        folateInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    folateInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        folateInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                folateInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set vitCInput to digits only
-        vitCInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    vitCInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        vitCInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                vitCInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
     }
