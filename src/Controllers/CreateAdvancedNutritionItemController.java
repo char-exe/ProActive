@@ -325,7 +325,12 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      */
     public boolean checkInputs(){
         return checkFirstName() && checkKcalInput() && checkProteinInput() && checkFatInput() && checkCarbsInput() &&
-               checkSugarInput() && checkFibreInput() && checkCholesterolInput();
+               checkSugarInput() && checkFibreInput() && checkCholesterolInput() && checkSodiumInput() &&
+               checkPotassiumInput() && checkCalciumInput() && checkMagnesiumInput() && checkPhosphorousInput() &&
+               checkIronInput() && checkCopperInput() && checkZincInput() && checkChlorideInput() &&
+               checkSeleniumInput() && checkIodineInput() && checkVitAInput() && checkVitDInput() &&
+               checkThiaminInput() && checkRiboflavinInput() && checkNiacinInput() && checkVitB6Input() &&
+               checkVitB12Input() && checkFolateInput() && checkVitCInput();
     }
 
     /**
@@ -463,4 +468,346 @@ public class CreateAdvancedNutritionItemController implements Initializable {
             return false;
         }
     }
+
+
+    /**
+     * Method to check sodium field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkSodiumInput(){
+        String sodium = sodiumInput.getText();
+        if (sodium.matches(DOUBLEINPUTREGEX) && checkValidDouble(sodium, ".")){
+            sodiumInputPopUp.setText("");
+            return true;
+        }
+        else{
+            sodiumInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check potassium field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkPotassiumInput(){
+        String potassium = potassiumInput.getText();
+        if (potassium.matches(DOUBLEINPUTREGEX) && checkValidDouble(potassium, ".")){
+            potassiumInputPopUp.setText("");
+            return true;
+        }
+        else{
+            potassiumInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check calcium field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkCalciumInput(){
+        String calcium = calciumInput.getText();
+        if (calcium.matches(DOUBLEINPUTREGEX) && checkValidDouble(calcium, ".")){
+            calciumInputPopUp.setText("");
+            return true;
+        }
+        else{
+            calciumInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check magnesium field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkMagnesiumInput(){
+        String magnesium = magnesiumInput.getText();
+        if (magnesium.matches(DOUBLEINPUTREGEX) && checkValidDouble(magnesium, ".")){
+            magnesiumInputPopUp.setText("");
+            return true;
+        }
+        else{
+            magnesiumInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check phosphorous field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkPhosphorousInput(){
+        String phospherous = phosphorousInput.getText();
+        if (phospherous.matches(DOUBLEINPUTREGEX) && checkValidDouble(phospherous, ".")){
+            phosphorousInputPopUp.setText("");
+            return true;
+        }
+        else{
+            phosphorousInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check iron field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkIronInput(){
+        String iron = ironInput.getText();
+        if (iron.matches(DOUBLEINPUTREGEX) && checkValidDouble(iron, ".")){
+            ironInputPopUp.setText("");
+            return true;
+        }
+        else{
+            ironInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check copper field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkCopperInput(){
+        String copper = copperInput.getText();
+        if (copper.matches(DOUBLEINPUTREGEX) && checkValidDouble(copper, ".")){
+            copperInputPopUp.setText("");
+            return true;
+        }
+        else{
+            copperInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check zinc field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkZincInput(){
+        String zinc = zincInput.getText();
+        if (zinc.matches(DOUBLEINPUTREGEX) && checkValidDouble(zinc, ".")){
+            zincInputPopUp.setText("");
+            return true;
+        }
+        else{
+            zincInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check chloride field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkChlorideInput(){
+        String chloride = chlorideInput.getText();
+        if (chloride.matches(DOUBLEINPUTREGEX) && checkValidDouble(chloride, ".")){
+            chlorideInputPopUp.setText("");
+            return true;
+        }
+        else{
+            chlorideInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check selenium field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkSeleniumInput(){
+        String selenium = seleniumInput.getText();
+        if (selenium.matches(DOUBLEINPUTREGEX) && checkValidDouble(selenium, ".")){
+            seleniumInputPopUp.setText("");
+            return true;
+        }
+        else{
+            seleniumInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check iodine field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkIodineInput(){
+        String iodine = iodineInput.getText();
+        if (iodine.matches(DOUBLEINPUTREGEX) && checkValidDouble(iodine, ".")){
+            iodineInputPopUp.setText("");
+            return true;
+        }
+        else{
+            iodineInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check vitA field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkVitAInput(){
+        String vitA = vitAInput.getText();
+        if (vitA.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitA, ".")){
+            vitAInputPopUp.setText("");
+            return true;
+        }
+        else{
+            vitAInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check vitD field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkVitDInput(){
+        String vitD = vitDInput.getText();
+        if (vitD.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitD, ".")){
+            vitDInputPopUp.setText("");
+            return true;
+        }
+        else{
+            vitDInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check thiamin field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkThiaminInput(){
+        String thiamin = thiaminInput.getText();
+        if (thiamin.matches(DOUBLEINPUTREGEX) && checkValidDouble(thiamin, ".")){
+            thiaminInputPopUp.setText("");
+            return true;
+        }
+        else{
+            thiaminInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check riboflavin field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkRiboflavinInput(){
+        String riboflavin = riboflavinInput.getText();
+        if (riboflavin.matches(DOUBLEINPUTREGEX) && checkValidDouble(riboflavin, ".")){
+            riboflavinInputPopUp.setText("");
+            return true;
+        }
+        else{
+            riboflavinInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check niacin field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkNiacinInput(){
+        String niacin = niacinInput.getText();
+        if (niacin.matches(DOUBLEINPUTREGEX) && checkValidDouble(niacin, ".")){
+            niacinInputPopUp.setText("");
+            return true;
+        }
+        else{
+            niacinInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check vitB6 field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkVitB6Input(){
+        String vitB6 = vitB6Input.getText();
+        if (vitB6.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitB6, ".")){
+            vitB6InputPopUp.setText("");
+            return true;
+        }
+        else{
+            vitB6InputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check vitB12 field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkVitB12Input(){
+        String vitB12 = vitB12Input.getText();
+        if (vitB12.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitB12, ".")){
+            vitB12InputPopUp.setText("");
+            return true;
+        }
+        else{
+            vitB12InputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check folate field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkFolateInput(){
+        String folate = folateInput.getText();
+        if (folate.matches(DOUBLEINPUTREGEX) && checkValidDouble(folate, ".")){
+            folateInputPopUp.setText("");
+            return true;
+        }
+        else{
+            folateInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check vitC field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkVitCInput(){
+        String vitC = vitCInput.getText();
+        if (vitC.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitC, ".")){
+            vitCInputPopUp.setText("");
+            return true;
+        }
+        else{
+            vitCInputPopUp.setText("Please enter a valid value");
+            return false;
+        }
+    }
+
 }
