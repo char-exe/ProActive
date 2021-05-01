@@ -52,6 +52,7 @@ public class User {
     private Set<Group> groupMemberships = new HashSet<Group>();
     private ArrayList<Goal> goals;
     private ArrayList<SystemGoal> systemGoals;
+    private ArrayList<GroupGoal> groupGoals;
     private final String username;
 
     /**
@@ -223,6 +224,8 @@ public class User {
         return this.systemGoals;
     }
 
+    public ArrayList<GroupGoal> getGroupGoals() { return this.groupGoals; }
+
     /**
      * Sets the User's firstname to the passed parameter.
      *
@@ -321,6 +324,8 @@ public class User {
     public void setSystemGoals(ArrayList<SystemGoal> systemGoals) {
         this.systemGoals = systemGoals;
     }
+
+    public void setGroupGoals(ArrayList<GroupGoal> groupGoals) { this.groupGoals = groupGoals; }
 
     /**
      * Adds a goal to this user's goal list and then to the database.
