@@ -24,11 +24,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="javafx15" level="application" />
-    <orderEntry type="library" name="mail" level="application" />
-    <orderEntry type="library" name="sqlite" level="application" />
-    <orderEntry type="library" name="JavaFX" level="application" />
-    <orderEntry type="library" name="Mail" level="application" />
     <orderEntry type="library" exported="" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="module-library" exported="">
       <library>
@@ -61,7 +56,6 @@
     <orderEntry type="library" exported="" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" exported="" name="JavaFX15" level="application" />
     <orderEntry type="library" exported="" name="javax.mail" level="project" />
-    <orderEntry type="library" exported="" name="activation" level="project" />
     <orderEntry type="library" exported="" name="sqlite-jdbc-3.32.3.2" level="project" />
     <orderEntry type="module-library" exported="" scope="TEST">
       <library name="JUnit5.4">
@@ -79,6 +73,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="activation" level="application" />
   </component>
 </module>

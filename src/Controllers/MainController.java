@@ -1,5 +1,6 @@
 package Controllers;
 
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import sample.DatabaseHandler;
 import sample.Goal;
 import sample.GoalGenerator;
@@ -20,6 +22,7 @@ import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.Key;
 import java.util.ResourceBundle;
 
 /**
@@ -34,6 +37,7 @@ import java.util.ResourceBundle;
  *          1.1 - Minor update to logic to ensure User object is set before being passed on to other controllers.
  *                Possibly a hacky solution, as method calls have been moved from initialise to initData.
  *          1.2 - Added method to display notifications.
+ *          1.3 - Additional notification display methods for blinking and fading notifications
  */
 public class MainController implements Initializable {
 
@@ -101,6 +105,7 @@ public class MainController implements Initializable {
         for (Goal goal : user.getSystemGoals()) {
             System.out.println(goal);
         }
+        showNotification("");
     }
 
     /**
@@ -117,6 +122,7 @@ public class MainController implements Initializable {
         logActivityController.initData(user);
         main.setCenter(vBox);
         toggleButtonFocus(logActivityButton);
+        showBlinkNotification("Now with animations");
     }
 
     /**
@@ -169,6 +175,7 @@ public class MainController implements Initializable {
         mppc.initData(user);
         main.setCenter(vBox);
         toggleButtonFocus(manageProfileButton);
+        showFadeNotification("Ghost text");
     }
 
     /**
@@ -200,5 +207,46 @@ public class MainController implements Initializable {
      */
     public void showNotification(String message){
         notification.setText(message);
+
+        notification.setVisible(true);
+        notification.setOpacity(1.0);
+    }
+
+    /**
+     * Method to display text in the notification bar. The text blinks a few times before disappearing.
+     *
+     * @param message Text to be displayed.
+     */
+    public void showBlinkNotification(String message){
+        notification.setText(message);
+
+        notification.setVisible(true);
+        notification.setOpacity(1.0);
+        //Timeline where the text spends 1 second visible and 0.1 seconds not visible
+        Timeline blinkTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(1), evt -> notification.setVisible(false)),
+                new KeyFrame(Duration.seconds(0.1), evt -> notification.setVisible(true))
+        );
+        blinkTimeline.setCycleCount(3);
+        blinkTimeline.play();
+
+    }
+
+    /**
+     * Method to fade some text in and out on the notification bar a few times before disappearing.
+     *
+     * @param message Text to be displayed.
+     */
+    public void showFadeNotification(String message){
+        notification.setText(message);
+
+        notification.setVisible(true);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1.5), notification);
+        //Float values are the opacity values
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0.0);
+        fadeTransition.setCycleCount(7);
+        fadeTransition.setAutoReverse(true);
+        fadeTransition.play();
     }
 }
