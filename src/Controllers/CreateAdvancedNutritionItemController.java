@@ -255,12 +255,11 @@ public class CreateAdvancedNutritionItemController implements Initializable {
     }
 
     /**
-     * Method to act as a pseudo constructor for
-     *
-     * @param n Nutrition Item object to be passed in
+     * Method to act as a pseudo constructor for advancedNutritionItemController
+
      */
-    public void initData(NutritionItem n){
-        this.n = n;
+    public void initData(){
+
     }
 
     /**
@@ -272,14 +271,41 @@ public class CreateAdvancedNutritionItemController implements Initializable {
     @FXML public void submitButtonAction() throws SQLException {
         DatabaseHandler dbh = DatabaseHandler.getInstance();
 
-        //if (checkInputs()){
+        if (checkInputs()){
+
+            n = new NutritionItem(
+                    nameInput.getText(),
+                    Double.parseDouble(kcalInput.getText()),
+                    Double.parseDouble(proteinInput.getText()),
+                    Double.parseDouble(fatInput.getText()),
+                    Double.parseDouble(carbsInput.getText()),
+                    Double.parseDouble(sugarInput.getText()),
+                    Double.parseDouble(fibreInput.getText()),
+                    Double.parseDouble(cholesterolInput.getText()),
+                    Double.parseDouble(sodiumInput.getText()),
+                    Double.parseDouble(potassiumInput.getText()),
+                    Double.parseDouble(calciumInput.getText()),
+                    Double.parseDouble(magnesiumInput.getText()),
+                    Double.parseDouble(phosphorousInput.getText()),
+                    Double.parseDouble(ironInput.getText()),
+                    Double.parseDouble(copperInput.getText()),
+                    Double.parseDouble(zincInput.getText()),
+                    Double.parseDouble(chlorideInput.getText()),
+                    Double.parseDouble(seleniumInput.getText()),
+                    Double.parseDouble(iodineInput.getText()),
+                    Double.parseDouble(vitAInput.getText()),
+                    Double.parseDouble(vitDInput.getText()),
+                    Double.parseDouble(thiaminInput.getText()),
+                    Double.parseDouble(riboflavinInput.getText()),
+                    Double.parseDouble(niacinInput.getText()),
+                    Double.parseDouble(vitB6Input.getText()),
+                    Double.parseDouble(vitB12Input.getText()),
+                    Double.parseDouble(folateInput.getText()),
+                    Double.parseDouble(vitCInput.getText())
+            );
 
             System.out.println(n);
-            /*
             Stage parentScene = (Stage) submitButton.getScene().getWindow();
-
-            //TODO determine new inputs for nutrition items, once determined, create getters and setters in
-            // NutritionItem class then set up on this controller
 
             dbh.addNutritionItem(n);
 
@@ -287,9 +313,8 @@ public class CreateAdvancedNutritionItemController implements Initializable {
 
             parentScene.close();
 
-             */
 
-       // }
+        }
 
     }
 
@@ -468,7 +493,6 @@ public class CreateAdvancedNutritionItemController implements Initializable {
             return false;
         }
     }
-
 
     /**
      * Method to check sodium field matches in regex

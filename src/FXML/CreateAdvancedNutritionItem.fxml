@@ -661,7 +661,7 @@
                                     </TextField>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <Label fx:id="vitDInpupPopUp" />
+                                          <Label fx:id="vitDInputPopUp" />
                                        </children>
                                     </HBox>
                                  </children>
