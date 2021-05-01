@@ -49,6 +49,9 @@ public class CreateAdvancedNutritionItemController implements Initializable {
     //Regex for inputfields that will take doubles
     private final String DOUBLEINPUTREGEX = "[-+]?[0-9]*\\.?[0-9]+";
 
+    //Regex for inputField checking
+    private final String INPUTFIELDNONNUMERIC = "^\\d*\\.?\\d*";
+
     /**
      * Method to be ran after all FXML elements have been loaded, used for imposing restrictions on these FXML
      * elements
@@ -60,192 +63,193 @@ public class CreateAdvancedNutritionItemController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         //Set kcalInput to digits only
+        //Taken and adapted from below
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         kcalInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                kcalInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                kcalInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set proteinInput to digits only
         proteinInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                proteinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                proteinInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set fatInput to digits only
         fatInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                fatInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                fatInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set carbsInput to digits only
         carbsInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                carbsInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                carbsInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set sugarInput to digits only
         sugarInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                sugarInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                sugarInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set fibreInput to digits only
         fibreInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                fibreInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                fibreInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set cholesterolInput to digits only
         cholesterolInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                cholesterolInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                cholesterolInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set sodiumInput to digits only
         sodiumInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                sodiumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                sodiumInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set potassiumInput to digits only
         potassiumInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                potassiumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                potassiumInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set calciumInput to digits only
         calciumInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                calciumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                calciumInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set magnesiumInput to digits only
         magnesiumInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                magnesiumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                magnesiumInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set phosphorousInput to digits only
         phosphorousInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                phosphorousInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                phosphorousInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set ironInput to digits only
         ironInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                ironInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                ironInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set copperInput to digits only
         copperInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                copperInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                copperInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set zincInput to digits only
         zincInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                zincInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                zincInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set chlorideInput to digits only
         chlorideInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                chlorideInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                chlorideInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set seleniumInput to digits only
         seleniumInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                seleniumInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                seleniumInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set iodineInput to digits only
         iodineInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                iodineInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                iodineInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set vitAInput to digits only
         vitAInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                vitAInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                vitAInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set vitDInput to digits only
         vitDInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                vitDInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                vitDInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set thiaminInput to digits only
         thiaminInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                thiaminInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                thiaminInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set riboflavinInput to digits only
         riboflavinInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                riboflavinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                riboflavinInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set niacinInput to digits only
         niacinInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                niacinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                niacinInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set vitB6Input to digits only
         vitB6Input.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                vitB6Input.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                vitB6Input.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set vitB12Input to digits only
         vitB12Input.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                vitB12Input.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                vitB12Input.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set folateInput to digits only
         folateInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                folateInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                folateInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
 
         //Set vitCInput to digits only
         vitCInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("^\\d*\\.?\\d*")) {
-                vitCInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                vitCInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
     }
