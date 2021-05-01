@@ -1117,6 +1117,70 @@ public class DatabaseHandler
         return goals;
     }
 
+    public ArrayList<GroupGoal> selectGroupGoals(User user) throws SQLException {
+
+        ArrayList<GroupGoal> goals = new ArrayList<>();
+
+        String sql = "SELECT group_id, target, unit, progress, end_date FROM group_goals WHERE " +
+                "user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            while (rs.next()) {
+                float target = rs.getFloat("target");
+                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
+                int progress = rs.getInt("progress");
+                Group group = null; //update when group stuff is ready, use group_id to find group
+
+                goals.add(new GroupGoal(target, unit, endDate, progress, group));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException();
+        }
+
+        return goals;
+    }
+
+    public void updateGroupGoal(String username, GroupGoal goal, int amount) {
+        float target = goal.getTarget();
+        String unit = goal.getUnit().toString();
+        String endDate = goal.getEndDate().toString();
+        int newProgress = goal.getProgress();
+        int previousProgress = newProgress - amount;
+
+        String sql = "UPDATE group_goals SET progress = " + newProgress + " WHERE user_id = '" +
+                getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
+                "' AND progress = '" + previousProgress + "' AND end_date = '" + endDate + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+/*
+    public void insertGroupGoal(String username, Goal goal, Group group) {
+        //get group id
+        String sql = "INSERT INTO group_goals (group_id, user_id, target, unit, progress, end_date) VALUES('" +
+                getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
+                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "')";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+*/
+
     public static void main(String[] args) {
         System.out.println("INSERT INTO food " +
                 "VALUES('" + "name"  + "', " + "kcal" + ", " + "protein" + ", " + "fat" + ", " + "carbs" + ", " + "sugar" + ", "
