@@ -60,8 +60,6 @@ public class GoalGenerator {
             dailyFitness = generateDailyFitness();
         }
 
-
-
         //Check if Daily fitness were retrieved or generated
         if (dailyFitness.size() > 0) { //User has completed fitness goals
             //Check if weekly fitness exist
@@ -96,7 +94,7 @@ public class GoalGenerator {
 
         //For each unit
         for (Goal.Unit unit : units) {
-            //get the Users RDI
+            //get the User's RDI
             float target = db.getRecommendedIntake(unit, user.getAge(), user.getSex());
             //generate a goal for today with the RDI
             goals.add(new SystemGoal(target, unit, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY, SystemGoal.Category.DAY_TO_DAY));
