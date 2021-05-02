@@ -4,26 +4,65 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Group {
-    private String name;
-    private Set<User> members = new HashSet<User>();
-    private Set<User> goalMembers = new HashSet<User>();
-    public String getName() { return name; }
 
-    public void setName(String name) { this.name = name; }
+    private final String name;
+    private final GroupOwner owner;
+    private final Set<GroupAdmin> admins = new HashSet<>();
+    private final Set<GroupMember> members = new HashSet<>();
 
-    public Set<User> getMembers() {
+    public Group(String name, GroupOwner owner){
+        this.name = name;
+        this.owner = owner;
+    }
+
+    public void addMember(GroupMember member){
+
+    }
+
+    public void removeMember(GroupMember member){
+
+    }
+
+    public void addAdmin(GroupAdmin admin){
+
+    }
+
+    public void removeAdmin(GroupAdmin admin){
+
+    }
+
+    public void sendInvite(String email){
+
+    }
+
+//    public String createInvite(){
+//
+//    }
+
+    public void setGroupGoal(String type, int target){
+
+    }
+
+    public void deleteGroup(){
+
+    }
+
+
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<GroupMember> getMembers(){
         return members;
     }
 
-    public void setMembers(Set<User> members) {
-        this.members = members;
+    public Set<GroupAdmin> getAdmins() {
+        return admins;
     }
 
-    public Set<User> getGoalMembers() {
-        return goalMembers;
+    public GroupOwner getOwner() {
+        return owner;
     }
 
-    public void setGoalMembers(Set<User> goalMembers) {
-        this.goalMembers = goalMembers;
-    }
 }
