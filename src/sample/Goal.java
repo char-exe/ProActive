@@ -8,9 +8,12 @@ import java.time.LocalDate;
  *
  * @author Samuel Scarfe
  *
- * @version 1.0
+ * @version 1.2
  *
  * 1.0 - First working version.
+ * 1.1 - Updated with minimum target amounts as part of automatic goal generation.
+ * 1.2 - Increased units to include vitamins and minerals. Updated all units with a unit string, this is preferable
+ *       over a to string due to the variable nature of translation from unit to unit string.
  */
 public abstract class Goal {
 
@@ -19,8 +22,56 @@ public abstract class Goal {
      * protein, or an exercise unit of a specific exercise or all exercise.
      */
     public enum Unit {
-        CALORIES, PROTEIN, BURN, EXERCISE, WALKING, JOGGING, RUNNING, FOOTBALL, RUGBY, YOGA,
-        TENNIS, SWIMMING, CYCLING, KARATE, HIKING, CLEANING, BOXING, BILLIARDS, JUDO
+        CALORIES(-1, "calories"),                   PROTEIN(-1, "grams of protein"),
+        CARBS(-1, "grams of carbs"),                FIBRE(-1, "grams of fibre"),
+        VITAMIN_A(-1, "micrograms of vitamin A"),   THIAMIN(-1, "milligrams of thiamin"),
+        RIBOFLAVIN(-1, "milligrams of riboflavin"), NIACIN(-1, "milligrams of niacin"),
+        VITAMIN_B6(-1, "milligrams of vitamin B6"), VITAMIN_B12(-1, "micrograms of vitamin B12"),
+        FOLATE(-1, "micrograms of folate"),         VITAMIN_C(-1, "milligrams of vitamin C"),
+        VITAMIN_D(-1, "micrograms of vitamin D"),   IRON(-1, "milligrams of iron"),
+        CALCIUM(-1, "milligrams of calcium"),       MAGNESIUM(-1, "milligrams of magnesium"),
+        POTASSIUM(-1, "milligrams of potassium"),   ZINC(-1, "milligrams of zinc"),
+        COPPER(-1, "milligrams of copper"),         IODINE(-1, "micrograms of iodine"),
+        SELENIUM(-1, "micrograms of selenium"),     PHOSPHORUS(-1, "milligrams of phosphorus"),
+        CHLORIDE(-1, "milligrams of chloride"),     SODIUM(-1, "milligrams of sodium"),
+        BURNED(-1, "calories burned"),              EXERCISE(30, "minutes of exercise"),
+        WALKING(30, "minutes of walking"),          JOGGING(30, "minutes of jogging"),
+        RUNNING(30, "minutes of running"),          FOOTBALL(30, "minutes of football"),
+        RUGBY(30, "minutes of rugby"),              YOGA(30, "minutes of yoga"),
+        TENNIS(30, "minutes of tennis"),            SWIMMING(30, "minutes of swimming"),
+        CYCLING(30, "minutes of cycling"),          KARATE(30, "minutes of karate"),
+        HIKING(30, "minutes of hiking"),            CLEANING(30, "minutes of cleaning"),
+        BOXING(30, "minutes of boxing"),            BILLIARDS(30, "minutes of billiards"),
+        JUDO(30, "minutes of judo");
+
+        /**
+         * The minimum target amount set by the system for a daily goal of this unit.
+         */
+        private final int minimum;
+
+        private final String unitString;
+
+        /**
+         * Constructs a Unit with its minimum value.
+         * @param minimum the minimum target amount set by the system for a daily got of this unit.
+         */
+        Unit(int minimum, String unitString) {
+            this.minimum = minimum;
+            this.unitString = unitString;
+        }
+
+        /**
+         * Gets the minimum value for this unit.
+         *
+         * @return the minimum value for this unit.
+         */
+        public int getMinimum() {
+            return this.minimum;
+        }
+
+        public String getUnitString() {
+            return unitString;
+        }
     }
 
     /**
@@ -38,7 +89,7 @@ public abstract class Goal {
     /**
      * The current progress of the goal.
      */
-    protected int progress;
+    protected float progress;
     /**
      * The active status of the goal.
      */
@@ -75,7 +126,7 @@ public abstract class Goal {
      * @param endDate   the end date of the goal.
      * @param progress  the current progress of the goal.
      */
-    public Goal(float target, Unit unit, LocalDate endDate, int progress) {
+    public Goal(float target, Unit unit, LocalDate endDate, float progress) {
         this.target    = target;
         this.unit      = unit;
         this.endDate   = endDate;
@@ -116,7 +167,7 @@ public abstract class Goal {
      *
      * @return the progress amount for this goal.
      */
-    public int getProgress() {
+    public float getProgress() {
         return this.progress;
     }
 
@@ -144,7 +195,7 @@ public abstract class Goal {
      *
      * @param update the amount to increment progress by
      */
-    public boolean updateProgress(Unit unit, int update) {
+    public boolean updateProgress(Unit unit, float update) {
         if (this.active && !this.completed && this.unit == unit) {
 
             this.progress = this.progress + update;
@@ -158,6 +209,6 @@ public abstract class Goal {
     }
 
     public String toString() {
-        return this.target + " of " + this.unit + " by " + this.endDate;
+        return this.target + " " + this.unit.getUnitString() + " by " + this.endDate;
     }
 }

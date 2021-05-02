@@ -48,6 +48,8 @@ import java.util.ResourceBundle;
  *       General commenting.
  * 1.6 - Implemented goal updating.
  * 1.7 - Implemented ability to create custom exercise and food items
+ * 1.8 - Corrected int casts to float casts, in line with the database.
+ * 1.9 - Updated goal updating for wider range of nutritional goals. Encapsulated goal updating in a private method.
  */
 public class LogActivityController implements Initializable {
 
@@ -235,7 +237,7 @@ public class LogActivityController implements Initializable {
                 dh.insertExercise(user.getUsername(), exercise, minutes);
                 user.updateGoals(Goal.Unit.valueOf(exercise.toUpperCase(Locale.ROOT)), minutes);
                 user.updateGoals(Goal.Unit.EXERCISE, minutes);
-                user.updateGoals(Goal.Unit.BURN, exerciseItem.calculateBurn(minutes));
+                user.updateGoals(Goal.Unit.BURNED, exerciseItem.calculateBurn(minutes));
                 exercisePopUp.setText(exercise + " for " + minutesText + " minutes added to database");
             }
             catch (SQLException e) {
@@ -445,8 +447,8 @@ public class LogActivityController implements Initializable {
             //Submit food entry to database
             for (NutritionItem key : breakfast.keySet()) {
                 try {
-                    user.updateGoals(Goal.Unit.CALORIES, (int) (breakfast.get(key) * key.getKcal()/100));
-                    user.updateGoals(Goal.Unit.PROTEIN, (int) (breakfast.get(key) * key.getProtein()/100));
+                    updateUserNutritionGoals(key, breakfast);
+
                     dh.addFoodEntry(user.getUsername(), "Breakfast", key.getName(), breakfast.get(key), date);
                 }
                 catch (SQLException e) {
@@ -455,8 +457,8 @@ public class LogActivityController implements Initializable {
             }
             for (NutritionItem key : lunch.keySet()) {
                 try {
-                    user.updateGoals(Goal.Unit.CALORIES, (int) (lunch.get(key) * key.getKcal()/100));
-                    user.updateGoals(Goal.Unit.PROTEIN, (int) (lunch.get(key) * key.getProtein()/100));
+                    updateUserNutritionGoals(key, lunch);
+
                     dh.addFoodEntry(user.getUsername(), "Lunch", key.getName(), lunch.get(key), date);
                 }
                 catch (SQLException e) {
@@ -465,8 +467,8 @@ public class LogActivityController implements Initializable {
             }
             for (NutritionItem key : dinner.keySet()) {
                 try {
-                    user.updateGoals(Goal.Unit.CALORIES, (int) (dinner.get(key) * key.getKcal()/100));
-                    user.updateGoals(Goal.Unit.PROTEIN, (int) (dinner.get(key) * key.getProtein()/100));
+                    updateUserNutritionGoals(key, dinner);
+
                     dh.addFoodEntry(user.getUsername(), "Dinner", key.getName(), dinner.get(key), date);
                 }
                 catch (SQLException e) {
@@ -475,8 +477,8 @@ public class LogActivityController implements Initializable {
             }
             for (NutritionItem key : snack.keySet()) {
                 try {
-                    user.updateGoals(Goal.Unit.CALORIES, (int) (snack.get(key) * key.getKcal()/100));
-                    user.updateGoals(Goal.Unit.PROTEIN, (int) (snack.get(key) * key.getProtein()/100));
+                    updateUserNutritionGoals(key, snack);
+
                     dh.addFoodEntry(user.getUsername(), "Snack", key.getName(), snack.get(key), date);
                 }
                 catch (SQLException e) {
@@ -502,6 +504,40 @@ public class LogActivityController implements Initializable {
             //Show success message to user.
             foodDateLabel.setText("Meals added to database on " + date);
         }
+    }
+
+    /**
+     * Private helper method for updating a user's nutrition goals. Calls the user's update goals method for every
+     * nutrition target value.
+     *
+     * @param key A NutritionItem in the mealMap.
+     * @param mealMap A map storing NutritionItems against their quantity consumed.
+     */
+    private void updateUserNutritionGoals(NutritionItem key, HashMap<NutritionItem, Integer> mealMap) {
+        user.updateGoals(Goal.Unit.CALORIES, (float) (mealMap.get(key) * key.getKcal()/100));
+        user.updateGoals(Goal.Unit.PROTEIN, (float) (mealMap.get(key) * key.getProteinG()/100));
+        user.updateGoals(Goal.Unit.CARBS, (float) (mealMap.get(key) * key.getCarbsG()/100));
+        user.updateGoals(Goal.Unit.FIBRE, (float) (mealMap.get(key) * key.getFibreG()/100));
+        user.updateGoals(Goal.Unit.SODIUM, (float) (mealMap.get(key) * key.getSodiumMg()/100));
+        user.updateGoals(Goal.Unit.POTASSIUM, (float) (mealMap.get(key) * key.getPotassiumMg()/100));
+        user.updateGoals(Goal.Unit.CALCIUM, (float) (mealMap.get(key) * key.getCalciumMg()/100));
+        user.updateGoals(Goal.Unit.MAGNESIUM, (float) (mealMap.get(key) * key.getMagnesiumMg()/100));
+        user.updateGoals(Goal.Unit.PHOSPHORUS, (float) (mealMap.get(key) * key.getPhosphorusMg()/100));
+        user.updateGoals(Goal.Unit.IRON, (float) (mealMap.get(key) * key.getIronMg()/100));
+        user.updateGoals(Goal.Unit.COPPER, (float) (mealMap.get(key) * key.getCopperMg()/100));
+        user.updateGoals(Goal.Unit.ZINC, (float) (mealMap.get(key) * key.getZincMg()/100));
+        user.updateGoals(Goal.Unit.CHLORIDE, (float) (mealMap.get(key) * key.getChlorideMg()/100));
+        user.updateGoals(Goal.Unit.SELENIUM, (float) (mealMap.get(key) * key.getSeleniumUg()/100));
+        user.updateGoals(Goal.Unit.IODINE, (float) (mealMap.get(key) * key.getIodineUg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_A, (float) (mealMap.get(key) * key.getVitAUg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_D, (float) (mealMap.get(key) * key.getVitDUg()/100));
+        user.updateGoals(Goal.Unit.THIAMIN, (float) (mealMap.get(key) * key.getThiaminMg()/100));
+        user.updateGoals(Goal.Unit.RIBOFLAVIN, (float) (mealMap.get(key) * key.getRiboflavinMg()/100));
+        user.updateGoals(Goal.Unit.NIACIN, (float) (mealMap.get(key) * key.getNiacinMg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_B6, (float) (mealMap.get(key) * key.getVitB6Mg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_B12, (float) (mealMap.get(key) * key.getVitB12Ug()/100));
+        user.updateGoals(Goal.Unit.FOLATE, (float) (mealMap.get(key) * key.getFolateUg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_C, (float) (mealMap.get(key) * key.getVitCMg()/100));
     }
 
     /**

@@ -1,8 +1,5 @@
 package sample;
 
-import org.sqlite.core.DB;
-
-import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,11 +19,16 @@ import java.util.Locale;
  * as per page 37 of the pdf available for download, it is available on an Open Government Licence, details of which
  * can be found at https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
  *
+ * Data for the daily_intake table can be found at
+ * https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/618167/government_dietary_recommendations.pdf
+ * as per page 2 of the document, it is available on an Open Government Licence, details of which can be found at
+ * https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+ *
  * @author Samuel Scarfe
  * @author Owen Tasker
  * @author Charlie Jones
  *
- * @version 1.12
+ * @version 1.13
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -65,6 +67,7 @@ import java.util.Locale;
  *        nested ResultSets.
  * 1.11 - Implemented adding and updating goals.
  * 1.12 - Added methods for adding elements to exercise and food tables, used for custom item creation
+ * 1.13 - Implemented automatic goal generation.
  */
 public class DatabaseHandler
 {
@@ -414,11 +417,22 @@ public class DatabaseHandler
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
 
-            nutritionItem = new NutritionItem(rs.getString("name"),
-                    rs.getFloat("kcal"), rs.getFloat("protein"),
-                    rs.getFloat("fat"), rs.getFloat("carbs"),
-                    rs.getFloat("sugar"), rs.getFloat("fibre"),
-                    rs.getFloat("cholesterol"));
+            nutritionItem = new NutritionItem(
+                    rs.getString("name"),          rs.getDouble("kcal"),
+                    rs.getDouble("protein_g"),     rs.getDouble("fat_g"),
+                    rs.getDouble("carbs_g"),       rs.getDouble("sugar_g"),
+                    rs.getDouble("fibre_g"),       rs.getDouble("cholesterol_mg"),
+                    rs.getDouble("sodium_mg"),     rs.getDouble("potassium_mg"),
+                    rs.getDouble("calcium_mg"),    rs.getDouble("magnesium_mg"),
+                    rs.getDouble("phosphorus_mg"), rs.getDouble("iron_mg"),
+                    rs.getDouble("copper_mg"),     rs.getDouble("zinc_mg"),
+                    rs.getDouble("chloride_mg"),   rs.getDouble("selenium_ug"),
+                    rs.getDouble("iodine_ug"),     rs.getDouble("vit_a_ug"),
+                    rs.getDouble("vit_d_ug"),      rs.getDouble("thiamin_mg"),
+                    rs.getDouble("riboflavin_mg"), rs.getDouble("niacin_mg"),
+                    rs.getDouble("vit_b6_mg"),     rs.getDouble("vit_b12_ug"),
+                    rs.getDouble("folate_ug"),     rs.getDouble("vit_c_mg")
+            );
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -925,12 +939,38 @@ public class DatabaseHandler
         float target = goal.getTarget();
         String unit = goal.getUnit().toString();
         String endDate = goal.getEndDate().toString();
-        int newProgress = goal.getProgress();
-        int previousProgress = newProgress - amount;
+        float newProgress = goal.getProgress();
+        float previousProgress = newProgress - amount;
 
         String sql = "UPDATE goal SET progress = " + newProgress + " WHERE user_id = '" +
-                      getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
-                     "' AND progress = '" + previousProgress + "' AND end_date = '" + endDate + "'";
+                getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
+                "' AND progress = '" + previousProgress + "' AND end_date = '" + endDate + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates a user's goal in the database.
+     *
+     * @param username the user's username.
+     * @param goal the updated goal to be updated in the database.
+     */
+    public void updateGoal(String username, Goal goal, float amount) {
+        float target = goal.getTarget();
+        String unit = goal.getUnit().toString();
+        String endDate = goal.getEndDate().toString();
+        float newProgress = goal.getProgress();
+        float previousProgress = newProgress - amount;
+
+        String sql = "UPDATE goal SET progress = " + newProgress + " WHERE user_id = '" +
+                getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
+                "' AND progress = '" + previousProgress + "' AND end_date = '" + endDate + "'";
 
         try {
             Statement stmt = this.conn.createStatement();
@@ -953,7 +993,7 @@ public class DatabaseHandler
         int noCups = 0;
 
         String sql = "SELECT quantity FROM meal WHERE user_id = '" + userID + "' AND date_of = '" + date +
-                "' AND food_id = 0";
+                "' AND food_id = " + getFoodId("Water");
 
         try(Statement stmt = this.conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
@@ -997,7 +1037,7 @@ public class DatabaseHandler
                         "' AND date_of = '" + date + "'";
             } else {
                 sql = "INSERT INTO meal (meal_category, food_id, user_id, date_of, quantity)" +
-                        "VALUES('Water', '" + 0 + "','" + userID + "','" + date.toString() + "','" +
+                        "VALUES('Water', '" + getFoodId("Water") + "','" + userID + "','" + date.toString() + "','" +
                         waterQuantity + "')";
             }
 
@@ -1019,10 +1059,20 @@ public class DatabaseHandler
      *                      the running of an SQL statement
      */
     public void addNutritionItem(NutritionItem n) throws SQLException {
-        String sql = "INSERT INTO food (name, kcal, protein, fat, carbs, sugar, fibre, cholesterol)" +
-                     "VALUES('" + n.getName()  + "', " + n.getKcal() + ", " + n.getProtein() + ", " + n.getFat() + ", "
-                                + n.getCarbs() + ", " + n.getSugar() + ", " + n.getFibre() + ", " + n.getCholesterol()
-                                + ")";
+        String sql = "INSERT INTO food (name, kcal, protein_g, fat_g, carbs_g, sugar_g, fibre_g, cholesterol_mg, " +
+                "sodium_mg, potassium_mg, calcium_mg, magnesium_mg, phosphorus_mg, iron_mg, copper_mg, zinc_mg, " +
+                "chloride_mg, selenium_ug, iodine_ug, vit_a_ug, vit_d_ug, thiamin_mg, riboflavin_mg, niacin_mg, " +
+                "vit_b6_mg, vit_b12_ug, folate_ug, vit_c_mg)" + "VALUES('" +
+                n.getName()         + "', " + n.getKcal()          + ", " + n.getProteinG()     + ", " +
+                n.getFatG()         + ", "  + n.getCarbsG()        + ", " + n.getSugarG()       + ", " +
+                n.getFibreG()       + ", "  + n.getCholesterolMg() + ", " + n.getSodiumMg()     + ", " +
+                n.getPotassiumMg()  + ", "  + n.getCalciumMg()     + ", " + n.getMagnesiumMg()  + ", " +
+                n.getPhosphorusMg() + ", "  + n.getIronMg()        + ", " + n.getCopperMg()     + ", " +
+                n.getZincMg()       + ", "  + n.getChlorideMg()    + ", " + n.getSeleniumUg()   + ", " +
+                n.getIodineUg()     + ", "  + n.getVitAUg()        + ", " + n.getVitDUg()       + ", " +
+                n.getThiaminMg()    + ", "  + n.getRiboflavinMg()  + ", " + n.getNiacinMg()     + ", " +
+                n.getVitB6Mg()      + ", "  + n.getVitB12Ug()      + ", " + n.getFolateUg()     + ", " +
+                n.getVitCMg()       + ")";
 
         Statement stmt  = conn.createStatement();
         stmt.executeUpdate(sql);
@@ -1046,75 +1096,223 @@ public class DatabaseHandler
         System.out.println("Added " + name + " to exercise database");
     }
 
-    private float getDailyIntakeTarget(User user, Goal.Unit unit) throws SQLException{
-        String sql = "SELECT amount FROM daily_intake WHERE gender = '" + user.getSex() +
-                "' AND min_age <= '" + user.getAge() + "' AND max_age >= '" + user.getAge() + "' AND unit = '" +
-                unit.toString() + "'";
-
-        float target = -1;
-
-        try {
-            Statement stmt = this.conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            target = rs.getFloat("amount");
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException();
-        }
-
-        return target;
-    }
-
-    public void updateDayToDayGoals(User user) throws SQLException {
-
-        Goal.Unit[] units = {Goal.Unit.CALORIES, Goal.Unit.PROTEIN};
-
-        for (Goal.Unit unit : units) {
-            float target = getDailyIntakeTarget(user, unit);
-
-            String sql = "UPDATE system_goal SET end_date = '" + LocalDate.now().plusDays(1).toString() +
-                    "', target = '" + target + "' WHERE " + "end_date != '" + LocalDate.now().plusDays(1).toString() +
-                    "' AND category = 'DAY_TO_DAY' AND user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
-
-            try {
-                Statement stmt = this.conn.createStatement();
-                stmt.executeUpdate(sql);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new SQLException();
-            }
-        }
-    }
-
-    public ArrayList<SystemGoal> selectSystemGoals(User user) throws SQLException {
+    /**
+     * Method to select all SystemGoals for a particular username, end date, and category from the database.
+     *
+     * @param username the username of the user concerned.
+     * @param endDate the end date to search up to
+     * @param category the category of goal to search for, e.g. Day to Day
+     * @return an ArrayList of SystemGoals
+     */
+    public ArrayList<SystemGoal> selectSystemGoals(String username, LocalDate endDate, SystemGoal.Category category) {
+        String sql = "SELECT target, unit, end_date, update_period, category, accepted FROM system_goal WHERE " +
+                "user_id = '" + getUserIDFromUsername(username) + "' AND end_date = '" + endDate +
+                "' AND category = '" + category + "'";
 
         ArrayList<SystemGoal> goals = new ArrayList<>();
 
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                float target = rs.getFloat("target");
+                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                LocalDate date = LocalDate.parse(rs.getString("end_date"));
+                SystemGoal.UpdatePeriod updatePeriod = SystemGoal.UpdatePeriod.valueOf(rs.getString("update_period"));
+                SystemGoal.Category cat = SystemGoal.Category.valueOf(rs.getString("category"));
+                boolean accepted = rs.getBoolean("accepted");
+
+                goals.add(new SystemGoal(target, unit, date, updatePeriod, cat, accepted));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return goals;
+    }
+
+    /**
+     * Method to select all SystemGoals for a particular username, end date, and update period, except those goals
+     * with category day to day.
+     *
+     * @param username the username of the user concerned.
+     * @param endDate the end date to search up to.
+     * @param updatePeriod the update period to search for, e.g. Daily.
+     * @return an ArrayList of SystemGoals.
+     */
+    public ArrayList<SystemGoal> selectSystemGoals(String username, LocalDate endDate, SystemGoal.UpdatePeriod updatePeriod) {
         String sql = "SELECT target, unit, end_date, update_period, category, accepted FROM system_goal WHERE " +
-                "user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
+                "user_id = '" + getUserIDFromUsername(username) + "' AND end_date <= '" + endDate +
+                "' AND update_period = '" + updatePeriod + "' AND category != 'DAY_TO_DAY'";
+
+        ArrayList<SystemGoal> goals = new ArrayList<>();
 
         try (Statement stmt = this.conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql))
-        {
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                float target = rs.getFloat("target");
+                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                LocalDate date = LocalDate.parse(rs.getString("end_date"));
+                SystemGoal.UpdatePeriod update = SystemGoal.UpdatePeriod.valueOf(rs.getString("update_period"));
+                SystemGoal.Category category = SystemGoal.Category.valueOf(rs.getString("category"));
+                boolean accepted = rs.getBoolean("accepted");
+
+                goals.add(new SystemGoal(target, unit, date, updatePeriod, category, accepted));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return goals;
+    }
+
+    /**
+     * Retrieves the recommended daily intake for a given unit, sex, and age.
+     *
+     * @param unit the unit of the target, e.g. protein
+     * @param sex the sex the query, male or female
+     * @param age the age to query
+     * @return a float representing the intake target for this user
+     * @throws SQLException if a SQL error occurs such as a database error.
+     */
+    public float getRecommendedIntake(Goal.Unit unit, int age, String sex) {
+        String sql = "SELECT amount FROM daily_intake WHERE unit = '" + unit + "' AND gender = '" + sex +
+                "' AND min_age <= '" + age + "' AND max_age >= '" + age + "'";
+
+        float amount = -1;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                amount = rs.getFloat("amount");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return amount;
+    }
+
+    /**
+     * Method to get a goal of each fitness unit completed by a user with the maximum target value within a given
+     * date range.
+     *
+     * @param username the username of the user
+     * @param earliest the earliest date to query
+     * @return an ArrayList of SystemGoals representing the max achieved targets for their respective units.
+     */
+    public ArrayList<IndividualGoal> selectMaxCompletedGoals(String username, LocalDate earliest) {
+        ArrayList<IndividualGoal> maxCompletedGoals = new ArrayList<>();
+
+        String sql = "SELECT MAX(target) as target, unit, end_date, progress FROM goal WHERE user_id = '" +
+                getUserIDFromUsername(username)  + "' AND end_date >= '" + earliest + "' AND progress > target " +
+                "GROUP BY unit HAVING unit NOT IN ('" +
+                Goal.Unit.CALORIES.toString() +    "', '" + Goal.Unit.PROTEIN.toString() +    "', '" +
+                Goal.Unit.BURNED.toString() +      "', '" + Goal.Unit.CARBS.toString() +      "', '" +
+                Goal.Unit.FIBRE.toString() +       "', '" + Goal.Unit.SODIUM.toString() +     "', '" +
+                Goal.Unit.POTASSIUM.toString() +   "', '" + Goal.Unit.CALCIUM.toString() +    "', '" +
+                Goal.Unit.MAGNESIUM.toString() +   "', '" + Goal.Unit.PHOSPHORUS.toString() + "', '" +
+                Goal.Unit.IRON.toString() +        "', '" + Goal.Unit.COPPER.toString() +     "', '" +
+                Goal.Unit.ZINC.toString() +        "', '" + Goal.Unit.CHLORIDE.toString() +   "', '" +
+                Goal.Unit.SELENIUM.toString() +    "', '" + Goal.Unit.IODINE.toString() +     "', '" +
+                Goal.Unit.VITAMIN_A.toString() +   "', '" + Goal.Unit.VITAMIN_D.toString() +  "', '" +
+                Goal.Unit.THIAMIN.toString() +     "', '" + Goal.Unit.RIBOFLAVIN.toString() + "', '" +
+                Goal.Unit.NIACIN.toString() +      "', '" + Goal.Unit.VITAMIN_B6.toString() + "', '" +
+                Goal.Unit.VITAMIN_B12.toString() + "', '" + Goal.Unit.FOLATE.toString() +     "', '" +
+                Goal.Unit.VITAMIN_C.toString() +   "')";
+
+
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 float target = rs.getFloat("target");
                 Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
                 LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
-                SystemGoal.UpdatePeriod updatePeriod = SystemGoal.UpdatePeriod.valueOf(rs.getString("update_period"));
-                SystemGoal.Category category = SystemGoal.Category.valueOf(rs.getString("category"));
-                boolean accepted = rs.getBoolean("accepted");
+                float progress = rs.getFloat("progress");
 
-                goals.add(new SystemGoal(target, unit, endDate, updatePeriod, category, accepted));
+                maxCompletedGoals.add(new IndividualGoal(target, unit, endDate, progress));
+            }
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return maxCompletedGoals;
+    }
+
+    /**
+     * Method to calculate a user's average work rate in a particular unit over a given time period.
+     *
+     * @param username the username of the user.
+     * @param unit the unit to be queried
+     * @param daysEarlier the earliest date to be queried
+     * @return a float representing the user's average work rate in the unit over the date range
+     */
+    public float selectAverageWorkRate(String username, Goal.Unit unit, int daysEarlier) {
+        String sql = "SELECT SUM(progress) as progress FROM goal WHERE user_id = '" + getUserIDFromUsername(username) +
+                "' AND unit = '" + unit + "' AND end_date >= '" + LocalDate.now().minusDays(daysEarlier) +
+                "' GROUP BY unit";
+
+        float workRate = -1;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                System.out.println(unit);
+                workRate = rs.getFloat("progress");
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
-            throw new SQLException();
         }
 
-        return goals;
+        return workRate/daysEarlier;
+    }
+
+    /**
+     * A method to refresh a user's SystemGoals in the database. Intended to be called every time they are updated such
+     * that the database maintains parity with the application. Deletes the goals currently stored and then Inserts
+     * the passed ArrayList.
+     *
+     * @param username the user's username
+     * @param systemGoals the user's SystemGoals
+     */
+    public void refreshSystemGoals(String username, ArrayList<SystemGoal> systemGoals) {
+        String sqlDel = "DELETE FROM system_goal WHERE user_id = '" + getUserIDFromUsername(username) + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sqlDel);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for (SystemGoal systemGoal : systemGoals) {
+            String sqlIns = "INSERT INTO system_goal(target, unit, end_date, update_period, user_id, category, accepted)" +
+                    "VALUES(?,?,?,?,?,?,?)";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sqlIns)){
+                pstmt.setFloat(1,systemGoal.getTarget());
+                pstmt.setString(2, systemGoal.getUnit().toString());
+                pstmt.setString(3, systemGoal.getEndDate().toString());
+                pstmt.setString(4, systemGoal.getUpdatePeriod().toString());
+                pstmt.setInt(5, getUserIDFromUsername(username));
+                pstmt.setString(6, systemGoal.getCategory().toString());
+                pstmt.setBoolean(7, systemGoal.isAccepted());
+
+                pstmt.executeUpdate();
+            }
+            catch (SQLException e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+
     }
 
     public ArrayList<GroupGoal> selectGroupGoals(User user) throws SQLException {
