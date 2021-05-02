@@ -1314,7 +1314,7 @@ public class DatabaseHandler
         }
 
     }
-
+/*
     public ArrayList<GroupGoal> selectGroupGoals(User user) throws SQLException {
 
         ArrayList<GroupGoal> goals = new ArrayList<>();
@@ -1343,6 +1343,8 @@ public class DatabaseHandler
         return goals;
     }
 
+ */
+    /*
     public void updateGroupGoal(String username, GroupGoal goal, int amount) {
         float target = goal.getTarget();
         String unit = goal.getUnit().toString();
@@ -1362,6 +1364,8 @@ public class DatabaseHandler
             e.printStackTrace();
         }
     }
+
+     */
 /*
     public void insertGroupGoal(String username, Goal goal, Group group) {
         //get group id
