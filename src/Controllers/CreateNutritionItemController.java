@@ -370,7 +370,6 @@ public class CreateNutritionItemController implements Initializable {
 
         CreateAdvancedNutritionItemController controller = loader.getController();
         stage.setScene(sceneEmail);
-        controller.initData(n);
 
         parentScene.close();
         stage.show();
