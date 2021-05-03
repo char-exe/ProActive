@@ -374,8 +374,8 @@
     <table id="172" parent="2" name="exercise"/>
     <table id="173" parent="2" name="food"/>
     <table id="174" parent="2" name="goal"/>
-    <table id="175" parent="2" name="group"/>
-    <table id="176" parent="2" name="group_membership"/>
+    <table id="175" parent="2" name="group_membership"/>
+    <table id="176" parent="2" name="group_table"/>
     <table id="177" parent="2" name="meal"/>
     <table id="178" parent="2" name="regTokens"/>
     <table id="179" parent="2" name="sqlite_master">
@@ -1685,74 +1685,74 @@
       <OnDelete>cascade</OnDelete>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <column id="571" parent="175" name="Group_Id">
+    <column id="571" parent="175" name="Membership_ID">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="572" parent="175" name="Group_Name">
-      <Position>2</Position>
-      <DataType>int|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="573" parent="175" name="group_Group_Id_uindex">
-      <ColNames>Group_Id</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <index id="574" parent="175" name="group_Group_Name_uindex">
-      <ColNames>Group_Name</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <key id="575" parent="175" name="group_pk">
-      <ColNames>Group_Id</ColNames>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>group_Group_Id_uindex</UnderlyingIndexName>
-    </key>
-    <column id="576" parent="176" name="Membership_ID">
-      <Position>1</Position>
-      <DataType>INTEGER|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="577" parent="176" name="User_Id">
+    <column id="572" parent="175" name="User_Id">
       <Position>2</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="578" parent="176" name="Group_Id">
+    <column id="573" parent="175" name="Group_Id">
       <Position>3</Position>
       <DataType>INTEGER|0s</DataType>
     </column>
-    <column id="579" parent="176" name="Group_Role">
+    <column id="574" parent="175" name="Group_Role">
       <Position>4</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="580" parent="176" name="group_membership_Membership_ID_uindex">
+    <index id="575" parent="175" name="group_membership_Membership_ID_uindex">
       <ColNames>Membership_ID</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="581" parent="176" name="group_membership_pk">
+    <key id="576" parent="175" name="group_membership_pk">
       <ColNames>Membership_ID</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>group_membership_Membership_ID_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="582" parent="176">
+    <foreign-key id="577" parent="175">
       <ColNames>User_Id</ColNames>
       <RefTableName>user</RefTableName>
       <RefKeyName>user_pk</RefKeyName>
       <RefColNames>user_id</RefColNames>
     </foreign-key>
-    <foreign-key id="583" parent="176">
+    <foreign-key id="578" parent="175">
       <ColNames>Group_Id</ColNames>
-      <RefTableName>group</RefTableName>
+      <RefTableName>group_table</RefTableName>
       <RefKeyName>group_pk</RefKeyName>
       <RefColNames>Group_Id</RefColNames>
     </foreign-key>
+    <column id="579" parent="176" name="Group_Id">
+      <Position>1</Position>
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="580" parent="176" name="Group_Name">
+      <Position>2</Position>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="581" parent="176" name="group_Group_Id_uindex">
+      <ColNames>Group_Id</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <index id="582" parent="176" name="group_Group_Name_uindex">
+      <ColNames>Group_Name</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="583" parent="176" name="group_pk">
+      <ColNames>Group_Id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>group_Group_Id_uindex</UnderlyingIndexName>
+    </key>
     <column id="584" parent="177" name="meal_id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
