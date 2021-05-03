@@ -2,9 +2,7 @@ package sample;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Contains ways to interact with the backend database of the ProActive app, contains a number of
@@ -230,6 +228,32 @@ public class DatabaseHandler
             System.out.println(e.getMessage());
         }
         return userID;
+    }
+    /**
+     * Method to find the username of a user based on their UserID
+     *
+     * @param userID Takes in a users userID
+     *
+     * @return returns an String which represents the users username
+     */
+    public String getUsernameFromUserID(int userID){
+        String username = "";
+
+        String sql = "SELECT username FROM user WHERE user_id = " + userID;
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                username = rs.getString("username");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return username;
     }
 
     /**
@@ -1488,6 +1512,47 @@ public class DatabaseHandler
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Method to return a Group object based on the group username
+     *
+     * @param groupName Name of the group we are fetching
+     *
+     * @return Returns a fully constructed group
+     */
+    public Group getGroupObjectFromGroupName(String groupName){
+        int groupID = getGroupIDFromName(groupName);
+        GroupOwner owner = null;
+        Set<GroupAdmin> admins = new HashSet<>();
+        Set<GroupMember> members = new HashSet<>();
+
+        Group group = new Group(groupName);
+
+        String sql = "SELECT User_id, Group_Role FROM group_membership WHERE Group_Id = " + groupID;
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                int user_id = rs.getInt("User_id");
+                String role = rs.getString("Group_Role");
+
+                switch (role) {
+                    case "Owner" -> owner = new GroupOwner(group, createUserObjectFromUsername(getUsernameFromUserID(user_id)));
+                    case "Admin" -> admins.add(new GroupAdmin(group, createUserObjectFromUsername(getUsernameFromUserID(user_id))));
+                    case "Member" -> members.add(new GroupMember(group, createUserObjectFromUsername(getUsernameFromUserID(user_id))));
+                }
+
+                group.setOwner(owner);
+                group.setAdmins(admins);
+                group.setMembers(members);
+
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return group;
+
     }
 
 
