@@ -2,18 +2,17 @@ package Controllers;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import sample.*;
 
@@ -42,6 +41,7 @@ public class GoalController implements Initializable {
 
     //Our Goals For You tab
     @FXML private VBox ourGoalsVbox;
+    @FXML private ChoiceBox<String> ourGoalsDropDown;
 
     //Set Your Own tab
     @FXML private TextField dietAmountField;
@@ -88,37 +88,25 @@ public class GoalController implements Initializable {
 
         //Set dateAmountField to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        dietAmountField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("(\\d\\.\\d)*")) {
-                    dietAmountField.setText(newValue.replaceAll("[^(\\d\\.\\d)]", ""));
-                }
+        dietAmountField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("(\\d\\.\\d)*")) {
+                dietAmountField.setText(newValue.replaceAll("[^(\\d\\.\\d)]", ""));
             }
         });
 
         //Set calorieAmountField to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        calorieAmountField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    calorieAmountField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
+        calorieAmountField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                calorieAmountField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
 
         //Set exerciseMinutesField to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        exerciseMinutesField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    exerciseMinutesField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
+        exerciseMinutesField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                exerciseMinutesField.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
 
@@ -139,35 +127,48 @@ public class GoalController implements Initializable {
 
         //Instantiate dropdowns
         dietUnitSelect.getItems().addAll(nutrientsMap.keySet());
-
         exerciseSelect.getItems().add("Any Exercise");
         exerciseSelect.getItems().addAll(dh.getExerciseNames());
+        ourGoalsDropDown.getItems().addAll("All Goals", "Fitness", "Nutrition");
+        ourGoalsDropDown.setValue("All Goals");
+
+        //Set ourGoalsDropDown actions
+        ourGoalsDropDown.getSelectionModel().selectedItemProperty().addListener((ov, t, t1) -> {
+            if ("All Goals".equals(t1)) {
+                ourGoalsVbox.getChildren().clear();
+                showSystemGoals();
+            }
+        });
+
+        ourGoalsDropDown.getSelectionModel().selectedItemProperty().addListener((ov, t, t1) -> {
+            if ("Fitness".equals(t1)) {
+                ourGoalsVbox.getChildren().clear();
+                showFitnessGoals(0);
+            }
+        });
+
+        ourGoalsDropDown.getSelectionModel().selectedItemProperty().addListener((ov, t, t1) -> {
+            if ("Nutrition".equals(t1)) {
+                ourGoalsVbox.getChildren().clear();
+                showNutritionGoals(0);
+            }
+        });
 
         //Set tab selection action for Current Goals
         //https://stackoverflow.com/questions/43092588/how-to-perform-some-action-when-the-tab-is-selected-in-javafx-scene-builder
-        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1)
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ov, t, t1) -> {
+            if ("Current Goals".equals(t1.getText()))
             {
-                if ("Current Goals".equals(t1.getText()))
-                {
-                    loadCurrentGoals(new ActionEvent());
-                }
+                loadCurrentGoals();
             }
         });
 
         //Set tab selection action for Past Goals
         //https://stackoverflow.com/questions/43092588/how-to-perform-some-action-when-the-tab-is-selected-in-javafx-scene-builder
-        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1)
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ov, t, t1) -> {
+            if ("Past Goals".equals(t1.getText()))
             {
-                if ("Past Goals".equals(t1.getText()))
-                {
-                    loadPastGoals(new ActionEvent());
-                }
+                loadPastGoals();
             }
         });
 
@@ -197,50 +198,125 @@ public class GoalController implements Initializable {
     }
 
     /**
-     * Method to instantiate Our Goals for You tab. Assigns a row to each goal, with a button to accept the goal on
-     * the row.
+     * Method to instantiate all goals for the Our Goals for You tab.
      */
     public void showSystemGoals() {
+        int stylesIndex = showFitnessGoals(0);
+        showNutritionGoals(stylesIndex);
+    }
+
+    /**
+     * Method to instantiate only fitness goals for the Our Goals for You tab.
+     *
+     * @param stylesIndex the row index modulo two, to allow alternating styles
+     */
+    public int showFitnessGoals(int stylesIndex) {
+
+        //Show goals marked as Stay on Pace
+        Label stay = new Label("Stay on pace with...");
+        ourGoalsVbox.getChildren().add(stay);
+
+        for (SystemGoal systemGoal : user.getSystemGoals()) {
+            if (systemGoal.getCategory() == SystemGoal.Category.STAY) {
+                stylesIndex = showGoal(systemGoal, stylesIndex);
+            }
+        }
+
+        //Show goals marked as Push Harder
+        Label push = new Label("Push harder with...");
+        ourGoalsVbox.getChildren().add(push);
+
+        for (SystemGoal systemGoal : user.getSystemGoals()) {
+            if (systemGoal.getCategory() == SystemGoal.Category.PUSH) {
+                stylesIndex = showGoal(systemGoal, stylesIndex);
+            }
+        }
+
+        return stylesIndex;
+    }
+
+    /**
+     * Method to instantiate only nutrition goals for the Our Goals for You tab.
+     *
+     * @param stylesIndex the row index modulo two, to allow alternating styles
+     */
+    public void showNutritionGoals(int stylesIndex) {
+
+        Label rdi = new Label("Hit your recommended daily intake with...");
+
+        ourGoalsVbox.getChildren().add(rdi);
+        rdi.getStyleClass().add("ourGoalsVbox");
+
         //For goal in user's system goals
         for (SystemGoal systemGoal : user.getSystemGoals()) {
+            if (systemGoal.getCategory() == SystemGoal.Category.DAY_TO_DAY) {
 
-            //Add label and button for goal
-            HBox hbox = new HBox();
-            ourGoalsVbox.getChildren().add(hbox);
-            hbox.getChildren().add(new Label(systemGoal.toString()));
-            Button button = new Button();
-
-            //Set button text based on goal status
-            if (systemGoal.isAccepted()) {
-                button.setText("Accepted");
+                stylesIndex = showGoal(systemGoal, stylesIndex);
             }
-            else {
-                button.setText("Click to accept");
-            }
-
-            //Set button action such that if the goal is not accepted it is added to the user's goals, set to
-            //accepted, updated in the database, and then the button updated.
-
-
-            button.setOnAction( e -> {
-                if (!systemGoal.isAccepted()) {
-                    user.addGoal(new IndividualGoal(systemGoal));
-                    systemGoal.setAccepted(true);
-                    user.saveSystemGoals();
-                    button.setText("Accepted");
-                }
-            });
-
-            hbox.getChildren().add(button);
         }
     }
 
     /**
-     * Method for parsing information passed to diet fields and creating a user goal.
+     * Private helper method to instantiate a row for one goal.
      *
-     * @param actionEvent a button click
+     * @param systemGoal the goal to be instantiated as a row
+     * @param stylesIndex the index of the row modulo 2
+     * @return the index of the next row modulo 2
      */
-    public void setDietGoal(ActionEvent actionEvent) {
+    private int showGoal(SystemGoal systemGoal, int stylesIndex)
+    {
+        String[] styles = {"goalsHboxOdd", "goalsHboxEven"}; //Alternating style classes
+
+
+        //Create label such that pabel container fills all space available and is centered within.
+        Region region1 = new Region();
+        Region region2 = new Region();
+        HBox.setHgrow(region1, Priority.ALWAYS);
+        HBox.setHgrow(region2, Priority.ALWAYS);
+        Label label = new Label(systemGoal.toString());
+        HBox innerBox = new HBox(region1, label, region2);
+        HBox.setHgrow(innerBox, Priority.ALWAYS);
+        innerBox.setAlignment(Pos.CENTER);
+
+        //Create button
+        Button button = new Button();
+
+        //Set button text based on goal status
+        if (systemGoal.isAccepted()) {
+            button.setText("Accepted");
+        } else {
+            button.setText("Click to accept");
+        }
+
+        button.setMinWidth(125); //Width set such that it doesn't change when text changes
+
+        //Set button action
+        button.setOnAction(e -> {
+            if (!systemGoal.isAccepted()) { //If goal not labelled accepted
+                user.addGoal(new IndividualGoal(systemGoal)); //Add to the user's individual goals
+                systemGoal.setAccepted(true); //Mark accepted
+                user.saveSystemGoals(); //Save user's goals in the database
+                button.setText("Accepted"); //Update button text
+            }
+        });
+
+        //Add button and label to an HBox with content centered, CSS styled, and margins set
+        HBox hbox = new HBox(innerBox, button);
+        hbox.getStyleClass().add(styles[stylesIndex]);
+        hbox.setAlignment(Pos.CENTER);
+        VBox.setMargin(hbox, new Insets(5, 5, 5, 5));
+
+        ourGoalsVbox.getChildren().add(hbox);
+
+        stylesIndex = ++stylesIndex%2; //Increment then mod 2
+
+        return stylesIndex;
+    }
+
+    /**
+     * Method for parsing information passed to diet fields and creating a user goal.
+     */
+    public void setDietGoal() {
         //Get field values
         String amountText = dietAmountField.getText();
         String unitsText = dietUnitSelect.getValue();
@@ -259,10 +335,8 @@ public class GoalController implements Initializable {
 
     /**
      * Method for parsing information passed to calorie fields and creating a user goal.
-     *
-     * @param actionEvent a button click
      */
-    public void setCaloriesGoal(ActionEvent actionEvent) {
+    public void setCaloriesGoal() {
         //Get fields
         String amountText = calorieAmountField.getText();
         LocalDate dateText = calorieDateField.getValue();
@@ -281,10 +355,8 @@ public class GoalController implements Initializable {
 
     /**
      * Method for parsing information passed to exercise fields and creating a user goal.
-     *
-     * @param actionEvent a button click
      */
-    public void setExerciseGoal(ActionEvent actionEvent) {
+    public void setExerciseGoal() {
         //Get fields
         String amountText = exerciseMinutesField.getText();
         String unitsText = exerciseSelect.getValue();
@@ -310,10 +382,8 @@ public class GoalController implements Initializable {
 
     /**
      * Method for loading a user's current goals into the current goals table.
-     *
-     * @param actionEvent a mouseclick on the current goals tab.
      */
-    public void loadCurrentGoals(ActionEvent actionEvent) {
+    public void loadCurrentGoals() {
         //Create holder for the table rows
         ObservableList<GoalItem> goalRows = FXCollections.observableArrayList();
 
@@ -330,10 +400,8 @@ public class GoalController implements Initializable {
 
     /**
      * Method for loading a user's past goals into the past goals table.
-     *
-     * @param actionEvent a mouseclick on the past goals tab.
      */
-    public void loadPastGoals(ActionEvent actionEvent) {
+    public void loadPastGoals() {
         //Create holder for table rows
         ObservableList<GoalItem> goalRows = FXCollections.observableArrayList();
 

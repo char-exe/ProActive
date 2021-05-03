@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -23,12 +24,26 @@
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <center>
-                        <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="tab-content-area" stylesheets="@../style.css" BorderPane.alignment="CENTER">
                            <content>
-                              <VBox fx:id="ourGoalsVbox" prefHeight="357.0" prefWidth="576.0" />
+                              <VBox prefHeight="324.0" prefWidth="547.0" stylesheets="@../style.css">
+                                 <styleClass>
+                                    <String fx:value="tabPane" />
+                                    <String fx:value="goalScrollPane" />
+                                 </styleClass>
+                                 <children>
+                                    <VBox fx:id="ourGoalsVbox" prefHeight="295.0" prefWidth="539.0" styleClass="ourGoalsVbox" stylesheets="@../style.css" />
+                                 </children></VBox>
                            </content>
                         </ScrollPane>
                      </center>
+                     <top>
+                        <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+                           <children>
+                              <ChoiceBox fx:id="ourGoalsDropDown" prefWidth="150.0" />
+                           </children>
+                        </HBox>
+                     </top>
                   </BorderPane>
                </content>
             </Tab>
