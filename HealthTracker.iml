@@ -28,6 +28,6 @@
     <orderEntry type="library" exported="" name="Mail" level="application" />
     <orderEntry type="library" exported="" name="JavaFX#" level="project" />
     <orderEntry type="library" name="lib1" level="project" />
-    <orderEntry type="library" name="activation" level="application" />
+    <orderEntry type="library" exported="" name="activation" level="application" />
   </component>
 </module>
