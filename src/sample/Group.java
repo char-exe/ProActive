@@ -80,4 +80,8 @@ public class Group {
         return owner;
     }
 
+    @Override
+    public String toString(){
+        return this.name + "{" + this.owner + ", " + this.admins + ", " + this.members + "}";
+    }
 }

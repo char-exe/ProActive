@@ -1555,8 +1555,76 @@ public class DatabaseHandler
 
     }
 
+    /**
+     * Method to fetch a groups name based on its ID
+     *
+     * @param groupID ID of the group we are fetching
+     *
+     * @return Returns a String value representing the name of the Group
+     */
+    public String getGroupNameFromID(int groupID){
+        String groupName = "";
+
+        String sql = "SELECT Group_Name FROM group_table WHERE Group_Id = " + groupID;
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                groupName = rs.getString("Group_Name");
+
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return groupName;
+    }
+
+    /**
+     * Method to return a Group object based on the group username
+     *
+     * @param groupID ID of the group we are fetching
+     *
+     * @return Returns a fully constructed group
+     */
+    public Group getGroupObjectFromGroupId(int groupID){
+        String groupName = getGroupNameFromID(groupID);
+        GroupOwner owner = null;
+        Set<GroupAdmin> admins = new HashSet<>();
+        Set<GroupMember> members = new HashSet<>();
+
+        Group group = new Group(groupName);
+
+        String sql = "SELECT User_id, Group_Role FROM group_membership WHERE Group_Id = " + groupID;
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                int user_id = rs.getInt("User_id");
+                String role = rs.getString("Group_Role");
+
+                switch (role) {
+                    case "Owner" -> owner = new GroupOwner(group, createUserObjectFromUsername(getUsernameFromUserID(user_id)));
+                    case "Admin" -> admins.add(new GroupAdmin(group, createUserObjectFromUsername(getUsernameFromUserID(user_id))));
+                    case "Member" -> members.add(new GroupMember(group, createUserObjectFromUsername(getUsernameFromUserID(user_id))));
+                }
+
+                group.setOwner(owner);
+                group.setAdmins(admins);
+                group.setMembers(members);
+
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return group;
+
+    }
+
 
     public static void main(String[] args) {
-        getInstance().joinGroup("OwenTest", "TestGroup1");
+        Group a = getInstance().getGroupObjectFromGroupId(1);
+        Group b = getInstance().getGroupObjectFromGroupName("TestGroup1");
+        System.out.println(a.toString());
+        System.out.println(b.toString());
     }
 }
