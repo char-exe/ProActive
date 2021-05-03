@@ -220,18 +220,16 @@ public class GoalController implements Initializable {
 
             //Set button action such that if the goal is not accepted it is added to the user's goals, set to
             //accepted, updated in the database, and then the button updated.
-            EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent e) {
-                    if (!systemGoal.isAccepted()) {
-                        user.addGoal(new IndividualGoal(systemGoal));
-                        systemGoal.setAccepted(true);
-                        user.saveSystemGoals();
-                        button.setText("Accepted");
-                    }
-                }
-            };
 
-            button.setOnAction(event);
+
+            button.setOnAction( e -> {
+                if (!systemGoal.isAccepted()) {
+                    user.addGoal(new IndividualGoal(systemGoal));
+                    systemGoal.setAccepted(true);
+                    user.saveSystemGoals();
+                    button.setText("Accepted");
+                }
+            });
 
             hbox.getChildren().add(button);
         }
