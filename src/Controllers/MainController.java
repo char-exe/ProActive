@@ -110,6 +110,9 @@ public class MainController implements Initializable {
             System.out.println(goal);
         }
         showNotification("");
+
+        // Sets application window title
+        ((Stage) main.getScene().getWindow()).setTitle("ProActive");
     }
 
     /**
@@ -135,7 +138,7 @@ public class MainController implements Initializable {
      * @throws IOException Throws an IOException whenever it is possible a file could be missing
      */
     @FXML private void groupsScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/TODO.fxml"));
+        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/Group.fxml"));
 
 //        ScrollPane scrollPane = new ScrollPane();
 //        scrollPane.setContent(vBox);
