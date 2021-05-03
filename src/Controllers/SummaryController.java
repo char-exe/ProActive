@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import sample.DatabaseHandler;
@@ -74,6 +75,11 @@ public class SummaryController implements Initializable
      */
     @FXML
     private NumberAxis weightDateAxis;
+    /**
+     * The Welcome message for summary page
+     */
+    @FXML
+    private Label welcomeBackLabel;
 
     private User user;
     private DatabaseHandler dh;
@@ -95,6 +101,7 @@ public class SummaryController implements Initializable
         formatAxis(weightDateAxis);
 
         dh = DatabaseHandler.getInstance();
+
     }
 
     public void initData(User user) {
@@ -162,6 +169,10 @@ public class SummaryController implements Initializable
         HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername());
         HashMap<String, Float> burnedData = dh.getBurnedEntries(user.getUsername());
         HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername());
+
+        //Set Welcome message to Users first name
+        welcomeBackLabel.setText("Welcome Back " + user.getFirstname() + "!");
+
 
         //Add data to each series.
         DateConverter dc = new DateConverter();

@@ -1314,7 +1314,8 @@ public class DatabaseHandler
         }
 
     }
-/*
+
+    /*
     public ArrayList<GroupGoal> selectGroupGoals(User user) throws SQLException {
 
         ArrayList<GroupGoal> goals = new ArrayList<>();
@@ -1343,37 +1344,120 @@ public class DatabaseHandler
         return goals;
     }
 
- */
-    /*
-    public void updateGroupGoal(String username, GroupGoal goal, int amount) {
-        float target = goal.getTarget();
-        String unit = goal.getUnit().toString();
-        String endDate = goal.getEndDate().toString();
-        int newProgress = goal.getProgress();
-        int previousProgress = newProgress - amount;
-
-        String sql = "UPDATE group_goals SET progress = " + newProgress + " WHERE user_id = '" +
-                getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
-                "' AND progress = '" + previousProgress + "' AND end_date = '" + endDate + "'";
-
-        try {
-            Statement stmt = this.conn.createStatement();
-            stmt.executeUpdate(sql);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
      */
-/*
-    public void insertGroupGoal(String username, Goal goal, Group group) {
-        //get group id
-        String sql = "INSERT INTO group_goals (group_id, user_id, target, unit, progress, end_date) VALUES('" +
-                getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
-                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "')";
+    /*
+        public void updateGroupGoal(String username, GroupGoal goal, int amount) {
+            float target = goal.getTarget();
+            String unit = goal.getUnit().toString();
+            String endDate = goal.getEndDate().toString();
+            int newProgress = goal.getProgress();
+            int previousProgress = newProgress - amount;
 
-        try {
+            String sql = "UPDATE group_goals SET progress = " + newProgress + " WHERE user_id = '" +
+                    getUserIDFromUsername(username) + "' AND target = '" + target + "' AND unit = '" + unit +
+                    "' AND progress = '" + previousProgress + "' AND end_date = '" + endDate + "'";
+
+            try {
+                Statement stmt = this.conn.createStatement();
+                stmt.executeUpdate(sql);
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+         */
+    /*
+        public void insertGroupGoal(String username, Goal goal, Group group) {
+            //get group id
+            String sql = "INSERT INTO group_goals (group_id, user_id, target, unit, progress, end_date) VALUES('" +
+                    getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
+                    "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "')";
+
+            try {
+                Statement stmt = this.conn.createStatement();
+                stmt.executeUpdate(sql);
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    */
+
+    /**
+     * Method to get the groupID based on the groupName
+     *
+     * @param groupName Name of the group we are finding the ID of
+     *
+     * @return Returns the GroupID of the group we are checking
+     */
+    public int getGroupIDFromName(String groupName){
+        String sql = "SELECT group_id " +
+                     "FROM group_table " +
+                     "WHERE group_name = '" + groupName + "';";
+
+        int groupID = -1;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                groupID = rs.getInt("group_id");
+                System.out.println(groupID);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return groupID;
+    }
+
+    /**
+     * Method to change a group members group_role to member
+     *
+     * @param userName  Takes the username of the user having their role changed
+     * @param groupName Takes the name of the group the change is taking place in
+     */
+    public void removeAdmin(String userName, String groupName){
+
+        int groupID = DatabaseHandler.getInstance().getGroupIDFromName(groupName);
+        int userID = getInstance().getUserIDFromUsername(userName);
+
+
+        String sql = "UPDATE group_membership" +
+                     " SET group_role = 'Member'" +
+                     " WHERE user_id = " + userID +
+                     " AND group_id = " + groupID + ";";
+        System.out.println(sql);
+
+        try{
+             Statement stmt = this.conn.createStatement();
+             stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method to change a group members group_role to admin
+     *
+     * @param userName  Takes the username of the user having their role changed
+     * @param groupName Takes the name of the group the change is taking place in
+     */
+    public void addAdmin(String userName, String groupName){
+
+        int groupID = getInstance().getGroupIDFromName(groupName);
+        int userID = getInstance().getUserIDFromUsername(userName);
+
+
+        String sql = "UPDATE group_membership" +
+                    " SET group_role = 'Admin'" +
+                    " WHERE user_id = " + userID +
+                    " AND group_id = " + groupID + ";";
+        System.out.println(sql);
+
+        try{
             Statement stmt = this.conn.createStatement();
             stmt.executeUpdate(sql);
         }
@@ -1381,11 +1465,33 @@ public class DatabaseHandler
             e.printStackTrace();
         }
     }
-*/
+
+    /**
+     * Method to add a user to a group
+     *
+     * @param userName  userName of the user who is joining a group
+     * @param groupName group the user is intending to join
+     */
+    public void joinGroup(String userName, String groupName){
+
+        int groupID = getInstance().getGroupIDFromName(groupName);
+        int userID = getInstance().getUserIDFromUsername(userName);
+
+
+        String sql = "INSERT INTO group_membership (User_Id, Group_Id, Group_Role) " +
+                    " VALUES (" + userID + ", " + groupID  + ", 'Member');";
+
+        try{
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
-        System.out.println("INSERT INTO food " +
-                "VALUES('" + "name"  + "', " + "kcal" + ", " + "protein" + ", " + "fat" + ", " + "carbs" + ", " + "sugar" + ", "
-                + "fibre" + ", " + "cholesterol"  + ")");
+        getInstance().joinGroup("OwenTest", "TestGroup1");
     }
 }
