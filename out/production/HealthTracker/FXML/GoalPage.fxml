@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="10.0" styleClass="base" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GoalController">
+    <children>
+        <Label text="Goals">
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+            <padding>
+                <Insets left="10.0" top="10.0" />
+            </padding>
+            <font>
+                <Font size="22.0" />
+            </font></Label>
+        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" styleClass="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <tabs>
+            <Tab styleClass="parentTab" text="Our Goals For You">
+               <content>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                           <content>
+                              <VBox fx:id="ourGoalsVbox" prefHeight="357.0" prefWidth="576.0" />
+                           </content>
+                        </ScrollPane>
+                     </center>
+                  </BorderPane>
+               </content>
+            </Tab>
+                <Tab closable="false" styleClass="parentTab" text="Set Your Own">
+                    <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                            <center>
+                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                                    <children>
+                              <Label text="Dietary">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                 <padding>
+                                    <Insets top="25.0" />
+                                 </padding>
+                                 <children>
+                                    <TextField fx:id="dietAmountField" prefHeight="37.0" prefWidth="149.0" />
+                                    <ComboBox fx:id="dietUnitSelect" prefHeight="36.0" prefWidth="150.0" />
+                                    <DatePicker fx:id="dietDateField" prefHeight="38.0" prefWidth="125.0" />
+                                    <Button mnemonicParsing="false" onAction="#setDietGoal" prefHeight="33.0" prefWidth="33.0" text="Set" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="dietGoalLabel" />
+                              <Label text="Calorie Burn">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                                        <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                            <padding>
+                                                <Insets top="25.0" />
+                                            </padding>
+                                 <children>
+                                    <TextField fx:id="calorieAmountField" prefHeight="38.0" prefWidth="149.0" />
+                                    <DatePicker fx:id="calorieDateField" prefHeight="38.0" prefWidth="125.0" />
+                                    <Button mnemonicParsing="false" onAction="#setCaloriesGoal" prefHeight="36.0" prefWidth="33.0" text="Set" />
+                                 </children>
+                                        </HBox>
+                              <Label fx:id="calorieGoalLabel" />
+                                        <Label fx:id="exercisePopUp" />
+                              <Label text="Time Exercising">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                 <children>
+                                                <ComboBox fx:id="exerciseSelect" editable="true" prefHeight="35.0" prefWidth="150.0" promptText="Select exercise..." HBox.hgrow="ALWAYS" />
+                                                <TextField fx:id="exerciseMinutesField" prefHeight="37.0" prefWidth="66.0" promptText="Minutes..." />
+                                    <DatePicker fx:id="exerciseDateField" prefHeight="36.0" prefWidth="126.0" />
+                                                <Button mnemonicParsing="false" onAction="#setExerciseGoal" prefHeight="35.0" text="Set" HBox.hgrow="ALWAYS" />
+                                 </children>
+                                 <padding>
+                                    <Insets top="25.0" />
+                                 </padding>
+                              </HBox>
+                              <Label fx:id="exerciseGoalLabel" />
+                                    </children>
+                                </VBox>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+                <Tab closable="false" styleClass="parentTab" text="Current Goals">
+                    <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                            <center>
+                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="TOP_CENTER">
+                           <children>
+                              <TableView fx:id="currentGoalsTable" prefHeight="359.0" prefWidth="560.0">
+                                <columns>
+                                  <TableColumn fx:id="currentTargetColumn" prefWidth="145.0" text="Target" />
+                                  <TableColumn fx:id="currentUnitColumn" prefWidth="145.0" text="Unit" />
+                                    <TableColumn fx:id="currentProgressColumn" minWidth="0.0" prefWidth="145.0" text="Progress" />
+                                    <TableColumn fx:id="currentEndDateColumn" prefWidth="145.0" text="End Date" />
+                                </columns>
+                              </TableView>
+                           </children>
+                                </VBox>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+                <Tab closable="false" styleClass="parentTab" text="Past Goals">
+                    <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                            <center>
+                                <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+                           <children>
+                              <TableView fx:id="pastGoalsTable" prefHeight="361.0" prefWidth="579.0">
+                                <columns>
+                                  <TableColumn fx:id="pastTargetColumn" prefWidth="116.0" text="Target" />
+                                  <TableColumn fx:id="pastUnitColumn" prefWidth="116.0" text="Unit" />
+                                    <TableColumn fx:id="pastProgressColumn" prefWidth="116.0" text="Progress" />
+                                    <TableColumn fx:id="pastEndDateColumn" prefWidth="116.0" text="End Date" />
+                                    <TableColumn fx:id="pastCompletedColumn" prefWidth="115.0" text="Completed" />
+                                </columns>
+                              </TableView>
+                           </children>
+                                </VBox>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
+            </tabs>
+            <VBox.margin>
+                <Insets bottom="50.0" left="50.0" right="50.0" />
+            </VBox.margin>
+            <padding>
+                <Insets bottom="25.0" left="40.0" right="40.0" top="25.0" />
+            </padding>
+        </TabPane>
+    </children>
+</VBox>

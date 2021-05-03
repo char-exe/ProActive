@@ -9,27 +9,34 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import sample.*;
+import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.User;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
  * A controller for the activity logging page of the app.
  *
- * @author Evan Clayton
  * @author Samuel Scarfe
+ * @author Owen Tasker
  * @author Charlie Jones
  *
- * @version 1.5
+ * @version 1.7
  *
  * 1.0 - Initial commit, dummy file.
  * 1.1 - Implemented simple exercise logging to database.
@@ -39,6 +46,10 @@ import java.util.ResourceBundle;
  * 1.5 - Implemented table view for added foods, with reference to
  *       https://medium.com/@keeptoo/adding-data-to-javafx-tableview-stepwise-df582acbae4f.
  *       General commenting.
+ * 1.6 - Implemented goal updating.
+ * 1.7 - Implemented ability to create custom exercise and food items
+ * 1.8 - Corrected int casts to float casts, in line with the database.
+ * 1.9 - Updated goal updating for wider range of nutritional goals. Encapsulated goal updating in a private method.
  */
 public class LogActivityController implements Initializable {
 
@@ -78,10 +89,13 @@ public class LogActivityController implements Initializable {
     @FXML private TableColumn<FoodItem, Double> snacksCaloriesColumn;
 
     //Meal maps
-    private HashMap<String, Integer> breakfast;
-    private HashMap<String, Integer> lunch;
-    private HashMap<String, Integer> snack;
-    private HashMap<String, Integer> dinner;
+    private HashMap<NutritionItem, Integer> breakfast;
+    private HashMap<NutritionItem, Integer> lunch;
+    private HashMap<NutritionItem, Integer> snack;
+    private HashMap<NutritionItem, Integer> dinner;
+
+    //Custom Item button
+    @FXML private Button addCustomItem;
 
     private DatabaseHandler dh;
     private User user;
@@ -91,6 +105,13 @@ public class LogActivityController implements Initializable {
     @FXML private Button addCup;
     private int noCups = 0;
 
+    /**
+     * Method to be ran after all FXML elements have been loaded, used to impose restrictions and populate these
+     * elements
+     *
+     * @param url FXML defined parameter
+     * @param resourceBundle FXML defined parameter
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -210,10 +231,13 @@ public class LogActivityController implements Initializable {
 
         if (checkExerciseFields(exercise, minutesText)) {
             int minutes = Integer.parseInt(minutesText); //Convert after checking as empty string needs to be checked
-
+            ExerciseItem exerciseItem = dh.getExerciseItem(exercise);
             //Try to add to database and show appropriate success/fail message to user
             try {
                 dh.insertExercise(user.getUsername(), exercise, minutes);
+                user.updateGoals(Goal.Unit.valueOf(exercise.toUpperCase(Locale.ROOT)), minutes);
+                user.updateGoals(Goal.Unit.EXERCISE, minutes);
+                user.updateGoals(Goal.Unit.BURNED, exerciseItem.calculateBurn(minutes));
                 exercisePopUp.setText(exercise + " for " + minutesText + " minutes added to database");
             }
             catch (SQLException e) {
@@ -329,34 +353,39 @@ public class LogActivityController implements Initializable {
 
         if (checkFoodFields(meal, food, quantityText)) {
             int quantity = Integer.parseInt(quantityText); //Convert after checking as empty string needs to be checked
+            NutritionItem nutritionItem = dh.getNutritionItem(food);
             //add to map
             switch (meal) {
                 case "Breakfast":
-                    if (breakfast.containsKey(food)) {
-                        breakfast.put(food, breakfast.get(food) + quantity); //Increment existing
-                    } else {
-                        breakfast.put(food, quantity); //Add new
+                    if (breakfast.containsKey(nutritionItem)) {
+                        breakfast.put(nutritionItem, breakfast.get(food) + quantity); //Increment existing
+                    }
+                    else {
+                        breakfast.put(nutritionItem, quantity); //Add new
                     }
                     break;
                 case "Lunch":
                     if (lunch.containsKey(food)) {
-                        lunch.put(food, lunch.get(food) + quantity); //Increment existing
-                    } else {
-                        lunch.put(food, quantity); //Add new
+                        lunch.put(nutritionItem, lunch.get(food) + quantity); //Increment existing
+                    }
+                    else {
+                        lunch.put(nutritionItem, quantity); //Add new
                     }
                     break;
                 case "Dinner":
                     if (dinner.containsKey(food)) {
-                        dinner.put(food, dinner.get(food) + quantity); //Increment existing
-                    } else {
-                        dinner.put(food, quantity); //Add new
+                        dinner.put(nutritionItem, dinner.get(food) + quantity); //Increment existing
+                    }
+                    else {
+                        dinner.put(nutritionItem, quantity); //Add new
                     }
                     break;
                 case "Snacks":
                     if (snack.containsKey(food)) {
-                        snack.put(food, snack.get(food) + quantity); //Increment existing
-                    } else {
-                        snack.put(food, quantity); //Add new
+                        snack.put(nutritionItem, snack.get(food) + quantity); //Increment existing
+                    }
+                    else {
+                        snack.put(nutritionItem, quantity); //Add new
                     }
                     break;
             }
@@ -414,35 +443,43 @@ public class LogActivityController implements Initializable {
 
         if (checkFoodDate(date)) {
             //For each map
-                //For each key
-                    //Submit food entry to database
-            for (String key : breakfast.keySet()) {
+            //For each key
+            //Submit food entry to database
+            for (NutritionItem key : breakfast.keySet()) {
                 try {
-                    dh.addFoodEntry(user.getUsername(), "Breakfast", key, breakfast.get(key), date);
+                    updateUserNutritionGoals(key, breakfast);
+
+                    dh.addFoodEntry(user.getUsername(), "Breakfast", key.getName(), breakfast.get(key), date);
                 }
                 catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-            for (String key : lunch.keySet()) {
+            for (NutritionItem key : lunch.keySet()) {
                 try {
-                dh.addFoodEntry(user.getUsername(), "Lunch", key, lunch.get(key), date);
+                    updateUserNutritionGoals(key, lunch);
+
+                    dh.addFoodEntry(user.getUsername(), "Lunch", key.getName(), lunch.get(key), date);
                 }
                 catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-            for (String key : dinner.keySet()) {
+            for (NutritionItem key : dinner.keySet()) {
                 try {
-                dh.addFoodEntry(user.getUsername(), "Dinner", key, dinner.get(key), date);
+                    updateUserNutritionGoals(key, dinner);
+
+                    dh.addFoodEntry(user.getUsername(), "Dinner", key.getName(), dinner.get(key), date);
                 }
                 catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-            for (String key : snack.keySet()) {
+            for (NutritionItem key : snack.keySet()) {
                 try {
-                dh.addFoodEntry(user.getUsername(), "Snack", key, snack.get(key), date);
+                    updateUserNutritionGoals(key, snack);
+
+                    dh.addFoodEntry(user.getUsername(), "Snack", key.getName(), snack.get(key), date);
                 }
                 catch (SQLException e) {
                     e.printStackTrace();
@@ -467,6 +504,40 @@ public class LogActivityController implements Initializable {
             //Show success message to user.
             foodDateLabel.setText("Meals added to database on " + date);
         }
+    }
+
+    /**
+     * Private helper method for updating a user's nutrition goals. Calls the user's update goals method for every
+     * nutrition target value.
+     *
+     * @param key A NutritionItem in the mealMap.
+     * @param mealMap A map storing NutritionItems against their quantity consumed.
+     */
+    private void updateUserNutritionGoals(NutritionItem key, HashMap<NutritionItem, Integer> mealMap) {
+        user.updateGoals(Goal.Unit.CALORIES, (float) (mealMap.get(key) * key.getKcal()/100));
+        user.updateGoals(Goal.Unit.PROTEIN, (float) (mealMap.get(key) * key.getProteinG()/100));
+        user.updateGoals(Goal.Unit.CARBS, (float) (mealMap.get(key) * key.getCarbsG()/100));
+        user.updateGoals(Goal.Unit.FIBRE, (float) (mealMap.get(key) * key.getFibreG()/100));
+        user.updateGoals(Goal.Unit.SODIUM, (float) (mealMap.get(key) * key.getSodiumMg()/100));
+        user.updateGoals(Goal.Unit.POTASSIUM, (float) (mealMap.get(key) * key.getPotassiumMg()/100));
+        user.updateGoals(Goal.Unit.CALCIUM, (float) (mealMap.get(key) * key.getCalciumMg()/100));
+        user.updateGoals(Goal.Unit.MAGNESIUM, (float) (mealMap.get(key) * key.getMagnesiumMg()/100));
+        user.updateGoals(Goal.Unit.PHOSPHORUS, (float) (mealMap.get(key) * key.getPhosphorusMg()/100));
+        user.updateGoals(Goal.Unit.IRON, (float) (mealMap.get(key) * key.getIronMg()/100));
+        user.updateGoals(Goal.Unit.COPPER, (float) (mealMap.get(key) * key.getCopperMg()/100));
+        user.updateGoals(Goal.Unit.ZINC, (float) (mealMap.get(key) * key.getZincMg()/100));
+        user.updateGoals(Goal.Unit.CHLORIDE, (float) (mealMap.get(key) * key.getChlorideMg()/100));
+        user.updateGoals(Goal.Unit.SELENIUM, (float) (mealMap.get(key) * key.getSeleniumUg()/100));
+        user.updateGoals(Goal.Unit.IODINE, (float) (mealMap.get(key) * key.getIodineUg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_A, (float) (mealMap.get(key) * key.getVitAUg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_D, (float) (mealMap.get(key) * key.getVitDUg()/100));
+        user.updateGoals(Goal.Unit.THIAMIN, (float) (mealMap.get(key) * key.getThiaminMg()/100));
+        user.updateGoals(Goal.Unit.RIBOFLAVIN, (float) (mealMap.get(key) * key.getRiboflavinMg()/100));
+        user.updateGoals(Goal.Unit.NIACIN, (float) (mealMap.get(key) * key.getNiacinMg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_B6, (float) (mealMap.get(key) * key.getVitB6Mg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_B12, (float) (mealMap.get(key) * key.getVitB12Ug()/100));
+        user.updateGoals(Goal.Unit.FOLATE, (float) (mealMap.get(key) * key.getFolateUg()/100));
+        user.updateGoals(Goal.Unit.VITAMIN_C, (float) (mealMap.get(key) * key.getVitCMg()/100));
     }
 
     /**
@@ -500,16 +571,16 @@ public class LogActivityController implements Initializable {
         ObservableList<FoodItem> snacksRows = FXCollections.observableArrayList();
 
         //Add each key to its holder with its calorie amount
-        for (String key : breakfast.keySet()) {
+        for (NutritionItem key : breakfast.keySet()) {
             breakfastRows.add(new FoodItem(key, breakfast.get(key)));
         }
-        for (String key : lunch.keySet()) {
+        for (NutritionItem key : lunch.keySet()) {
             lunchRows.add(new FoodItem(key, lunch.get(key)));
         }
-        for (String key : dinner.keySet()) {
+        for (NutritionItem key : dinner.keySet()) {
             dinnerRows.add(new FoodItem(key, dinner.get(key)));
         }
-        for (String key : snack.keySet()) {
+        for (NutritionItem key : snack.keySet()) {
             snacksRows.add(new FoodItem(key, snack.get(key)));
         }
 
@@ -520,22 +591,21 @@ public class LogActivityController implements Initializable {
         snackTable.setItems(snacksRows);
     }
 
-
     /**
      * Wrapper class for table rows, wraps food name and calories into one class.
      */
     public class FoodItem {
-        SimpleStringProperty foodName;
-        SimpleDoubleProperty calories;
+        private SimpleStringProperty foodName;
+        private SimpleDoubleProperty calories;
 
         /**
          * Constructs a table row comprised of food name and calories.
-         * @param foodName the name of the food.
+         * @param food the food as a NutritionItem.
          * @param quantity the amount consumed in grams.
          */
-        FoodItem(String foodName, int quantity) {
-            this.foodName = new SimpleStringProperty(foodName);
-            double kcal = dh.getKcal(foodName); //stored in the database as kcal per 100g
+        public FoodItem(NutritionItem food, int quantity) {
+            this.foodName = new SimpleStringProperty(food.getName());
+            double kcal = food.getKcal(); //stored in the item as kcal per 100g
             calories = new SimpleDoubleProperty(((kcal * quantity) / 100));
         }
 
@@ -574,5 +644,31 @@ public class LogActivityController implements Initializable {
         public void setCalories(double calories) {
             this.calories = new SimpleDoubleProperty(calories);
         }
+    }
+
+    /**
+     * Method to handle custom nutrition item creation
+     *
+     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
+     */
+    public void customNutritionItemButtonAction() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateNutritionItem.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(part);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /**
+     * Method to handle custom exercise item creation
+     *
+     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
+     */
+    public void customExerciseItemButtonAction() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateExerciseItem.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(part);
+        stage.setScene(scene);
+        stage.show();
     }
 }

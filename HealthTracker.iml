@@ -8,7 +8,7 @@
     </content>
     <orderEntry type="jdk" jdkName="openjdk-15" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library name="JUnit5.4">
         <CLASSES>
           <root url="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter/5.4.2/junit-jupiter-5.4.2.jar!/" />
@@ -24,10 +24,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="javafx15" level="application" />
-    <orderEntry type="library" name="mail" level="application" />
-    <orderEntry type="library" name="sqlite" level="application" />
-    <orderEntry type="library" name="JavaFX" level="application" />
-    <orderEntry type="library" name="Mail" level="application" />
+    <orderEntry type="library" exported="" name="JavaFX" level="application" />
+    <orderEntry type="library" exported="" name="Mail" level="application" />
+    <orderEntry type="library" exported="" name="JavaFX#" level="project" />
+    <orderEntry type="library" name="lib1" level="project" />
+    <orderEntry type="library" exported="" name="activation" level="application" />
   </component>
 </module>

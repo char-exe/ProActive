@@ -1,22 +1,29 @@
 package Controllers;
 
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import sample.DatabaseHandler;
+import sample.Goal;
+import sample.GoalGenerator;
 import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.Key;
 import java.util.ResourceBundle;
 
 /**
@@ -30,6 +37,8 @@ import java.util.ResourceBundle;
  *                same page again.
  *          1.1 - Minor update to logic to ensure User object is set before being passed on to other controllers.
  *                Possibly a hacky solution, as method calls have been moved from initialise to initData.
+ *          1.2 - Added method to display notifications.
+ *          1.3 - Additional notification display methods for blinking and fading notifications
  */
 public class MainController implements Initializable {
 
@@ -40,7 +49,10 @@ public class MainController implements Initializable {
     @FXML private Button groupsButton;
     @FXML private Button goalsButton;
     @FXML private Button manageProfileButton;
+    @FXML private Button logOutButton;
     @FXML private BorderPane main;
+    @FXML private Label notification;
+
 
     private User user;
 
@@ -54,7 +66,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        logo.setImage(new Image("src/Resources/proactive.png"));
+        //logo.setImage(new Image("src/Resources/proactive.png"));
     }
 
     /**
@@ -75,12 +87,16 @@ public class MainController implements Initializable {
     public void homeScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
 //        loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
-        loader.setLocation(getClass().getResource("/src/FXML/SummaryPage.fxml"));
+        loader.setLocation(getClass().getResource("/FXML/SummaryPage.fxml"));
         VBox vBox = loader.load();
 
         SummaryController summaryController = loader.getController();
         summaryController.initData(user);
         summaryController.setData();
+
+        GoalGenerator gg = new GoalGenerator(user);
+        user.setSystemGoals(gg.generateGoals());
+        user.saveSystemGoals();
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(vBox);
@@ -90,6 +106,10 @@ public class MainController implements Initializable {
 
         main.setCenter(scrollPane);
         toggleButtonFocus(homeButton);
+        for (Goal goal : user.getSystemGoals()) {
+            System.out.println(goal);
+        }
+        showNotification("");
     }
 
     /**
@@ -106,6 +126,7 @@ public class MainController implements Initializable {
         logActivityController.initData(user);
         main.setCenter(vBox);
         toggleButtonFocus(logActivityButton);
+        showBlinkNotification("Now with animations");
     }
 
     /**
@@ -132,7 +153,14 @@ public class MainController implements Initializable {
      * @throws IOException Throws an IOException whenever it is possible a file could be missing
      */
     @FXML private void goalsScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/TODO.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        //VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/GoalPage.FXML"));
+        loader.setLocation(getClass().getResource("/FXML/GoalPage.fxml"));
+        VBox vBox = loader.load();
+
+        GoalController gc = loader.getController();
+        gc.initData(user);
+        gc.showSystemGoals();
         main.setCenter(vBox);
         toggleButtonFocus(goalsButton);
     }
@@ -144,7 +172,7 @@ public class MainController implements Initializable {
      */
     @FXML private void manageProfileScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        //loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
+        //loader.setLocation(getClass().getClassLoader().getResource("src/FXML/ManageProfilePage.fxml"));
         loader.setLocation(getClass().getResource("/FXML/ManageProfilePage.fxml"));
         VBox vBox = loader.load();
 
@@ -152,6 +180,7 @@ public class MainController implements Initializable {
         mppc.initData(user);
         main.setCenter(vBox);
         toggleButtonFocus(manageProfileButton);
+        showFadeNotification("Ghost text");
     }
 
     /**
@@ -175,4 +204,81 @@ public class MainController implements Initializable {
                 new BackgroundFill(Color.rgb(120,120,120), null, null)));
 
     }
+
+    /**
+     * Method to display text in the notification bar. This method is called by the notification handler.
+     *
+     * @param message Text to be displayed in the notification bar.
+     */
+    public void showNotification(String message){
+        notification.setText(message);
+
+        notification.setVisible(true);
+        notification.setOpacity(1.0);
+    }
+
+    /**
+     * Method to display text in the notification bar. The text blinks a few times before disappearing.
+     *
+     * @param message Text to be displayed.
+     */
+    public void showBlinkNotification(String message){
+        notification.setText(message);
+
+        notification.setVisible(true);
+        notification.setOpacity(1.0);
+        //Timeline where the text spends 1 second visible and 0.1 seconds not visible
+        Timeline blinkTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(1), evt -> notification.setVisible(false)),
+                new KeyFrame(Duration.seconds(0.1), evt -> notification.setVisible(true))
+        );
+        blinkTimeline.setCycleCount(3);
+        blinkTimeline.play();
+
+    }
+
+    /**
+     * Method to fade some text in and out on the notification bar a few times before disappearing.
+     *
+     * @param message Text to be displayed.
+     */
+    public void showFadeNotification(String message){
+        notification.setText(message);
+
+        notification.setVisible(true);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1.5), notification);
+        //Float values are the opacity values
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0.0);
+        fadeTransition.setCycleCount(7);
+        fadeTransition.setAutoReverse(true);
+        fadeTransition.play();
+    }
+
+    /**
+     * Method to log out and send user back to the splash page
+     *
+     * @param actionEvent This refers to the button that will cause this method to be called
+     *
+     * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
+     */
+    @FXML protected void logOutAction(ActionEvent actionEvent) throws IOException {
+        Stage parentScene = (Stage) logOutButton.getScene().getWindow();
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
+
+        Parent splashParent = loader.load();
+
+        Scene sceneParent = new Scene(splashParent);
+
+        stage.setScene(sceneParent);
+
+        SplashPageController controller = loader.getController();
+        stage.setScene(sceneParent);
+
+        parentScene.close();
+        stage.show();
+    }
+
 }

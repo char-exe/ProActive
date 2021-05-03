@@ -8,10 +8,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
+import sample.GoalGenerator;
 import sample.User;
 
 import javax.crypto.SecretKeyFactory;
@@ -35,9 +37,10 @@ public class LoginPageController {
     private String username, password;
 
     @FXML private TextField usernameField;
-    @FXML private TextField passwordField;
+    @FXML private PasswordField passwordField;
     @FXML private Label usernameError;
     @FXML private Label passwordError;
+    @FXML private Button escapeHome;
 
     /**
      * Getter for username
@@ -67,6 +70,9 @@ public class LoginPageController {
     public void login(ActionEvent actionEvent) {
         username = usernameField.getText();
         password = passwordField.getText();
+
+        clearInvalidUsername();
+        clearInvalidPassword();
 
         try{
             DatabaseHandler dh = DatabaseHandler.getInstance();
@@ -108,8 +114,9 @@ public class LoginPageController {
             }else {
                 displayInvalidPassword();
             }
-        } catch (SQLException userError) {
+        } catch (SQLException | NullPointerException userError) {
             displayInvalidUsername();
+            displayInvalidPassword();
         } catch (IOException e1){
             System.out.println(e1.getMessage());
         } catch (NoSuchAlgorithmException e) {
@@ -171,5 +178,31 @@ public class LoginPageController {
      */
     public void forgotUsername(ActionEvent actionEvent) {
         //TODO create method that reminds users of their username
+    }
+
+    /**
+     * Method to cancel registration and send user back to the splash page
+     *
+     * @param actionEvent This refers to the button that will cause this method to be called
+     *
+     * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
+     */
+    @FXML protected void escapeHomeAction(ActionEvent actionEvent) throws IOException {
+        Stage parentScene = (Stage) escapeHome.getScene().getWindow();
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/SplashPage.fxml"));
+
+        Parent splashParent = loader.load();
+
+        Scene sceneParent = new Scene(splashParent);
+
+        stage.setScene(sceneParent);
+
+        SplashPageController controller = loader.getController();
+        stage.setScene(sceneParent);
+
+        parentScene.close();
+        stage.show();
     }
 }

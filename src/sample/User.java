@@ -3,6 +3,9 @@ package sample;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A class to represent a user in a health tracking application, most/all error checking is completed
@@ -11,8 +14,9 @@ import java.time.Period;
  * @author Owen Tasker
  * @author Charlie Jones
  * @author Samuel Scarfe
+ * @author Evan Clayton
  *
- * @version 1.5
+ * @version 1.8
  *
  * 1.0 - Initial user class structure and their variables.
  * 1.1 - Added constructor, getters and setters.
@@ -21,6 +25,9 @@ import java.time.Period;
  * 1.4 - Added methods to check constructor inputs and throw necessary exceptions. Updated setAge to throw
  *       an exception if the dob passed is in the future.
  * 1.5 - Updated Javadoc.
+ * 1.6 - Added groupMembership array and corresponding methods
+ * 1.7 - Implemented adding and updating goals.
+ * 1.8 - Implemented automatic goal generation.
  */
 public class User {
 
@@ -43,7 +50,10 @@ public class User {
     private float weight;  //Changed from int on class description storing in KG
     private LocalDate dob;
     private final String email;
-    //private Set<Group> groupMemberships = new ArrayList();  To be added in sprint 2 group not a suitable name, object in Swing may be OK though
+    private Set<Group> groupMemberships = new HashSet<Group>();
+    private ArrayList<Goal> goals;
+    private ArrayList<SystemGoal> systemGoals;
+    private ArrayList<GroupGoal> groupGoals;
     private final String username;
 
     /**
@@ -71,6 +81,11 @@ public class User {
         this.email = email;
         this.username = username;
 
+        this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
+
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
 
@@ -92,6 +107,11 @@ public class User {
         this.dob = dob;
         this.email = email;
         this.username = username;
+
+        this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -187,6 +207,27 @@ public class User {
     }
 
     /**
+     * Method for getting the full list of groups the user belongs to.
+     * @return returns the list of group objects
+     */
+    public Set<Group> getGroupMemberships() { return groupMemberships; }
+
+    /**
+     * Gets the list of goals for this user.
+     *
+     * @return this user's goals as an ArrayList.
+     */
+    public ArrayList<Goal> getGoals() {
+        return this.goals;
+    }
+
+    public ArrayList<SystemGoal> getSystemGoals() {
+        return this.systemGoals;
+    }
+
+    public ArrayList<GroupGoal> getGroupGoals() { return this.groupGoals; }
+
+    /**
      * Sets the User's firstname to the passed parameter.
      *
      * @param firstname the User's new firstname
@@ -279,6 +320,121 @@ public class User {
         LocalDate birthday = LocalDate.of(this.dob.getYear(), this.dob.getMonth(), this.dob.getDayOfMonth());
 
         this.age = Period.between(birthday, today).getYears();
+    }
+
+    /**
+     * Method to set this user's system goals to the provided ArrayList.
+     *
+     * @param systemGoals this user's system goals.
+     */
+    public void setSystemGoals(ArrayList<SystemGoal> systemGoals) {
+        this.systemGoals = systemGoals;
+    }
+
+    public void setGroupGoals(ArrayList<GroupGoal> groupGoals) { this.groupGoals = groupGoals; }
+
+    /**
+     * Adds a goal to this user's goal list and then to the database.
+     *
+     * @param goal the goal to be added.
+     */
+    public void addGoal(Goal goal) {
+        this.goals.add(goal);
+        DatabaseHandler.getInstance().insertGoal(this.getUsername(), goal);
+    }
+
+    /**
+     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
+     *
+     * @param unit   the unit which has been input as part of a logged activity.
+     * @param amount the amount of the unit which has been logged.
+     */
+    public void updateGoals(Goal.Unit unit, int amount) {
+        //for each goal
+        for (Goal goal : goals) {
+            //if the goal is updated
+            if (goal.updateProgress(unit, amount)) {
+                //update the goal in the database
+                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+            }
+        }
+    }
+
+    /**
+     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
+     *
+     * @param unit   the unit which has been input as part of a logged activity.
+     * @param amount the amount of the unit which has been logged.
+     */
+    public void updateGoals(Goal.Unit unit, float amount) {
+        //for each goal
+        for (Goal goal : goals) {
+            //if the goal is updated
+            if (goal.updateProgress(unit, amount)) {
+                //update the goal in the database
+                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+            }
+        }
+    }
+
+    /**
+     * Method to query the database for this user's day to day system goals.
+     * @return an ArrayList of SystemGoals for this user's day to day system goals.
+     */
+    public ArrayList<SystemGoal> getDayToDayGoals() {
+        return DatabaseHandler.getInstance().selectSystemGoals(
+                this.username, LocalDate.now().plusDays(1), SystemGoal.Category.DAY_TO_DAY
+        );
+    }
+
+    /**
+     * Method to query the database for this user's daily fitness system goals.
+     * @return an ArrayList of SystemGoals for this user's daily fitness system goals.
+     */
+    public ArrayList<SystemGoal> getDailyFitness() {
+        return DatabaseHandler.getInstance().selectSystemGoals(
+                this.username, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY
+        );
+    }
+
+    /**
+     * Method to query the database for this user's weekly fitness system goals.
+     * @return an ArrayList of SystemGoals for this user's weekly fitness system goals.
+     */
+    public ArrayList<SystemGoal> getWeeklyFitness() {
+        return DatabaseHandler.getInstance().selectSystemGoals(
+                this.username, LocalDate.now().plusDays(7), SystemGoal.UpdatePeriod.WEEKLY
+        );
+    }
+
+    /**
+     * Method to query the database for this user's goal of each unit with the maximum achieved target within a
+     * date range.
+     *
+     * @param earliest The number of days prior to today to query
+     * @return an ArrayList of SystemGoals.
+     */
+    public ArrayList<IndividualGoal> getMaxCompletedGoals(LocalDate earliest) {
+        return DatabaseHandler.getInstance().selectMaxCompletedGoals(this.username, earliest);
+    }
+
+    /**
+     * Method to get a user's average work rate in a particular activity within a date range.
+     *
+     * @param unit the activity to be queried.
+     * @param daysEarlier the earliest date to be queried.
+     * @return a float representing the average work rate for that unit over the time period.
+     */
+    public float getAverageWorkRate(Goal.Unit unit, int daysEarlier) {
+        return DatabaseHandler.getInstance().selectAverageWorkRate(this.username, unit, daysEarlier);
+    }
+
+    /**
+     * Method to save this user's system goals in the database. Intended for use whenever their values change such
+     * that their state will persist between logins.
+     */
+    public void saveSystemGoals() {
+        DatabaseHandler.getInstance().refreshSystemGoals(this.username, this.systemGoals);
     }
 
     //Class-Specific Methods
@@ -409,6 +565,41 @@ public class User {
         final String LASTNAMEREGEX  = "[a-zA-Z]+([ '-][a-zA-Z]+)*";
         if (!surname.matches(LASTNAMEREGEX)) {
             throw new IllegalArgumentException("First name contains illegal characters.");
+        }
+    }
+
+    /**
+     * Public method for adding a group membership to the user's list of memberships.
+     *
+     * @param group Takes a the group object for the group being joined.
+     */
+    public void joinGroup(Group group) {
+        if (groupMemberships.contains(group) == false) {
+            groupMemberships.add(group);
+        }
+    }
+
+    /**
+     * Method for removing a user from a group
+     * @param group Group object for the group the user is to leave.
+     */
+    public void leaveGroup(Group group) {
+        if (groupMemberships.contains(group)){
+            groupMemberships.remove(group);
+        }
+    }
+
+    /**
+     * Method to check for group membership.
+     * @param group Group object for the group you are checking the user is a member of.
+     * @return returns true if they are a member, false if they are not.
+     */
+    public boolean isGroupMemberOf(Group group){
+        if (groupMemberships.contains(group)){
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
