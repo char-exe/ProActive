@@ -47,6 +47,7 @@ public class CreateNutritionItemController implements Initializable {
     @FXML public Label cholesterolInputPopUp;
 
     @FXML public Button advancedCreationButton;
+    @FXML public Button cancelButton;
 
     private NutritionItem n;
     
@@ -182,6 +183,13 @@ public class CreateNutritionItemController implements Initializable {
             parentScene.close();
 
         }
+
+    }
+
+    @FXML public void cancelButtonAction(){
+        Stage parentScene = (Stage) cancelButton.getScene().getWindow();
+
+        parentScene.close();
 
     }
 
