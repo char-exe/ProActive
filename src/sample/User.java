@@ -612,8 +612,8 @@ public class User {
         User user = new User("test","test", Sex.MALE, 0.1f, 0.1f,
                 LocalDate.of(1999, Month.DECEMBER, 28), "test@gmail.com", "testy");
 
-        System.out.println(user.getDob().toString());
-        System.out.println(user);
+//        System.out.println(user.getDob().toString());
+//        System.out.println(user);
 
     }
 }

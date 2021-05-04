@@ -13,4 +13,8 @@ public class GroupMember {
         this.user = user;
     }
 
+    public User getUser(){
+        return user;
+    }
+
 }

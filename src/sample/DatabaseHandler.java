@@ -26,7 +26,7 @@ import java.util.*;
  * @author Owen Tasker
  * @author Charlie Jones
  *
- * @version 1.13
+ * @version 1.14
  *
  * 1.0 - Initial handler created, methods with ability to select all information from a table added
  *
@@ -66,6 +66,7 @@ import java.util.*;
  * 1.11 - Implemented adding and updating goals.
  * 1.12 - Added methods for adding elements to exercise and food tables, used for custom item creation
  * 1.13 - Implemented automatic goal generation.
+ * 1.14 - Added method to return all groups in which the user is in.
  */
 public class DatabaseHandler
 {
@@ -1617,6 +1618,27 @@ public class DatabaseHandler
         }
 
         return group;
+
+    }
+
+    public ArrayList<Group> getUserGroupsFromUsername(String username){
+
+        ArrayList<Group> groups = new ArrayList<>();
+
+        int userID = getUserIDFromUsername(username);
+
+        String sql = "SELECT Group_Id FROM group_membership WHERE User_Id = " + userID;
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                groups.add(getGroupObjectFromGroupId(rs.getInt("Group_Id")));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+        return groups;
 
     }
 

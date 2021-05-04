@@ -75,6 +75,7 @@ public class MainController implements Initializable {
      * @param user Takes in a user object
      */
     public void initData(User user){
+        System.out.println(user);
         this.user = user;
     }
 
@@ -106,9 +107,9 @@ public class MainController implements Initializable {
 
         main.setCenter(scrollPane);
         toggleButtonFocus(homeButton);
-        for (Goal goal : user.getSystemGoals()) {
-            System.out.println(goal);
-        }
+//        for (Goal goal : user.getSystemGoals()) {
+//            System.out.println(goal);
+//        }
         showNotification("");
 
         // Sets application window title
@@ -138,13 +139,20 @@ public class MainController implements Initializable {
      * @throws IOException Throws an IOException whenever it is possible a file could be missing
      */
     @FXML private void groupsScreen() throws IOException {
-        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/Group.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource("FXML/Group.fxml"));
+        VBox vBox = loader.load();
+//        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/Group.fxml"));
 
 //        ScrollPane scrollPane = new ScrollPane();
 //        scrollPane.setContent(vBox);
 //        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 //        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 //        scrollPane.setFitToWidth(true);
+
+        GroupController gc = loader.getController();
+        gc.initData(user);
+        gc.initUserGroupData();
 
         main.setCenter(vBox);
         toggleButtonFocus(groupsButton);
