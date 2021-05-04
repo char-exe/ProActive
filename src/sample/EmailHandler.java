@@ -228,6 +228,36 @@ public class EmailHandler {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Method to send an email to a user that has forgotten their password.
+     *
+     * @param session     Takes a session object, this is required to send any emails.
+     * @param to          Takes a To Address, this is the address that the email will be sent to.
+     */
+    public void sendRecoveryEmail(Session session, String to){
+        String password = "";
+        //getPasswordFromEmail
+        String username = DatabaseHandler.getInstance().getUsernameFromEmail(to);
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(to)
+            );
+            message.setSubject(username + ", you have requested your forgotten password. Your passowrd is "
+                    + "as follows \n" + password);
+
+            Transport.send(message);
+
+            System.out.println("Password Recovery sent");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         //General account for use with this application, dont worry about non-secure password as is ultimately
         //a throwaway account

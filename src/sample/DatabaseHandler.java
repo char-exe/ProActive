@@ -1434,6 +1434,33 @@ public class DatabaseHandler
         }
     }
 
+    /**
+     * Method to find the username of a user based on their email address. This is used in password recovery.
+     *
+     * @param email Takes in an email address.
+     *
+     * @return returns a string of the username linked to the given email.
+     */
+    public String getUsernameFromEmail(String email){
+        String username = "Could not find Username";
+
+        String sql = "SELECT username FROM user WHERE email = '" + email + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                username = rs.getString("username");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return username;
+    }
+
 /* Method to get group object from group_id
     public Group getGroup (int group_id) {
         String sql = "SELECT group_id, target, unit, end_date, accepted FROM group_goal WHERE " +

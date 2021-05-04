@@ -32,6 +32,19 @@
                   </BorderPane>
                </content>
             </Tab>
+                <Tab styleClass="parentTab" text="Available Group Goals">
+                    <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                            <center>
+                                <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                    <content>
+                                        <VBox fx:id="groupGoalsVbox" prefHeight="357.0" prefWidth="576.0" />
+                                    </content>
+                                </ScrollPane>
+                            </center>
+                        </BorderPane>
+                    </content>
+                </Tab>
                 <Tab closable="false" styleClass="parentTab" text="Set Your Own">
                     <content>
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
