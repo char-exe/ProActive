@@ -59,14 +59,20 @@ import java.util.*;
  * 1.8 - Added Javadoc for outstanding methods
  *
  * 1.9 - Added methods to assist with activity logging.
+ *
  * 1.95 - Added methods to assist with water intake logging and information retrieval.
  *
  * 1.10 - Rewrote getBurnedEntries and getIntakeEntries as JOIN statements to fix exception originating from having
  *        nested ResultSets.
+ *
  * 1.11 - Implemented adding and updating goals.
- * 1.12 - Added methods for adding elements to exercise and food tables, used for custom item creation
+ *
+ * 1.12 - Added methods for adding elements to exercise and food tables, used for custom item creation.
+ *
  * 1.13 - Implemented automatic goal generation.
+ *
  * 1.14 - Added method to return all groups in which the user is in.
+ *
  */
 public class DatabaseHandler
 {
@@ -1621,7 +1627,7 @@ public class DatabaseHandler
 
     }
 
-    public ArrayList<Group> getUserGroupsFromUsername(String username){
+    public ArrayList<Group> getUserGroups(String username){
 
         ArrayList<Group> groups = new ArrayList<>();
 

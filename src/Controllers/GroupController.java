@@ -12,7 +12,6 @@ import sample.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 /**
@@ -51,7 +50,7 @@ public class GroupController implements Initializable {
 
     public void initUserGroupData(){
 
-        for(Group group : dh.getUserGroupsFromUsername(user.getUsername())){
+        for(Group group : dh.getUserGroups(user.getUsername())){
             VBox groupNode = null;
             try {
                 groupNode = FXMLLoader.load(getClass().getResource("/FXML/UIGroupItem.fxml"));
@@ -74,18 +73,18 @@ public class GroupController implements Initializable {
                 // Get user list from groupContainer children
                 VBox userList = (VBox) groupContainer.getChildren().get(0);
 
-                for(GroupMember groupMember : group.getMembers()){
-                    Label label = new Label();
-                    if(groupMember instanceof GroupOwner){
-                        label.setText("Owner: " + groupMember.getUser().getUsername());
-                        label.setUnderline(true);
-                    } else if(groupMember instanceof GroupAdmin)
-                        label.setText("Admin: " + groupMember.getUser().getUsername());
-                    else
-                        label.setText(groupMember.getUser().getUsername());
+                Label ownerLabel = new Label("Owner: " + group.getOwner().getUser().getUsername());
+                ownerLabel.setUnderline(true);
+                userList.getChildren().add(ownerLabel);
 
-                    userList.getChildren().add(label);
-                }
+                for(GroupAdmin groupAdmin : group.getAdmins())
+                    userList.getChildren().add(new Label("Admin: " + groupAdmin.getUser().getUsername()));
+
+                userList.getChildren().add(new Label(""));
+
+                for(GroupMember groupMember : group.getMembers())
+                    userList.getChildren().add(new Label(groupMember.getUser().getUsername()));
+
 
                 // Get goal list from groupContainer children
                 VBox goalList = (VBox) groupContainer.getChildren().get(2);
