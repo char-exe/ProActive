@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-
-<VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" styleClass="groupNode" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="*group name*">
+      <Label fx:id="groupNameLabel" text="*group name*">
          <font>
             <Font size="16.0" />
          </font>
@@ -27,7 +24,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label layoutX="30.0" layoutY="10.0" text="Owner: *placeholder*" underline="true">
+                  <Label fx:id="ownerNameLabel" layoutX="30.0" layoutY="10.0" text="Owner: *placeholder*" underline="true">
                      <font>
                         <Font size="14.0" />
                      </font>
