@@ -82,9 +82,6 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
-        for (Goal goal : goals) {
-            System.out.println(goal);
-        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -109,9 +106,6 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
-        for (Goal goal : goals) {
-            System.out.println(goal);
-        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -437,6 +431,21 @@ public class User {
         DatabaseHandler.getInstance().refreshSystemGoals(this.username, this.systemGoals);
     }
 
+    /**
+     * Method to mark a goal as not active and update it's end date to today's date, functionally equivalent to
+     * quitting it.
+     *
+     * @param goal the goal to quit.
+     */
+    public void quitGoal(Goal goal) {
+        for (Goal g : this.goals) {
+            if (g == goal) {
+                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, goal);
+                g.quitGoal();
+
+            }
+        }
+    }
     //Class-Specific Methods
     /*
     public ArrayList<Goal> getGoals(){

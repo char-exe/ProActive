@@ -57,11 +57,7 @@ public class GoalController implements Initializable {
     @FXML private Label exerciseGoalLabel;
 
     //Current Goals tab
-    @FXML private TableView<GoalItem> currentGoalsTable;
-    @FXML private TableColumn<GoalItem, Float> currentTargetColumn;
-    @FXML private TableColumn<GoalItem, String> currentUnitColumn;
-    @FXML private TableColumn<GoalItem, Float> currentProgressColumn;
-    @FXML private TableColumn<GoalItem, String> currentEndDateColumn;
+    @FXML private VBox currentGoalsVbox;
 
     //Past Goals tab
     @FXML private TableView<GoalItem> pastGoalsTable;
@@ -166,21 +162,16 @@ public class GoalController implements Initializable {
         //Set tab selection action for Past Goals
         //https://stackoverflow.com/questions/43092588/how-to-perform-some-action-when-the-tab-is-selected-in-javafx-scene-builder
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, t, t1) -> {
-            if ("Past Goals".equals(t1.getText()))
+            if ("Completed Goals".equals(t1.getText()))
             {
                 loadPastGoals();
             }
         });
 
         //Instantiate table placeholder texts
-        currentGoalsTable.setPlaceholder(new Label("No current goals, set some in Set Goals"));
         pastGoalsTable.setPlaceholder(new Label("No past goals, view current goals in Current Goals"));
 
         //Instantiate table columns
-        currentTargetColumn.setCellValueFactory(new PropertyValueFactory<>("Target"));
-        currentUnitColumn.setCellValueFactory(new PropertyValueFactory<>("Unit"));
-        currentProgressColumn.setCellValueFactory(new PropertyValueFactory<>("Progress"));
-        currentEndDateColumn.setCellValueFactory(new PropertyValueFactory<>("EndDate"));
         pastTargetColumn.setCellValueFactory(new PropertyValueFactory<>("Target"));
         pastUnitColumn.setCellValueFactory(new PropertyValueFactory<>("Unit"));
         pastProgressColumn.setCellValueFactory(new PropertyValueFactory<>("Progress"));
@@ -268,7 +259,7 @@ public class GoalController implements Initializable {
         String[] styles = {"goalsHboxOdd", "goalsHboxEven"}; //Alternating style classes
 
 
-        //Create label such that pabel container fills all space available and is centered within.
+        //Create label such that label container fills all space available and is centered within.
         Region region1 = new Region();
         Region region2 = new Region();
         HBox.setHgrow(region1, Priority.ALWAYS);
@@ -384,18 +375,63 @@ public class GoalController implements Initializable {
      * Method for loading a user's current goals into the current goals table.
      */
     public void loadCurrentGoals() {
-        //Create holder for the table rows
-        ObservableList<GoalItem> goalRows = FXCollections.observableArrayList();
 
-        //Load rows into holder
+        //Empty current goals container
+        currentGoalsVbox.getChildren().clear();
+
+        int stylesIndex = 0; //Index for alternating styles
+        int count = 0; // Count rows presented
+
+        //For every goal
         for (Goal goal : user.getGoals()) {
             if (goal.isActive() && !goal.isCompleted()) { //If goal is active active and not completed
-                goalRows.add(new GoalItem(goal));
+                count++;
+
+                String[] styles = {"goalsHboxOdd", "goalsHboxEven"}; //Alternating style classes
+
+                //Create a column of labels such that the column is centered and the surrounding container
+                //fills all available space.
+                Region region1 = new Region();
+                Region region2 = new Region();
+                HBox.setHgrow(region1, Priority.ALWAYS);
+                HBox.setHgrow(region2, Priority.ALWAYS);
+                Label goalLabel = new Label(goal.toString());
+                Label progressLabel = new Label("Progress : " + goal.getProgress());
+                VBox innerVBox = new VBox(goalLabel, progressLabel);
+                HBox.setHgrow(innerVBox, Priority.ALWAYS);
+                innerVBox.setAlignment(Pos.CENTER);
+                HBox innerHBox = new HBox(region1, innerVBox, region2);
+                HBox.setHgrow(innerHBox, Priority.ALWAYS);
+                innerHBox.setAlignment(Pos.CENTER);
+
+
+                //Create button
+                Button button = new Button();
+                button.setText("Quit Goal");
+                button.setMinWidth(125); //Width set such that it doesn't change when text changes
+
+                //Set button action
+                button.setOnAction(e -> {
+                    user.quitGoal(goal);
+                    loadCurrentGoals(); //Reload goals
+                });
+
+                //Add button and labels to an HBox with content centered, CSS styled, and margins set
+                HBox hbox = new HBox(innerHBox, button);
+                hbox.getStyleClass().add(styles[stylesIndex]);
+                hbox.setAlignment(Pos.CENTER);
+                VBox.setMargin(hbox, new Insets(5, 5, 5, 5));
+
+                currentGoalsVbox.getChildren().add(hbox);
+
+                stylesIndex = ++stylesIndex%2; //Increment then mod 2
             }
         }
 
-        //Add rows to table
-        currentGoalsTable.setItems(goalRows);
+        if (count == 0) { //No goals presented
+            currentGoalsVbox.getChildren().add(new Label("No Current Goals, take a look at our suggestions in " +
+                    "Our Goals For You or set your own in Set Your Own"));
+        }
     }
 
     /**
@@ -407,7 +443,7 @@ public class GoalController implements Initializable {
 
         //Load rows into holder
         for (Goal goal : user.getGoals()) {
-            if (!goal.isActive() || goal.isCompleted()) { //if end date has passed for goal or goal is complete
+            if (goal.isCompleted()) { //if end date has passed for goal or goal is complete
                 goalRows.add(new GoalItem(goal));
             }
         }

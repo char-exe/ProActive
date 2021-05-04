@@ -1142,7 +1142,7 @@ public class DatabaseHandler
      */
     public ArrayList<SystemGoal> selectSystemGoals(String username, LocalDate endDate, SystemGoal.UpdatePeriod updatePeriod) {
         String sql = "SELECT target, unit, end_date, update_period, category, accepted FROM system_goal WHERE " +
-                "user_id = '" + getUserIDFromUsername(username) + "' AND end_date <= '" + endDate +
+                "user_id = '" + getUserIDFromUsername(username) + "' AND end_date >= '" + endDate +
                 "' AND update_period = '" + updatePeriod + "' AND category != 'DAY_TO_DAY'";
 
         ArrayList<SystemGoal> goals = new ArrayList<>();
@@ -1157,7 +1157,7 @@ public class DatabaseHandler
                 SystemGoal.Category category = SystemGoal.Category.valueOf(rs.getString("category"));
                 boolean accepted = rs.getBoolean("accepted");
 
-                goals.add(new SystemGoal(target, unit, date, updatePeriod, category, accepted));
+                goals.add(new SystemGoal(target, unit, date, update, category, accepted));
             }
         }
         catch (SQLException e) {
@@ -1312,7 +1312,27 @@ public class DatabaseHandler
                 System.out.println(e.getMessage());
             }
         }
+    }
 
+    /**
+     * Method to update the end date of a given goal for a given user in the database to today's date.
+     *
+     * @param username the user's username.
+     * @param goal the goal to updated.
+     */
+    public void quitGoalInDatabase(String username, Goal goal) {
+        String sql = "UPDATE goal SET end_date = '" + LocalDate.now().toString() + "' WHERE user_id = '" +
+                getUserIDFromUsername(username) + "' AND target = '" + goal.getTarget() + "' AND unit = '" +
+                goal.getUnit() + "' AND progress = '" + goal.getProgress() + "' AND end_date = '" +
+                goal.getEndDate().toString() + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /*

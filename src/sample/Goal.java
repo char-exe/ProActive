@@ -85,7 +85,7 @@ public abstract class Goal {
     /**
      * The end date of the goal.
      */
-    protected final LocalDate endDate;
+    protected LocalDate endDate;
     /**
      * The current progress of the goal.
      */
@@ -190,6 +190,14 @@ public abstract class Goal {
     }
 
     /**
+     * Method to mark a goal as inactive and update its end date.
+     */
+    public void quitGoal() {
+        this.endDate = LocalDate.now();
+        this.active = false;
+    }
+
+    /**
      * Increments the current progress by the passed amount, provided the goal is marked as ongoing. Updates the goal
      * status to completed if the target has been met.
      *
@@ -209,6 +217,11 @@ public abstract class Goal {
     }
 
     public String toString() {
+
+        if (this.unit.getMinimum() > -1) {
+            return (int) this.target + " " + this.unit.getUnitString() + " by " + this.endDate;
+        }
+
         return this.target + " " + this.unit.getUnitString() + " by " + this.endDate;
     }
 }
