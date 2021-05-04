@@ -3,13 +3,10 @@ package Controllers;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -28,11 +25,12 @@ import javafx.fxml.FXML;
  *
  * @author Samuel Scarfe
  *
- * @version 1.2
+ * @version 1.3
  *
  * 1.0 - First working version. Functionality for adding goals implemented with simple error checking.
  * 1.1 - Implemented functionality for checking current and past goals.
  * 1.2 - Implemented automatic goal generation. Extended goal setting for vitamins and minerals.
+ * 1.3 - Added goal management. Updated styling. Removed now superfluous inner class GoalItem.
  */
 
 public class GoalController implements Initializable {
@@ -60,12 +58,7 @@ public class GoalController implements Initializable {
     @FXML private VBox currentGoalsVbox;
 
     //Past Goals tab
-    @FXML private TableView<GoalItem> pastGoalsTable;
-    @FXML private TableColumn<GoalItem, Float> pastTargetColumn;
-    @FXML private TableColumn<GoalItem, String> pastUnitColumn;
-    @FXML private TableColumn<GoalItem, Float> pastProgressColumn;
-    @FXML private TableColumn<GoalItem, String> pastEndDateColumn;
-    @FXML private TableColumn<GoalItem, Boolean> pastCompletedColumn;
+    @FXML private VBox completedGoalsVbox;
 
     private User user;
     private DatabaseHandler dh;
@@ -167,16 +160,6 @@ public class GoalController implements Initializable {
                 loadPastGoals();
             }
         });
-
-        //Instantiate table placeholder texts
-        pastGoalsTable.setPlaceholder(new Label("No past goals, view current goals in Current Goals"));
-
-        //Instantiate table columns
-        pastTargetColumn.setCellValueFactory(new PropertyValueFactory<>("Target"));
-        pastUnitColumn.setCellValueFactory(new PropertyValueFactory<>("Unit"));
-        pastProgressColumn.setCellValueFactory(new PropertyValueFactory<>("Progress"));
-        pastEndDateColumn.setCellValueFactory(new PropertyValueFactory<>("EndDate"));
-        pastCompletedColumn.setCellValueFactory(new PropertyValueFactory<>("Completed"));
     }
 
     /**
@@ -438,18 +421,42 @@ public class GoalController implements Initializable {
      * Method for loading a user's past goals into the past goals table.
      */
     public void loadPastGoals() {
-        //Create holder for table rows
-        ObservableList<GoalItem> goalRows = FXCollections.observableArrayList();
+
+        completedGoalsVbox.getChildren().clear();
+
+        int stylesIndex = 0;
+        int count = 0;
 
         //Load rows into holder
         for (Goal goal : user.getGoals()) {
-            if (goal.isCompleted()) { //if end date has passed for goal or goal is complete
-                goalRows.add(new GoalItem(goal));
+            if (goal.isCompleted()) { //if goal is complete
+                count++;
+                String[] styles = {"goalsHboxOdd", "goalsHboxEven"}; //Alternating style classes
+
+                //Create an HBox for each goal containing a centered label
+                Region region1 = new Region();
+                Region region2 = new Region();
+                HBox.setHgrow(region1, Priority.ALWAYS);
+                HBox.setHgrow(region2, Priority.ALWAYS);
+                Label goalLabel = new Label(goal.toString());
+                HBox hbox = new HBox(region1, goalLabel, region2);
+                HBox.setHgrow(hbox, Priority.ALWAYS);
+                hbox.setAlignment(Pos.CENTER);
+
+                //Style the HBox and add to the parent container.
+                hbox.getStyleClass().add(styles[stylesIndex]);
+                VBox.setMargin(hbox, new Insets(5, 5, 5, 5));
+
+                completedGoalsVbox.getChildren().add(hbox);
+
+                stylesIndex = ++stylesIndex%2; //Increment then mod 2
             }
         }
 
-        //Add rows to table
-        pastGoalsTable.setItems(goalRows);
+        if (count == 0) { //No goals presented
+            currentGoalsVbox.getChildren().add(new Label("No Completed Goals, " +
+                    "take a look at your current goals in Current Goals"));
+        }
     }
 
     /**
@@ -544,119 +551,5 @@ public class GoalController implements Initializable {
         }
 
         return true; //All fields fine
-    }
-
-    /**
-     * Wrapper class for table rows, wraps target, unit, progress, end date, and completed status into a holding class.
-     */
-    public class GoalItem {
-        private SimpleFloatProperty target;
-        private SimpleStringProperty unit;
-        private SimpleFloatProperty progress;
-        private SimpleStringProperty endDate;
-        private SimpleBooleanProperty completed;
-
-        /**
-         * Constructs a goal item from a goal.
-         *
-         * @param goal The goal to be parsed as a goal item.
-         */
-        public GoalItem(Goal goal) {
-            this.target = new SimpleFloatProperty(goal.getTarget());
-            this.unit = new SimpleStringProperty(goal.getUnit().toString());
-            this.progress = new SimpleFloatProperty(goal.getProgress());
-            this.endDate = new SimpleStringProperty(goal.getEndDate().toString());
-            this.completed = new SimpleBooleanProperty(goal.isCompleted());
-        }
-
-        /**
-         * Gets the target for this goal item.
-         *
-         * @return the target for this goal item.
-         */
-        public Float getTarget() {
-            return this.target.get();
-        }
-
-        /**
-         * Sets the target for this goal item to the passed value.
-         *
-         * @param target the new target value.
-         */
-        public void setTarget(int target) {
-            this.target = new SimpleFloatProperty(target);
-        }
-
-        /**
-         * Gets the unit for this goal item.
-         *
-         * @return the nit for this goal item.
-         */
-        public String getUnit() {
-            return this.unit.get();
-        }
-
-        /**
-         * Sets the unit for this goal item to the passed value.
-         *
-         * @param unit the new unit value.
-         */
-        public void setUnit(String unit) {
-            this.unit = new SimpleStringProperty(unit);
-        }
-
-        /**
-         * Gets the progress for this goal item.
-         *
-         * @return the progress for this goal item.
-         */
-        public Float getProgress() {
-            return this.progress.get();
-        }
-
-        /**
-         * Sets the progress for this goal item to the passed value.
-         *
-         * @param progress the new progress value.
-         */
-        public void setProgress(float progress) {
-            this.progress = new SimpleFloatProperty(progress);
-        }
-
-        /**
-         * Gets the end date for this goal item.
-         *
-         * @return the end date for this goal item.
-         */
-        public String getEndDate() {
-            return this.endDate.get();
-        }
-
-        /**
-         * Sets the end date for this goal item to the passed value.
-         *
-         * @param endDate the new end date value.
-         */
-        public void setEndDate(String endDate) {
-            this.endDate = new SimpleStringProperty(endDate);
-        }
-
-        /**
-         * Gets the completed status for this goal item.
-         *
-         * @return the completed status for this goal item.
-         */
-        public Boolean getCompleted() {
-            return this.completed.get();
-        }
-
-        /**
-         * Sets the completed status for this goal item to the passed value.
-         *
-         * @param completed the new completed status value.
-         */
-        public void setCompleted(boolean completed) {
-            this.completed = new SimpleBooleanProperty(completed);
-        }
     }
 }
