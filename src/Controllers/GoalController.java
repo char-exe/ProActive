@@ -367,7 +367,15 @@ public class GoalController implements Initializable {
 
         //For every goal
         for (Goal goal : user.getGoals()) {
-            if (goal.isActive() && !goal.isCompleted()) { //If goal is active active and not completed
+            boolean isActive = false;
+            boolean isCompleted = false;
+
+            if (goal instanceof IndividualGoal) {
+                isActive = ((IndividualGoal) goal).isActive();
+                isCompleted = ((IndividualGoal) goal).isCompleted();
+            }
+
+            if (isActive && !isCompleted) { //If goal is active active and not completed
                 count++;
 
                 String[] styles = {"goalsHboxOdd", "goalsHboxEven"}; //Alternating style classes
@@ -429,7 +437,13 @@ public class GoalController implements Initializable {
 
         //Load rows into holder
         for (Goal goal : user.getGoals()) {
-            if (goal.isCompleted()) { //if goal is complete
+            boolean isCompleted = false;
+
+            if (goal instanceof IndividualGoal) {
+                isCompleted = ((IndividualGoal) goal).isCompleted();
+            }
+
+            if (isCompleted) { //if goal is complete
                 count++;
                 String[] styles = {"goalsHboxOdd", "goalsHboxEven"}; //Alternating style classes
 

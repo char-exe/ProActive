@@ -347,7 +347,7 @@ public class User {
         //for each goal
         for (Goal goal : goals) {
             //if the goal is updated
-            if (goal.updateProgress(unit, amount)) {
+            if (((IndividualGoal)goal).updateProgress(unit, amount)) {
                 //update the goal in the database
                 DatabaseHandler.getInstance().updateGoal(username, goal, amount);
             }
@@ -364,7 +364,7 @@ public class User {
         //for each goal
         for (Goal goal : goals) {
             //if the goal is updated
-            if (goal.updateProgress(unit, amount)) {
+            if (((IndividualGoal)goal).updateProgress(unit, amount)) {
                 //update the goal in the database
                 DatabaseHandler.getInstance().updateGoal(username, goal, amount);
             }
@@ -441,7 +441,7 @@ public class User {
         for (Goal g : this.goals) {
             if (g == goal) {
                 DatabaseHandler.getInstance().quitGoalInDatabase(this.username, goal);
-                g.quitGoal();
+                ((IndividualGoal)g).quitGoal();
 
             }
         }
