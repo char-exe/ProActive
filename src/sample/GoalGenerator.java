@@ -178,7 +178,7 @@ public class GoalGenerator {
             weeklyGoals.add(new SystemGoal(
                     goal.getTarget()*5,
                     goal.getUnit(),
-                    goal.getEndDate().plusDays(6),
+                    goal.getEndDate().plusDays(7),
                     SystemGoal.UpdatePeriod.WEEKLY,
                     goal.getCategory())
             );

@@ -386,7 +386,7 @@ public class User {
      * @return an ArrayList of SystemGoals for this user's daily fitness system goals.
      */
     public ArrayList<SystemGoal> getDailyFitness() {
-        return DatabaseHandler.getInstance().selectSystemGoals(
+        return DatabaseHandler.getInstance().selectDailyFitnessGoals(
                 this.username, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY
         );
     }
@@ -396,7 +396,7 @@ public class User {
      * @return an ArrayList of SystemGoals for this user's weekly fitness system goals.
      */
     public ArrayList<SystemGoal> getWeeklyFitness() {
-        return DatabaseHandler.getInstance().selectSystemGoals(
+        return DatabaseHandler.getInstance().selectWeeklyFitnessGoals(
                 this.username, LocalDate.now().plusDays(7), SystemGoal.UpdatePeriod.WEEKLY
         );
     }

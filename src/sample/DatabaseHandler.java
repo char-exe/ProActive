@@ -1140,10 +1140,46 @@ public class DatabaseHandler
      * @param updatePeriod the update period to search for, e.g. Daily.
      * @return an ArrayList of SystemGoals.
      */
-    public ArrayList<SystemGoal> selectSystemGoals(String username, LocalDate endDate, SystemGoal.UpdatePeriod updatePeriod) {
+    public ArrayList<SystemGoal> selectDailyFitnessGoals(String username, LocalDate endDate, SystemGoal.UpdatePeriod updatePeriod) {
         String sql = "SELECT target, unit, end_date, update_period, category, accepted FROM system_goal WHERE " +
-                "user_id = '" + getUserIDFromUsername(username) + "' AND end_date >= '" + endDate +
-                "' AND update_period = '" + updatePeriod + "' AND category != 'DAY_TO_DAY'";
+                "user_id = '" + getUserIDFromUsername(username) + "' AND end_date = '" + endDate +
+                "' AND update_period = 'DAILY' AND category != 'DAY_TO_DAY'";
+
+        ArrayList<SystemGoal> goals = new ArrayList<>();
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                float target = rs.getFloat("target");
+                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                LocalDate date = LocalDate.parse(rs.getString("end_date"));
+                SystemGoal.UpdatePeriod update = SystemGoal.UpdatePeriod.valueOf(rs.getString("update_period"));
+                SystemGoal.Category category = SystemGoal.Category.valueOf(rs.getString("category"));
+                boolean accepted = rs.getBoolean("accepted");
+
+                goals.add(new SystemGoal(target, unit, date, update, category, accepted));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return goals;
+    }
+
+    /**
+     * Method to select all SystemGoals for a particular username, end date, and update period, except those goals
+     * with category day to day.
+     *
+     * @param username the username of the user concerned.
+     * @param endDate the end date to search up to.
+     * @param updatePeriod the update period to search for, e.g. Daily.
+     * @return an ArrayList of SystemGoals.
+     */
+    public ArrayList<SystemGoal> selectWeeklyFitnessGoals(String username, LocalDate endDate, SystemGoal.UpdatePeriod updatePeriod) {
+        String sql = "SELECT target, unit, end_date, update_period, category, accepted FROM system_goal WHERE " +
+                "user_id = '" + getUserIDFromUsername(username) + "' AND end_date <= '" + endDate +
+                "'AND end_date > '" + endDate.minusDays(7) + "' AND update_period = 'WEEKLY' AND category != 'DAY_TO_DAY'";
 
         ArrayList<SystemGoal> goals = new ArrayList<>();
 
