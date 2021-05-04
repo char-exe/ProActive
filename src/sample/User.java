@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Samuel Scarfe
  * @author Evan Clayton
  *
- * @version 1.8
+ * @version 1.9
  *
  * 1.0 - Initial user class structure and their variables.
  * 1.1 - Added constructor, getters and setters.
@@ -28,6 +28,7 @@ import java.util.Set;
  * 1.6 - Added groupMembership array and corresponding methods
  * 1.7 - Implemented adding and updating goals.
  * 1.8 - Implemented automatic goal generation.
+ * 1.9 - Added functionality for including group goals.
  */
 public class User {
 
@@ -82,6 +83,7 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
         for (Goal goal : goals) {
             System.out.println(goal);
         }
@@ -109,6 +111,7 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
         for (Goal goal : goals) {
             System.out.println(goal);
         }
@@ -221,10 +224,20 @@ public class User {
         return this.goals;
     }
 
+    /**
+     * Gets the list of system goals for this user.
+     *
+     * @return this user's system goals as an ArrayList.
+     */
     public ArrayList<SystemGoal> getSystemGoals() {
         return this.systemGoals;
     }
 
+    /**
+     * Gets the list of group goals for this user.
+     *
+     * @return this user's group goals as an ArrayList.
+     */
     public ArrayList<GroupGoal> getGroupGoals() { return this.groupGoals; }
 
     /**
@@ -331,6 +344,11 @@ public class User {
         this.systemGoals = systemGoals;
     }
 
+    /**
+     * Method to set this user's group goals to the provided ArrayList.
+     *
+     * @param groupGoals this user's group goals.
+     */
     public void setGroupGoals(ArrayList<GroupGoal> groupGoals) { this.groupGoals = groupGoals; }
 
     /**
@@ -353,7 +371,7 @@ public class User {
         //for each goal
         for (Goal goal : goals) {
             //if the goal is updated
-            if (goal.updateProgress(unit, amount)) {
+            if (goal.updateProgress(unit, amount, this)) {
                 //update the goal in the database
                 DatabaseHandler.getInstance().updateGoal(username, goal, amount);
             }
@@ -370,7 +388,7 @@ public class User {
         //for each goal
         for (Goal goal : goals) {
             //if the goal is updated
-            if (goal.updateProgress(unit, amount)) {
+            if (goal.updateProgress(unit, amount, this)) {
                 //update the goal in the database
                 DatabaseHandler.getInstance().updateGoal(username, goal, amount);
             }
@@ -436,6 +454,12 @@ public class User {
     public void saveSystemGoals() {
         DatabaseHandler.getInstance().refreshSystemGoals(this.username, this.systemGoals);
     }
+
+    /**
+     * Method to save this user's group goals in the database. Intended for use whenever their values change such that
+     * their state will persist between logins.
+     */
+    public void saveGroupGoals() { DatabaseHandler.getInstance().refreshGroupGoals(this.username, this.groupGoals);}
 
     //Class-Specific Methods
     /*
@@ -602,6 +626,7 @@ public class User {
             return false;
         }
     }
+
 
     /**
      * Test Harness

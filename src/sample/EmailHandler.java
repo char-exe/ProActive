@@ -10,6 +10,7 @@ import javax.mail.internet.*;
  *
  * @author Owen Tasker
  * @author Samuel Scarfe
+ * @author Evan Clayton
  *
  * @version 1.3
  *
@@ -20,6 +21,9 @@ import javax.mail.internet.*;
  *       email and password.
  * 1.4 - Minor refactor to enforce the Singleton pattern, thereby ensuring that only one instance is created and
  *       that there is only one smtp connection.
+ * 1.5 - Added method for sending emails for group goal completion. Changed many email methods to accept a goal object
+ *       rather than a goalName as goalName does not exist, the goal.getMessageFragment() method is used instead
+ *       of goalName.
  *
  */
 public class EmailHandler {
@@ -173,10 +177,9 @@ public class EmailHandler {
      *
      * @param session     Takes a session object, this is required to send any emails
      * @param to          Takes a To Address, this is the address that the email will be sent to
-     * @param goalName    Takes the goal that has been completed
+     * @param goal        Takes the goal that has been completed
      */
-    public void sendGoalCompletion(Session session, String to, String goalName){
-        //Send an email as an invite to join a goal
+    public void sendGoalCompletion(Session session, String to, Goal goal){
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
@@ -185,7 +188,8 @@ public class EmailHandler {
                     InternetAddress.parse(to)
             );
             message.setSubject("You Have Completed A Goal!");
-            message.setText("You have successfully completed the goal \"" + goalName + "\" Congratulations!");
+            message.setText("You have successfully completed the goal \"" + goal.getMessageFragment()
+                    + "\" Congratulations!");
 
             Transport.send(message);
 
@@ -196,6 +200,34 @@ public class EmailHandler {
         }
     }
 
+    /**
+     * Method to send an email to a group member when a different member has completed a group goal.
+     *
+     * @param session     Takes a session object, this is required to send any emails.
+     * @param to          Takes a To Address, this is the address that the email will be sent to.
+     * @param goal        Takes the goal that has been completed.
+     * @param user        User that completed the goal.
+     */
+    public void sendGroupGoalCompletion(Session session, String to, Goal goal, User user){
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(to)
+            );
+            message.setSubject(user.getUsername() + " Has Completed A Group Goal!");
+            message.setText(user.getUsername() + " has successfully completed the group goal \""
+                    + goal.getMessageFragment() + "\" Wish Them Congratulations!");
+
+            Transport.send(message);
+
+            System.out.println("Goal Completion sent");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
         //General account for use with this application, dont worry about non-secure password as is ultimately
         //a throwaway account

@@ -85,12 +85,12 @@ public class NotificationHandler {
      * informing them of the goal's completion.
      *
      * @param email Email to send the message to.
-     * @param goalName The name of the completed goal.
+     * @param goal the completed goal.
      */
-    public void sendGoalNotificationWithEmail (String email, String goalName) {
-        String message = "You have completed the goal: " + goalName;
+    public void sendGoalNotificationWithEmail (String email, Goal goal) {
+        String message = "You have completed the goal: " + goal.getMessageFragment();
         displayNotification(message);
-        emailHandler.sendGoalCompletion(session, email, goalName);
+        emailHandler.sendGoalCompletion(session, email, goal);
     }
 
     /**
@@ -98,12 +98,12 @@ public class NotificationHandler {
      * informing them of the goal's completion.
      *
      * @param email Email to send the message to.
-     * @param goalName The name of the completed goal.
+     * @param goal the completed goal.
      */
-    public void sendGoalNotificationWithEmail_Blink (String email, String goalName) {
-        String message = "You have completed the goal: " + goalName;
+    public void sendGoalNotificationWithEmail_Blink (String email, Goal goal) {
+        String message = "You have completed the goal: " + goal.getMessageFragment();
         displayBlinkNotification(message);
-        emailHandler.sendGoalCompletion(session, email, goalName);
+        emailHandler.sendGoalCompletion(session, email, goal);
     }
 
     /**
@@ -111,12 +111,16 @@ public class NotificationHandler {
      * informing them of the goal's completion.
      *
      * @param email Email to send the message to.
-     * @param goalName The name of the completed goal.
+     * @param goal the completed goal.
      */
-    public void sendGoalNotificationWithEmail_Fade (String email, String goalName) {
-        String message = "You have completed the goal: " + goalName;
+    public void sendGoalNotificationWithEmail_Fade (String email, Goal goal) {
+        String message = "You have completed the goal: " + goal.getMessageFragment();
         displayFadeNotification(message);
-        emailHandler.sendGoalCompletion(session, email, goalName);
+        emailHandler.sendGoalCompletion(session, email, goal);
+    }
+
+    public void sendGroupEmail (String email, Goal goal, User user) {
+        emailHandler.sendGroupGoalCompletion(session, email, goal, user);
     }
 
 }

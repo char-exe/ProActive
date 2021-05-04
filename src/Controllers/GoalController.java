@@ -28,12 +28,14 @@ import javafx.fxml.FXML;
  * A controller for the goals page of the app.
  *
  * @author Samuel Scarfe
+ * @author Evan Clayton
  *
- * @version 1.2
+ * @version 1.3
  *
  * 1.0 - First working version. Functionality for adding goals implemented with simple error checking.
  * 1.1 - Implemented functionality for checking current and past goals.
  * 1.2 - Implemented automatic goal generation. Extended goal setting for vitamins and minerals.
+ * 1.3 - Added functionality for group goals tab.
  */
 
 public class GoalController implements Initializable {
@@ -42,6 +44,9 @@ public class GoalController implements Initializable {
 
     //Our Goals For You tab
     @FXML private VBox ourGoalsVbox;
+
+    //Group Goals tab
+    @FXML private VBox groupGoalsVbox;
 
     //Set Your Own tab
     @FXML private TextField dietAmountField;
@@ -442,6 +447,47 @@ public class GoalController implements Initializable {
         }
 
         return true; //All fields fine
+    }
+
+    /**
+     * Method to instantiate Group Goals tab. Assigns a row to each goal, with a button to accept the goal on
+     * the row.
+     */
+    public void showGroupGoals() {
+        //For goal in user's system goals
+        for (GroupGoal groupGoal : user.getGroupGoals()) {
+
+            //Add label and button for goal
+            HBox hbox = new HBox();
+            groupGoalsVbox.getChildren().add(hbox);
+            hbox.getChildren().add(new Label(groupGoal.toString()));
+            Button button = new Button();
+
+            //Set button text based on goal status
+            if (groupGoal.isAccepted()) {
+                button.setText("Accepted");
+            }
+            else {
+                button.setText("Click to accept");
+            }
+
+            //Set button action such that if the goal is not accepted it is added to the user's goals, set to
+            //accepted, updated in the database, and then the button updated.
+            EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent e) {
+                    if (!groupGoal.isAccepted()) {
+                        user.addGoal(new IndividualGoal(groupGoal));
+                        groupGoal.setAccepted(true);
+                        user.saveGroupGoals();
+                        button.setText("Accepted");
+                    }
+                }
+            };
+
+            button.setOnAction(event);
+
+            hbox.getChildren().add(button);
+        }
     }
 
     /**

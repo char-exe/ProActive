@@ -24,9 +24,24 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" exported="" name="JavaFX" level="application" />
-    <orderEntry type="library" exported="" name="Mail" level="application" />
-    <orderEntry type="library" exported="" name="JavaFX#" level="project" />
-    <orderEntry type="library" name="lib1" level="project" />
+    <orderEntry type="library" exported="" name="JavaFX15" level="application" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/javax.mail.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/sqlite-jdbc-3.32.3.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -10,4 +10,7 @@ public class GroupMember {
         this.user = user;
     }
 
+    public Group getGroup() { return group; }
+
+    public User getUser() { return user; }
 }
