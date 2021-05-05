@@ -103,3 +103,9 @@
     -fx-background-radius: 5 33 0 0;
     -fx-background-insets: 0 1 0 1, 0, 0;
 }
+
+.groupNode {
+    -fx-background-color: white;
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+}
