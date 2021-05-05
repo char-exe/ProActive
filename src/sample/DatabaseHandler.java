@@ -487,7 +487,7 @@ public class DatabaseHandler
      *
      * @return Returns a float representation of a weight
      */
-    public float getMostRecentWeightFromUsername(String username) {
+    public float getMostRecentWeightFromUsername(String username){
         int id =  getUserIDFromUsername(username);
 
         String sqlWeight = "SELECT * FROM weight_entry WHERE user_id = " + id + " ORDER BY entry_id DESC LIMIT 1";
@@ -501,8 +501,8 @@ public class DatabaseHandler
                 System.out.println("SQL NULL, There were no logged weight entries for this user");
             }
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        }catch (SQLException e){
+            System.out.println("SQLError");
         }
 
         return weight;
@@ -1378,6 +1378,7 @@ public class DatabaseHandler
      *
      * @return Returns the GroupID of the group we are checking
      */
+    /*
     public int getGroupIDFromName(String groupName){
         String sql = "SELECT group_id " +
                      "FROM group_table " +
@@ -1399,12 +1400,15 @@ public class DatabaseHandler
         return groupID;
     }
 
+     */
+
     /**
      * Method to change a group members group_role to member
      *
      * @param userName  Takes the username of the user having their role changed
      * @param groupName Takes the name of the group the change is taking place in
      */
+    /*
     public void removeAdmin(String userName, String groupName){
 
         int groupID = DatabaseHandler.getInstance().getGroupIDFromName(groupName);
@@ -1426,12 +1430,15 @@ public class DatabaseHandler
         }
     }
 
+     */
+
     /**
      * Method to change a group members group_role to admin
      *
      * @param userName  Takes the username of the user having their role changed
      * @param groupName Takes the name of the group the change is taking place in
      */
+    /*
     public void addAdmin(String userName, String groupName){
 
         int groupID = getInstance().getGroupIDFromName(groupName);
@@ -1453,12 +1460,15 @@ public class DatabaseHandler
         }
     }
 
+     */
+
     /**
      * Method to add a user to a group
      *
      * @param userName  userName of the user who is joining a group
      * @param groupName group the user is intending to join
      */
+    /*
     public void joinGroup(String userName, String groupName){
 
         int groupID = getInstance().getGroupIDFromName(groupName);
@@ -1477,8 +1487,10 @@ public class DatabaseHandler
         }
     }
 
+     */
+
 
     public static void main(String[] args) {
-        getInstance().joinGroup("OwenTest", "TestGroup1");
+        //getInstance().joinGroup("OwenTest", "TestGroup1");
     }
 }

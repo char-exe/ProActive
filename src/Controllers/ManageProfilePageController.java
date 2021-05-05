@@ -43,6 +43,22 @@ public class ManageProfilePageController implements Initializable {
     @FXML public Button showBMIButton;
     @FXML public Label BMILabel;
 
+    @FXML public TextField bodyFatWaistInput;
+    @FXML public TextField bodyFatNeckInput;
+    @FXML public TextField bodyFatHipsInput;
+    @FXML public Label bodyFatWaistPopUp;
+    @FXML public Label bodyFatNeckPopUp;
+    @FXML public Label bodyFatHipsPopUp;
+    @FXML public Button bodyFatSubmit;
+    @FXML public Label bodyFatLabel;
+
+    //https://www.regular-expressions.info/floatingpoint.html
+    //Regex for inputfields that will take doubles
+    private final String DOUBLEINPUTREGEX = "[-+]?[0-9]*\\.?[0-9]+";
+
+    //Regex for inputField checking
+    private final String INPUTFIELDNONNUMERIC = "^\\d*\\.?\\d*";
+
     /**
      * Pseudo-constructor for controllers, runs after FXML elements have been loaded in and as such allows for
      * modifying their behaviours (e.g. choicebox contents)
@@ -61,13 +77,30 @@ public class ManageProfilePageController implements Initializable {
 
         //Set heightField to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        heightField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    heightField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
+        heightField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)){
+                heightField.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            }
+        });
+
+        //Set bodyFatWaistInput to digits only
+        bodyFatWaistInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                bodyFatWaistInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            }
+        });
+
+        //Set bodyFatNeckInput to digits only
+        bodyFatNeckInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                bodyFatNeckInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            }
+        });
+
+        //Set bodyFatHipsInput to digits only
+        bodyFatHipsInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
+                bodyFatHipsInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
             }
         });
     }
@@ -79,11 +112,11 @@ public class ManageProfilePageController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
-        System.out.println(user.getAge());
-        System.out.println(user.getSex());
-        System.out.println(user.getWeight());
-        System.out.println(user.getHeight());
-        System.out.println(user);
+        bodyFatHipsInput.setEditable(this.user.getSex().equals("Female"));
+        System.out.println(this.user.getSex());
+        System.out.println(this.user);
+
+
     }
 
     /**
@@ -210,6 +243,31 @@ public class ManageProfilePageController implements Initializable {
     }
 
     /**
+     * Method to check that a string representing a double is a valid double before casting, copied and adapted from
+     * https://stackoverflow.com/questions/767759/occurrences-of-substring-in-a-string
+     *
+     * @param str String that we are checking
+     * @param valToFind Value that we are checking for
+     *
+     * @return Returns true if value is a valid double value (has less than 2 decimal points)
+     *
+     */
+    public boolean checkValidDouble(String str, String valToFind){
+        int lastIndex = 0;
+        int count = 0;
+
+        while(lastIndex != -1){
+            lastIndex = str.indexOf(valToFind, lastIndex);
+
+            if (lastIndex != -1){
+                count++;
+                lastIndex+=valToFind.length();
+            }
+        }
+        return count <= 1;
+    }
+
+    /**
      * Method to calculate BMI on a user to user basis
      *
      * @return Returns a float representing BMI
@@ -233,6 +291,83 @@ public class ManageProfilePageController implements Initializable {
             BMILabel.setText("??");
         }
 
+    }
+
+    /**
+     * Method to check Waist Input field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkWaistInput(){
+        String name = bodyFatWaistInput.getText();
+        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")){
+            bodyFatHipsPopUp.setText("");
+            return true;
+        }
+        else{
+            bodyFatWaistPopUp.setText("Invalid");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check Neck Input field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkNeckInput(){
+        String name = bodyFatNeckInput.getText();
+        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")){
+            bodyFatNeckPopUp.setText("");
+            return true;
+        }
+        else{
+            bodyFatNeckPopUp.setText("Invalid");
+            return false;
+        }
+    }
+
+    /**
+     * Method to check Hips Input field matches in regex
+     *
+     * @return True if check is passed
+     */
+    @FXML protected boolean checkHipsInput(){
+        String name = bodyFatHipsInput.getText();
+        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")){
+            bodyFatHipsPopUp.setText("");
+            return true;
+        }
+        else{
+            bodyFatHipsPopUp.setText("Invalid");
+            return false;
+        }
+    }
+
+    public boolean checkBodyFatInputs(){
+        return checkWaistInput() && checkNeckInput() && checkHipsInput();
+    }
+
+    @FXML private void bodyFatSubmitAction(ActionEvent actionEvent){
+
+        if (checkBodyFatInputs()){
+            float waist;
+            float neck;
+            float hips;
+            if (user.getSex().equals("Male")){
+                waist = Float.parseFloat(bodyFatWaistInput.getText());
+                neck = Float.parseFloat(bodyFatNeckInput.getText());
+                float bfp = (float) ((float) 495.0 / (1.0324 - (0.19077 * (Math.log10((double) waist - neck)))) +
+                                                            (0.15456 * Math.log10(user.getHeight()))) - 450;
+                System.out.println(bfp);
+                if (bodyFatLabel.getText().equals("??")){
+                    bodyFatLabel.setText(String.valueOf(bfp));
+                }
+                else{
+                    bodyFatLabel.setText("??");
+                }
+            }
+        }
     }
 }
 

@@ -149,7 +149,7 @@
                                     </VBox>
                                  </children>
                               </VBox>
-                              <VBox prefHeight="36.0" prefWidth="620.0" />
+                              <VBox prefHeight="16.0" prefWidth="620.0" />
                               <Separator prefWidth="200.0" />
                               <VBox prefHeight="201.0" prefWidth="620.0">
                                  <children>
@@ -168,70 +168,102 @@
                                              <children>
                                                 <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="185.0">
                                                    <children>
-                                                      <Label alignment="CENTER_RIGHT" prefHeight="21.0" prefWidth="55.0" text="Waist: " textAlignment="RIGHT">
+                                                      <Label alignment="CENTER_RIGHT" prefHeight="21.0" prefWidth="110.0" text="Waist (cm): " textAlignment="RIGHT">
                                                          <font>
                                                             <Font size="15.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField prefHeight="25.0" prefWidth="136.0" />
+                                                      <TextField fx:id="bodyFatWaistInput" prefHeight="25.0" prefWidth="120.0" />
                                                    </children>
                                                 </HBox>
-                                                <VBox prefHeight="58.0" prefWidth="150.0" />
+                                                <VBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="150.0">
+                                                   <children>
+                                                      <Label fx:id="bodyFatWaistPopUp" />
+                                                   </children></VBox>
                                                 <VBox prefHeight="58.0" prefWidth="266.0">
                                                    <children>
-                                                      <Label alignment="TOP_LEFT" prefHeight="47.0" prefWidth="265.0" text="Label">
+                                                      <Label alignment="TOP_LEFT" prefHeight="47.0" prefWidth="265.0" text="Measure the circumference of your waist around the navel for men and around the smallest width for women" wrapText="true">
                                                          <padding>
                                                             <Insets left="5.0" top="5.0" />
                                                          </padding>
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
                                                       </Label>
                                                    </children>
                                                 </VBox>
                                              </children>
                                           </HBox>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="620.0">
+                                          <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="620.0">
                                              <children>
                                                 <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="185.0">
                                                    <children>
-                                                      <Label alignment="CENTER_RIGHT" prefHeight="21.0" prefWidth="55.0" text="Neck: ">
+                                                      <Label alignment="CENTER_RIGHT" prefHeight="21.0" prefWidth="110.0" text="Neck (cm): ">
                                                          <font>
                                                             <Font size="15.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField prefHeight="25.0" prefWidth="136.0" />
+                                                      <TextField fx:id="bodyFatNeckInput" prefHeight="25.0" prefWidth="120.0" />
                                                    </children>
                                                 </HBox>
-                                                <HBox prefHeight="49.0" prefWidth="70.0" />
+                                                <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="70.0">
+                                                   <children>
+                                                      <Label fx:id="bodyFatNeckPopUp" />
+                                                   </children></HBox>
                                                 <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="80.0">
                                                    <children>
-                                                      <Button mnemonicParsing="false" text="Calculate" />
+                                                      <Button fx:id="bodyFatSubmit" mnemonicParsing="false" onAction="#bodyFatSubmitAction" text="Calculate" />
                                                    </children>
                                                 </VBox>
-                                                <VBox prefHeight="58.0" prefWidth="266.0" />
+                                                <VBox prefHeight="58.0" prefWidth="266.0">
+                                                   <children>
+                                                      <Label alignment="TOP_LEFT" prefHeight="47.0" prefWidth="265.0" text="Measure the circumference of the neck from below the larynx" wrapText="true">
+                                                         <padding>
+                                                            <Insets left="5.0" top="5.0" />
+                                                         </padding>
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children></VBox>
                                              </children>
                                           </HBox>
-                                          <HBox prefHeight="45.0" prefWidth="620.0">
+                                          <HBox prefHeight="58.0" prefWidth="620.0">
                                              <children>
                                                 <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="620.0">
                                                    <children>
                                                       <HBox alignment="CENTER_RIGHT" prefHeight="47.0" prefWidth="185.0">
                                                          <children>
-                                                            <Label alignment="CENTER_RIGHT" prefHeight="21.0" prefWidth="55.0" text="Hips: ">
+                                                            <Label alignment="CENTER_RIGHT" prefHeight="21.0" prefWidth="110.0" text="Hips (cm): ">
                                                                <font>
                                                                   <Font size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <TextField prefHeight="25.0" prefWidth="136.0" />
+                                                            <TextField fx:id="bodyFatHipsInput" editable="false" prefHeight="25.0" prefWidth="120.0" />
                                                          </children>
                                                       </HBox>
-                                                      <VBox prefHeight="200.0" prefWidth="150.0" />
-                                                      <VBox prefHeight="58.0" prefWidth="266.0" />
+                                                      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="150.0">
+                                                         <children>
+                                                            <Label fx:id="bodyFatHipsPopUp" />
+                                                         </children></VBox>
+                                                      <VBox prefHeight="58.0" prefWidth="266.0">
+                                                         <children>
+                                                            <Label alignment="TOP_LEFT" prefHeight="47.0" prefWidth="265.0" text="(Women only) Measure the circumference of the hips at the largest horizontal measure" wrapText="true">
+                                                               <padding>
+                                                                  <Insets left="5.0" top="5.0" />
+                                                               </padding>
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children></VBox>
                                                    </children>
                                                 </HBox>
                                              </children>
                                           </HBox>
                                           <VBox alignment="TOP_CENTER" prefHeight="24.0" prefWidth="620.0">
                                              <children>
-                                                <Label fx:id="BMILabel1" alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="118.0" text="??">
+                                                <Label fx:id="bodyFatLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="118.0" text="??">
                                                    <font>
                                                       <Font size="30.0" />
                                                    </font>

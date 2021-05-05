@@ -319,12 +319,15 @@ public class CreateAdvancedNutritionItemController implements Initializable {
 
     }
 
+    /**
+     * Method to cancel creating an advanced nutrition item and close the window
+     */
     @FXML public void cancelButtonAction(){
         Stage parentScene = (Stage) cancelButton.getScene().getWindow();
 
         parentScene.close();
-
     }
+
     /**
      * Method to check that a string representing a double is a valid double before casting, copied and adapted from
      * https://stackoverflow.com/questions/767759/occurrences-of-substring-in-a-string
