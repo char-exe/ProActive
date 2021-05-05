@@ -33,6 +33,9 @@ public class GoalGenerator {
      * @param user the user to generate goals for
      */
     public GoalGenerator(User user) {
+        if (user == null) {
+            throw new NullPointerException();
+        }
         this.user = user;
         this.db = DatabaseHandler.getInstance();
     }
