@@ -14,7 +14,7 @@ import java.time.LocalDate;
  *
  *
  */
-public class GroupGoal extends Goal{
+public class GroupGoal extends Goal {
 
     /**
      * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.

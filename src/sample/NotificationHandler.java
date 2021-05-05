@@ -43,8 +43,7 @@ public class NotificationHandler {
         }
         MainController controller = loader.<MainController>getController();
         this.mainController = controller;
-        Properties prop = emailHandler.SetUpEmailHandler();
-        this.session = emailHandler.createSession(prop);
+        this.session = emailHandler.createSession();
     }
 
     /**

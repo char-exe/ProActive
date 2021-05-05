@@ -77,28 +77,28 @@ public abstract class Goal {
     /**
      * The target amount for the goal.
      */
-    protected final float target;
+    protected float target;
     /**
      * The units the goal is concerned with.
      */
-    protected final Unit unit;
+    protected Unit unit;
     /**
      * The end date of the goal.
      */
-    protected final LocalDate endDate;
+    protected LocalDate endDate;
     /**
      * The current progress of the goal.
      */
     protected float progress;
-    /**
-     * The active status of the goal.
-     */
-    protected boolean active;
-    /**
-     * The completion status of the goal
-     */
-    protected boolean completed;
 
+
+
+    protected Goal() {
+        this.target = -1;
+        this.unit = null;
+        this.endDate = null;
+        this.progress = -1;
+    }
 
     /**
      * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
@@ -109,12 +109,12 @@ public abstract class Goal {
      * @param endDate the end date of the goal.
      */
     public Goal(float target, Unit unit, LocalDate endDate) {
+        checkConstructorInputs(target, unit, endDate);
+
         this.target    = target;
         this.unit      = unit;
         this.endDate   = endDate;
         this.progress  = 0;
-        this.active    = endDate.isAfter(LocalDate.now());
-        this.completed = progress >= target;
     }
 
     /**
@@ -127,12 +127,11 @@ public abstract class Goal {
      * @param progress  the current progress of the goal.
      */
     public Goal(float target, Unit unit, LocalDate endDate, float progress) {
+        checkConstructorInputs(target, unit, endDate, progress);
         this.target    = target;
         this.unit      = unit;
         this.endDate   = endDate;
         this.progress  = progress;
-        this.active    = endDate.isAfter(LocalDate.now());
-        this.completed = progress >= target;
     }
 
     /**
@@ -172,43 +171,51 @@ public abstract class Goal {
     }
 
     /**
-     * Gets the active status of this goal.
+     * Method for creating a String representation of this Goal.
      *
-     * @return the active status of this goal.
+     * @return a String representing this Goal.
      */
-    public boolean isActive() {
-        return this.active;
-    }
-
-    /**
-     * Gets the completed status of this goal.
-     *
-     * @return the completed status of this goal.
-     */
-    public boolean isCompleted() {
-        return this.completed;
-    }
-
-    /**
-     * Increments the current progress by the passed amount, provided the goal is marked as ongoing. Updates the goal
-     * status to completed if the target has been met.
-     *
-     * @param update the amount to increment progress by
-     */
-    public boolean updateProgress(Unit unit, float update) {
-        if (this.active && !this.completed && this.unit == unit) {
-
-            this.progress = this.progress + update;
-
-            if (this.progress > this.target) {
-                this.completed = true;
-            }
-            return true;
-        }
-        return false;
-    }
-
     public String toString() {
+
+        if (this.unit.getMinimum() > -1) { //If this is a fitness goal
+            //Strip decimal part of target
+            return (int) this.target + " " + this.unit.getUnitString() + " by " + this.endDate;
+        }
+
         return this.target + " " + this.unit.getUnitString() + " by " + this.endDate;
+    }
+
+    /**
+     * Private helper method for checking constructor inputs for the short constructor.
+     *
+     * @param target the target for this Goal.
+     * @param unit the unit for this Goal.
+     * @param endDate the endDate for this Goal.
+     */
+    private void checkConstructorInputs(float target, Unit unit, LocalDate endDate) {
+        if (target <= 0) {
+            throw new IllegalArgumentException();
+        }
+        if (unit == null) {
+            throw new NullPointerException();
+        }
+        if (endDate == null) {
+            throw new NullPointerException();
+        }
+    }
+
+    /**
+     * Private helper method for checking constructor inputs for the long constructor.
+     *
+     * @param target the target for this Goal.
+     * @param unit the unit for this Goal.
+     * @param endDate the endDate for this Goal.
+     * @param progress the progress for this Goal.
+     */
+    private void checkConstructorInputs(float target, Unit unit, LocalDate endDate, float progress) {
+        checkConstructorInputs(target, unit, endDate);
+        if (progress < 0) {
+            throw new IllegalArgumentException();
+        }
     }
 }

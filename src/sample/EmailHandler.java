@@ -1,6 +1,5 @@
 package sample;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -44,11 +43,11 @@ public class EmailHandler {
     }
 
     /**
-     * Method to set up the email settings
+     * Private helper method to set up the properties of the email handler.
      *
      * @return returns a Properties object suitable to begin sending emails
      */
-    public Properties SetUpEmailHandler() {
+    private static Properties setUpEmailHandler() {
 
         //Create Properties object, this will store information such as the source smtp server, port and others
         Properties prop = new Properties();
@@ -65,14 +64,12 @@ public class EmailHandler {
     /**
      * Method to begin a session, this is required for all mail operations
      *
-     * @param prop Takes in the system properties and properties about the smtp server
-     *
      * @return returns a Session object, this is a persistent object required in all mail sending methods
      */
-    public Session createSession(Properties prop){
+    public Session createSession(){
 
         //Create a session to send this email
-        return Session.getInstance(prop,
+        return Session.getInstance(setUpEmailHandler(),
                 new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(EMAIL, PASS);
@@ -201,11 +198,8 @@ public class EmailHandler {
         //a throwaway account
         EmailHandler email = new EmailHandler();
 
-        //Configure system to send emails, need to run this at start of each session
-        Properties prop = email.SetUpEmailHandler();
-
         //Create email session
-        Session session = email.createSession(prop);
+        Session session = email.createSession();
 
         //Send a basic verification email
         email.sendVerification(session, "owen.tasker@gmail.com", TokenHandler.createUniqueToken(5));

@@ -107,9 +107,6 @@ public class MainController implements Initializable {
 
         main.setCenter(scrollPane);
         toggleButtonFocus(homeButton);
-//        for (Goal goal : user.getSystemGoals()) {
-//            System.out.println(goal);
-//        }
         showNotification("");
 
         // Sets application window title

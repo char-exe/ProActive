@@ -82,9 +82,6 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
-        for (Goal goal : goals) {
-            System.out.println(goal);
-        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -109,9 +106,6 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
-        for (Goal goal : goals) {
-            System.out.println(goal);
-        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -339,6 +333,13 @@ public class User {
      * @param goal the goal to be added.
      */
     public void addGoal(Goal goal) {
+        if (goal == null) {
+            throw new NullPointerException();
+        }
+        if (goal instanceof SystemGoal) {
+            throw new IllegalArgumentException();
+        }
+
         this.goals.add(goal);
         DatabaseHandler.getInstance().insertGoal(this.getUsername(), goal);
     }
@@ -349,28 +350,17 @@ public class User {
      * @param unit   the unit which has been input as part of a logged activity.
      * @param amount the amount of the unit which has been logged.
      */
-    public void updateGoals(Goal.Unit unit, int amount) {
-        //for each goal
-        for (Goal goal : goals) {
-            //if the goal is updated
-            if (goal.updateProgress(unit, amount)) {
-                //update the goal in the database
-                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
-            }
-        }
-    }
-
-    /**
-     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
-     *
-     * @param unit   the unit which has been input as part of a logged activity.
-     * @param amount the amount of the unit which has been logged.
-     */
     public void updateGoals(Goal.Unit unit, float amount) {
+        if (unit == null) {
+            throw new NullPointerException();
+        }
+        if (amount < 1) {
+            throw new IllegalArgumentException();
+        }
         //for each goal
         for (Goal goal : goals) {
             //if the goal is updated
-            if (goal.updateProgress(unit, amount)) {
+            if (((IndividualGoal)goal).updateProgress(unit, amount)) {
                 //update the goal in the database
                 DatabaseHandler.getInstance().updateGoal(username, goal, amount);
             }
@@ -392,9 +382,7 @@ public class User {
      * @return an ArrayList of SystemGoals for this user's daily fitness system goals.
      */
     public ArrayList<SystemGoal> getDailyFitness() {
-        return DatabaseHandler.getInstance().selectSystemGoals(
-                this.username, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY
-        );
+        return DatabaseHandler.getInstance().selectDailyFitnessGoals(this.username, LocalDate.now().plusDays(1));
     }
 
     /**
@@ -402,9 +390,7 @@ public class User {
      * @return an ArrayList of SystemGoals for this user's weekly fitness system goals.
      */
     public ArrayList<SystemGoal> getWeeklyFitness() {
-        return DatabaseHandler.getInstance().selectSystemGoals(
-                this.username, LocalDate.now().plusDays(7), SystemGoal.UpdatePeriod.WEEKLY
-        );
+        return DatabaseHandler.getInstance().selectWeeklyFitnessGoals(this.username, LocalDate.now().plusDays(7)        );
     }
 
     /**
@@ -415,6 +401,13 @@ public class User {
      * @return an ArrayList of SystemGoals.
      */
     public ArrayList<IndividualGoal> getMaxCompletedGoals(LocalDate earliest) {
+        if (earliest == null) {
+            throw new NullPointerException();
+        }
+        if (earliest.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException();
+        }
+
         return DatabaseHandler.getInstance().selectMaxCompletedGoals(this.username, earliest);
     }
 
@@ -426,6 +419,12 @@ public class User {
      * @return a float representing the average work rate for that unit over the time period.
      */
     public float getAverageWorkRate(Goal.Unit unit, int daysEarlier) {
+        if (unit == null) {
+            throw new NullPointerException();
+        }
+        if (daysEarlier < 1) {
+            throw new IllegalArgumentException();
+        }
         return DatabaseHandler.getInstance().selectAverageWorkRate(this.username, unit, daysEarlier);
     }
 
@@ -435,6 +434,24 @@ public class User {
      */
     public void saveSystemGoals() {
         DatabaseHandler.getInstance().refreshSystemGoals(this.username, this.systemGoals);
+    }
+
+    /**
+     * Method to mark a goal as not active and update it's end date to today's date, functionally equivalent to
+     * quitting it.
+     *
+     * @param goal the goal to quit.
+     */
+    public void quitGoal(Goal goal) {
+        if (goal == null) {
+            throw new NullPointerException();
+        }
+        for (Goal g : this.goals) {
+            if (g == goal) {
+                ((IndividualGoal)g).quitGoal();
+                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, goal);
+            }
+        }
     }
 
     //Class-Specific Methods

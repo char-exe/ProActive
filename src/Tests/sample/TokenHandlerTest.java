@@ -4,6 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit testing for TokenHandler.
+ *
+ * @author Samuel Scarfe
+ */
+
 class TokenHandlerTest {
 
     @Test
