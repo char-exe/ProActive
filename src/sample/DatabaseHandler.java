@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Contains ways to interact with the backend database of the ProActive app, contains a number of
@@ -1422,7 +1424,7 @@ public class DatabaseHandler
     public void insertIndividualGroupGoal(String username, Goal goal) {
         String sql = "INSERT INTO goal (user_id, target, unit, progress, end_date, group_id) VALUES('" +
                 getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
-                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "," +
+                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "','" +
                 goal.getGroup_id() + "')";
 
         try {
@@ -1460,6 +1462,53 @@ public class DatabaseHandler
         }
         return username;
     }
+
+    /**
+     * Method to insert a token for a group invite into the database with an expiry time of 30 minutes from method call.
+     *
+     * @param group_id id of the group the invite is for.
+     * @param token token used for the invite.
+     */
+
+    public void insertGroupInvite (int group_id, String token) {
+        LocalDateTime current_time = LocalDateTime.now();
+        LocalDateTime expiry_time = current_time.plusMinutes(30);//set time for 30 minutes from now
+        String expiry_time_string = expiry_time.toString();
+
+        String sql = "INSERT INTO group_invites(group_id, token, expiry_time) VALUES('" +
+                group_id + "','" + token + "','" + expiry_time_string + "')";
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkGroupInvite (String token) {
+        LocalDateTime current_time = LocalDateTime.now();
+
+        String sql = "SELECT expiry_time FROM group_invites WHERE " + "token = '" + token + "'";
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql))
+        {
+            while (rs.next())
+            {
+                String expiry_time_string = rs.getString("expiry_time");
+                LocalDateTime expiry_time = LocalDateTime.parse(expiry_time_string);
+                if
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+
+
+    }
+
 
 /* Method to get group object from group_id
     public Group getGroup (int group_id) {

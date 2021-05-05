@@ -246,7 +246,7 @@ public class EmailHandler {
                     Message.RecipientType.TO,
                     InternetAddress.parse(to)
             );
-            message.setSubject(username + ", you have requested your forgotten password. Your passowrd is "
+            message.setSubject(username + ", you have requested your forgotten password. Your password is "
                     + "as follows \n" + password);
 
             Transport.send(message);
@@ -256,6 +256,12 @@ public class EmailHandler {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendGroupInviteEmail (Session session, String to) {
+        String token = TokenHandler.createUniqueToken();
+
+
     }
 
     public static void main(String[] args) {
