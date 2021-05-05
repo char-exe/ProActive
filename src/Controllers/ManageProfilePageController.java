@@ -11,6 +11,7 @@ import sample.User;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -208,17 +209,26 @@ public class ManageProfilePageController implements Initializable {
         return true;
     }
 
+    /**
+     * Method to calculate BMI on a user to user basis
+     *
+     * @return Returns a float representing BMI
+     */
     private float calculateBMI(){
         float userHeightMeters = (float) (user.getHeight()/39.97);
-        return (user.getWeight()/userHeightMeters);
+        return (user.getWeight()/(userHeightMeters*userHeightMeters));
     }
 
+    /**
+     * Method to calculate BMI and display/hide it on a button press
+     *
+     * @param actionEvent JavaFX defined parameter
+     */
     @FXML private void showBMIButtonAction(ActionEvent actionEvent){
-        System.out.println(user.getHeight());
-        System.out.println(user.getWeight());
+        DecimalFormat df = new DecimalFormat("#.##");
         float BMI = calculateBMI();
-        if (!BMILabel.getText().equals("??")){
-            BMILabel.setText(String.valueOf(BMI));
+        if (BMILabel.getText().equals("??")){
+            BMILabel.setText(String.valueOf(df.format(BMI)));
         }else{
             BMILabel.setText("??");
         }

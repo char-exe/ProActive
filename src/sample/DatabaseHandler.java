@@ -74,29 +74,6 @@ public class DatabaseHandler
     private static final DatabaseHandler INSTANCE = new DatabaseHandler();
     private static final String CONNECTION = "jdbc:sqlite:proactive.db";
 
-    public enum dbTables{
-        ACTIVITY, EXERCISE, FOOD, MEAL, USER, WEIGHT_ENTRY;
-
-        public enum activityColumns {
-            ACTIVITY_ID, EXERCISE_ID, USER_ID, DURATION
-        }
-        public enum exerciseColumns {
-            ID, NAME, BURN_RATE
-        }
-        public enum foodColumns{
-            ID, NAME, KCAL, PROTEIN, FAT, CARBS, SUGAR, FIBRE, CHOLESTEROL
-        }
-        public enum mealColumns{
-            MEAL_ID, MEAL_CATEGORY, FOOD_ID, USER_ID, DATE_OF, QUANTITY
-        }
-        public enum userColumns{
-            USER_ID, FIRST_NAME, LAST_NAME, DOB, HEIGHT, SEX, USERNAME, HASH, SALT, EMAIL
-        }
-        public enum weightEntryColumns{
-            ENTRY_ID, USER_ID, WEIGHT, DATE
-        }
-    }
-
     private Connection conn;
 
     /**
@@ -117,29 +94,6 @@ public class DatabaseHandler
      */
     public static DatabaseHandler getInstance() {
         return INSTANCE;
-    }
-
-    /**
-     * Method to select all information from a table, returns a ResultSet which will contain the contents of
-     * aforementioned table
-     *
-     * @param table takes in a dbTable enum, this is to ensure type safety
-     *
-     * @return Returns a ResultSet which will contain a large amount of information which can be analyzed by another
-     *         process
-     */
-    public ResultSet selectAllFromTable(dbTables table){
-
-        String sql = "SELECT * FROM " + table.toString().toLowerCase();
-
-        try {
-             Statement stmt  = this.conn.createStatement();
-             return stmt.executeQuery(sql);
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
     }
 
     /**
@@ -407,6 +361,7 @@ public class DatabaseHandler
      *
      * @param itemName Takes in the a name to be searched in the database.
      *
+     * @return Returns a NutritionItem Object
      */
     public NutritionItem getNutritionItem(String itemName)  {
         String searchName = itemName + '%';
@@ -447,6 +402,7 @@ public class DatabaseHandler
      *
      * @param itemName Takes in the a name to be searched in the database.
      *
+     * @return Returns an ExerciseItem object
      */
     public ExerciseItem getExerciseItem(String itemName)  {
         String searchName = itemName + '%';
@@ -524,6 +480,13 @@ public class DatabaseHandler
 
     }
 
+    /**
+     * Method to get the most recent weight entry for a user, if returned value is 0, print error to console
+     *
+     * @param username Takes in the username of the user we are checking
+     *
+     * @return Returns a float representation of a weight
+     */
     public float getMostRecentWeightFromUsername(String username) {
         int id =  getUserIDFromUsername(username);
 
@@ -534,6 +497,10 @@ public class DatabaseHandler
         System.out.println(sqlWeight);
         try (Statement stmt = this.conn.createStatement(); ResultSet rs = stmt.executeQuery(sqlWeight)) {
             weight = rs.getFloat("weight");
+            if (weight == 0){
+                System.out.println("SQL NULL, There were no logged weight entries for this user");
+            }
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -1195,7 +1162,6 @@ public class DatabaseHandler
      * @param sex the sex the query, male or female
      * @param age the age to query
      * @return a float representing the intake target for this user
-     * @throws SQLException if a SQL error occurs such as a database error.
      */
     public float getRecommendedIntake(Goal.Unit unit, int age, String sex) {
         String sql = "SELECT amount FROM daily_intake WHERE unit = '" + unit + "' AND gender = '" + sex +

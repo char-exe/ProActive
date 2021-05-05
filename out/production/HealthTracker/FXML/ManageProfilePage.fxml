@@ -127,14 +127,14 @@
                               </HBox>
                               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="620.0">
                                  <children>
-                                    <VBox prefHeight="100.0" prefWidth="178.0">
+                                    <VBox prefHeight="100.0" prefWidth="114.0">
                                        <children>
                                           <VBox alignment="CENTER" prefHeight="50.0" prefWidth="178.0">
                                              <children>
                                                 <Button fx:id="showBMIButton" mnemonicParsing="false" onAction="#showBMIButtonAction" prefHeight="49.0" prefWidth="108.0" text="Show BMI" />
                                              </children>
                                           </VBox>
-                                          <VBox alignment="CENTER" prefHeight="50.0" prefWidth="178.0">
+                                          <VBox alignment="CENTER" prefHeight="50.0" prefWidth="238.0">
                                              <children>
                                                 <Label fx:id="BMILabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="51.0" prefWidth="118.0" text="??">
                                                    <font>
@@ -147,6 +147,11 @@
                                     </VBox>
                                  </children>
                               </HBox>
+                              <VBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="620.0">
+                                 <children>
+                                    <Label text="Values Will Be Calculated Most Recently Input Weight and Height " />
+                                 </children>
+                              </VBox>
                            </children>
                         </VBox>
                      </center>
