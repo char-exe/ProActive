@@ -125,43 +125,26 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <HBox prefHeight="57.0" prefWidth="620.0">
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="620.0">
                                  <children>
-                                    <HBox prefHeight="57.0" prefWidth="251.0">
+                                    <VBox prefHeight="100.0" prefWidth="178.0">
                                        <children>
-                                          <Label prefHeight="17.0" prefWidth="38.0" text="Height">
-                                             <HBox.margin>
-                                                <Insets top="5.0" />
-                                             </HBox.margin>
-                                          </Label>
-                                          <TextField prefHeight="25.0" prefWidth="84.0">
-                                             <HBox.margin>
-                                                <Insets left="5.0" />
-                                             </HBox.margin>
-                                          </TextField>
-                                          <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="123.0" text="Use Last Recorded" />
+                                          <VBox alignment="CENTER" prefHeight="50.0" prefWidth="178.0">
+                                             <children>
+                                                <Button fx:id="showBMIButton" mnemonicParsing="false" onAction="#showBMIButtonAction" prefHeight="49.0" prefWidth="108.0" text="Show BMI" />
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="CENTER" prefHeight="50.0" prefWidth="178.0">
+                                             <children>
+                                                <Label fx:id="BMILabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="51.0" prefWidth="118.0" text="??">
+                                                   <font>
+                                                      <Font size="30.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </VBox>
                                        </children>
-                                    </HBox>
-                                    <HBox alignment="CENTER" prefHeight="57.0" prefWidth="132.0">
-                                       <children>
-                                          <Button mnemonicParsing="false" text="Calculate" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefHeight="57.0" prefWidth="257.0">
-                                       <children>
-                                          <Label prefHeight="17.0" prefWidth="43.0" text="Weight">
-                                             <HBox.margin>
-                                                <Insets top="5.0" />
-                                             </HBox.margin>
-                                          </Label>
-                                          <TextField prefHeight="25.0" prefWidth="84.0">
-                                             <HBox.margin>
-                                                <Insets left="5.0" />
-                                             </HBox.margin>
-                                          </TextField>
-                                          <Button mnemonicParsing="false" prefHeight="15.0" prefWidth="122.0" text="Use Last Recorded" />
-                                       </children>
-                                    </HBox>
+                                    </VBox>
                                  </children>
                               </HBox>
                            </children>

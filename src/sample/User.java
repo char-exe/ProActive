@@ -117,6 +117,38 @@ public class User {
     }
 
     /**
+     * Constructs a user object with only firstname, surname, sex, dob, email, height, weight and username initialised.
+     * @param firstname Stores the firstname of the User
+     * @param surname Stores the surname of the User
+     * @param sex Stores the sex of the User
+     * @param dob Stores the date of birth of the User
+     * @param email Stores the unique email address of the User
+     * @param username Stores the unique username of the User
+     * @param height Stores the height of the user
+     * @param weight Stores the weight of the user
+     *
+     */
+    public User(String firstname, String surname, Sex sex, LocalDate dob, String email, String username, float height, float weight) {
+        checkConstructorInputs(firstname, surname, sex, dob, email, username);
+
+        this.firstname = firstname;
+        this.surname = surname;
+        this.sex = sex;
+        this.dob = dob;
+        this.email = email;
+        this.username = username;
+        this.height = height;
+        this.weight = weight;
+
+        this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
+
+        this.setAge();  //Takes the current date and DOB and calculates the current age of the user
+    }
+
+    /**
      * Getter for firstname
      *
      * @return returns the User's firstname

@@ -524,6 +524,23 @@ public class DatabaseHandler
 
     }
 
+    public float getMostRecentWeightFromUsername(String username) {
+        int id =  getUserIDFromUsername(username);
+
+        String sqlWeight = "SELECT * FROM weight_entry WHERE user_id = " + id + " ORDER BY entry_id DESC LIMIT 1";
+
+        float weight = -1;
+
+        System.out.println(sqlWeight);
+        try (Statement stmt = this.conn.createStatement(); ResultSet rs = stmt.executeQuery(sqlWeight)) {
+            weight = rs.getFloat("weight");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return weight;
+    }
+
     /**
      * Method to build a user object based on the username provided
      *
@@ -531,8 +548,10 @@ public class DatabaseHandler
      *
      * @return returns a complete user object for use as a persistent user throughout application
      */
-    public User createUserObjectFromUsername(String username) throws SQLException {
-        String sql = "SELECT first_name, last_name, sex, dob, email, username " +
+    public User createUserObjectFromUsername(String username) throws SQLException{
+        float weight = getMostRecentWeightFromUsername(username);
+
+        String sql = "SELECT first_name, last_name, sex, dob, email, username, height " +
                 "FROM user WHERE username = '" + username + "'";
 
         User user = null;
@@ -545,7 +564,9 @@ public class DatabaseHandler
                     User.Sex.valueOf(rs.getString("sex").toUpperCase(Locale.ROOT)),
                     LocalDate.parse(rs.getString("dob")),
                     rs.getString("email"),
-                    rs.getString("username")
+                    rs.getString("username"),
+                    rs.getFloat("height"),
+                    weight
             );
         }
 

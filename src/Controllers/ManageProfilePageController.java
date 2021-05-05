@@ -39,6 +39,9 @@ public class ManageProfilePageController implements Initializable {
     @FXML public Label heightLabel;
     @FXML public Label sexLabel;
 
+    @FXML public Button showBMIButton;
+    @FXML public Label BMILabel;
+
     /**
      * Pseudo-constructor for controllers, runs after FXML elements have been loaded in and as such allows for
      * modifying their behaviours (e.g. choicebox contents)
@@ -75,6 +78,10 @@ public class ManageProfilePageController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
+        System.out.println(user.getAge());
+        System.out.println(user.getSex());
+        System.out.println(user.getWeight());
+        System.out.println(user.getHeight());
         System.out.println(user);
     }
 
@@ -199,6 +206,23 @@ public class ManageProfilePageController implements Initializable {
         }
 
         return true;
+    }
+
+    private float calculateBMI(){
+        float userHeightMeters = (float) (user.getHeight()/39.97);
+        return (user.getWeight()/userHeightMeters);
+    }
+
+    @FXML private void showBMIButtonAction(ActionEvent actionEvent){
+        System.out.println(user.getHeight());
+        System.out.println(user.getWeight());
+        float BMI = calculateBMI();
+        if (!BMILabel.getText().equals("??")){
+            BMILabel.setText(String.valueOf(BMI));
+        }else{
+            BMILabel.setText("??");
+        }
+
     }
 }
 
