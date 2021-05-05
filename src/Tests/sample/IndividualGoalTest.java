@@ -6,6 +6,12 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit testing for Goal and IndividualGoal
+ *
+ * @author Samuel Scarfe
+ */
+
 class IndividualGoalTest {
 
     @Test

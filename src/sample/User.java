@@ -333,6 +333,13 @@ public class User {
      * @param goal the goal to be added.
      */
     public void addGoal(Goal goal) {
+        if (goal == null) {
+            throw new NullPointerException();
+        }
+        if (goal instanceof SystemGoal) {
+            throw new IllegalArgumentException();
+        }
+
         this.goals.add(goal);
         DatabaseHandler.getInstance().insertGoal(this.getUsername(), goal);
     }
@@ -343,24 +350,13 @@ public class User {
      * @param unit   the unit which has been input as part of a logged activity.
      * @param amount the amount of the unit which has been logged.
      */
-    public void updateGoals(Goal.Unit unit, int amount) {
-        //for each goal
-        for (Goal goal : goals) {
-            //if the goal is updated
-            if (((IndividualGoal)goal).updateProgress(unit, amount)) {
-                //update the goal in the database
-                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
-            }
-        }
-    }
-
-    /**
-     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
-     *
-     * @param unit   the unit which has been input as part of a logged activity.
-     * @param amount the amount of the unit which has been logged.
-     */
     public void updateGoals(Goal.Unit unit, float amount) {
+        if (unit == null) {
+            throw new NullPointerException();
+        }
+        if (amount < 1) {
+            throw new IllegalArgumentException();
+        }
         //for each goal
         for (Goal goal : goals) {
             //if the goal is updated
@@ -409,6 +405,13 @@ public class User {
      * @return an ArrayList of SystemGoals.
      */
     public ArrayList<IndividualGoal> getMaxCompletedGoals(LocalDate earliest) {
+        if (earliest == null) {
+            throw new NullPointerException();
+        }
+        if (earliest.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException();
+        }
+
         return DatabaseHandler.getInstance().selectMaxCompletedGoals(this.username, earliest);
     }
 
@@ -420,6 +423,12 @@ public class User {
      * @return a float representing the average work rate for that unit over the time period.
      */
     public float getAverageWorkRate(Goal.Unit unit, int daysEarlier) {
+        if (unit == null) {
+            throw new NullPointerException();
+        }
+        if (daysEarlier < 1) {
+            throw new IllegalArgumentException();
+        }
         return DatabaseHandler.getInstance().selectAverageWorkRate(this.username, unit, daysEarlier);
     }
 
@@ -438,14 +447,17 @@ public class User {
      * @param goal the goal to quit.
      */
     public void quitGoal(Goal goal) {
+        if (goal == null) {
+            throw new NullPointerException();
+        }
         for (Goal g : this.goals) {
             if (g == goal) {
-                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, goal);
                 ((IndividualGoal)g).quitGoal();
-
+                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, goal);
             }
         }
     }
+
     //Class-Specific Methods
     /*
     public ArrayList<Goal> getGoals(){

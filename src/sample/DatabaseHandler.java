@@ -1476,8 +1476,8 @@ public class DatabaseHandler
      */
     public void removeAdmin(String userName, String groupName){
 
-        int groupID = DatabaseHandler.getInstance().getGroupIDFromName(groupName);
-        int userID = getInstance().getUserIDFromUsername(userName);
+        int groupID = getGroupIDFromName(groupName);
+        int userID = getUserIDFromUsername(userName);
 
 
         String sql = "UPDATE group_membership" +
@@ -1503,8 +1503,8 @@ public class DatabaseHandler
      */
     public void addAdmin(String userName, String groupName){
 
-        int groupID = getInstance().getGroupIDFromName(groupName);
-        int userID = getInstance().getUserIDFromUsername(userName);
+        int groupID = getGroupIDFromName(groupName);
+        int userID = getUserIDFromUsername(userName);
 
 
         String sql = "UPDATE group_membership" +
@@ -1513,7 +1513,7 @@ public class DatabaseHandler
                     " AND group_id = " + groupID + ";";
         System.out.println(sql);
 
-        try{
+        try {
             Statement stmt = this.conn.createStatement();
             stmt.executeUpdate(sql);
         }
@@ -1530,8 +1530,8 @@ public class DatabaseHandler
      */
     public void joinGroup(String userName, String groupName){
 
-        int groupID = getInstance().getGroupIDFromName(groupName);
-        int userID = getInstance().getUserIDFromUsername(userName);
+        int groupID = getGroupIDFromName(groupName);
+        int userID = getUserIDFromUsername(userName);
 
 
         String sql = "INSERT INTO group_membership (User_Id, Group_Id, Group_Role) " +

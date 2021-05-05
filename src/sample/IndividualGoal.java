@@ -61,8 +61,6 @@ public class IndividualGoal extends Goal {
      * @param systemGoal a goal generated automatically by the system and accepted by the user.
      */
     public IndividualGoal(SystemGoal systemGoal) {
-        super();
-
         if (systemGoal == null) {
             throw new NullPointerException();
         }

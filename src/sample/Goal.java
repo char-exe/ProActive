@@ -185,6 +185,13 @@ public abstract class Goal {
         return this.target + " " + this.unit.getUnitString() + " by " + this.endDate;
     }
 
+    /**
+     * Private helper method for checking constructor inputs for the short constructor.
+     *
+     * @param target the target for this Goal.
+     * @param unit the unit for this Goal.
+     * @param endDate the endDate for this Goal.
+     */
     private void checkConstructorInputs(float target, Unit unit, LocalDate endDate) {
         if (target < 1) {
             throw new IllegalArgumentException();
@@ -197,6 +204,14 @@ public abstract class Goal {
         }
     }
 
+    /**
+     * Private helper method for checking constructor inputs for the long constructor.
+     *
+     * @param target the target for this Goal.
+     * @param unit the unit for this Goal.
+     * @param endDate the endDate for this Goal.
+     * @param progress the progress for this Goal.
+     */
     private void checkConstructorInputs(float target, Unit unit, LocalDate endDate, float progress) {
         checkConstructorInputs(target, unit, endDate);
         if (progress < 0) {
