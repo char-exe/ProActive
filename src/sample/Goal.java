@@ -193,7 +193,7 @@ public abstract class Goal {
      * @param endDate the endDate for this Goal.
      */
     private void checkConstructorInputs(float target, Unit unit, LocalDate endDate) {
-        if (target < 1) {
+        if (target <= 0) {
             throw new IllegalArgumentException();
         }
         if (unit == null) {

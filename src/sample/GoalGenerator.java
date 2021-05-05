@@ -96,7 +96,10 @@ public class GoalGenerator {
             //get the User's RDI
             float target = db.getRecommendedIntake(unit, user.getAge(), user.getSex());
             //generate a goal for today with the RDI
-            goals.add(new SystemGoal(target, unit, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY, SystemGoal.Category.DAY_TO_DAY));
+            if (target > 0) {
+                System.out.println(target);
+                goals.add(new SystemGoal(target, unit, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY, SystemGoal.Category.DAY_TO_DAY));
+            }
         }
 
         return goals;
