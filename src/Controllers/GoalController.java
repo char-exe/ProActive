@@ -420,8 +420,11 @@ public class GoalController implements Initializable {
         }
 
         if (count == 0) { //No goals presented
-            currentGoalsVbox.getChildren().add(new Label("No Current Goals, take a look at our suggestions in " +
-                    "Our Goals For You or set your own in Set Your Own"));
+            Label label = new Label("No Current Goals, take a look at our suggestions in " +
+                    "Our Goals For You or set your own in Set Your Own");
+            label.setWrapText(true);
+            label.getStyleClass().add("centerLabel");
+            currentGoalsVbox.getChildren().add(label);
         }
     }
 
@@ -468,8 +471,11 @@ public class GoalController implements Initializable {
         }
 
         if (count == 0) { //No goals presented
-            currentGoalsVbox.getChildren().add(new Label("No Completed Goals, " +
-                    "take a look at your current goals in Current Goals"));
+
+            Label label = new Label("No Completed Goals, take a look at your current goals in Current Goals");
+            label.setWrapText(true);
+            label.getStyleClass().add("centerLabel");
+            completedGoalsVbox.getChildren().add(label);
         }
     }
 
