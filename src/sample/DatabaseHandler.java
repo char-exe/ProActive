@@ -71,8 +71,7 @@ import java.util.Locale;
  * 1.13 - Implemented automatic goal generation.
  * 1.14 - Added exceptions. Some slight refactoring to remove unused methods and add private helper methods.
  */
-public class DatabaseHandler
-{
+public class DatabaseHandler {
     private static final DatabaseHandler INSTANCE = new DatabaseHandler();
     private static final String CONNECTION = "jdbc:sqlite:proactive.db";
     private Connection conn;
@@ -80,7 +79,7 @@ public class DatabaseHandler
     /**
      * Private default constructor. Enforces the Singleton pattern.
      */
-    private DatabaseHandler(){
+    private DatabaseHandler() {
         try {
             conn = DriverManager.getConnection(CONNECTION);
         }
