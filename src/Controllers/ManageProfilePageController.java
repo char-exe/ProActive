@@ -96,7 +96,7 @@ public class ManageProfilePageController implements Initializable {
         //Try to update database then user. Show appropriate success/fail message to user.
         if (checkDob(date)){
             try {
-                dh.editValue("user", "dob", date.toString(), user.getUsername());
+                dh.editValue("user", "dob", date.toString(), "username", user.getUsername());
                 user.setDob(date);
                 dobLabel.setText("Date of Birth updated to " + date.toString());
             }
@@ -122,7 +122,7 @@ public class ManageProfilePageController implements Initializable {
 
             //Try to update database then user. Show appropriate success/fail message to user.
             try {
-                dh.editValue("user", "height", Integer.parseInt(updatedHeight), user.getUsername());
+                dh.editValue("user", "height", Integer.parseInt(updatedHeight), "username", user.getUsername());
                 user.setHeight(heightValue);
                 heightLabel.setText("Height updated to " + updatedHeight + heightUnit);
             }
@@ -140,7 +140,7 @@ public class ManageProfilePageController implements Initializable {
 
             //Try to update database then user. Show appropriate success/fail message to user.
             try {
-                dh.editValue("user", "sex", userSex.toString(), user.getUsername());
+                dh.editValue("user", "sex", userSex.toString(), "username", user.getUsername());
                 user.setSex(userSex);
                 sexLabel.setText("Sex updated to " + userSex.toString());
             }

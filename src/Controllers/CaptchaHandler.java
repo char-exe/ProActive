@@ -131,7 +131,7 @@ public class CaptchaHandler implements Initializable {
             //Create the initial token to be sent
             String token = TokenHandler.createUniqueToken(5);
             eh.sendVerification(session, user.getEmail(), token);
-            db.addTokenEntry(token, System.currentTimeMillis()/1000);
+            db.addTokenEntry(token);
 
             Stage parentScene = (Stage) captchaSubmit.getScene().getWindow();
             Stage stage = new Stage();
