@@ -131,3 +131,7 @@
     -fx-border-width: 2 2 2 2;
     -fx-alignment: center;
 }
+
+.centerLabel {
+    -fx-text-alignment: center;
+}
