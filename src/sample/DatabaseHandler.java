@@ -203,7 +203,11 @@ public class DatabaseHandler {
      *
      * @return returns an String which represents the users username
      */
-    public String getUsernameFromUserID(int userID){
+    public String getUsernameFromUserID(int userID) {
+        if (userID < 0) {
+            throw new IllegalArgumentException();
+        }
+
         String username = "";
 
         String sql = "SELECT username FROM user WHERE user_id = " + userID;
@@ -541,26 +545,9 @@ public class DatabaseHandler {
     public void editValue(
             String table, String column, int valToUpdateTo, String identifyingColumn, String identifyingValue)
             throws SQLException {
-        if (table == null) {
-            throw new NullPointerException("Table cannot be null");
-        }
-        if (column == null) {
-            throw new NullPointerException("Column cannot be null");
-        }
-        if (identifyingColumn == null) {
-            throw new NullPointerException("Identifying column cannot be null");
-        }
-        if (identifyingValue == null) {
-            throw new NullPointerException("Identifying value cannoy be null");
-        }
+        String strValToUpdateTo = Integer.toString(valToUpdateTo);
 
-        String sql = "UPDATE " + table.toUpperCase(Locale.ROOT) +
-                     " SET " + column.toUpperCase(Locale.ROOT) + " = " + valToUpdateTo +
-                     " WHERE " + identifyingColumn + " = '" + identifyingValue + "'";
-
-            Statement stmt  = this.conn.createStatement();
-            stmt.executeUpdate(sql);
-
+        editValue(table, column, strValToUpdateTo, identifyingColumn, identifyingValue);
     }
 
     /**
@@ -832,7 +819,7 @@ public class DatabaseHandler {
      * @param duration the duration undertaken for.
      * @throws SQLException when a database access error occurs.
      */
-    public void insertExercise(String username, String exercise, int duration) throws SQLException{
+    public void insertExercise(String username, String exercise, int duration) throws SQLException {
         if (username == null) {
             throw new NullPointerException();
         }
@@ -901,6 +888,9 @@ public class DatabaseHandler {
         }
         if (quantity < 1) {
             throw new IllegalArgumentException();
+        }
+        if (date == null) {
+            throw new NullPointerException();
         }
         if (date.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException();

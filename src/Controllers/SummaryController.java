@@ -109,53 +109,6 @@ public class SummaryController implements Initializable
     }
 
     /**
-     * Private method for formatting a NumberAxis to show dates for the past week instead of ordinals.
-     * Centers today's date at ordinal 7.
-     *
-     * @param DateAxis A NumberAxis object for a JavaFX Chart
-     */
-    private void formatAxis(NumberAxis DateAxis)
-    {
-        //Set tick labels by calling the formatter method and passing an anonymous StringConverter.
-        DateAxis.setTickLabelFormatter(new DateConverter());
-    }
-
-    /**
-     * Private nested utility class for converting dates represented by strings to ordinals and vice versa.
-     */
-    private static class DateConverter extends StringConverter<Number>
-    {
-        /**
-         * Converts a Number to a String representing a date.
-         * @param number The numeric tick mark.
-         * @return A string representation of a date with 7 equal to today's date.
-         */
-        @Override
-        public String toString(Number number)
-        {
-            //https://stackoverflow.com/questions/11882926/how-to-subtract-x-day-from-a-date-object-in-java
-            return LocalDate.now().minusDays(7 - number.intValue()).toString();
-        }
-
-        /**
-         * Converts a String representation of a date to an ordinal by comparing the date to today.
-         *
-         * @param s A string representing a date.
-         * @return An ordinal representation of the date, 7 equals today.
-         */
-        //https://stackoverflow.com/questions/13037654/subtract-two-dates-in-java
-        @Override
-        public Number fromString(String s)
-        {
-            LocalDate d1 = LocalDate.now();
-            LocalDate d2 = LocalDate.parse(s);
-            Duration diff = Duration.between(d1.atStartOfDay(), d2.atStartOfDay());
-
-            return diff.toDays() + 7;
-        }
-    }
-
-    /**
      * Sets the data for the caloric intake to the net caloric intake for the past 7 days, including today.
      */
     public void setData() {
@@ -204,4 +157,50 @@ public class SummaryController implements Initializable
         weightChart.getData().add(weightSeries);
     }
 
+    /**
+     * Private method for formatting a NumberAxis to show dates for the past week instead of ordinals.
+     * Centers today's date at ordinal 7.
+     *
+     * @param DateAxis A NumberAxis object for a JavaFX Chart
+     */
+    private void formatAxis(NumberAxis DateAxis)
+    {
+        //Set tick labels by calling the formatter method and passing a DateConverter.
+        DateAxis.setTickLabelFormatter(new DateConverter());
+    }
+
+    /**
+     * Private nested utility class for converting dates represented by strings to ordinals and vice versa.
+     */
+    private static class DateConverter extends StringConverter<Number>
+    {
+        /**
+         * Converts a Number to a String representing a date.
+         * @param number The numeric tick mark.
+         * @return A string representation of a date with 7 equal to today's date.
+         */
+        @Override
+        public String toString(Number number)
+        {
+            //https://stackoverflow.com/questions/11882926/how-to-subtract-x-day-from-a-date-object-in-java
+            return LocalDate.now().minusDays(7 - number.intValue()).toString();
+        }
+
+        /**
+         * Converts a String representation of a date to an ordinal by comparing the date to today.
+         *
+         * @param s A string representing a date.
+         * @return An ordinal representation of the date, 7 equals today.
+         */
+        //https://stackoverflow.com/questions/13037654/subtract-two-dates-in-java
+        @Override
+        public Number fromString(String s)
+        {
+            LocalDate d1 = LocalDate.now();
+            LocalDate d2 = LocalDate.parse(s);
+            Duration diff = Duration.between(d1.atStartOfDay(), d2.atStartOfDay());
+
+            return diff.toDays() + 7;
+        }
+    }
 }
