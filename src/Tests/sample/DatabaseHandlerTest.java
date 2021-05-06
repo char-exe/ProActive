@@ -251,7 +251,7 @@ class DatabaseHandlerTest {
 
         assertThrows(NullPointerException.class, () -> dh.createUserObjectFromUsername(null));
     }
-
+/*
     @Test
     void nullUsernameGetIntakeEntries() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
@@ -279,6 +279,8 @@ class DatabaseHandlerTest {
 
         assertThrows(NullPointerException.class, () -> dh.getWeightEntries(null));
     }
+
+ */
 
     @Test
     void nullNameGetExerciseId() {

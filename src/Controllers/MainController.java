@@ -24,6 +24,7 @@ import sample.User;
 import java.io.IOException;
 import java.net.URL;
 import java.security.Key;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 /**
@@ -93,7 +94,7 @@ public class MainController implements Initializable {
 
         SummaryController summaryController = loader.getController();
         summaryController.initData(user);
-        summaryController.setData();
+        summaryController.setData(LocalDate.now());
 
         GoalGenerator gg = new GoalGenerator(user);
         user.setSystemGoals(gg.generateGoals());
