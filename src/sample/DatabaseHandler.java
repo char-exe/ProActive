@@ -589,7 +589,7 @@ public class DatabaseHandler {
      * @param username The user's username.
      * @return A Map of String representation of a date against calories intaken.
      */
-    public HashMap<String, Double> getIntakeEntries(String username) {
+    public HashMap<String, Double> getIntakeEntries(String username, LocalDate latest) {
         if (username == null) {
             throw new NullPointerException();
         }
@@ -631,18 +631,17 @@ public class DatabaseHandler {
      * @param username The user's username.
      * @return A Map of String representation of a date against minutes spent exercising.
      */
-    public HashMap<String, Integer> getSpentEntries(String username) {
+    public HashMap<String, Integer> getSpentEntries(String username, LocalDate latest) {
         if (username == null) {
             throw new NullPointerException();
         }
 
         HashMap<String, Integer> entries = new HashMap<>();
-        LocalDate today = LocalDate.now();
-        LocalDate lastWeek = today.minusDays(6);
+        LocalDate prevWeek = latest.minusDays(6);
 
         String sql = "SELECT date_of, duration FROM activity WHERE user_id = '" +
-                      getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + lastWeek.toString() +
-                     "' AND '" + today.toString() + "'";
+                      getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + latest.toString() +
+                     "' AND '" + prevWeek.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
@@ -671,18 +670,17 @@ public class DatabaseHandler {
      * @param username The user's username.
      * @return A Map of String representation of a date against calories burned.
      */
-    public HashMap<String, Float> getBurnedEntries(String username) {
+    public HashMap<String, Float> getBurnedEntries(String username, LocalDate latest) {
         if (username == null) {
             throw new NullPointerException();
         }
 
         HashMap<String, Float> entries = new HashMap<>();
-        LocalDate today = LocalDate.now();
-        LocalDate lastWeek = today.minusDays(6);
+        LocalDate prevWeek = latest.minusDays(6);
 
         String sql = "SELECT date_of, duration, burn_rate FROM activity INNER JOIN exercise " +
                      "ON activity.exercise_id = exercise.id WHERE user_id = '" + getUserIDFromUsername(username) +
-                     "' AND date_of BETWEEN '" + lastWeek.toString() + "' AND '" + today.toString() + "'";
+                     "' AND date_of BETWEEN '" + prevWeek.toString() + "' AND '" + latest.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
@@ -712,18 +710,17 @@ public class DatabaseHandler {
      * @param username The user's username.
      * @return A Map of String representation of a date against weight entries.
      */
-    public HashMap<String, Integer> getWeightEntries(String username) {
+    public HashMap<String, Integer> getWeightEntries(String username, LocalDate latest) {
         if (username == null) {
             throw new NullPointerException();
         }
 
         HashMap<String, Integer> entries = new HashMap<>();
-        LocalDate today = LocalDate.now();
-        LocalDate lastWeek = today.minusDays(6);
+        LocalDate prevWeek = latest.minusDays(6);
 
         String sql = "SELECT date_of, weight FROM weight_entry WHERE user_id = '" +
-                getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + lastWeek.toString() +
-                "' AND '" + today.toString() + "'";
+                getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + prevWeek.toString() +
+                "' AND '" + latest.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {

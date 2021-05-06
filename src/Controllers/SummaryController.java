@@ -94,14 +94,7 @@ public class SummaryController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
-        //format each axis from showing numeric tick marks to showing the past 7 days
-        formatAxis(intakeDateAxis);
-        formatAxis(burnDateAxis);
-        formatAxis(spentDateAxis);
-        formatAxis(weightDateAxis);
-
         dh = DatabaseHandler.getInstance();
-
     }
 
     public void initData(User user) {
@@ -111,24 +104,30 @@ public class SummaryController implements Initializable
     /**
      * Sets the data for the caloric intake to the net caloric intake for the past 7 days, including today.
      */
-    public void setData() {
+    public void setData(LocalDate latest) {
+        //format each axis from showing numeric tick marks to showing the past 7 days
+        formatAxis(intakeDateAxis, latest);
+        formatAxis(burnDateAxis, latest);
+        formatAxis(spentDateAxis, latest);
+        formatAxis(weightDateAxis, latest);
+
         //Create a data series for each graph and set names
         XYChart.Series<Number, Number> intakeSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> burnSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> spentSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
 
-        HashMap<String, Double> intakeData = dh.getIntakeEntries(user.getUsername());
-        HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername());
-        HashMap<String, Float> burnedData = dh.getBurnedEntries(user.getUsername());
-        HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername());
+        HashMap<String, Double> intakeData = dh.getIntakeEntries(user.getUsername(), latest);
+        HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername(), latest);
+        HashMap<String, Float> burnedData = dh.getBurnedEntries(user.getUsername(), latest);
+        HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername(), latest);
 
         //Set Welcome message to Users first name
         welcomeBackLabel.setText("Welcome Back " + user.getFirstname() + "!");
 
 
         //Add data to each series.
-        DateConverter dc = new DateConverter();
+        DateConverter dc = new DateConverter(latest);
 
         for (String key : intakeData.keySet())
         {
@@ -163,10 +162,10 @@ public class SummaryController implements Initializable
      *
      * @param DateAxis A NumberAxis object for a JavaFX Chart
      */
-    private void formatAxis(NumberAxis DateAxis)
+    private void formatAxis(NumberAxis DateAxis, LocalDate latest)
     {
         //Set tick labels by calling the formatter method and passing a DateConverter.
-        DateAxis.setTickLabelFormatter(new DateConverter());
+        DateAxis.setTickLabelFormatter(new DateConverter(latest));
     }
 
     /**
@@ -174,6 +173,12 @@ public class SummaryController implements Initializable
      */
     private static class DateConverter extends StringConverter<Number>
     {
+        private LocalDate latest;
+
+        public DateConverter(LocalDate latest) {
+            this.latest = latest;
+        }
+
         /**
          * Converts a Number to a String representing a date.
          * @param number The numeric tick mark.
@@ -183,7 +188,7 @@ public class SummaryController implements Initializable
         public String toString(Number number)
         {
             //https://stackoverflow.com/questions/11882926/how-to-subtract-x-day-from-a-date-object-in-java
-            return LocalDate.now().minusDays(7 - number.intValue()).toString();
+            return latest.minusDays(7 - number.intValue()).toString();
         }
 
         /**
@@ -196,7 +201,7 @@ public class SummaryController implements Initializable
         @Override
         public Number fromString(String s)
         {
-            LocalDate d1 = LocalDate.now();
+            LocalDate d1 = latest;
             LocalDate d2 = LocalDate.parse(s);
             Duration diff = Duration.between(d1.atStartOfDay(), d2.atStartOfDay());
 
