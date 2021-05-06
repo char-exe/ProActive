@@ -593,14 +593,16 @@ public class DatabaseHandler {
         if (username == null) {
             throw new NullPointerException();
         }
+        if (latest == null) {
+            throw new NullPointerException();
+        }
 
         HashMap<String, Double> entries = new HashMap<>();
-        LocalDate today = LocalDate.now();
-        LocalDate lastWeek = today.minusDays(6);
+        LocalDate prevWeek = latest.minusDays(6);
 
         String sql = "SELECT date_of, quantity, kcal FROM meal INNER JOIN food ON meal.food_id = food.id " +
                      "WHERE user_id = '" + getUserIDFromUsername(username) + "' AND date_of BETWEEN '" +
-                      lastWeek.toString() + "' AND '" + today.toString() + "'";
+                      prevWeek.toString() + "' AND '" + latest.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
@@ -633,6 +635,9 @@ public class DatabaseHandler {
      */
     public HashMap<String, Integer> getSpentEntries(String username, LocalDate latest) {
         if (username == null) {
+            throw new NullPointerException();
+        }
+        if (latest == null) {
             throw new NullPointerException();
         }
 
@@ -674,6 +679,9 @@ public class DatabaseHandler {
         if (username == null) {
             throw new NullPointerException();
         }
+        if (latest == null) {
+            throw new NullPointerException();
+        }
 
         HashMap<String, Float> entries = new HashMap<>();
         LocalDate prevWeek = latest.minusDays(6);
@@ -712,6 +720,9 @@ public class DatabaseHandler {
      */
     public HashMap<String, Integer> getWeightEntries(String username, LocalDate latest) {
         if (username == null) {
+            throw new NullPointerException();
+        }
+        if (latest == null) {
             throw new NullPointerException();
         }
 
