@@ -309,11 +309,6 @@ public class EmailHandler {
         }
     }
 
-    public void sendGroupInviteEmail (Session session, String to) {
-        String token = TokenHandler.createUniqueToken();
-
-
-    }
 
     public static void main(String[] args) {
         //General account for use with this application, dont worry about non-secure password as is ultimately

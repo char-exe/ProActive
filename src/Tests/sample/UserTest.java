@@ -770,9 +770,6 @@ class UserTest {
 
         ArrayList<GroupGoal> groupGoals = new ArrayList<>();
 
-        groupGoals.add(new GroupGoal(1.0f, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1)));
-        groupGoals.add(new GroupGoal(1.0f, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1)));
-        groupGoals.add(new GroupGoal(1.0f, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1)));
 
         batman.setGroupGoals(groupGoals);
 

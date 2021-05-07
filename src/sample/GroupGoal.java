@@ -33,7 +33,7 @@ public class GroupGoal extends Goal{
         super(target, unit, endDate);
         this.group_id = group_id;
         DatabaseHandler db = DatabaseHandler.getInstance();
-        //this.group = db.getGroupFromID(group_id);
+        this.group = db.getGroupObjectFromGroupId(group_id);
     }
 
     /**
@@ -51,7 +51,7 @@ public class GroupGoal extends Goal{
         this.group_id = group_id;
         this.accepted = accepted;
         DatabaseHandler db = DatabaseHandler.getInstance();
-        //this.group = db.getGroupFromID(group_id);
+        this.group = db.getGroupObjectFromGroupId(group_id);
     }
 
     public Group getGroup() { return group; }

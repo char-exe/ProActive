@@ -361,7 +361,7 @@ public class DatabaseHandler {
 
         LocalDateTime now = LocalDateTime.now();
 
-        String sql = "INSERT INTO regTokens (tokenVal, sent_time) VALUES" +
+        String sql = "INSERT INTO regTokens (tokenVal) VALUES" +
                 "('" + tokenVal + "', '" + now.toString() + "')";
 
         try {
@@ -390,7 +390,7 @@ public class DatabaseHandler {
             throw new NullPointerException();
         }
 
-        String sql = "SELECT tokenVal, sent_time FROM regTokens WHERE tokenVal = '" + tokenVal + "'";
+        String sql = "SELECT tokenVal FROM regTokens WHERE tokenVal = '" + tokenVal + "'";
 
         Statement stmt  = this.conn.createStatement();
 
@@ -1026,7 +1026,7 @@ public class DatabaseHandler {
      * Adds a token to the groupInvTable
      *
      * @param username the user's username.
-     * @param goal the updated goal to be updated in the database.
+     *
      */
     public void addInvToken(String tokenVal, int time, String groupName, String username) {
         //Get userID from the username
@@ -1712,6 +1712,7 @@ public class DatabaseHandler {
         }
     }
 
+    /*
     public boolean checkGroupInvite (String token) {
         LocalDateTime current_time = LocalDateTime.now();
 
@@ -1723,14 +1724,14 @@ public class DatabaseHandler {
             {
                 String expiry_time_string = rs.getString("expiry_time");
                 LocalDateTime expiry_time = LocalDateTime.parse(expiry_time_string);
-                if
+
             }
         }
         catch (SQLException e)
         {
             System.out.println(e.getMessage());
         }
-
+    */
 
     /**
      * Method to get the groupID based on the groupName

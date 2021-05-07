@@ -50,6 +50,7 @@ public abstract class Goal {
          */
         private final int minimum;
 
+
         private final String unitString;
 
         /**
@@ -92,6 +93,9 @@ public abstract class Goal {
      */
     protected float progress;
 
+    protected boolean active;
+
+    protected boolean completed;
 
     /**
      * If the goal was derived from a group goal it will have a group id, else this value will be 0
