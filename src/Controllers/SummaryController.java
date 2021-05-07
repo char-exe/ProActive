@@ -125,109 +125,11 @@ public class SummaryController implements Initializable
     /**
      * Sets the data for the caloric intake to the net caloric intake for the past 7 days, including today.
      */
-    public void initChartData(LocalDate latest) {
-        //format each axis from showing numeric tick marks to showing the past 7 days
-        formatAxis(intakeDateAxis, latest);
-        formatAxis(burnDateAxis, latest);
-        formatAxis(spentDateAxis, latest);
-        formatAxis(weightDateAxis, latest);
-
-        //Create a data series for each graph and set names
-        XYChart.Series<Number, Number> intakeSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> burnSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> spentSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
-
-        HashMap<String, Double> intakeData = dh.getIntakeEntries(user.getUsername(), latest);
-        HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername(), latest);
-        HashMap<String, Float> burnedData = dh.getBurnedEntries(user.getUsername(), latest);
-        HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername(), latest);
-
-
-        //Add data to each series.
-        DateConverter dc = new DateConverter(latest);
-
-        for (String key : intakeData.keySet())
-        {
-            intakeSeries.getData().add(new XYChart.Data<>(dc.fromString(key), intakeData.get(key)));
-        }
-
-        for (String key : spentData.keySet())
-        {
-            spentSeries.getData().add(new XYChart.Data<>(dc.fromString(key), spentData.get(key)));
-        }
-
-        for (String key : burnedData.keySet())
-        {
-            burnSeries.getData().add(new XYChart.Data<>(dc.fromString(key), burnedData.get(key)));
-        }
-
-        for (String key : weightData.keySet())
-        {
-            weightSeries.getData().add(new XYChart.Data<>(dc.fromString(key), weightData.get(key)));
-        }
-
-        //Add series to graphs.
-        intakeChart.getData().add(intakeSeries);
-        burnChart.getData().add(burnSeries);
-        spentChart.getData().add(spentSeries);
-        weightChart.getData().add(weightSeries);
-
-        for (XYChart.Data<Number, Number> d : intakeSeries.getData()) {
-
-            String value = d.getYValue().toString();
-
-            if(value.endsWith(".0"))
-                value = value.substring(0, value.length() - 2);
-
-
-            Tooltip t = new Tooltip(value);
-            t.setShowDelay(javafx.util.Duration.millis(0));
-            Tooltip.install(d.getNode(), t);
-
-        }
-
-        for (XYChart.Data<Number, Number> d : burnSeries.getData()) {
-
-            String value = d.getYValue().toString();
-
-            if(value.endsWith(".0"))
-                value = value.substring(0, value.length() - 2);
-
-
-            Tooltip t = new Tooltip(value);
-            t.setShowDelay(javafx.util.Duration.millis(0));
-            Tooltip.install(d.getNode(), t);
-
-        }
-
-        for (XYChart.Data<Number, Number> d : spentSeries.getData()) {
-
-            String value = d.getYValue().toString();
-
-            if(value.endsWith(".0"))
-                value = value.substring(0, value.length() - 2);
-
-
-            Tooltip t = new Tooltip(value);
-            t.setShowDelay(javafx.util.Duration.millis(0));
-            Tooltip.install(d.getNode(), t);
-
-        }
-
-        for (XYChart.Data<Number, Number> d : weightSeries.getData()) {
-
-            String value = d.getYValue().toString();
-
-            if(value.endsWith(".0"))
-                value = value.substring(0, value.length() - 2);
-
-
-            Tooltip t = new Tooltip(value);
-            t.setShowDelay(javafx.util.Duration.millis(0));
-            Tooltip.install(d.getNode(), t);
-
-        }
+    public void initChartData() {
+        setWeightChartData();
+        setSpentChartData();
+        setIntakeChartData();
+        setBurnChartData();
 
         weightChartNextWeekButton.setTooltip(nextWeekTooltip);
         spentChartNextWeekButton.setTooltip(nextWeekTooltip);
@@ -241,7 +143,7 @@ public class SummaryController implements Initializable
 
     }
 
-    public void setWeightChartData(){
+    private void setWeightChartData(){
 
         weightChart.getData().clear();
 
@@ -281,7 +183,7 @@ public class SummaryController implements Initializable
 
     }
 
-    public void setIntakeChartData(){
+    private void setIntakeChartData(){
 
         intakeChart.getData().clear();
 
@@ -321,7 +223,7 @@ public class SummaryController implements Initializable
 
     }
 
-    public void setBurnChartData(){
+    private void setBurnChartData(){
 
         burnChart.getData().clear();
 
@@ -361,7 +263,7 @@ public class SummaryController implements Initializable
 
     }
 
-    public void setSpentChartData(){
+    private void setSpentChartData(){
 
         spentChart.getData().clear();
 
