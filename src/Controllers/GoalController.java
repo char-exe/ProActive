@@ -274,7 +274,7 @@ public class GoalController implements Initializable {
         //Set button action
         button.setOnAction(e -> {
             if (!systemGoal.isAccepted()) { //If goal not labelled accepted
-                user.addGoal(new IndividualGoal(systemGoal)); //Add to the user's individual goals
+                user.addIndividualGoal(new IndividualGoal(systemGoal)); //Add to the user's individual goals
                 systemGoal.setAccepted(true); //Mark accepted
                 user.saveSystemGoals(); //Save user's goals in the database
                 button.setText("Accepted"); //Update button text
@@ -308,8 +308,8 @@ public class GoalController implements Initializable {
 
             float amount = Float.parseFloat(amountText); //Need to check as a string first to check for empty input.
 
-            Goal goal = new IndividualGoal(amount, nutrientsMap.get(unitsText), dateText);
-            user.addGoal(goal);
+            IndividualGoal goal = new IndividualGoal(amount, nutrientsMap.get(unitsText), dateText);
+            user.addIndividualGoal(goal);
             dietGoalLabel.setText("Goal added : " + goal);
         }
     }
@@ -328,8 +328,8 @@ public class GoalController implements Initializable {
             int amount = Integer.parseInt(amountText); //Need to check as a string first to check for empty input
 
             //Create goal and present message to user
-            Goal goal = new IndividualGoal(amount, Goal.Unit.BURNED, dateText);
-            user.addGoal(goal);
+            IndividualGoal goal = new IndividualGoal(amount, Goal.Unit.BURNED, dateText);
+            user.addIndividualGoal(goal);
             calorieGoalLabel.setText("Goal added : " + goal);
         }
     }
@@ -349,14 +349,14 @@ public class GoalController implements Initializable {
             int amount = Integer.parseInt(amountText); //Need to check as a string first to check for empty input
 
             //Create goal and present message to user
-            Goal goal;
+            IndividualGoal goal;
             if (unitsText.equals("Any Exercise")) {
                 goal = new IndividualGoal(amount, Goal.Unit.EXERCISE, dateText);
             }
             else {
                 goal = new IndividualGoal(amount, Goal.Unit.valueOf(unitsText.toUpperCase(Locale.ROOT)), dateText);
             }
-            user.addGoal(goal);
+            user.addIndividualGoal(goal);
             exerciseGoalLabel.setText("Goal added : " + goal);
         }
     }
@@ -373,7 +373,7 @@ public class GoalController implements Initializable {
         int count = 0; // Count rows presented
 
         //For every goal
-        for (Goal goal : user.getGoals()) {
+        for (UserGoal goal : user.getGoals()) {
             boolean isActive = false;
             boolean isCompleted = false;
 
@@ -607,7 +607,7 @@ public class GoalController implements Initializable {
             EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent e) {
                     if (!groupGoal.isAccepted()) {
-                        user.addGoal(new IndividualGoal(groupGoal));
+                        user.addGroupGoal(groupGoal);
                         groupGoal.setAccepted(true);
                         user.saveGroupGoals();
                         button.setText("Accepted");
@@ -634,14 +634,14 @@ public class GoalController implements Initializable {
         /**
          * Constructs a goal item from a goal.
          *
-         * @param goal The goal to be parsed as a goal item.
+         * @param userGoal The goal to be parsed as a goal item.
          */
-        public GoalItem(Goal goal) {
-            this.target = new SimpleFloatProperty(goal.getTarget());
-            this.unit = new SimpleStringProperty(goal.getUnit().toString());
-            this.progress = new SimpleFloatProperty(goal.getProgress());
-            this.endDate = new SimpleStringProperty(goal.getEndDate().toString());
-            this.completed = new SimpleBooleanProperty(goal.isCompleted());
+        public GoalItem(UserGoal userGoal) {
+            this.target = new SimpleFloatProperty(userGoal.getTarget());
+            this.unit = new SimpleStringProperty(userGoal.getUnit().toString());
+            this.progress = new SimpleFloatProperty(userGoal.getProgress());
+            this.endDate = new SimpleStringProperty(userGoal.getEndDate().toString());
+            this.completed = new SimpleBooleanProperty(userGoal.isCompleted());
         }
 
         /**

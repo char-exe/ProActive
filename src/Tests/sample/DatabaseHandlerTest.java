@@ -426,7 +426,7 @@ class DatabaseHandlerTest {
     void nullUsernameInsertGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        IndividualGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(NullPointerException.class, () -> dh.insertGoal(null, goal));
     }
@@ -449,7 +449,7 @@ class DatabaseHandlerTest {
     void nullUsernameUpdateGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        UserGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(NullPointerException.class, () -> dh.updateGoal(null, goal, 1));
     }
@@ -465,7 +465,7 @@ class DatabaseHandlerTest {
     void zeroAmountUpdateGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        UserGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(IllegalArgumentException.class, () -> dh.updateGoal("bwayne1998", goal, 0));
     }
@@ -474,7 +474,7 @@ class DatabaseHandlerTest {
     void negativeAmountUpdateGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        UserGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(IllegalArgumentException.class, () -> dh.updateGoal("bwayne1998", goal, 0));
     }
@@ -718,7 +718,7 @@ class DatabaseHandlerTest {
     void nullUsernameQuitGoalInDatabase() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        UserGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(NullPointerException.class, () -> dh.quitGoalInDatabase(null, goal));
     }

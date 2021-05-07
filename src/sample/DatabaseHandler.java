@@ -31,7 +31,7 @@ import java.util.*;
  * @author Samuel Scarfe
  * @author Owen Tasker
  * @author Charlie Jones
- * @authot Evan Clayton
+ * @author Evan Clayton
  *
  * @version 1.16
  *
@@ -365,7 +365,7 @@ public class DatabaseHandler {
 
         LocalDateTime now = LocalDateTime.now();
 
-        String sql = "INSERT INTO regTokens (tokenVal) VALUES" +
+        String sql = "INSERT INTO regTokens (tokenVal, sent_time) VALUES" +
                 "('" + tokenVal + "', '" + now.toString() + "')";
 
         try {
@@ -394,7 +394,7 @@ public class DatabaseHandler {
             throw new NullPointerException();
         }
 
-        String sql = "SELECT tokenVal FROM regTokens WHERE tokenVal = '" + tokenVal + "'";
+        String sql = "SELECT tokenVal, sent_time FROM regTokens WHERE tokenVal = '" + tokenVal + "'";
 
         Statement stmt  = this.conn.createStatement();
 
@@ -927,7 +927,7 @@ public class DatabaseHandler {
      * @param username the user's username.
      * @param goal the user's new goal.
      */
-    public void insertGoal(String username, Goal goal) {
+    public void insertGoal(String username, IndividualGoal goal) {
         if (username == null) {
             throw new NullPointerException();
         }
@@ -936,9 +936,40 @@ public class DatabaseHandler {
         }
 
         String sql = "INSERT INTO goal (user_id, target, unit, progress, end_date, group_id) VALUES('" +
-                      getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
-                     "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + ","
-                     + goal.getGroup_id() + "')";
+                getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
+                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "', '0')";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Adds a new goal to the database for a user.
+     *
+     * @param username the user's username.
+     * @param goal the user's new goal.
+     */
+    public void insertGoal(String username, GroupGoal goal) {
+        if (username == null) {
+            throw new NullPointerException();
+        }
+        if (goal == null) {
+            throw new NullPointerException();
+        }
+
+        insertGoalHelper(username, goal);
+    }
+
+    private void insertGoalHelper(String username, GroupGoal goal) {
+        String sql = "INSERT INTO goal (user_id, target, unit, progress, end_date, group_id) VALUES('" +
+                getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
+                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "','"
+                + goal.getGroup_id() + "')";
 
         try {
             Statement stmt = this.conn.createStatement();
@@ -955,7 +986,7 @@ public class DatabaseHandler {
      * @param username the user's username.
      * @return the user's goals in an ArrayList.
      */
-    public ArrayList<Goal> selectGoals(String username) {
+    public ArrayList<UserGoal> selectGoals(String username) {
         if (username == null) {
             throw new NullPointerException();
         }
@@ -963,7 +994,7 @@ public class DatabaseHandler {
         String sql = "SELECT target, unit, progress, end_date, group_id FROM goal WHERE user_id = " +
                 getUserIDFromUsername(username);
 
-        ArrayList<Goal> goals = new ArrayList<>();
+        ArrayList<UserGoal> goals = new ArrayList<>();
 
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -974,7 +1005,12 @@ public class DatabaseHandler {
                 LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
                 int group_id = rs.getInt("group_id");
 
-                goals.add(new IndividualGoal(target, unit, endDate, progress, group_id));
+                if (group_id == 0) {
+                    goals.add(new IndividualGoal(target, unit, endDate, progress));
+                }
+                else {
+                    goals.add(new GroupGoal(target, unit, endDate, progress, group_id));
+                }
             }
         }
         catch (SQLException e) {
@@ -990,7 +1026,7 @@ public class DatabaseHandler {
      * @param username the user's username.
      * @param goal the updated goal to be updated in the database.
      */
-    public void updateGoal(String username, Goal goal, float amount) {
+    public void updateGoal(String username, UserGoal goal, float amount) {
         if (username == null) {
             throw new NullPointerException();
         }
@@ -1524,7 +1560,7 @@ public class DatabaseHandler {
      * @param username the user's username.
      * @param goal the goal to updated.
      */
-    public void quitGoalInDatabase(String username, Goal goal) {
+    public void quitGoalInDatabase(String username, UserGoal goal) {
         if (username == null) {
             throw new NullPointerException();
         }
@@ -1578,8 +1614,6 @@ public class DatabaseHandler {
 
         return goals;
     }
-
-
 
     /**
      * Method to insert a new group goal into the database.
@@ -1645,19 +1679,8 @@ public class DatabaseHandler {
      * @param username the user's username.
      * @param goal the user's new goal.
      */
-    public void insertIndividualGroupGoal(String username, Goal goal) {
-        String sql = "INSERT INTO goal (user_id, target, unit, progress, end_date, group_id) VALUES('" +
-                getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
-                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "','" +
-                goal.getGroup_id() + "')";
-
-        try {
-            Statement stmt = this.conn.createStatement();
-            stmt.executeUpdate(sql);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void insertIndividualGroupGoal(String username, GroupGoal goal) {
+        insertGoalHelper(username, goal);
     }
 
     /**

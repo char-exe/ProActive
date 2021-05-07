@@ -37,5 +37,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="JavaFX" level="application" />
+    <orderEntry type="library" name="Mail" level="application" />
   </component>
 </module>

@@ -52,7 +52,7 @@ public class User {
     private LocalDate dob;
     private final String email;
     private Set<Group> groupMemberships = new HashSet<Group>();
-    private ArrayList<Goal> goals;
+    private ArrayList<UserGoal> goals;
     private ArrayList<SystemGoal> systemGoals;
     private ArrayList<GroupGoal> groupGoals;
     private final String username;
@@ -220,7 +220,7 @@ public class User {
      *
      * @return this user's goals as an ArrayList.
      */
-    public ArrayList<Goal> getGoals() {
+    public ArrayList<UserGoal> getGoals() {
         return this.goals;
     }
 
@@ -356,16 +356,22 @@ public class User {
      *
      * @param goal the goal to be added.
      */
-    public void addGoal(Goal goal) {
+    public void addIndividualGoal(IndividualGoal goal) {
         if (goal == null) {
             throw new NullPointerException();
-        }
-        if (goal instanceof SystemGoal) {
-            throw new IllegalArgumentException();
         }
 
         this.goals.add(goal);
         DatabaseHandler.getInstance().insertGoal(this.getUsername(), goal);
+    }
+
+    public void addGroupGoal(GroupGoal groupGoal) {
+        if (groupGoal == null) {
+            throw new NullPointerException();
+        }
+
+        this.goals.add(groupGoal);
+        DatabaseHandler.getInstance().insertGoal(this.getUsername(), groupGoal);
     }
 
     /**
@@ -376,11 +382,11 @@ public class User {
      */
     public void updateGoals(Goal.Unit unit, int amount) {
         //for each goal
-        for (Goal goal : goals) {
+        for (UserGoal userGoal : goals) {
             //if the goal is updated
-            if (goal.updateProgress(unit, amount, this)) {
+            if (userGoal.updateProgress(unit, amount)) {
                 //update the goal in the database
-                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+                DatabaseHandler.getInstance().updateGoal(username, userGoal, amount);
             }
         }
     }
@@ -399,11 +405,11 @@ public class User {
             throw new IllegalArgumentException();
         }
         //for each goal
-        for (Goal goal : goals) {
+        for (UserGoal userGoal : goals) {
             //if the goal is updated
-            if (goal.updateProgress(unit, amount, this)) {
+            if (userGoal.updateProgress(unit, amount)) {
                 //update the goal in the database
-                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+                DatabaseHandler.getInstance().updateGoal(username, userGoal, amount);
             }
         }
     }
@@ -487,16 +493,16 @@ public class User {
      * Method to mark a goal as not active and update it's end date to today's date, functionally equivalent to
      * quitting it.
      *
-     * @param goal the goal to quit.
+     * @param userGoal the goal to quit.
      */
-    public void quitGoal(Goal goal) {
-        if (goal == null) {
+    public void quitGoal(UserGoal userGoal) {
+        if (userGoal == null) {
             throw new NullPointerException();
         }
-        for (Goal g : this.goals) {
-            if (g == goal) {
-                ((IndividualGoal)g).quitGoal();
-                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, goal);
+        for (UserGoal ug : this.goals) {
+            if (ug == userGoal) {
+                ug.quitGoal();
+                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, userGoal);
             }
         }
     }
