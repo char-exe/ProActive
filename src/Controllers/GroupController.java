@@ -31,6 +31,8 @@ import java.util.ResourceBundle;
 public class GroupController implements Initializable {
 
     @FXML private VBox groupsContainer;
+    @FXML private HBox hboxGroupInvite;
+    @FXML private VBox vboxGroupInvite;
 
     private DatabaseHandler dh;
     private User user;
@@ -117,6 +119,10 @@ public class GroupController implements Initializable {
                         groupInvitePopUp.setText("");
                         groupInviteInput.setEditable(true);
                         groupInviteButton.setDisable(false);
+                    }
+                    else{
+                        groupInvite.setManaged(false);
+                        groupInviteInputHbox.setManaged(false);
                     }
                 }
 

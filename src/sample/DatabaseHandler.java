@@ -1013,6 +1013,31 @@ public class DatabaseHandler
     }
 
     /**
+     * Adds a token to the groupInvTable
+     *
+     * @param username the user's username.
+     * @param goal the updated goal to be updated in the database.
+     */
+    public void addInvToken(String tokenVal, int time, String groupName, String username) {
+        //Get userID from the username
+        int userID = getUserIDFromUsername(username);
+
+        //Get the time 36 hours after token creation
+        int timeDelay = time + 129600;
+
+        String sql = "INSERT INTO groupInvTable (tokenVal, timeDelay, groupName, userID) VALUES '" + tokenVal +"', " + time + ", '" + groupName + "', '" + username + "';";
+        System.out.println(sql);
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
      * Method to retrieve water intake for user on a certain day, if no entry is found method returns 0
      *
      * @param username user's username

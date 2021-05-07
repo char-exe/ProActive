@@ -4,6 +4,7 @@ import javafx.scene.control.Button;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import sample.DatabaseHandler;
 import sample.EmailHandler;
 import sample.TokenHandler;
@@ -31,13 +32,19 @@ public class UIGroupItemController {
         Session emailSession = emailHandler.createSession(emailHandler.SetUpEmailHandler());
 
         String token = TokenHandler.createUniqueToken(7);
-        DatabaseHandler.getInstance().addTokenEntry(token, System.currentTimeMillis()/1000);
+//        DatabaseHandler.getInstance().addTokenEntry(token, System.currentTimeMillis()/1000);
 
         if (!(email == null)){
             invitePopUp.setText("Invite sent to " + inviteInput.getText());
+            DatabaseHandler.getInstance().addInvToken(token, (int) System.currentTimeMillis()/1000, groupNameLabel.getText(), inviteInput.getText());
             EmailHandler.getInstance().sendGroupInvite(emailSession, email, groupNameLabel.getText(), token);
         }else{
             invitePopUp.setText("No User Found With This Username");
         }
+    }
+
+    public static void main(String[] args) {
+        int time = (int) ((System.currentTimeMillis()/1000) + 129600);
+        System.out.println(time) ;
     }
 }

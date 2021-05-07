@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" styleClass="groupNode" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.UIGroupItemController">
+<VBox alignment="TOP_CENTER" styleClass="groupNode" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.UIGroupItemController">
    <children>
       <Label fx:id="groupNameLabel" text="*group name*">
          <font>
@@ -52,7 +48,7 @@
          </children>
       </HBox>
       <Separator prefWidth="200.0" />
-      <VBox alignment="CENTER" prefHeight="49.0" prefWidth="450.0">
+      <VBox fx:id="vboxGroupInvite" alignment="CENTER" prefHeight="49.0" prefWidth="450.0">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -67,7 +63,7 @@
             </HBox>
          </children>
       </VBox>
-      <HBox alignment="CENTER" prefHeight="33.0" prefWidth="450.0">
+      <HBox fx:id="hboxGroupInvite" alignment="CENTER" prefHeight="33.0" prefWidth="450.0">
          <children>
             <Button fx:id="inviteButton" disable="true" mnemonicParsing="false" onAction="#inviteButtonAction" prefHeight="27.0" prefWidth="76.0" text="Invite User" />
          </children>
