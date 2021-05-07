@@ -14,6 +14,7 @@ import java.time.LocalDate;
  * 1.1 - Updated with minimum target amounts as part of automatic goal generation.
  * 1.2 - Increased units to include vitamins and minerals. Updated all units with a unit string, this is preferable
  *       over a to string due to the variable nature of translation from unit to unit string.
+ * 1.3 - Extended to include group_id and methods to support this.
  */
 public abstract class Goal {
 
@@ -48,6 +49,7 @@ public abstract class Goal {
          * The minimum target amount set by the system for a daily goal of this unit.
          */
         private final int minimum;
+
 
         private final String unitString;
 
@@ -86,18 +88,11 @@ public abstract class Goal {
      * The end date of the goal.
      */
     protected LocalDate endDate;
-    /**
-     * The current progress of the goal.
-     */
-    protected float progress;
-
-
 
     protected Goal() {
         this.target = -1;
         this.unit = null;
         this.endDate = null;
-        this.progress = -1;
     }
 
     /**
@@ -114,24 +109,6 @@ public abstract class Goal {
         this.target    = target;
         this.unit      = unit;
         this.endDate   = endDate;
-        this.progress  = 0;
-    }
-
-    /**
-     * Constructs a goal from a target amount, unit, end date, progress amount, and current status. Intended for use
-     * when pulling user goals from the database.
-     *
-     * @param target    the target amount of the goal.
-     * @param unit      the units targeted by the goal.
-     * @param endDate   the end date of the goal.
-     * @param progress  the current progress of the goal.
-     */
-    public Goal(float target, Unit unit, LocalDate endDate, float progress) {
-        checkConstructorInputs(target, unit, endDate, progress);
-        this.target    = target;
-        this.unit      = unit;
-        this.endDate   = endDate;
-        this.progress  = progress;
     }
 
     /**
@@ -161,20 +138,16 @@ public abstract class Goal {
         return LocalDate.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth());
     }
 
-    /**
-     * Gets the progress amount for this goal.
-     *
-     * @return the progress amount for this goal.
-     */
-    public float getProgress() {
-        return this.progress;
-    }
+
 
     /**
-     * Method for creating a String representation of this Goal.
-     *
-     * @return a String representing this Goal.
+     * Combines the target and unit for use in sending notifications about goal completment.
+     * @return the target value and unit with a space between them.
      */
+    public String getMessageFragment(){
+        return (getTarget() + " " + getUnit());
+    }
+
     public String toString() {
 
         if (this.unit.getMinimum() > -1) { //If this is a fitness goal

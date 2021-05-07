@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Samuel Scarfe
  * @author Evan Clayton
  *
- * @version 1.8
+ * @version 1.9
  *
  * 1.0 - Initial user class structure and their variables.
  * 1.1 - Added constructor, getters and setters.
@@ -28,6 +28,7 @@ import java.util.Set;
  * 1.6 - Added groupMembership array and corresponding methods
  * 1.7 - Implemented adding and updating goals.
  * 1.8 - Implemented automatic goal generation.
+ * 1.9 - Added functionality for including group goals.
  */
 public class User {
 
@@ -51,7 +52,7 @@ public class User {
     private LocalDate dob;
     private final String email;
     private Set<Group> groupMemberships = new HashSet<Group>();
-    private ArrayList<Goal> goals;
+    private ArrayList<UserGoal> goals;
     private ArrayList<SystemGoal> systemGoals;
     private ArrayList<GroupGoal> groupGoals;
     private final String username;
@@ -82,6 +83,10 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -106,6 +111,10 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -211,14 +220,24 @@ public class User {
      *
      * @return this user's goals as an ArrayList.
      */
-    public ArrayList<Goal> getGoals() {
+    public ArrayList<UserGoal> getGoals() {
         return this.goals;
     }
 
+    /**
+     * Gets the list of system goals for this user.
+     *
+     * @return this user's system goals as an ArrayList.
+     */
     public ArrayList<SystemGoal> getSystemGoals() {
         return this.systemGoals;
     }
 
+    /**
+     * Gets the list of group goals for this user.
+     *
+     * @return this user's group goals as an ArrayList.
+     */
     public ArrayList<GroupGoal> getGroupGoals() { return this.groupGoals; }
 
     /**
@@ -325,6 +344,11 @@ public class User {
         this.systemGoals = systemGoals;
     }
 
+    /**
+     * Method to set this user's group goals to the provided ArrayList.
+     *
+     * @param groupGoals this user's group goals.
+     */
     public void setGroupGoals(ArrayList<GroupGoal> groupGoals) { this.groupGoals = groupGoals; }
 
     /**
@@ -332,16 +356,39 @@ public class User {
      *
      * @param goal the goal to be added.
      */
-    public void addGoal(Goal goal) {
+    public void addIndividualGoal(IndividualGoal goal) {
         if (goal == null) {
             throw new NullPointerException();
-        }
-        if (goal instanceof SystemGoal) {
-            throw new IllegalArgumentException();
         }
 
         this.goals.add(goal);
         DatabaseHandler.getInstance().insertGoal(this.getUsername(), goal);
+    }
+
+    public void addGroupGoal(GroupGoal groupGoal) {
+        if (groupGoal == null) {
+            throw new NullPointerException();
+        }
+
+        this.goals.add(groupGoal);
+        DatabaseHandler.getInstance().insertGoal(this.getUsername(), groupGoal);
+    }
+
+    /**
+     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
+     *
+     * @param unit   the unit which has been input as part of a logged activity.
+     * @param amount the amount of the unit which has been logged.
+     */
+    public void updateGoals(Goal.Unit unit, int amount) {
+        //for each goal
+        for (UserGoal userGoal : goals) {
+            //if the goal is updated
+            if (userGoal.updateProgress(unit, amount)) {
+                //update the goal in the database
+                DatabaseHandler.getInstance().updateGoal(username, userGoal, amount);
+            }
+        }
     }
 
     /**
@@ -358,11 +405,11 @@ public class User {
             throw new IllegalArgumentException();
         }
         //for each goal
-        for (Goal goal : goals) {
+        for (UserGoal userGoal : goals) {
             //if the goal is updated
-            if (((IndividualGoal)goal).updateProgress(unit, amount)) {
+            if (userGoal.updateProgress(unit, amount)) {
                 //update the goal in the database
-                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+                DatabaseHandler.getInstance().updateGoal(username, userGoal, amount);
             }
         }
     }
@@ -437,19 +484,25 @@ public class User {
     }
 
     /**
+     * Method to save this user's group goals in the database. Intended for use whenever their values change such that
+     * their state will persist between logins.
+     */
+    public void saveGroupGoals() { DatabaseHandler.getInstance().refreshGroupGoals(this.username, this.groupGoals);}
+
+    /**
      * Method to mark a goal as not active and update it's end date to today's date, functionally equivalent to
      * quitting it.
      *
-     * @param goal the goal to quit.
+     * @param userGoal the goal to quit.
      */
-    public void quitGoal(Goal goal) {
-        if (goal == null) {
+    public void quitGoal(UserGoal userGoal) {
+        if (userGoal == null) {
             throw new NullPointerException();
         }
-        for (Goal g : this.goals) {
-            if (g == goal) {
-                ((IndividualGoal)g).quitGoal();
-                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, goal);
+        for (UserGoal ug : this.goals) {
+            if (ug == userGoal) {
+                ug.quitGoal();
+                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, userGoal);
             }
         }
     }
@@ -619,6 +672,7 @@ public class User {
             return false;
         }
     }
+
 
     /**
      * Test Harness

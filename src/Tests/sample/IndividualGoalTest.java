@@ -49,10 +49,6 @@ class IndividualGoalTest {
         assertDoesNotThrow(() -> new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 1));
     }
 
-    @Test
-    void nullSystemGoal() {
-        assertThrows(NullPointerException.class, () -> new IndividualGoal(null));
-    }
 
     @Test
     void successfulSystemGoalConstructor() {

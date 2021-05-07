@@ -21,6 +21,8 @@ import sample.User;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.security.Key;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 /**
@@ -166,6 +168,7 @@ public class MainController implements Initializable {
         GoalController gc = loader.getController();
         gc.initData(user);
         gc.showSystemGoals();
+        gc.showGroupGoals();
         main.setCenter(vBox);
         toggleButtonFocus(goalsButton);
     }

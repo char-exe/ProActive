@@ -251,36 +251,62 @@ class DatabaseHandlerTest {
 
         assertThrows(NullPointerException.class, () -> dh.createUserObjectFromUsername(null));
     }
-/*
+
     @Test
     void nullUsernameGetIntakeEntries() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        assertThrows(NullPointerException.class, () -> dh.getIntakeEntries(null));
+        assertThrows(NullPointerException.class, () -> dh.getIntakeEntries(null, LocalDate.now()));
+    }
+
+    @Test
+    void nullLatestGetIntakeEntries() {
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+
+        assertThrows(NullPointerException.class, () -> dh.getIntakeEntries("bwayne1998", null));
     }
 
     @Test
     void nullUsernameGetSpentEntries() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        assertThrows(NullPointerException.class, () -> dh.getSpentEntries(null));
+        assertThrows(NullPointerException.class, () -> dh.getSpentEntries(null, LocalDate.now()));
+    }
+
+    @Test
+    void nullLatestGetSpentEntries() {
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+
+        assertThrows(NullPointerException.class, () -> dh.getSpentEntries("bwayne1998", null));
     }
 
     @Test
     void nullUsernameGetBurnedEntries() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        assertThrows(NullPointerException.class, () -> dh.getBurnedEntries(null));
+        assertThrows(NullPointerException.class, () -> dh.getBurnedEntries(null, LocalDate.now()));
+    }
+
+    @Test
+    void nullLatestGetBurnedEntries() {
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+
+        assertThrows(NullPointerException.class, () -> dh.getBurnedEntries("bwayne1998", null));
     }
 
     @Test
     void nullUsernameGetWeightEntries() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        assertThrows(NullPointerException.class, () -> dh.getWeightEntries(null));
+        assertThrows(NullPointerException.class, () -> dh.getWeightEntries(null, LocalDate.now()));
     }
 
- */
+    @Test
+    void nullLatestGetWeightEntries() {
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+
+        assertThrows(NullPointerException.class, () -> dh.getWeightEntries("bwayne1998", null));
+    }
 
     @Test
     void nullNameGetExerciseId() {
@@ -400,7 +426,7 @@ class DatabaseHandlerTest {
     void nullUsernameInsertGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        IndividualGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(NullPointerException.class, () -> dh.insertGoal(null, goal));
     }
@@ -423,7 +449,7 @@ class DatabaseHandlerTest {
     void nullUsernameUpdateGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        UserGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(NullPointerException.class, () -> dh.updateGoal(null, goal, 1));
     }
@@ -439,7 +465,7 @@ class DatabaseHandlerTest {
     void zeroAmountUpdateGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        UserGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(IllegalArgumentException.class, () -> dh.updateGoal("bwayne1998", goal, 0));
     }
@@ -448,7 +474,7 @@ class DatabaseHandlerTest {
     void negativeAmountUpdateGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        UserGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(IllegalArgumentException.class, () -> dh.updateGoal("bwayne1998", goal, 0));
     }
@@ -692,7 +718,7 @@ class DatabaseHandlerTest {
     void nullUsernameQuitGoalInDatabase() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        Goal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
+        UserGoal goal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1));
 
         assertThrows(NullPointerException.class, () -> dh.quitGoalInDatabase(null, goal));
     }
