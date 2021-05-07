@@ -134,6 +134,60 @@ public class EmailHandler {
     }
 
     /**
+     * Method to send a Group Invite email to a user
+     *
+     * @param to               Takes an email to send to
+     * @param verificationCode Takes a verification code to be created in a tokenHandler, will be used to confirm
+     *                         a user meant to join the app
+     */
+    public void sendGroupInvite(Session session, String to, String groupName, String verificationCode){
+
+        //Send Verification Email
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL));
+            System.out.println(to);
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject("You Have Been Invited To A Group With Proactive");
+            message.setContent(
+                    "<head>" +
+                            "   <style>" +
+                            "       h1{" +
+                            "           background-color:#CCCCCC;" +
+                            "           border-radius:20px;" +
+                            "           font-size:40px;" +
+                            "           text-align:center;" +
+                            "           padding:25px;" +
+                            "           color:black;" +
+                            "       }" +
+                            "       p{" +
+                            "           background-color:#CCCCCC;" +
+                            "           border-radius:20px;" +
+                            "           font-size:20px;" +
+                            "           text-align:center;" +
+                            "           padding:20px;" +
+                            "           color:black;" +
+                            "       }" +
+                            "   </style>" +
+                            "</head>" +
+                            "<body>" +
+                            "   <h1>ProActive</h1>" +
+                            "   <p>You Have been invited to the group <strong> " + groupName + "</strong> please enter " +
+                            "   the code below in the 'Groups' panel of the ProActive App</p>" +
+                            "   <p><strong> " + verificationCode + " </strong></p>" +
+                            "</body>",
+                    "text/html");
+
+            Transport.send(message);
+
+            System.out.println("verification email sent");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Method to send a user an invite to a goal in the form of a token in an email
      *
      * @param session     Takes a session object, this is required to send any emails

@@ -1044,6 +1044,37 @@ public class DatabaseHandler
     }
 
     /**
+     * Method to get the role of a user in a group
+     *
+     * @param group Takes the group that we are checking the user against
+     * @param username Takes the user we are checking the role of
+     *
+     * @return Returns a String representing the role of the user
+     */
+    public String getGroupRoleFromUsername(String group, String username){
+        int groupID = getGroupIDFromName(group);
+        int userID = getUserIDFromUsername(username);
+        String role = null;
+
+        String sql = "SELECT Group_Role FROM group_membership WHERE User_Id = " + userID + " AND Group_Id = " + groupID;
+        System.out.println(sql);
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            while (rs.next()) {
+                role = rs.getString("Group_Role");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return role;
+    }
+
+
+    /**
      * Method to set the amount of water intake on a given day and store it into the meal table.
      * It firstly checks if the user ID exists, then checks if there is already an entry into the database for the given
      * day, if there is it will update the record and if there isn't, a new row will be inserted.
@@ -1273,6 +1304,26 @@ public class DatabaseHandler
         }
 
         return maxCompletedGoals;
+    }
+
+    public String getEmailFromUsername(String username){
+        String email = null;
+
+        String sql = "SELECT email FROM user WHERE username = '" + username + "'";
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                email = rs.getString("email");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return email;
     }
 
     /**
