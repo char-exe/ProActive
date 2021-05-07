@@ -14,6 +14,7 @@ import java.time.LocalDate;
  * 1.1 - Updated with minimum target amounts as part of automatic goal generation.
  * 1.2 - Increased units to include vitamins and minerals. Updated all units with a unit string, this is preferable
  *       over a to string due to the variable nature of translation from unit to unit string.
+ * 1.3 - Extended to include group_id and methods to support this.
  */
 public abstract class Goal {
 
@@ -48,6 +49,7 @@ public abstract class Goal {
          * The minimum target amount set by the system for a daily goal of this unit.
          */
         private final int minimum;
+
 
         private final String unitString;
 
@@ -91,7 +93,14 @@ public abstract class Goal {
      */
     protected float progress;
 
+    protected boolean active;
 
+    protected boolean completed;
+
+    /**
+     * If the goal was derived from a group goal it will have a group id, else this value will be 0
+     */
+    protected int group_id;
 
     protected Goal() {
         this.target = -1;
@@ -115,6 +124,9 @@ public abstract class Goal {
         this.unit      = unit;
         this.endDate   = endDate;
         this.progress  = 0;
+        this.active    = endDate.isAfter(LocalDate.now());
+        this.completed = progress >= target;
+        this.group_id = 0;
     }
 
     /**
@@ -132,6 +144,48 @@ public abstract class Goal {
         this.unit      = unit;
         this.endDate   = endDate;
         this.progress  = progress;
+        this.active    = endDate.isAfter(LocalDate.now());
+        this.completed = progress >= target;
+        this.group_id = 0;
+    }
+
+    /**
+     * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
+     * Intended for use at initial creation of a goal from a group goal.
+     *
+     * @param target  the target amount of the goal.
+     * @param unit    the units targeted by the goal.
+     * @param endDate the end date of the goal.
+     * @param group_id the id of the group the goal is associated with.
+     */
+    public Goal(float target, Unit unit, LocalDate endDate, int group_id) {
+        this.target    = target;
+        this.unit      = unit;
+        this.endDate   = endDate;
+        this.progress  = 0;
+        this.active    = endDate.isAfter(LocalDate.now());
+        this.completed = progress >= target;
+        this.group_id = group_id;
+    }
+
+    /**
+     * Constructs a goal from a target amount, unit, end date, progress amount, and current status. Intended for use
+     * when pulling user instances of group goals from the database.
+     *
+     * @param target    the target amount of the goal.
+     * @param unit      the units targeted by the goal.
+     * @param endDate   the end date of the goal.
+     * @param progress  the current progress of the goal.
+     * @param group_id the id of the group the goal is associated with.
+     */
+    public Goal(float target, Unit unit, LocalDate endDate, float progress, int group_id) {
+        this.target    = target;
+        this.unit      = unit;
+        this.endDate   = endDate;
+        this.progress  = progress;
+        this.active    = endDate.isAfter(LocalDate.now());
+        this.completed = progress >= target;
+        this.group_id = group_id;
     }
 
     /**
@@ -171,10 +225,64 @@ public abstract class Goal {
     }
 
     /**
-     * Method for creating a String representation of this Goal.
+     * Gets the active status of this goal.
      *
-     * @return a String representing this Goal.
+     * @return the active status of this goal.
      */
+    public boolean isActive() {
+        return this.active;
+    }
+
+    /**
+     * Gets the completed status of this goal.
+     *
+     * @return the completed status of this goal.
+     */
+    public boolean isCompleted() {
+        return this.completed;
+    }
+
+    /**
+     * Gets the group_id for the goal (Note this is default 0 if no group is associated with this goal).
+     *
+     * @return the group_id for this goal.
+     */
+    public int getGroup_id() { return group_id; }
+
+    /**
+     * Increments the current progress by the passed amount, provided the goal is marked as ongoing. Updates the goal
+     * status to completed if the target has been met.
+     *
+     * @param unit unit used for the goal.
+     * @param update the amount to increment progress by.
+     * @param user the user object, used for finding group goal to allow notification calls
+     */
+    public boolean updateProgress(Unit unit, float update, User user) {
+        if (this.active && !this.completed && this.unit == unit) {
+
+            this.progress = this.progress + update;
+
+            if (this.progress > this.target) {
+                this.completed = true;
+                NotificationHandler.getInstance().sendGoalNotificationWithEmail_Fade(user.getEmail(), this);
+                if (this.getGroup_id() > 0){
+                    //Group group = DatabaseHandler.getInstance().getGroupFromID(this.getGroup_id());
+                    //group.sendGroupNotifications(user, this);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Combines the target and unit for use in sending notifications about goal completment.
+     * @return the target value and unit with a space between them.
+     */
+    public String getMessageFragment(){
+        return (getTarget() + " " + getUnit());
+    }
+
     public String toString() {
 
         if (this.unit.getMinimum() > -1) { //If this is a fitness goal

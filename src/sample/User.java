@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Samuel Scarfe
  * @author Evan Clayton
  *
- * @version 1.8
+ * @version 1.9
  *
  * 1.0 - Initial user class structure and their variables.
  * 1.1 - Added constructor, getters and setters.
@@ -28,6 +28,7 @@ import java.util.Set;
  * 1.6 - Added groupMembership array and corresponding methods
  * 1.7 - Implemented adding and updating goals.
  * 1.8 - Implemented automatic goal generation.
+ * 1.9 - Added functionality for including group goals.
  */
 public class User {
 
@@ -82,6 +83,10 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -106,6 +111,10 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
+        for (Goal goal : goals) {
+            System.out.println(goal);
+        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -215,10 +224,20 @@ public class User {
         return this.goals;
     }
 
+    /**
+     * Gets the list of system goals for this user.
+     *
+     * @return this user's system goals as an ArrayList.
+     */
     public ArrayList<SystemGoal> getSystemGoals() {
         return this.systemGoals;
     }
 
+    /**
+     * Gets the list of group goals for this user.
+     *
+     * @return this user's group goals as an ArrayList.
+     */
     public ArrayList<GroupGoal> getGroupGoals() { return this.groupGoals; }
 
     /**
@@ -325,6 +344,11 @@ public class User {
         this.systemGoals = systemGoals;
     }
 
+    /**
+     * Method to set this user's group goals to the provided ArrayList.
+     *
+     * @param groupGoals this user's group goals.
+     */
     public void setGroupGoals(ArrayList<GroupGoal> groupGoals) { this.groupGoals = groupGoals; }
 
     /**
@@ -350,6 +374,23 @@ public class User {
      * @param unit   the unit which has been input as part of a logged activity.
      * @param amount the amount of the unit which has been logged.
      */
+    public void updateGoals(Goal.Unit unit, int amount) {
+        //for each goal
+        for (Goal goal : goals) {
+            //if the goal is updated
+            if (goal.updateProgress(unit, amount, this)) {
+                //update the goal in the database
+                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+            }
+        }
+    }
+
+    /**
+     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
+     *
+     * @param unit   the unit which has been input as part of a logged activity.
+     * @param amount the amount of the unit which has been logged.
+     */
     public void updateGoals(Goal.Unit unit, float amount) {
         if (unit == null) {
             throw new NullPointerException();
@@ -360,7 +401,7 @@ public class User {
         //for each goal
         for (Goal goal : goals) {
             //if the goal is updated
-            if (((IndividualGoal)goal).updateProgress(unit, amount)) {
+            if (goal.updateProgress(unit, amount, this)) {
                 //update the goal in the database
                 DatabaseHandler.getInstance().updateGoal(username, goal, amount);
             }
@@ -435,6 +476,12 @@ public class User {
     public void saveSystemGoals() {
         DatabaseHandler.getInstance().refreshSystemGoals(this.username, this.systemGoals);
     }
+
+    /**
+     * Method to save this user's group goals in the database. Intended for use whenever their values change such that
+     * their state will persist between logins.
+     */
+    public void saveGroupGoals() { DatabaseHandler.getInstance().refreshGroupGoals(this.username, this.groupGoals);}
 
     /**
      * Method to mark a goal as not active and update it's end date to today's date, functionally equivalent to
@@ -619,6 +666,7 @@ public class User {
             return false;
         }
     }
+
 
     /**
      * Test Harness

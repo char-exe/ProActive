@@ -170,6 +170,7 @@ public class MainController implements Initializable {
         GoalController gc = loader.getController();
         gc.initData(user);
         gc.showSystemGoals();
+        gc.showGroupGoals();
         main.setCenter(vBox);
         toggleButtonFocus(goalsButton);
     }
