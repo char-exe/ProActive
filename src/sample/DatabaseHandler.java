@@ -1012,6 +1012,31 @@ public class DatabaseHandler {
     }
 
     /**
+     * Adds a token to the groupInvTable
+     *
+     * @param username the user's username.
+     * @param goal the updated goal to be updated in the database.
+     */
+    public void addInvToken(String tokenVal, int time, String groupName, String username) {
+        //Get userID from the username
+        int userID = getUserIDFromUsername(username);
+
+        //Get the time 36 hours after token creation
+        int timeDelay = time + 129600;
+
+        String sql = "INSERT INTO groupInvTable (tokenVal, timeDelay, groupName, userID) VALUES '" + tokenVal +"', " + time + ", '" + groupName + "', '" + username + "';";
+        System.out.println(sql);
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
      * Method to retrieve water intake for user on a certain day, if no entry is found method returns 0
      *
      * @param username user's username
@@ -1049,6 +1074,37 @@ public class DatabaseHandler {
 
         return noCups;
     }
+
+    /**
+     * Method to get the role of a user in a group
+     *
+     * @param group Takes the group that we are checking the user against
+     * @param username Takes the user we are checking the role of
+     *
+     * @return Returns a String representing the role of the user
+     */
+    public String getGroupRoleFromUsername(String group, String username){
+        int groupID = getGroupIDFromName(group);
+        int userID = getUserIDFromUsername(username);
+        String role = null;
+
+        String sql = "SELECT Group_Role FROM group_membership WHERE User_Id = " + userID + " AND Group_Id = " + groupID;
+        System.out.println(sql);
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            while (rs.next()) {
+                role = rs.getString("Group_Role");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return role;
+    }
+
 
     /**
      * Method to set the amount of water intake on a given day and store it into the meal table.
@@ -1344,6 +1400,26 @@ public class DatabaseHandler {
         }
 
         return maxCompletedGoals;
+    }
+
+    public String getEmailFromUsername(String username){
+        String email = null;
+
+        String sql = "SELECT email FROM user WHERE username = '" + username + "'";
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                email = rs.getString("email");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return email;
     }
 
     /**
