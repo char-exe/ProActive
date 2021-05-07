@@ -29,7 +29,7 @@ public class UIGroupItemController {
 
         String email = DatabaseHandler.getInstance().getEmailFromUsername(inviteInput.getText());
         EmailHandler emailHandler = EmailHandler.getInstance();
-        Session emailSession = emailHandler.createSession(emailHandler.SetUpEmailHandler());
+        Session emailSession = emailHandler.createSession();
 
         String token = TokenHandler.createUniqueToken(7);
 //        DatabaseHandler.getInstance().addTokenEntry(token, System.currentTimeMillis()/1000);
