@@ -15,76 +15,137 @@
       </Label>
       <HBox alignment="CENTER">
          <children>
-            <Label text="Here's your activity summary over the last 7 days">
+            <Label text="Here's your activity summary.">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
          </children>
       </HBox>
-      <HBox alignment="CENTER" layoutX="35.0" layoutY="155.0">
+      <HBox alignment="CENTER" spacing="20.0">
          <children>
-            <LineChart fx:id="weightChart" legendVisible="false" maxWidth="900.0" title="Weight" HBox.hgrow="ALWAYS">
-               <xAxis>
-                  <NumberAxis fx:id="weightDateAxis" autoRanging="false" label="Date" minorTickCount="0" minorTickVisible="false" side="BOTTOM" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
-               </xAxis>
-               <yAxis>
-                  <NumberAxis label="Weight (kg)" side="LEFT" />
-               </yAxis>
-               <padding>
-                  <Insets top="15.0" />
-               </padding>
-            </LineChart>
+            <RadioButton fx:id="activitySummary" mnemonicParsing="false" text="Activity summary" />
+            <RadioButton fx:id="nutritionSummary" mnemonicParsing="false" text="Nutrition summary" />
          </children>
       </HBox>
+      <VBox alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER">
+               <children>
+                  <LineChart fx:id="weightChart" legendVisible="false" maxWidth="900.0" styleClass="graph" title="Weight" HBox.hgrow="ALWAYS">
+                     <xAxis>
+                        <NumberAxis fx:id="weightDateAxis" autoRanging="false" label="Date" minorTickCount="0" minorTickVisible="false" side="BOTTOM" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis label="Weight (kg)" side="LEFT" />
+                     </yAxis>
+                     <padding>
+                        <Insets top="15.0" />
+                     </padding>
+                  </LineChart>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" maxWidth="250.0" prefHeight="35.0" spacing="7.5" styleClass="cycleWeekBox">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#weightPrevWeek" text="Previous week" />
+                  <Button fx:id="weightChartNextWeekButton" layoutX="243.0" layoutY="10.0" mnemonicParsing="false" onAction="#weightNextWeek" prefWidth="92.0" text="Next week" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
       <Separator layoutX="35.0" layoutY="995.0" />
-      <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
          <children>
-            <LineChart fx:id="intakeChart" legendVisible="false" maxWidth="900.0" title="Calorie Intake" HBox.hgrow="ALWAYS">
-              <xAxis>
-                <NumberAxis fx:id="intakeDateAxis" autoRanging="false" label="Date" minorTickCount="0" minorTickVisible="false" side="BOTTOM" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis label="Calorie Intake" side="LEFT" />
-              </yAxis>
+            <HBox alignment="CENTER">
+               <children>
+                  <LineChart fx:id="intakeChart" legendVisible="false" maxWidth="900.0" styleClass="graph" title="Calorie Intake" HBox.hgrow="ALWAYS">
+                    <xAxis>
+                      <NumberAxis fx:id="intakeDateAxis" autoRanging="false" label="Date" minorTickCount="0" minorTickVisible="false" side="BOTTOM" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis label="Calorie Intake" side="LEFT" />
+                    </yAxis>
+                     <padding>
+                        <Insets top="15.0" />
+                     </padding>
+                  </LineChart>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" maxWidth="250.0" prefHeight="35.0" spacing="7.5" styleClass="cycleWeekBox">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#intakePrevWeek" text="Previous week" />
+                  <Button fx:id="intakeChartNextWeekButton" layoutX="243.0" layoutY="10.0" mnemonicParsing="false" onAction="#intakeNextWeek" prefWidth="92.0" text="Next week" />
+               </children>
                <padding>
-                  <Insets top="15.0" />
+                  <Insets bottom="5.0" />
                </padding>
-            </LineChart>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
       <Separator />
-      <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
          <children>
-            <LineChart fx:id="burnChart" legendVisible="false" maxWidth="900.0" title="Calorie Burn" HBox.hgrow="ALWAYS">
-              <xAxis>
-                <NumberAxis fx:id="burnDateAxis" autoRanging="false" label="Date" minorTickVisible="false" side="BOTTOM" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis label="Calories Burned" side="LEFT" />
-              </yAxis>
+            <HBox alignment="CENTER">
+               <children>
+                  <LineChart fx:id="burnChart" legendVisible="false" maxWidth="900.0" styleClass="graph" title="Calorie Burn" HBox.hgrow="ALWAYS">
+                    <xAxis>
+                      <NumberAxis fx:id="burnDateAxis" autoRanging="false" label="Date" minorTickVisible="false" side="BOTTOM" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis label="Calories Burned" side="LEFT" />
+                    </yAxis>
+                     <padding>
+                        <Insets top="15.0" />
+                     </padding>
+                  </LineChart>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" maxWidth="250.0" prefHeight="35.0" spacing="7.5" styleClass="cycleWeekBox">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#burnPrevWeek" text="Previous week" />
+                  <Button fx:id="burnChartNextWeekButton" layoutX="243.0" layoutY="10.0" mnemonicParsing="false" onAction="#burnNextWeek" prefWidth="92.0" text="Next week" />
+               </children>
                <padding>
-                  <Insets top="15.0" />
+                  <Insets bottom="5.0" />
                </padding>
-            </LineChart>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
       <Separator />
-      <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
          <children>
-            <LineChart fx:id="spentChart" legendVisible="false" maxWidth="900.0" title="Minutes Spent Exercising" HBox.hgrow="ALWAYS">
-               <xAxis>
-                  <NumberAxis fx:id="spentDateAxis" autoRanging="false" label="Date" minorTickVisible="false" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
-               </xAxis>
-               <yAxis>
-                  <NumberAxis label="Minutes" side="LEFT" />
-               </yAxis>
+            <HBox alignment="CENTER">
+               <children>
+                  <LineChart fx:id="spentChart" legendVisible="false" maxWidth="900.0" styleClass="graph" title="Minutes Spent Exercising" HBox.hgrow="ALWAYS">
+                     <xAxis>
+                        <NumberAxis fx:id="spentDateAxis" autoRanging="false" label="Date" minorTickVisible="false" tickLabelRotation="45.0" tickUnit="1.0" upperBound="8.0" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis label="Minutes" side="LEFT" />
+                     </yAxis>
+                     <padding>
+                        <Insets top="15.0" />
+                     </padding>
+                  </LineChart>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" maxWidth="250.0" prefHeight="35.0" spacing="7.5" styleClass="cycleWeekBox">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#spentPrevWeek" text="Previous week" />
+                  <Button fx:id="spentChartNextWeekButton" layoutX="243.0" layoutY="10.0" mnemonicParsing="false" onAction="#spentNextWeek" prefWidth="92.0" text="Next week" />
+               </children>
                <padding>
-                  <Insets top="15.0" />
+                  <Insets bottom="5.0" />
                </padding>
-            </LineChart>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
       <Separator />
    </children>
    <padding>
