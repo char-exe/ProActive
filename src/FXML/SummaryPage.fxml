@@ -15,11 +15,17 @@
       </Label>
       <HBox alignment="CENTER">
          <children>
-            <Label text="Here's your activity summary over the last 7 days">
+            <Label text="Here's your activity summary.">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" spacing="20.0">
+         <children>
+            <RadioButton fx:id="activitySummary" mnemonicParsing="false" text="Activity summary" />
+            <RadioButton fx:id="nutritionSummary" mnemonicParsing="false" text="Nutrition summary" />
          </children>
       </HBox>
       <VBox alignment="CENTER">

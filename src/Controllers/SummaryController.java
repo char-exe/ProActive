@@ -7,9 +7,7 @@ import javafx.scene.Cursor;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import sample.DatabaseHandler;
@@ -86,6 +84,10 @@ public class SummaryController implements Initializable
     @FXML private Button burnChartNextWeekButton;
     @FXML private Button spentChartNextWeekButton;
 
+    private ToggleGroup summaryGroup = new ToggleGroup();
+    @FXML private ToggleButton nutritionSummary;
+    @FXML private ToggleButton activitySummary;
+
     private User user;
     private DatabaseHandler dh;
 
@@ -108,6 +110,9 @@ public class SummaryController implements Initializable
     {
         dh = DatabaseHandler.getInstance();
         nextWeekTooltip.setShowDelay(javafx.util.Duration.millis(0));
+
+        summaryGroup.getToggles().addAll(activitySummary, nutritionSummary);
+        summaryGroup.selectToggle(activitySummary);
     }
 
     public void initData(User user) {
