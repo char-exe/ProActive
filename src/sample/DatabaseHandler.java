@@ -595,12 +595,11 @@ public class DatabaseHandler {
         }
 
         HashMap<String, Double> entries = new HashMap<>();
-        LocalDate today = LocalDate.now();
-        LocalDate lastWeek = today.minusDays(6);
+        LocalDate prevWeek = latest.minusDays(6);
 
         String sql = "SELECT date_of, quantity, kcal FROM meal INNER JOIN food ON meal.food_id = food.id " +
                      "WHERE user_id = '" + getUserIDFromUsername(username) + "' AND date_of BETWEEN '" +
-                      lastWeek.toString() + "' AND '" + today.toString() + "'";
+                      prevWeek.toString() + "' AND '" + latest.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {

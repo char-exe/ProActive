@@ -1,23 +1,23 @@
 package Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import sample.DatabaseHandler;
 import sample.User;
 
-import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLOutput;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -81,8 +81,20 @@ public class SummaryController implements Initializable
     @FXML
     private Label welcomeBackLabel;
 
+    @FXML private Button weightChartNextWeekButton;
+    @FXML private Button intakeChartNextWeekButton;
+    @FXML private Button burnChartNextWeekButton;
+    @FXML private Button spentChartNextWeekButton;
+
     private User user;
     private DatabaseHandler dh;
+
+    private LocalDate weightChartDate = LocalDate.now();
+    private LocalDate intakeChartDate = LocalDate.now();
+    private LocalDate burnChartDate = LocalDate.now();
+    private LocalDate spentChartDate = LocalDate.now();
+
+    private final Tooltip nextWeekTooltip = new Tooltip("You cannot summarise the future!");
 
     /**
      * Initializes the graphs with formatted axes and dummy data.
@@ -95,16 +107,20 @@ public class SummaryController implements Initializable
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
         dh = DatabaseHandler.getInstance();
+        nextWeekTooltip.setShowDelay(javafx.util.Duration.millis(0));
     }
 
     public void initData(User user) {
         this.user = user;
+
+        //Set Welcome message to Users first name
+        welcomeBackLabel.setText("Welcome Back " + user.getFirstname() + "!");
     }
 
     /**
      * Sets the data for the caloric intake to the net caloric intake for the past 7 days, including today.
      */
-    public void setData(LocalDate latest) {
+    public void initChartData(LocalDate latest) {
         //format each axis from showing numeric tick marks to showing the past 7 days
         formatAxis(intakeDateAxis, latest);
         formatAxis(burnDateAxis, latest);
@@ -121,9 +137,6 @@ public class SummaryController implements Initializable
         HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername(), latest);
         HashMap<String, Float> burnedData = dh.getBurnedEntries(user.getUsername(), latest);
         HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername(), latest);
-
-        //Set Welcome message to Users first name
-        welcomeBackLabel.setText("Welcome Back " + user.getFirstname() + "!");
 
 
         //Add data to each series.
@@ -154,6 +167,293 @@ public class SummaryController implements Initializable
         burnChart.getData().add(burnSeries);
         spentChart.getData().add(spentSeries);
         weightChart.getData().add(weightSeries);
+
+        for (XYChart.Data<Number, Number> d : intakeSeries.getData()) {
+
+            String value = d.getYValue().toString();
+
+            if(value.endsWith(".0"))
+                value = value.substring(0, value.length() - 2);
+
+
+            Tooltip t = new Tooltip(value);
+            t.setShowDelay(javafx.util.Duration.millis(0));
+            Tooltip.install(d.getNode(), t);
+
+        }
+
+        for (XYChart.Data<Number, Number> d : burnSeries.getData()) {
+
+            String value = d.getYValue().toString();
+
+            if(value.endsWith(".0"))
+                value = value.substring(0, value.length() - 2);
+
+
+            Tooltip t = new Tooltip(value);
+            t.setShowDelay(javafx.util.Duration.millis(0));
+            Tooltip.install(d.getNode(), t);
+
+        }
+
+        for (XYChart.Data<Number, Number> d : spentSeries.getData()) {
+
+            String value = d.getYValue().toString();
+
+            if(value.endsWith(".0"))
+                value = value.substring(0, value.length() - 2);
+
+
+            Tooltip t = new Tooltip(value);
+            t.setShowDelay(javafx.util.Duration.millis(0));
+            Tooltip.install(d.getNode(), t);
+
+        }
+
+        for (XYChart.Data<Number, Number> d : weightSeries.getData()) {
+
+            String value = d.getYValue().toString();
+
+            if(value.endsWith(".0"))
+                value = value.substring(0, value.length() - 2);
+
+
+            Tooltip t = new Tooltip(value);
+            t.setShowDelay(javafx.util.Duration.millis(0));
+            Tooltip.install(d.getNode(), t);
+
+        }
+
+        weightChartNextWeekButton.setTooltip(nextWeekTooltip);
+        spentChartNextWeekButton.setTooltip(nextWeekTooltip);
+        intakeChartNextWeekButton.setTooltip(nextWeekTooltip);
+        burnChartNextWeekButton.setTooltip(nextWeekTooltip);
+
+        weightChart.setAnimated(false);
+        spentChart.setAnimated(false);
+        intakeChart.setAnimated(false);
+        burnChart.setAnimated(false);
+
+    }
+
+    public void setWeightChartData(){
+
+        weightChart.getData().clear();
+
+        //format each axis from showing numeric tick marks to showing the past 7 days
+        formatAxis(weightDateAxis, weightChartDate);
+
+        //Create a data series for each graph and set names
+        XYChart.Series<Number, Number> weightSeries = new XYChart.Series<>();
+
+        HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername(), weightChartDate);
+
+
+        //Add data to each series.
+        DateConverter dc = new DateConverter(weightChartDate);
+
+        for (String key : weightData.keySet())
+        {
+            weightSeries.getData().add(new XYChart.Data<>(dc.fromString(key), weightData.get(key)));
+        }
+
+        //Add series to graphs.
+        weightChart.getData().add(weightSeries);
+
+        for (XYChart.Data<Number, Number> d : weightSeries.getData()) {
+
+            String value = d.getYValue().toString();
+
+            if(value.endsWith(".0"))
+                value = value.substring(0, value.length() - 2);
+
+
+            Tooltip t = new Tooltip(value);
+            t.setShowDelay(javafx.util.Duration.millis(0));
+            Tooltip.install(d.getNode(), t);
+
+        }
+
+    }
+
+    public void setIntakeChartData(){
+
+        intakeChart.getData().clear();
+
+        //format each axis from showing numeric tick marks to showing the past 7 days
+        formatAxis(intakeDateAxis, intakeChartDate);
+
+        //Create a data series for each graph and set names
+        XYChart.Series<Number, Number> intakeSeries = new XYChart.Series<>();
+
+        HashMap<String, Double> intakeData = dh.getIntakeEntries(user.getUsername(), intakeChartDate);
+
+
+        //Add data to each series.
+        DateConverter dc = new DateConverter(intakeChartDate);
+
+        for (String key : intakeData.keySet())
+        {
+            intakeSeries.getData().add(new XYChart.Data<>(dc.fromString(key), intakeData.get(key)));
+        }
+
+        //Add series to graphs.
+        intakeChart.getData().add(intakeSeries);
+
+        for (XYChart.Data<Number, Number> d : intakeSeries.getData()) {
+
+            String value = d.getYValue().toString();
+
+            if(value.endsWith(".0"))
+                value = value.substring(0, value.length() - 2);
+
+
+            Tooltip t = new Tooltip(value);
+            t.setShowDelay(javafx.util.Duration.millis(0));
+            Tooltip.install(d.getNode(), t);
+
+        }
+
+    }
+
+    public void setBurnChartData(){
+
+        burnChart.getData().clear();
+
+        //format each axis from showing numeric tick marks to showing the past 7 days
+        formatAxis(burnDateAxis, burnChartDate);
+
+        //Create a data series for each graph and set names
+        XYChart.Series<Number, Number> burnSeries = new XYChart.Series<>();
+
+        HashMap<String, Float> burnData = dh.getBurnedEntries(user.getUsername(), burnChartDate);
+
+
+        //Add data to each series.
+        DateConverter dc = new DateConverter(burnChartDate);
+
+        for (String key : burnData.keySet())
+        {
+            burnSeries.getData().add(new XYChart.Data<>(dc.fromString(key), burnData.get(key)));
+        }
+
+        //Add series to graphs.
+        burnChart.getData().add(burnSeries);
+
+        for (XYChart.Data<Number, Number> d : burnSeries.getData()) {
+
+            String value = d.getYValue().toString();
+
+            if(value.endsWith(".0"))
+                value = value.substring(0, value.length() - 2);
+
+
+            Tooltip t = new Tooltip(value);
+            t.setShowDelay(javafx.util.Duration.millis(0));
+            Tooltip.install(d.getNode(), t);
+
+        }
+
+    }
+
+    public void setSpentChartData(){
+
+        spentChart.getData().clear();
+
+        //format each axis from showing numeric tick marks to showing the past 7 days
+        formatAxis(spentDateAxis, spentChartDate);
+
+        //Create a data series for each graph and set names
+        XYChart.Series<Number, Number> spentSeries = new XYChart.Series<>();
+
+        HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername(), spentChartDate);
+
+
+        //Add data to each series.
+        DateConverter dc = new DateConverter(spentChartDate);
+
+        for (String key : spentData.keySet())
+        {
+            spentSeries.getData().add(new XYChart.Data<>(dc.fromString(key), spentData.get(key)));
+        }
+
+        //Add series to graphs.
+        spentChart.getData().add(spentSeries);
+
+        for (XYChart.Data<Number, Number> d : spentSeries.getData()) {
+
+            String value = d.getYValue().toString();
+
+            if(value.endsWith(".0"))
+                value = value.substring(0, value.length() - 2);
+
+
+            Tooltip t = new Tooltip(value);
+            t.setShowDelay(javafx.util.Duration.millis(0));
+            Tooltip.install(d.getNode(), t);
+
+        }
+
+    }
+
+    public void weightPrevWeek(ActionEvent actionEvent) {
+        weightChartNextWeekButton.setTooltip(null);
+        weightChartDate = weightChartDate.minusDays(7);
+        setWeightChartData();
+    }
+
+    public void weightNextWeek(ActionEvent actionEvent) {
+        if(!weightChartDate.plusDays(7).isAfter(LocalDate.now())){
+            weightChartDate = weightChartDate.plusDays(7);
+            setWeightChartData();
+        } else {
+            weightChartNextWeekButton.setTooltip(nextWeekTooltip);
+        }
+    }
+
+    public void intakePrevWeek(ActionEvent actionEvent) {
+        intakeChartNextWeekButton.setTooltip(null);
+        intakeChartDate = intakeChartDate.minusDays(7);
+        setIntakeChartData();
+    }
+
+    public void intakeNextWeek(ActionEvent actionEvent) {
+        if(!intakeChartDate.plusDays(7).isAfter(LocalDate.now())){
+            intakeChartDate = intakeChartDate.plusDays(7);
+            setIntakeChartData();
+        } else {
+            intakeChartNextWeekButton.setTooltip(nextWeekTooltip);
+        }
+    }
+
+    public void burnPrevWeek(ActionEvent actionEvent) {
+        burnChartNextWeekButton.setTooltip(null);
+        burnChartDate = burnChartDate.minusDays(7);
+        setBurnChartData();
+    }
+
+    public void burnNextWeek(ActionEvent actionEvent) {
+        if(!burnChartDate.plusDays(7).isAfter(LocalDate.now())){
+            burnChartDate = burnChartDate.plusDays(7);
+            setBurnChartData();
+        } else {
+            burnChartNextWeekButton.setTooltip(nextWeekTooltip);
+        }
+    }
+
+    public void spentPrevWeek(ActionEvent actionEvent) {
+        spentChartNextWeekButton.setTooltip(null);
+        spentChartDate = spentChartDate.minusDays(7);
+        setSpentChartData();
+    }
+
+    public void spentNextWeek(ActionEvent actionEvent) {
+        if(!spentChartDate.plusDays(7).isAfter(LocalDate.now())){
+            spentChartDate = spentChartDate.plusDays(7);
+            setSpentChartData();
+        } else {
+            spentChartNextWeekButton.setTooltip(nextWeekTooltip);
+        }
     }
 
     /**
