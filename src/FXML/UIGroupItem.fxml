@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="TOP_CENTER" styleClass="groupNode" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.UIGroupItemController">
+   <children>
+      <Label fx:id="groupNameLabel" text="*group name*">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin>
+      </Label>
+      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="450.0">
+         <children>
+            <VBox fx:id="groupMembersList" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Users">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="190.0">
+               <HBox.margin>
+                  <Insets bottom="10.0" />
+               </HBox.margin></Separator>
+            <VBox fx:id="groupGoalsList" alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
+               <children>
+                  <Label text="Goals">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <VBox fx:id="vboxGroupInvite" alignment="CENTER" prefHeight="49.0" prefWidth="450.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="invitePopUp" text="Only The Group Owner/Group Admins may invite new members" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="450.0">
+               <children>
+                  <Label text="Username: " />
+                  <TextField fx:id="inviteInput" alignment="CENTER" editable="false" prefHeight="25.0" prefWidth="172.0" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <HBox fx:id="hboxGroupInvite" alignment="CENTER" prefHeight="33.0" prefWidth="450.0">
+         <children>
+            <Button fx:id="inviteButton" disable="true" mnemonicParsing="false" onAction="#inviteButtonAction" prefHeight="27.0" prefWidth="76.0" text="Invite User" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

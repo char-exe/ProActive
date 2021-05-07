@@ -33,6 +33,9 @@ public class GoalGenerator {
      * @param user the user to generate goals for
      */
     public GoalGenerator(User user) {
+        if (user == null) {
+            throw new NullPointerException();
+        }
         this.user = user;
         this.db = DatabaseHandler.getInstance();
     }
@@ -56,22 +59,18 @@ public class GoalGenerator {
 
         //Check if Daily fitness exist
         ArrayList<SystemGoal> dailyFitness = user.getDailyFitness();
-        if (dailyFitness.size() == 0) { //If not, attempt to generate.
+        if (dailyFitness.size() == 0) { //If not, generate.
             dailyFitness = generateDailyFitness();
         }
 
-        //Check if Daily fitness were retrieved or generated
-        if (dailyFitness.size() > 0) { //User has completed fitness goals
-            //Check if weekly fitness exist
-            ArrayList<SystemGoal> weeklyFitness = user.getWeeklyFitness();
-
-            if (weeklyFitness.size() == 0) { //if not, generate
-                weeklyFitness = generateWeeklyFitness(dailyFitness);
-            }
-
-            goals.addAll(dailyFitness);
-            goals.addAll(weeklyFitness);
+        //Check if weekly fitness exist
+        ArrayList<SystemGoal> weeklyFitness = user.getWeeklyFitness();
+        if (weeklyFitness.size() == 0) { //if not, generate.
+            weeklyFitness = generateWeeklyFitness(dailyFitness);
         }
+
+        goals.addAll(dailyFitness);
+        goals.addAll(weeklyFitness);
         
         return goals;
     }
@@ -97,7 +96,10 @@ public class GoalGenerator {
             //get the User's RDI
             float target = db.getRecommendedIntake(unit, user.getAge(), user.getSex());
             //generate a goal for today with the RDI
-            goals.add(new SystemGoal(target, unit, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY, SystemGoal.Category.DAY_TO_DAY));
+            if (target > 0) {
+                System.out.println(target);
+                goals.add(new SystemGoal(target, unit, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY, SystemGoal.Category.DAY_TO_DAY));
+            }
         }
 
         return goals;
@@ -126,9 +128,10 @@ public class GoalGenerator {
             //Create new SystemGoals by checking the user's average work rate in that task
             float averageWorkRate = user.getAverageWorkRate(unit, 28);
 
-            if (averageWorkRate < unit.getMinimum()) {
-                averageWorkRate = unit.getMinimum();
+            if (averageWorkRate < unit.getMinimum()) { //Average work rate is below minimum threshold
+                averageWorkRate = unit.getMinimum(); //Set to minimum threshold
             }
+
             systemGoals.add(new SystemGoal(
                     averageWorkRate,
                     unit,
@@ -138,9 +141,8 @@ public class GoalGenerator {
             );
         }
 
-        System.out.println(systemGoals.size());
-        if (systemGoals.size() < 3) {
-            systemGoals.add(new SystemGoal(
+        if (systemGoals.size() < 3) { //If less than three goals have been created
+            systemGoals.add(new SystemGoal( //Create and add a generic exercise goal
                     30,
                     Goal.Unit.EXERCISE,
                     LocalDate.now().plusDays(1),
@@ -148,6 +150,20 @@ public class GoalGenerator {
                     SystemGoal.Category.STAY)
             );
         }
+
+        //Create push harder goals by multiplying targets for the stay on pace goals by 1.1
+        ArrayList<SystemGoal> pushGoals = new ArrayList<>();
+
+        for (SystemGoal systemGoal : systemGoals) {
+            pushGoals.add(new SystemGoal(
+                    (int) systemGoal.getTarget() * 1.1f, //Cast to an int to remove decimal parts
+                    systemGoal.getUnit(),
+                    systemGoal.getEndDate(),
+                    systemGoal.getUpdatePeriod(),
+                    SystemGoal.Category.PUSH));
+        }
+
+        systemGoals.addAll(pushGoals);
 
         return systemGoals;
     }
@@ -163,13 +179,14 @@ public class GoalGenerator {
     private ArrayList<SystemGoal> generateWeeklyFitness(ArrayList<SystemGoal> dailyGoals) {
         ArrayList<SystemGoal> weeklyGoals = new ArrayList<>();
 
+        //For every daily goal, create a weekly equivalent by multiplying the target by 5.
         for (SystemGoal goal : dailyGoals) {
             weeklyGoals.add(new SystemGoal(
                     goal.getTarget()*5,
                     goal.getUnit(),
-                    goal.getEndDate().plusDays(6),
+                    goal.getEndDate().plusDays(7),
                     SystemGoal.UpdatePeriod.WEEKLY,
-                    SystemGoal.Category.STAY)
+                    goal.getCategory())
             );
         }
 

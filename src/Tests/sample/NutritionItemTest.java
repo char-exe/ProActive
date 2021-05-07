@@ -4,6 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit testing for NutritionItem.
+ *
+ * @author Samuel Scarfe
+ */
+
 class NutritionItemTest {
 
     @Test

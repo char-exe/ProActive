@@ -8,7 +8,7 @@
 
 <VBox spacing="20.0" styleClass="base" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SummaryController">
    <children>
-      <Label text="Welcome back *user*!">
+      <Label fx:id="welcomeBackLabel" text="Welcome back *user*!">
          <font>
             <Font name="System Bold" size="30.0" />
          </font>

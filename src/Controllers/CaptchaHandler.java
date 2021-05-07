@@ -122,8 +122,7 @@ public class CaptchaHandler implements Initializable {
         //this class at time of submission whereon forward it will be handled by the EmailValidationController
         DatabaseHandler db = DatabaseHandler.getInstance();
         EmailHandler eh = EmailHandler.getInstance();
-        Properties prop = eh.SetUpEmailHandler();
-        Session session = eh.createSession(prop);
+        Session session = eh.createSession();
 
         //Check that the user input is the same as the expected value, if so, send a validation code then pass
         //to email validation scene
@@ -132,7 +131,7 @@ public class CaptchaHandler implements Initializable {
             //Create the initial token to be sent
             String token = TokenHandler.createUniqueToken(5);
             eh.sendVerification(session, user.getEmail(), token);
-            db.addTokenEntry(token, System.currentTimeMillis()/1000);
+            db.addTokenEntry(token);
 
             Stage parentScene = (Stage) captchaSubmit.getScene().getWindow();
             Stage stage = new Stage();

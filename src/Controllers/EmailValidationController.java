@@ -18,9 +18,8 @@ import sample.User;
 import javax.mail.Session;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 /**
@@ -28,7 +27,10 @@ import java.util.ResourceBundle;
  *
  * @author Owen Tasker
  *
- * @version 1.0
+ * @version 1.1
+ *
+ * 1.0 - First working version
+ * 1.1 - Small refactor to compare times in LocalDateTime rather than System.getCurrentTimeMillis
  */
 public class EmailValidationController implements Initializable{
     @FXML public Label header;
@@ -84,17 +86,22 @@ public class EmailValidationController implements Initializable{
      */
     @FXML protected void pushSubmit() throws SQLException, IOException {
         String tokenFromUser = codeInputBox.getText();
-        long currentTime = System.currentTimeMillis()/1000;
 
-        ResultSet res = dh.getTokenResult(tokenFromUser);
+        LocalDateTime sentTime = dh.getTokenResult(tokenFromUser);
 
-        if (res == null || currentTime > Long.parseLong(res.getString("timeDelay")) + 1800000) {
-            codeStatus.setText("Code Not Valid Or Has Expired, We have sent another to the specified address");
+        if (sentTime == null) {
+            codeStatus.setText("Code Invalid, we have sent another to the specified address");
+            dh.deleteToken(initialToken);
+            resendVerification();
+        }
+        else if (LocalDateTime.now().isAfter(sentTime.plusMinutes(30))) {
+            codeStatus.setText("Code Expired, we have sent another to the specified address");
             dh.deleteToken(initialToken);
             resendVerification();
         }
         else {
             codeStatus.setText("Code Correct, User Account has been created");
+            dh.deleteToken(initialToken);
             dh.createUserEntry(user, hash, salt);
 
             escapeHome(new ActionEvent());
@@ -106,16 +113,13 @@ public class EmailValidationController implements Initializable{
      */
     @FXML protected void resendVerification(){
         DatabaseHandler dh = DatabaseHandler.getInstance();
-        long time = System.currentTimeMillis()/1000;
         initialToken = TokenHandler.createUniqueToken(7);
 
-
         EmailHandler eh = EmailHandler.getInstance();
-        Properties prop = eh.SetUpEmailHandler();
-        Session session = eh.createSession(prop);
+        Session session = eh.createSession();
 
         System.out.println("Email Sending To: " + user.getEmail());
-        dh.addTokenEntry(initialToken, time);
+        dh.addTokenEntry(initialToken);
         eh.sendVerification(session, user.getEmail(), initialToken);
     }
 

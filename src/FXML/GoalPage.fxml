@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -23,12 +24,26 @@
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <center>
-                        <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="295.0" prefWidth="200.0" styleClass="tab-content-area" stylesheets="@../style.css" BorderPane.alignment="CENTER">
                            <content>
-                              <VBox fx:id="ourGoalsVbox" prefHeight="357.0" prefWidth="576.0" />
+                              <VBox minHeight="-Infinity" minWidth="-Infinity" prefWidth="539.0" stylesheets="@../style.css">
+                                 <styleClass>
+                                    <String fx:value="tabPane" />
+                                    <String fx:value="goalScrollPane" />
+                                 </styleClass>
+                                 <children>
+                                    <VBox fx:id="ourGoalsVbox" minHeight="-Infinity" minWidth="-Infinity" prefWidth="539.0" styleClass="ourGoalsVbox" stylesheets="@../style.css" VBox.vgrow="ALWAYS" />
+                                 </children></VBox>
                            </content>
                         </ScrollPane>
                      </center>
+                     <top>
+                        <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+                           <children>
+                              <ChoiceBox fx:id="ourGoalsDropDown" prefWidth="150.0" />
+                           </children>
+                        </HBox>
+                     </top>
                   </BorderPane>
                </content>
             </Tab>
@@ -111,41 +126,33 @@
                 <Tab closable="false" styleClass="parentTab" text="Current Goals">
                     <content>
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
-                            <center>
-                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="TOP_CENTER">
-                           <children>
-                              <TableView fx:id="currentGoalsTable" prefHeight="359.0" prefWidth="560.0">
-                                <columns>
-                                  <TableColumn fx:id="currentTargetColumn" prefWidth="145.0" text="Target" />
-                                  <TableColumn fx:id="currentUnitColumn" prefWidth="145.0" text="Unit" />
-                                    <TableColumn fx:id="currentProgressColumn" minWidth="0.0" prefWidth="145.0" text="Progress" />
-                                    <TableColumn fx:id="currentEndDateColumn" prefWidth="145.0" text="End Date" />
-                                </columns>
-                              </TableView>
-                           </children>
-                                </VBox>
-                            </center>
+                     <center>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="320.0" minWidth="-Infinity" prefWidth="539.0" styleClass="tab-content-area" stylesheets="@../style.css" BorderPane.alignment="CENTER">
+                           <content>
+                              <VBox minHeight="-Infinity" minWidth="-Infinity" prefWidth="539.0" styleClass="goalScrollPane" stylesheets="@../style.css">
+                                 <children>
+                                    <VBox fx:id="currentGoalsVbox" minHeight="-Infinity" minWidth="-Infinity" prefWidth="539.0" styleClass="ourGoalsVbox" />
+                                 </children></VBox>
+                           </content>
+                        </ScrollPane>
+                     </center>
                         </BorderPane>
                     </content>
                 </Tab>
-                <Tab closable="false" styleClass="parentTab" text="Past Goals">
+                <Tab closable="false" styleClass="parentTab" text="Completed Goals">
                     <content>
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
-                            <center>
-                                <VBox alignment="CENTER" BorderPane.alignment="CENTER">
-                           <children>
-                              <TableView fx:id="pastGoalsTable" prefHeight="361.0" prefWidth="579.0">
-                                <columns>
-                                  <TableColumn fx:id="pastTargetColumn" prefWidth="116.0" text="Target" />
-                                  <TableColumn fx:id="pastUnitColumn" prefWidth="116.0" text="Unit" />
-                                    <TableColumn fx:id="pastProgressColumn" prefWidth="116.0" text="Progress" />
-                                    <TableColumn fx:id="pastEndDateColumn" prefWidth="116.0" text="End Date" />
-                                    <TableColumn fx:id="pastCompletedColumn" prefWidth="115.0" text="Completed" />
-                                </columns>
-                              </TableView>
-                           </children>
-                                </VBox>
-                            </center>
+                     <center>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="320.0" minWidth="-Infinity" prefWidth="539.0" styleClass="tab-content-area" stylesheets="@../style.css" BorderPane.alignment="CENTER">
+                           <content>
+                              <VBox minHeight="-Infinity" minWidth="-Infinity" prefWidth="539.0" styleClass="goalScrollPane" stylesheets="@../style.css">
+                                 <children>
+                                    <VBox fx:id="completedGoalsVbox" minHeight="-Infinity" minWidth="-Infinity" prefWidth="539.0" styleClass="ourGoalsVbox" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </center>
                         </BorderPane>
                     </content>
                 </Tab>

@@ -3,8 +3,19 @@ package sample;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Unit testing for User.
+ *
+ * Methods involving the DatabaseHandler are tested for incorrect inputs but not for successful outputs. In the current
+ * project build they are more easily tested by passing data through the live system.
+ *
+ * @author Samuel Scarfe
+ */
 
 class UserTest {
 
@@ -707,5 +718,181 @@ class UserTest {
         );
 
         assertEquals("Bruce Wayne 23 Male", batman.toString());
+    }
+
+    @Test
+    void successfulSetSystemGoals() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        ArrayList<SystemGoal> systemGoals = new ArrayList<>();
+
+        systemGoals.add(new SystemGoal(
+                1.0f, Goal.Unit.PROTEIN,
+                LocalDate.now().plusDays(1),
+                SystemGoal.UpdatePeriod.DAILY,
+                SystemGoal.Category.DAY_TO_DAY)
+        );
+        systemGoals.add(new SystemGoal(
+                1.0f, Goal.Unit.PROTEIN,
+                LocalDate.now().plusDays(1),
+                SystemGoal.UpdatePeriod.DAILY,
+                SystemGoal.Category.DAY_TO_DAY)
+        );
+        systemGoals.add(new SystemGoal(
+                1.0f, Goal.Unit.PROTEIN,
+                LocalDate.now().plusDays(1),
+                SystemGoal.UpdatePeriod.DAILY,
+                SystemGoal.Category.DAY_TO_DAY)
+        );
+
+        batman.setSystemGoals(systemGoals);
+
+        assertEquals(systemGoals, batman.getSystemGoals());
+    }
+
+    @Test
+    void successfulSetGroupGoals() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        ArrayList<GroupGoal> groupGoals = new ArrayList<>();
+
+        groupGoals.add(new GroupGoal(1.0f, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1)));
+        groupGoals.add(new GroupGoal(1.0f, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1)));
+        groupGoals.add(new GroupGoal(1.0f, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1)));
+
+        batman.setGroupGoals(groupGoals);
+
+        assertEquals(groupGoals, batman.getGroupGoals());
+    }
+
+    @Test
+    void nullAddGoal() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(NullPointerException.class, () -> batman.addGoal(null));
+    }
+
+    @Test
+    void illegalAddGoal() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> batman.addGoal(new SystemGoal(
+                1.0f, Goal.Unit.PROTEIN,
+                LocalDate.now().plusDays(1),
+                SystemGoal.UpdatePeriod.DAILY,
+                SystemGoal.Category.DAY_TO_DAY))
+        );
+    }
+
+    @Test
+    void nullEarliestMaxCompleted() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(NullPointerException.class, () -> batman.getMaxCompletedGoals(null));
+    }
+
+    @Test
+    void futureEarliestMaxCompleted() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(IllegalArgumentException.class, ()-> batman.getMaxCompletedGoals(LocalDate.now().plusDays(1)));
+    }
+
+    @Test
+    void nullUnitAverageWorkRate() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(NullPointerException.class, () -> batman.getAverageWorkRate(null, 1));
+    }
+
+    @Test
+    void zeroDaysAverageWorkRate() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(NullPointerException.class, () -> batman.getAverageWorkRate(null, 0));
+    }
+
+    @Test
+    void negativeDaysAverageWorkRate() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(NullPointerException.class, () -> batman.getAverageWorkRate(null, -1));
+    }
+
+    @Test
+    void nullQuitGoal() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(NullPointerException.class, () -> batman.quitGoal(null));
     }
 }

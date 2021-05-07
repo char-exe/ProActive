@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
  * @version 1.0
  */
 public class CreateAdvancedNutritionItemController implements Initializable {
-    @FXML public Button submitButton;
+    @FXML public Button submitButton, cancelButton;
 
     @FXML public TextField  nameInput, kcalInput, proteinInput, fatInput, carbsInput, sugarInput, fibreInput,
                             cholesterolInput, sodiumInput, potassiumInput, calciumInput, magnesiumInput,
@@ -318,6 +318,12 @@ public class CreateAdvancedNutritionItemController implements Initializable {
 
     }
 
+    @FXML public void cancelButtonAction(){
+        Stage parentScene = (Stage) cancelButton.getScene().getWindow();
+
+        parentScene.close();
+
+    }
     /**
      * Method to check that a string representing a double is a valid double before casting, copied and adapted from
      * https://stackoverflow.com/questions/767759/occurrences-of-substring-in-a-string

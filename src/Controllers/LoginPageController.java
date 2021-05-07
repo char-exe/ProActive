@@ -71,6 +71,9 @@ public class LoginPageController {
         username = usernameField.getText();
         password = passwordField.getText();
 
+        clearInvalidUsername();
+        clearInvalidPassword();
+
         try{
             DatabaseHandler dh = DatabaseHandler.getInstance();
 
@@ -111,8 +114,9 @@ public class LoginPageController {
             }else {
                 displayInvalidPassword();
             }
-        } catch (SQLException userError) {
+        } catch (SQLException | NullPointerException userError) {
             displayInvalidUsername();
+            displayInvalidPassword();
         } catch (IOException e1){
             System.out.println(e1.getMessage());
         } catch (NoSuchAlgorithmException e) {

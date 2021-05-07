@@ -20,6 +20,15 @@ import java.time.LocalDate;
 public class IndividualGoal extends Goal {
 
     /**
+     * The active status of the goal.
+     */
+    private boolean active;
+    /**
+     * The completion status of the goal
+     */
+    private boolean completed;
+
+    /**
      * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
      * Intended for use at initial creation of a goal.
      *
@@ -29,6 +38,8 @@ public class IndividualGoal extends Goal {
      */
     public IndividualGoal(float target, Unit unit, LocalDate endDate) {
         super(target, unit, endDate);
+        this.completed = progress >= target;
+        this.active    = endDate.isAfter(LocalDate.now()) && !this.completed;
     }
 
     /**
@@ -42,6 +53,8 @@ public class IndividualGoal extends Goal {
      */
     public IndividualGoal(float target, Unit unit, LocalDate endDate, float progress) {
         super(target, unit, endDate, progress);
+        this.completed = progress >= target;
+        this.active    = endDate.isAfter(LocalDate.now()) && !this.completed;
     }
 
     /**
@@ -78,7 +91,73 @@ public class IndividualGoal extends Goal {
      * @param systemGoal a goal generated automatically by the system and accepted by the user.
      */
     public IndividualGoal(SystemGoal systemGoal) {
-        super(systemGoal.getTarget(), systemGoal.getUnit(), systemGoal.getEndDate());
+        if (systemGoal == null) {
+            throw new NullPointerException();
+        }
+
+        this.target = systemGoal.getTarget();
+        this.unit = systemGoal.getUnit();
+        this.endDate = systemGoal.getEndDate();
+        this.progress = 0;
+        this.completed = this.progress >= this.target;
+        this.active = this.endDate.isAfter(LocalDate.now()) && !this.completed;
+    }
+
+    /**
+     * Gets the active status of this goal.
+     *
+     * @return the active status of this goal.
+     */
+    public boolean isActive() {
+        return this.active;
+    }
+
+    /**
+     * Gets the completed status of this goal.
+     *
+     * @return the completed status of this goal.
+     */
+    public boolean isCompleted() {
+        return this.completed;
+    }
+
+    /**
+     * Method to mark a goal as inactive and update its end date.
+     */
+    public void quitGoal() {
+        if (this.completed) {
+            throw new IllegalStateException("Goal is already complete");
+        }
+
+        this.endDate = LocalDate.now();
+        this.active = false;
+    }
+
+    /**
+     * Increments the current progress by the passed amount, provided the goal is marked as ongoing. Updates the goal
+     * status to completed if the target has been met.
+     *
+     * @param update the amount to increment progress by
+     */
+    public boolean updateProgress(Unit unit, float update) {
+        if (unit == null) {
+            throw new NullPointerException();
+        }
+        if (update < 1) {
+            throw new IllegalArgumentException();
+        }
+
+        if (this.active && !this.completed && this.unit == unit) {
+
+            this.progress = this.progress + update;
+
+            if (this.progress >= this.target) {
+                this.completed = true;
+                this.active = false;
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
