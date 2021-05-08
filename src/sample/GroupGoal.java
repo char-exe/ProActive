@@ -74,12 +74,12 @@ public class GroupGoal extends IndividualGoal {
      * @param groupId  the id of the group associated with the goal.
      */
     public GroupGoal(float target, Unit unit, LocalDate endDate, int progress, int groupId, boolean accepted) {
-        super(target, unit, endDate, progress);
-        if (groupId < 1) {
-            throw new IllegalArgumentException("groupID's start from 1");
+        this(target, unit, endDate, groupId);
+        if (progress < 0) {
+            throw new IllegalArgumentException();
         }
 
-        this.groupId = groupId;
+        this.progress = progress;
         this.accepted = accepted;
     }
 
