@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -969,7 +967,7 @@ public class DatabaseHandler {
         String sql = "INSERT INTO goal (user_id, target, unit, progress, end_date, group_id) VALUES('" +
                 getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
                 "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "','"
-                + goal.getGroup_id() + "')";
+                + goal.getGroupId() + "')";
 
         try {
             Statement stmt = this.conn.createStatement();
@@ -1625,7 +1623,7 @@ public class DatabaseHandler {
         float target = goal.getTarget();
         String unit = goal.getUnit().toString();
         String endDate = goal.getEndDate().toString();
-        int group_id = goal.getGroup_id();
+        int group_id = goal.getGroupId();
         boolean accepted = goal.isAccepted();
         int user_id = getUserIDFromUsername(username);
         String sqlIns = "INSERT INTO group_goal(group_id, target, unit, end_date, user_id, accepted)" +
@@ -1891,36 +1889,7 @@ public class DatabaseHandler {
      */
     public Group getGroupObjectFromGroupName(String groupName){
         int groupID = getGroupIDFromName(groupName);
-        GroupOwner owner = null;
-        Set<GroupAdmin> admins = new HashSet<>();
-        Set<GroupMember> members = new HashSet<>();
-
-        Group group = new Group(groupName);
-
-        String sql = "SELECT User_id, Group_Role FROM group_membership WHERE Group_Id = " + groupID;
-        try (Statement stmt = this.conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                int user_id = rs.getInt("User_id");
-                String role = rs.getString("Group_Role");
-
-                switch (role) {
-                    case "Owner" -> owner = new GroupOwner(group, createUserObjectFromUsername(getUsernameFromUserID(user_id)));
-                    case "Admin" -> admins.add(new GroupAdmin(group, createUserObjectFromUsername(getUsernameFromUserID(user_id))));
-                    case "Member" -> members.add(new GroupMember(group, createUserObjectFromUsername(getUsernameFromUserID(user_id))));
-                }
-
-                group.setOwner(owner);
-                group.setAdmins(admins);
-                group.setMembers(members);
-
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return group;
-
+        return getGroup(groupID, groupName);
     }
 
     /**
@@ -1955,7 +1924,19 @@ public class DatabaseHandler {
      * @return Returns a fully constructed group
      */
     public Group getGroupObjectFromGroupId(int groupID){
+        if (groupID < 0) {
+            throw new IllegalArgumentException();
+        }
+        else if (groupID == 0) {
+            return null;
+        }
+
         String groupName = getGroupNameFromID(groupID);
+        return getGroup(groupID, groupName);
+
+    }
+
+    private Group getGroup(int groupID, String groupName) {
         GroupOwner owner = null;
         Set<GroupAdmin> admins = new HashSet<>();
         Set<GroupMember> members = new HashSet<>();
@@ -1985,7 +1966,6 @@ public class DatabaseHandler {
         }
 
         return group;
-
     }
 
     public ArrayList<Group> getUserGroups(String username){
@@ -2008,7 +1988,6 @@ public class DatabaseHandler {
         return groups;
 
     }
-
 
     public static void main(String[] args) {
         Group a = getInstance().getGroupObjectFromGroupId(1);

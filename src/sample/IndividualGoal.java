@@ -9,19 +9,22 @@ import java.time.LocalDate;
  * @author Samuel Scarfe
  * @author Evan Clayton
  *
- * @version 1.2
+ * @version 1.3
  *
- * @see Goal
+ * @see UserGoal
+ * @see GroupGoal
  *
  * 1.0 - First working version.
  * 1.1 - Implemented automatic goal generation
  * 1.2 - Now supports conversion from group goal to individual goal and added constructors with a group_id field.
+ * 1.3 - Refactored such that Group specific functionality is held within the GroupGoal class, which now inherits from
+ *       this class.
  */
 public class IndividualGoal extends UserGoal {
 
     /**
-     * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
-     * Intended for use at initial creation of a goal.
+     * Constructs an IndividualGoal from a target amount, unit, and end date. Initialises progress to 0 and status to
+     * ongoing. Intended for use at initial creation of a goal.
      *
      * @param target  the target amount of the goal.
      * @param unit    the units targeted by the goal.
@@ -32,8 +35,8 @@ public class IndividualGoal extends UserGoal {
     }
 
     /**
-     * Constructs a goal from a target amount, unit, end date, progress amount, and current status. Intended for use
-     * when pulling user goals from the database.
+     * Constructs an IndividualGoal from a target amount, unit, end date, progress amount, and current status. Intended
+     * for use when pulling user goals from the database.
      *
      * @param target   the target amount of the goal.
      * @param unit     the units targeted by the goal.
@@ -45,8 +48,8 @@ public class IndividualGoal extends UserGoal {
     }
 
     /**
-     * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
-     * Intended for use at initial creation of a goal derived from a group goal.
+     * Constructs an IndividualGoal from a target amount, unit, and end date. Initialises progress to 0 and status to
+     * ongoing. Intended for use at initial creation of a goal derived from a group goal.
      *
      * @param target  the target amount of the goal.
      * @param unit    the units targeted by the goal.
@@ -63,7 +66,6 @@ public class IndividualGoal extends UserGoal {
      * @param systemGoal a goal generated automatically by the system and accepted by the user.
      */
     public IndividualGoal(SystemGoal systemGoal) {
-        super();
         if (systemGoal == null) {
             throw new NullPointerException();
         }

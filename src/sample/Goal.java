@@ -3,18 +3,20 @@ package sample;
 import java.time.LocalDate;
 
 /**
- * Abstract class for modelling a user goal in the ProActive app by its target amount, concerned units, end date,
- * current progress, and completion status.
+ * Abstract class for modelling a user goal in the ProActive app by its target amount, concerned units, and end date.
  *
  * @author Samuel Scarfe
  *
- * @version 1.2
+ * @version 1.4
  *
  * 1.0 - First working version.
  * 1.1 - Updated with minimum target amounts as part of automatic goal generation.
  * 1.2 - Increased units to include vitamins and minerals. Updated all units with a unit string, this is preferable
  *       over a to string due to the variable nature of translation from unit to unit string.
  * 1.3 - Extended to include group_id and methods to support this.
+ * 1.4 - Refactored such that an inheritance hierarchy is more clearly defined. Progress, active, completed, and groupId
+ *       no longer instance variables of Goal. Instead they and their respective methods have been placed in
+ *       appropriate subclasses.
  */
 public abstract class Goal {
 
@@ -50,7 +52,9 @@ public abstract class Goal {
          */
         private final int minimum;
 
-
+        /**
+         * The string that will be used to show this unit's unit type.
+         */
         private final String unitString;
 
         /**
@@ -71,6 +75,11 @@ public abstract class Goal {
             return this.minimum;
         }
 
+        /**
+         * Gets the unit string for this unit.
+         *
+         * @return the unit string for this unit.
+         */
         public String getUnitString() {
             return unitString;
         }
@@ -89,6 +98,9 @@ public abstract class Goal {
      */
     protected LocalDate endDate;
 
+    /**
+     * Default constructor.
+     */
     protected Goal() {
         this.target = -1;
         this.unit = null;
@@ -96,8 +108,7 @@ public abstract class Goal {
     }
 
     /**
-     * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
-     * Intended for use at initial creation of a goal.
+     * Constructs a goal from a target amount, unit, and end date.
      *
      * @param target  the target amount of the goal.
      * @param unit    the units targeted by the goal.
@@ -138,8 +149,6 @@ public abstract class Goal {
         return LocalDate.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth());
     }
 
-
-
     /**
      * Combines the target and unit for use in sending notifications about goal completment.
      * @return the target value and unit with a space between them.
@@ -148,6 +157,11 @@ public abstract class Goal {
         return (getTarget() + " " + getUnit());
     }
 
+    /**
+     * Returns a String representation of this Goal.
+     *
+     * @return a String representation of this Goal.
+     */
     public String toString() {
 
         if (this.unit.getMinimum() > -1) { //If this is a fitness goal
@@ -174,21 +188,6 @@ public abstract class Goal {
         }
         if (endDate == null) {
             throw new NullPointerException();
-        }
-    }
-
-    /**
-     * Private helper method for checking constructor inputs for the long constructor.
-     *
-     * @param target the target for this Goal.
-     * @param unit the unit for this Goal.
-     * @param endDate the endDate for this Goal.
-     * @param progress the progress for this Goal.
-     */
-    private void checkConstructorInputs(float target, Unit unit, LocalDate endDate, float progress) {
-        checkConstructorInputs(target, unit, endDate);
-        if (progress < 0) {
-            throw new IllegalArgumentException();
         }
     }
 }

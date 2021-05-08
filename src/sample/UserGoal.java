@@ -2,23 +2,36 @@ package sample;
 
 import java.time.LocalDate;
 
+/**
+ * Abstract class for representing a Goal in the ProActive app that a User can set, work towards, and achieve. Extends
+ * Goal with active and completed flags and a progress counter.
+ *
+ * @author Samuel Scarfe
+ *
+ * @version 1.0
+ *
+ * @see Goal
+ * @see IndividualGoal
+ *
+ * 1.0 - First working version.
+ */
 public abstract class UserGoal extends Goal {
 
     /**
-     * The active status of the goal.
+     * The active status of the UserGoal.
      */
     protected boolean active;
     /**
-     * The completion status of the goal
+     * The completion status of the UserGoal
      */
     protected boolean completed;
     /**
-     * The current progress of the goal.
+     * The current progress of the UserGoal.
      */
     protected float progress;
 
     /**
-     * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
+     * Constructs a UserGoal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
      * Intended for use at initial creation of a goal.
      *
      * @param target  the target amount of the goal.
@@ -32,6 +45,14 @@ public abstract class UserGoal extends Goal {
         this.progress  = 0;
     }
 
+    /**
+     * Constructs a UserGoal from a target amount, unit, end date, and progress amount. Intended for use when loading
+     * goals from the database.
+     * @param target   the target amount for this UserGoal.
+     * @param unit     the targeted unit for this UserGoal.
+     * @param endDate  the end date for this UserGoal.
+     * @param progress the progress amount for this UserGoal.
+     */
     public UserGoal(float target, Unit unit, LocalDate endDate, float progress) {
         super(target, unit, endDate);
         this.progress = progress;
@@ -39,11 +60,15 @@ public abstract class UserGoal extends Goal {
         this.active    = endDate.isAfter(LocalDate.now()) && !this.completed;
     }
 
-    public UserGoal() {
+    /**
+     * Default constructor.
+     */
+    protected UserGoal() {
         super();
         this.progress = -1;
+        this.completed = false;
+        this.active = false;
     }
-
 
     /**
      * Gets the progress amount for this goal.
@@ -86,17 +111,17 @@ public abstract class UserGoal extends Goal {
             throw new IllegalArgumentException();
         }
 
-        if (this.active && !this.completed && this.unit == unit) {
+        if (this.active && !this.completed && this.unit == unit) { //if active and not completed and units match
 
-            this.progress = this.progress + update;
+            this.progress = this.progress + update; //update progress
 
-            if (this.progress >= this.target) {
+            if (this.progress >= this.target) { //if completed
                 this.completed = true;
                 this.active = false;
             }
-            return true;
+            return true; //Goal completed
         }
-        return false;
+        return false; //Goal not completed
     }
 
     /**
