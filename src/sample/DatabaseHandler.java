@@ -1744,6 +1744,56 @@ public class DatabaseHandler {
     }
 
     /**
+     * Inserts a recovery code for a forgotten password into the database with a 30 min expiry time.
+     * @param user_id ID of the user the code is for.
+     * @param token The unique token used for the recovery code.
+     */
+    public void insertRecoveryCode (int user_id, String token) {
+        LocalDateTime current_time = LocalDateTime.now();
+        LocalDateTime expiry_time = current_time.plusMinutes(30);//set time for 30 minutes from now
+        String expiry_time_string = expiry_time.toString();
+
+        String sql = "INSERT INTO passwordRecoveryCodes(userID, recoveryCode, expiryTime) VALUES('" +
+                user_id + "','" + token + "','" + expiry_time_string + "')";
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method to check if a recovery code is present and valid.
+     *
+     * @param token The unique token that is used as the recovery code.
+     * @return Returns true if valid, else returns false.
+     */
+    public boolean checkRecoveryCode (String token) {
+        LocalDateTime current_time = LocalDateTime.now();
+
+        String sql = "SELECT expiryTime FROM passwordRecoveryCodes WHERE " + "recoveryCode = '" + token + "'";
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String expiry_time_string = rs.getString("expiryTime");
+                LocalDateTime expiryTime = LocalDateTime.parse(expiry_time_string);
+                if (LocalDateTime.now().isBefore(expiryTime)) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    /**
      * Method to get the groupID based on the groupName
      *
      * @param groupName Name of the group we are finding the ID of

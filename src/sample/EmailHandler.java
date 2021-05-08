@@ -287,9 +287,10 @@ public class EmailHandler {
      * @param to          Takes a To Address, this is the address that the email will be sent to.
      */
     public void sendRecoveryEmail(Session session, String to){
-        String password = "";
-        //getPasswordFromEmail
+        String token = TokenHandler.createUniqueToken();
         String username = DatabaseHandler.getInstance().getUsernameFromEmail(to);
+        int userID = DatabaseHandler.getInstance().getUserIDFromUsername(username);
+        DatabaseHandler.getInstance().insertRecoveryCode(userID, token);
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
@@ -297,8 +298,8 @@ public class EmailHandler {
                     Message.RecipientType.TO,
                     InternetAddress.parse(to)
             );
-            message.setSubject(username + ", you have requested your forgotten password. Your password is "
-                    + "as follows \n" + password);
+            message.setSubject(username + ", you have requested to reset your password. Please use the following code: "
+            + token + "\n Enter this code into the app to reset your password.");
 
             Transport.send(message);
 
