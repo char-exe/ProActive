@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RecoveryCodePageController">
    <children>
       <VBox prefHeight="400.0" prefWidth="600.0">
          <children>
@@ -28,7 +28,7 @@
             <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
                <children>
                   <Label text="Enter your new password:   " />
-                  <TextField />
+                  <TextField fx:id="passwordField" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">

@@ -41,7 +41,7 @@ public class TokenHandler {
      *
      * @return Returns a unique token
      */
-    public static String createUniqueToken(){
+    public static String createUniqueTokenWithoutArgument(){
         Random rand = new Random();
         int num = (rand.nextInt(1000)+1); //number from 1 to 1000
         String uniqueRegToken = UUID.randomUUID().toString();

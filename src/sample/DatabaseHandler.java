@@ -1771,8 +1771,6 @@ public class DatabaseHandler {
      * @return Returns true if valid, else returns false.
      */
     public boolean checkRecoveryCode (String token) {
-        LocalDateTime current_time = LocalDateTime.now();
-
         String sql = "SELECT expiryTime FROM passwordRecoveryCodes WHERE " + "recoveryCode = '" + token + "'";
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -1791,6 +1789,26 @@ public class DatabaseHandler {
             System.out.println(e.getMessage());
         }
         return false;
+    }
+
+    /**
+     * Method to get the userID a recovery code was for.
+     *
+     * @param token The unique token that is used as the recovery code.
+     * @return The userID associated with the token or -1 if there was an error retrieving the userID
+     */
+    public int getUserIDFromRecoveryCode (String token) {
+        String sql = "SELECT userID FROM passwordRecoveryCodes WHERE " + "recoveryCode = '" + token + "'";
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                int user_id = rs.getInt("userID");
+                return user_id;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return -1;
     }
 
     /**
