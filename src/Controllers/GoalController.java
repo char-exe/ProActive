@@ -274,7 +274,7 @@ public class GoalController implements Initializable {
         //Set button action
         button.setOnAction(e -> {
             if (!systemGoal.isAccepted()) { //If goal not labelled accepted
-                user.addIndividualGoal(new IndividualGoal(systemGoal)); //Add to the user's individual goals
+                user.addGoal(new IndividualGoal(systemGoal)); //Add to the user's individual goals
                 systemGoal.setAccepted(true); //Mark accepted
                 user.saveSystemGoals(); //Save user's goals in the database
                 button.setText("Accepted"); //Update button text
@@ -309,7 +309,7 @@ public class GoalController implements Initializable {
             float amount = Float.parseFloat(amountText); //Need to check as a string first to check for empty input.
 
             IndividualGoal goal = new IndividualGoal(amount, nutrientsMap.get(unitsText), dateText);
-            user.addIndividualGoal(goal);
+            user.addGoal(goal);
             dietGoalLabel.setText("Goal added : " + goal);
         }
     }
@@ -329,7 +329,7 @@ public class GoalController implements Initializable {
 
             //Create goal and present message to user
             IndividualGoal goal = new IndividualGoal(amount, Goal.Unit.BURNED, dateText);
-            user.addIndividualGoal(goal);
+            user.addGoal(goal);
             calorieGoalLabel.setText("Goal added : " + goal);
         }
     }
@@ -356,7 +356,7 @@ public class GoalController implements Initializable {
             else {
                 goal = new IndividualGoal(amount, Goal.Unit.valueOf(unitsText.toUpperCase(Locale.ROOT)), dateText);
             }
-            user.addIndividualGoal(goal);
+            user.addGoal(goal);
             exerciseGoalLabel.setText("Goal added : " + goal);
         }
     }
@@ -604,14 +604,19 @@ public class GoalController implements Initializable {
 
             //Set button action such that if the goal is not accepted it is added to the user's goals, set to
             //accepted, updated in the database, and then the button updated.
-            EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent e) {
-                    if (!groupGoal.isAccepted()) {
-                        user.addGroupGoal(groupGoal);
-                        groupGoal.setAccepted(true);
-                        user.saveGroupGoals();
-                        button.setText("Accepted");
-                    }
+            EventHandler<ActionEvent> event = e -> {
+                if (!groupGoal.isAccepted()) {
+                    user.addGoal(new GroupGoal(
+                            groupGoal.getTarget(),
+                            groupGoal.getUnit(),
+                            groupGoal.getEndDate(),
+                            groupGoal.getProgress(),
+                            groupGoal.getGroupId(),
+                            groupGoal.isAccepted())
+                    );
+                    groupGoal.setAccepted(true);
+                    user.saveGroupGoals();
+                    button.setText("Accepted");
                 }
             };
 

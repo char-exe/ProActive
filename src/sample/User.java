@@ -356,7 +356,7 @@ public class User {
      *
      * @param goal the goal to be added.
      */
-    public void addIndividualGoal(IndividualGoal goal) {
+    public void addGoal(UserGoal goal) {
         if (goal == null) {
             throw new NullPointerException();
         }

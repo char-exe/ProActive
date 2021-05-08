@@ -512,8 +512,8 @@ public class DatabaseHandler {
      * @param identifyingValue This specifies the value by which the record/s to edit will be found
      */
     public void editValue(
-            String table, String column, String valToUpdateTo, String identifyingColumn, String identifyingValue)
-            throws SQLException {
+            String table, String column, String valToUpdateTo, String identifyingColumn, String identifyingValue
+    ) throws SQLException {
         if (table == null) {
             throw new NullPointerException("Table cannot be null");
         }
@@ -925,7 +925,7 @@ public class DatabaseHandler {
      * @param username the user's username.
      * @param goal the user's new goal.
      */
-    public void insertGoal(String username, IndividualGoal goal) {
+    public void insertGoal(String username, UserGoal goal) {
         if (username == null) {
             throw new NullPointerException();
         }
@@ -933,41 +933,15 @@ public class DatabaseHandler {
             throw new NullPointerException();
         }
 
+        int groupId = 0;
+
+        if (goal instanceof GroupGoal) {
+            groupId = ((GroupGoal)goal).getGroupId();
+        }
+
         String sql = "INSERT INTO goal (user_id, target, unit, progress, end_date, group_id) VALUES('" +
                 getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
-                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "', '0')";
-
-        try {
-            Statement stmt = this.conn.createStatement();
-            stmt.executeUpdate(sql);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Adds a new goal to the database for a user.
-     *
-     * @param username the user's username.
-     * @param goal the user's new goal.
-     */
-    public void insertGoal(String username, GroupGoal goal) {
-        if (username == null) {
-            throw new NullPointerException();
-        }
-        if (goal == null) {
-            throw new NullPointerException();
-        }
-
-        insertGoalHelper(username, goal);
-    }
-
-    private void insertGoalHelper(String username, GroupGoal goal) {
-        String sql = "INSERT INTO goal (user_id, target, unit, progress, end_date, group_id) VALUES('" +
-                getUserIDFromUsername(username) + "','" + goal.getTarget() + "','" + goal.getUnit().toString() +
-                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "','"
-                + goal.getGroupId() + "')";
+                "','" + goal.getProgress() + "','" + goal.getEndDate().toString() + "', '" + groupId + "')";
 
         try {
             Statement stmt = this.conn.createStatement();
@@ -1058,16 +1032,29 @@ public class DatabaseHandler {
      * Adds a token to the groupInvTable
      *
      * @param username the user's username.
-     *
      */
     public void addInvToken(String tokenVal, int time, String groupName, String username) {
+        if (tokenVal == null) {
+            throw new NullPointerException();
+        }
+        if (time < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (groupName == null) {
+            throw new NullPointerException();
+        }
+        if (username == null) {
+            throw new NullPointerException();
+        }
+
         //Get userID from the username
         int userID = getUserIDFromUsername(username);
 
         //Get the time 36 hours after token creation
         int timeDelay = time + 129600;
 
-        String sql = "INSERT INTO groupInvTable (tokenVal, timeDelay, groupName, userID) VALUES '" + tokenVal +"', " + time + ", '" + groupName + "', '" + username + "';";
+        String sql = "INSERT INTO groupInvTable (tokenVal, timeDelay, groupName, userID) VALUES '"
+                + tokenVal +"', " + timeDelay + ", '" + groupName + "', '" + userID + "';";
         System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
@@ -1127,6 +1114,13 @@ public class DatabaseHandler {
      * @return Returns a String representing the role of the user
      */
     public String getGroupRoleFromUsername(String group, String username){
+        if (group == null) {
+            throw new NullPointerException();
+        }
+        if (username == null) {
+            throw new NullPointerException();
+        }
+
         int groupID = getGroupIDFromName(group);
         int userID = getUserIDFromUsername(username);
         String role = null;
@@ -1324,6 +1318,12 @@ public class DatabaseHandler {
         return getSystemGoals(sql);
     }
 
+    /**
+     * Private helper method to run various SQL statements for grabbing SystemGoals.
+     *
+     * @param sql the statement to run.
+     * @return an ArrayList containing a User's SystemGoals meeting the required SQL statement.
+     */
     private ArrayList<SystemGoal> getSystemGoals(String sql) {
         if (sql == null) {
             throw new NullPointerException();
@@ -1445,7 +1445,16 @@ public class DatabaseHandler {
         return maxCompletedGoals;
     }
 
+    /**
+     * Method to get a User's email from their username.
+     *
+     * @param username the User's username.
+     * @return the User's email.
+     */
     public String getEmailFromUsername(String username){
+        if (username == null) {
+            throw new NullPointerException();
+        }
         String email = null;
 
         String sql = "SELECT email FROM user WHERE username = '" + username + "'";
@@ -1459,8 +1468,6 @@ public class DatabaseHandler {
         catch (SQLException e) {
             e.printStackTrace();
         }
-
-
 
         return email;
     }
@@ -1581,21 +1588,23 @@ public class DatabaseHandler {
     }
 
     /**
-     * Method to select all available group goals for a user.
-     * @param user user object.
-     * @return an array list containing group goal objects.
-     * @throws SQLException
+     * Method to select all available GroupGoals for a User.
+     *
+     * @param user the User for whom to retrieve GroupGoals.
+     * @return an ArrayList containing the User's GroupGoals.
      */
     public ArrayList<GroupGoal> selectGroupGoals(User user) {
+        if (user == null) {
+            throw new NullPointerException();
+        }
 
         ArrayList<GroupGoal> goals = new ArrayList<>();
 
         String sql = "SELECT group_id, target, unit, end_date, accepted FROM group_goal WHERE " +
-                "user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
+                     "user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
 
         try (Statement stmt = this.conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql))
-        {
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 float target = rs.getFloat("target");
                 Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
@@ -1615,17 +1624,25 @@ public class DatabaseHandler {
 
     /**
      * Method to insert a new group goal into the database.
+     *
      * @param username username for the user the goal is for.
      * @param goal the group goal object to be inserted.
      */
-
     public void insertGroupGoal(String username, GroupGoal goal) {
+        if (username == null ) {
+            throw new NullPointerException();
+        }
+        if (goal == null) {
+            throw new NullPointerException();
+        }
+
         float target = goal.getTarget();
         String unit = goal.getUnit().toString();
         String endDate = goal.getEndDate().toString();
         int group_id = goal.getGroupId();
         boolean accepted = goal.isAccepted();
         int user_id = getUserIDFromUsername(username);
+
         String sqlIns = "INSERT INTO group_goal(group_id, target, unit, end_date, user_id, accepted)" +
                 "VALUES(?,?,?,?,?,?,?)";
 
@@ -1655,6 +1672,13 @@ public class DatabaseHandler {
      * @param groupGoals the user's Group Goals
      */
     public void refreshGroupGoals(String username, ArrayList<GroupGoal> groupGoals) {
+        if (username == null) {
+            throw new NullPointerException();
+        }
+        if (groupGoals == null) {
+            throw new NullPointerException();
+        }
+
         String sqlDel = "DELETE FROM group_goal WHERE user_id = '" + getUserIDFromUsername(username) + "'";
 
         try {
@@ -1672,37 +1696,28 @@ public class DatabaseHandler {
     }
 
     /**
-     * Adds an individual user's instance of a group goal to the database.
-     *
-     * @param username the user's username.
-     * @param goal the user's new goal.
-     */
-    public void insertIndividualGroupGoal(String username, GroupGoal goal) {
-        insertGoalHelper(username, goal);
-    }
-
-    /**
      * Method to find the username of a user based on their email address. This is used in password recovery.
      *
      * @param email Takes in an email address.
      *
      * @return returns a string of the username linked to the given email.
      */
-    public String getUsernameFromEmail(String email){
+    public String getUsernameFromEmail(String email) {
+        if (email == null) {
+            throw new NullPointerException();
+        }
+
         String username = "Could not find Username";
 
         String sql = "SELECT username FROM user WHERE email = '" + email + "'";
 
         try (Statement stmt  = this.conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql))
-        {
-            while (rs.next())
-            {
+             ResultSet rs    = stmt.executeQuery(sql)) {
+            while (rs.next()) {
                 username = rs.getString("username");
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return username;
@@ -1711,17 +1726,24 @@ public class DatabaseHandler {
     /**
      * Method to insert a token for a group invite into the database with an expiry time of 30 minutes from method call.
      *
-     * @param group_id id of the group the invite is for.
+     * @param groupId id of the group the invite is for.
      * @param token token used for the invite.
      */
 
-    public void insertGroupInvite (int group_id, String token) {
+    public void insertGroupInvite(int groupId, String token) {
+        if (groupId < 1) {
+            throw new IllegalArgumentException();
+        }
+        if (token == null) {
+            throw new NullPointerException();
+        }
+
         LocalDateTime current_time = LocalDateTime.now();
-        LocalDateTime expiry_time = current_time.plusMinutes(30);//set time for 30 minutes from now
+        LocalDateTime expiry_time = current_time.plusMinutes(30); //set time for 30 minutes from now
         String expiry_time_string = expiry_time.toString();
 
         String sql = "INSERT INTO group_invites(group_id, token, expiry_time) VALUES('" +
-                group_id + "','" + token + "','" + expiry_time_string + "')";
+                groupId + "','" + token + "','" + expiry_time_string + "')";
         try {
             Statement stmt = this.conn.createStatement();
             stmt.executeUpdate(sql);
@@ -1834,7 +1856,6 @@ public class DatabaseHandler {
         int groupID = getGroupIDFromName(groupName);
         int userID = getUserIDFromUsername(userName);
 
-
         String sql = "UPDATE group_membership" +
                     " SET group_role = 'Admin'" +
                     " WHERE user_id = " + userID +
@@ -1887,30 +1908,38 @@ public class DatabaseHandler {
      *
      * @return Returns a fully constructed group
      */
-    public Group getGroupObjectFromGroupName(String groupName){
+    public Group getGroupObjectFromGroupName(String groupName) {
+        if (groupName == null) {
+            throw new NullPointerException();
+        }
+
         int groupID = getGroupIDFromName(groupName);
-        return getGroup(groupID, groupName);
+        return getGroup(groupID);
     }
 
     /**
      * Method to fetch a groups name based on its ID
      *
-     * @param groupID ID of the group we are fetching
+     * @param groupId ID of the group we are fetching
      *
      * @return Returns a String value representing the name of the Group
      */
-    public String getGroupNameFromID(int groupID){
+    public String getGroupNameFromID(int groupId) {
+        if (groupId < 1) {
+            throw new IllegalArgumentException();
+        }
+
         String groupName = "";
 
-        String sql = "SELECT Group_Name FROM group_table WHERE Group_Id = " + groupID;
+        String sql = "SELECT Group_Name FROM group_table WHERE Group_Id = " + groupId;
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 groupName = rs.getString("Group_Name");
-
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return groupName;
@@ -1923,25 +1952,31 @@ public class DatabaseHandler {
      *
      * @return Returns a fully constructed group
      */
-    public Group getGroupObjectFromGroupId(int groupID){
-        if (groupID < 0) {
+    public Group getGroupObjectFromGroupId(int groupID) {
+        if (groupID < 1) {
             throw new IllegalArgumentException();
         }
-        else if (groupID == 0) {
-            return null;
-        }
 
-        String groupName = getGroupNameFromID(groupID);
-        return getGroup(groupID, groupName);
+        return getGroup(groupID);
 
     }
 
-    private Group getGroup(int groupID, String groupName) {
+    /**
+     * Private helper method for getting Group objects from the database.
+     *
+     * @param groupID the unique ID of the Group.
+     * @return an instance of the Group.
+     */
+    private Group getGroup(int groupID) {
+        if (groupID < 1) {
+            throw new IllegalArgumentException();
+        }
+
         GroupOwner owner = null;
         Set<GroupAdmin> admins = new HashSet<>();
         Set<GroupMember> members = new HashSet<>();
 
-        Group group = new Group(groupName);
+        Group group = new Group(getGroupNameFromID(groupID));
 
         String sql = "SELECT User_id, Group_Role FROM group_membership WHERE Group_Id = " + groupID;
         try (Statement stmt = this.conn.createStatement();
@@ -1968,31 +2003,34 @@ public class DatabaseHandler {
         return group;
     }
 
-    public ArrayList<Group> getUserGroups(String username){
+    /**
+     * Method to retrieve all of a User's joined Groups from the database.
+     *
+     * @param username the User's username.
+     * @return an ArrayList containing the User's Groups.
+     */
+    public ArrayList<Group> getUserGroups(String username) {
+        if (username == null) {
+            throw new NullPointerException();
+        }
 
         ArrayList<Group> groups = new ArrayList<>();
 
         int userID = getUserIDFromUsername(username);
 
         String sql = "SELECT Group_Id FROM group_membership WHERE User_Id = " + userID;
+
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 groups.add(getGroupObjectFromGroupId(rs.getInt("Group_Id")));
             }
-        } catch (SQLException throwables) {
+        }
+        catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
 
         return groups;
-
-    }
-
-    public static void main(String[] args) {
-        Group a = getInstance().getGroupObjectFromGroupId(1);
-        Group b = getInstance().getGroupObjectFromGroupName("TestGroup1");
-        System.out.println(a.toString());
-        System.out.println(b.toString());
     }
 }

@@ -60,7 +60,7 @@ public class GroupGoal extends IndividualGoal {
      * @param progress the current progress of the goal.
      * @param groupId  the id of the group associated with the goal.
      */
-    public GroupGoal(float target, Unit unit, LocalDate endDate, int progress, int groupId) {
+    public GroupGoal(float target, Unit unit, LocalDate endDate, float progress, int groupId) {
         super(target, unit, endDate, progress);
         this.groupId = groupId;
         this.accepted = true;
@@ -76,7 +76,7 @@ public class GroupGoal extends IndividualGoal {
      * @param progress the current progress of the goal.
      * @param groupId  the id of the group associated with the goal.
      */
-    public GroupGoal(float target, Unit unit, LocalDate endDate, int progress, int groupId, boolean accepted) {
+    public GroupGoal(float target, Unit unit, LocalDate endDate, float progress, int groupId, boolean accepted) {
         this(target, unit, endDate, progress, groupId);
 
         this.accepted = accepted;
