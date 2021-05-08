@@ -1035,7 +1035,7 @@ public class DatabaseHandler {
         //Get the time 36 hours after token creation
         int timeDelay = time + 129600;
 
-        String sql = "INSERT INTO groupInvTable (tokenVal, timeDelay, groupName, userID) VALUES '" + tokenVal +"', " + time + ", '" + groupName + "', '" + username + "';";
+        String sql = "INSERT INTO groupInvTable (tokenVal, expiryTime, groupID, userID) VALUES '" + tokenVal +"', " + time + ", '" + groupName + "', '" + username + "';";
         System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
@@ -1696,13 +1696,13 @@ public class DatabaseHandler {
      * @param token token used for the invite.
      */
 
-    public void insertGroupInvite (int group_id, String token) {
+    public void insertGroupInvite (int group_id, String token, int user_id) {
         LocalDateTime current_time = LocalDateTime.now();
         LocalDateTime expiry_time = current_time.plusMinutes(30);//set time for 30 minutes from now
         String expiry_time_string = expiry_time.toString();
 
-        String sql = "INSERT INTO group_invites(group_id, token, expiry_time) VALUES('" +
-                group_id + "','" + token + "','" + expiry_time_string + "')";
+        String sql = "INSERT INTO groupInvTable(tokenVal, expiryTime, groupID, userID) VALUES('" +
+                token + "','" + expiry_time_string + "','" + group_id + "','" + user_id + "')";
         try {
             Statement stmt = this.conn.createStatement();
             stmt.executeUpdate(sql);
@@ -1712,26 +1712,36 @@ public class DatabaseHandler {
         }
     }
 
-    /*
-    public boolean checkGroupInvite (String token) {
+    /**
+     * Method to check if an invite token is still within the valid time and for the correct user.
+     *
+     * @param token     Invite token string.
+     * @param user_id   ID of the user the invite is being checked for.
+     * @return          Returns true if the invite is valid, else returns false.
+     */
+    public boolean checkGroupInvite (String token, int user_id) {
         LocalDateTime current_time = LocalDateTime.now();
 
-        String sql = "SELECT expiry_time FROM group_invites WHERE " + "token = '" + token + "'";
-        try (Statement stmt  = this.conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql))
-        {
-            while (rs.next())
-            {
-                String expiry_time_string = rs.getString("expiry_time");
-                LocalDateTime expiry_time = LocalDateTime.parse(expiry_time_string);
+        String sql = "SELECT expiryTime, userID FROM groupInvTable WHERE " + "tokenVal = '" + token + "'";
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String expiry_time_string = rs.getString("expiryTime");
+                LocalDateTime expiryTime = LocalDateTime.parse(expiry_time_string);
+                int tokenUserID = rs.getInt("userID");
+                if (LocalDateTime.now().isBefore(expiryTime) && user_id == tokenUserID) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
 
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-    */
+        return false;
+    }
 
     /**
      * Method to get the groupID based on the groupName

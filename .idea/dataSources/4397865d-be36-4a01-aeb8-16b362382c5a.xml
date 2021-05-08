@@ -1703,14 +1703,14 @@
       <DataType>varchar[20]|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="576" parent="175" name="timeDelay">
+    <column id="576" parent="175" name="expiryTime">
       <Position>3</Position>
-      <DataType>INTEGER|0s</DataType>
+      <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="577" parent="175" name="groupName">
+    <column id="577" parent="175" name="groupID">
       <Position>4</Position>
-      <DataType>varchar[50]|0s</DataType>
+      <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
     <column id="578" parent="175" name="userID">
@@ -1729,7 +1729,7 @@
       <UnderlyingIndexName>groupInvTable_tokenID_uindex</UnderlyingIndexName>
     </key>
     <foreign-key id="581" parent="175" name="groupInvTable_group_table_Group_Name_fk">
-      <ColNames>groupName</ColNames>
+      <ColNames>groupID</ColNames>
       <RefTableName>group_table</RefTableName>
       <RefColNames>Group_Name</RefColNames>
     </foreign-key>
