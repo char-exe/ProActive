@@ -401,7 +401,7 @@ public class User {
         if (unit == null) {
             throw new NullPointerException();
         }
-        if (amount < 1) {
+        if (amount < 0) {
             throw new IllegalArgumentException();
         }
         //for each goal

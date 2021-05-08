@@ -4,8 +4,7 @@ import java.time.LocalDate;
 
 
 /**
- * A class to represent a goal created automatically by the application. System Goals function similarly to Individual
- * Goals, but with extra flags for their update period and accepted status. System Goals are intended to be stored in
+ * A class to represent a goal created automatically by the application. System Goals are intended to be stored in
  * and loaded from the database.
  *
  * @author Samuel Scarfe

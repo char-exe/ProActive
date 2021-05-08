@@ -111,7 +111,7 @@ public abstract class UserGoal extends Goal {
         if (unit == null) {
             throw new NullPointerException();
         }
-        if (update < 1) {
+        if (update < 0) {
             throw new IllegalArgumentException();
         }
 
