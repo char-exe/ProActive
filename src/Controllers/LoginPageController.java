@@ -166,7 +166,7 @@ public class LoginPageController {
      * @param actionEvent Takes in the event that caused this method to be called
      */
     public void forgotPassword(ActionEvent actionEvent) throws IOException {
-        Stage parentScene = (Stage) escapeHome.getScene().getWindow();
+        Stage parentScene = (Stage) forgotPasswordButton.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/FXML/ForgottenPasswordPage.fxml"));
@@ -175,9 +175,7 @@ public class LoginPageController {
 
         Scene sceneParent = new Scene(forgotParent);
 
-        stage.setScene(sceneParent);
-
-        SplashPageController controller = loader.getController();
+        ForgottenPasswordPageController controller = loader.getController();
         stage.setScene(sceneParent);
 
         parentScene.close();

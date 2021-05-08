@@ -47,7 +47,7 @@ public class ForgottenPasswordPageController {
 
             stage.setScene(sceneParent);
 
-            SplashPageController controller = loader.getController();
+            RecoveryCodePageController controller = loader.getController();
             stage.setScene(sceneParent);
 
             parentScene.close();
