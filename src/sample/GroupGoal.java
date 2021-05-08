@@ -53,6 +53,7 @@ public class GroupGoal extends IndividualGoal {
     /**
      * Constructs a GroupGoal from a target amount, unit, end date, progress amount, and groupId. Intended for use
      * when loading user goals from the database.
+     *
      * @param target   the target amount for this goal.
      * @param unit     the units targeted by this goal.
      * @param endDate  the end date of the goal.
@@ -60,7 +61,9 @@ public class GroupGoal extends IndividualGoal {
      * @param groupId  the id of the group associated with the goal.
      */
     public GroupGoal(float target, Unit unit, LocalDate endDate, int progress, int groupId) {
-        this(target, unit, endDate, progress, groupId, true);
+        super(target, unit, endDate, progress);
+        this.groupId = groupId;
+        this.accepted = true;
     }
 
     /**
@@ -74,12 +77,8 @@ public class GroupGoal extends IndividualGoal {
      * @param groupId  the id of the group associated with the goal.
      */
     public GroupGoal(float target, Unit unit, LocalDate endDate, int progress, int groupId, boolean accepted) {
-        this(target, unit, endDate, groupId);
-        if (progress < 0) {
-            throw new IllegalArgumentException();
-        }
+        this(target, unit, endDate, progress, groupId);
 
-        this.progress = progress;
         this.accepted = accepted;
     }
 

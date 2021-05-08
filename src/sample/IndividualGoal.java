@@ -48,19 +48,6 @@ public class IndividualGoal extends UserGoal {
     }
 
     /**
-     * Constructs an IndividualGoal from a target amount, unit, and end date. Initialises progress to 0 and status to
-     * ongoing. Intended for use at initial creation of a goal derived from a group goal.
-     *
-     * @param target  the target amount of the goal.
-     * @param unit    the units targeted by the goal.
-     * @param endDate the end date of the goal.
-     * @param group_id the id of the group associated with the group goal this goal is derived from.
-     */
-    public IndividualGoal(float target, Unit unit, LocalDate endDate, int group_id) {
-        super(target, unit, endDate, group_id);
-    }
-
-    /**
      * Constructs an IndividualGoal from a SystemGoal.
      *
      * @param systemGoal a goal generated automatically by the system and accepted by the user.
