@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0" />
+            <Label fx:id="recoveryCodePopUp" alignment="CENTER" prefHeight="17.0" prefWidth="676.0" textFill="#d31a1a" />
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="600.0">
+               <children>
+                  <Label text="Enter the recovery code:   " />
+                  <TextField fx:id="recoveryCodeField" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="31.0" prefWidth="600.0">
+               <children>
+                  <Label fx:id="passwordFieldPopUp" textFill="#d31a1a" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+               <children>
+                  <Label text="Enter your new password:   " />
+                  <TextField />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="submitButton" mnemonicParsing="false" onAction="#submit" text="Submit" />
+                  <Label text="           " />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
