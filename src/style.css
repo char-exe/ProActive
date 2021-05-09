@@ -14,15 +14,19 @@
     -fx-padding: 35px;
 }
 
-.chart-series-line {
+.graph .chart-series-line {
     -fx-stroke-width: 4px;
     -fx-effect: null;
     -fx-stroke: #6f9dea;
 }
 
-.chart-series-line:hover {
+.graph .chart-series-line:hover {
     -fx-stroke-width: 6px;
     -fx-stroke: #ffa601;
+}
+
+.graphAlt .chart-series-line:hover {
+    -fx-stroke-width: 6px;
 }
 
 .chart-line-symbol {
@@ -30,25 +34,64 @@
     -fx-scale-y: 1.25;
 }
 
-.chart-line-symbol:hover{
+.graph .chart-line-symbol:hover{
     -fx-scale-x: 1.6;
     -fx-scale-y: 1.6;
     -fx-background-color: #ffa601;
 }
 
-.default-color0,
-.default-color1,
-.default-color2,
-.default-color3,
-.default-color4,
-.default-color5,
-.default-color6 {
+.graphAlt .chart-line-symbol:hover{
+    -fx-scale-x: 1.6;
+    -fx-scale-y: 1.6;
+}
+
+.graph .default-color0,
+.graph .default-color1,
+.graph .default-color2,
+.graph .default-color3,
+.graph .default-color4,
+.graph .default-color5,
+.graph .default-color6 {
     -fx-background-color: #4472C4;
 }
 
-.notificationBar {
-    -fx-background-color: #FFFF05;
-}
+/*.graphAlt .default-color0{*/
+/*    -fx-background-color: #000710;*/
+/*}*/
+/*.graphAlt .default-color1{*/
+/*    -fx-background-color: #003f5c;*/
+/*}*/
+/*.graphAlt .default-color2{*/
+/*    -fx-background-color: #2f4b7c;*/
+/*}*/
+/*.graphAlt .default-color3{*/
+/*    -fx-background-color: #665191;*/
+/*}*/
+/*.graphAlt .default-color4{*/
+/*    -fx-background-color: #a05195;*/
+/*}*/
+/*.graphAlt .default-color5{*/
+/*    -fx-background-color: #d45087;*/
+/*}*/
+/*.graphAlt .default-color6{*/
+/*    -fx-background-color: #f95d6a;*/
+/*}*/
+/*.graphAlt .default-color7{*/
+/*    -fx-background-color: #ff7c43;*/
+/*}*/
+/*.graphAlt .default-color8{*/
+/*    -fx-background-color: #ffa600;*/
+/*}*/
+/*.graphAlt .default-color9{*/
+/*    -fx-background-color: #c8ff00;*/
+/*}*/
+/*.graphAlt .default-color10{*/
+/*    -fx-background-color: #57c444;*/
+/*}*/
+
+/*.notificationBar {*/
+/*    -fx-background-color: #FFFF05;*/
+/*}*/
 
 .sideBar {
     -fx-background-color: #68C799;

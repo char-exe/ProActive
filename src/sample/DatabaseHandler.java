@@ -417,7 +417,6 @@ public class DatabaseHandler {
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
-
             nutritionItem = new NutritionItem(
                     rs.getString("name"),          rs.getDouble("kcal"),
                     rs.getDouble("protein_g"),     rs.getDouble("fat_g"),
@@ -439,6 +438,37 @@ public class DatabaseHandler {
             e.printStackTrace();
         }
 
+        return nutritionItem;
+    }
+
+    public NutritionItem getNutritionItem(int foodID)  {
+        String sql = "SELECT * FROM food WHERE id = " + foodID;
+
+        NutritionItem nutritionItem = null;
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+            nutritionItem = new NutritionItem(
+                    rs.getString("name"),          rs.getDouble("kcal"),
+                    rs.getDouble("protein_g"),     rs.getDouble("fat_g"),
+                    rs.getDouble("carbs_g"),       rs.getDouble("sugar_g"),
+                    rs.getDouble("fibre_g"),       rs.getDouble("cholesterol_mg"),
+                    rs.getDouble("sodium_mg"),     rs.getDouble("potassium_mg"),
+                    rs.getDouble("calcium_mg"),    rs.getDouble("magnesium_mg"),
+                    rs.getDouble("phosphorus_mg"), rs.getDouble("iron_mg"),
+                    rs.getDouble("copper_mg"),     rs.getDouble("zinc_mg"),
+                    rs.getDouble("chloride_mg"),   rs.getDouble("selenium_ug"),
+                    rs.getDouble("iodine_ug"),     rs.getDouble("vit_a_ug"),
+                    rs.getDouble("vit_d_ug"),      rs.getDouble("thiamin_mg"),
+                    rs.getDouble("riboflavin_mg"), rs.getDouble("niacin_mg"),
+                    rs.getDouble("vit_b6_mg"),     rs.getDouble("vit_b12_ug"),
+                    rs.getDouble("folate_ug"),     rs.getDouble("vit_c_mg")
+            );
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
         return nutritionItem;
     }
 
@@ -734,6 +764,45 @@ public class DatabaseHandler {
         }
 
         return entries;
+    }
+
+    public HashMap<String, ArrayList<NutritionItem>> getNutrientEntries(String username, LocalDate latest){
+        if (username == null) {
+            throw new NullPointerException();
+        }
+
+        HashMap<String, ArrayList<NutritionItem>> result = new HashMap<>();
+        HashMap<String, Integer> entries = new HashMap<>();
+        LocalDate prevWeek = latest.minusDays(6);
+
+        String sql = "SELECT date_of, food_id FROM meal WHERE user_id = '" +
+                getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + prevWeek.toString() +
+                "' AND '" + latest.toString() + "'";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String date = rs.getString("date_of");
+
+                entries.put(date, rs.getInt("food_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for(String date : entries.keySet()){
+            if(result.containsKey(date)){
+                ArrayList<NutritionItem> items = result.get(date);
+                items.add(getNutritionItem(entries.get(date)));
+                result.put(date, items);
+            } else {
+                ArrayList<NutritionItem> item = new ArrayList<>();
+                item.add(getNutritionItem(entries.get(date)));
+                result.put(date, item);
+            }
+        }
+
+        return result;
     }
 
     /**
