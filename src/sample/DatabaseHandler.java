@@ -1550,16 +1550,16 @@ public class DatabaseHandler {
 
     /**
      * Method to select all available group goals for a user.
-     * @param user user object.
+     * @param userID userID.
      * @return an array list containing group goal objects.
      * @throws SQLException
      */
-    public ArrayList<GroupGoal> selectGroupGoals(User user) {
+    public ArrayList<GroupGoal> selectGroupGoals(int userID) {
 
         ArrayList<GroupGoal> goals = new ArrayList<>();
 
         String sql = "SELECT group_id, target, unit, end_date, accepted FROM group_goal WHERE " +
-                "user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
+                "user_id = '" + userID + "'";
 
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql))

@@ -83,7 +83,7 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
-        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(DatabaseHandler.getInstance().getUserIDFromUsername(username));
         for (Goal goal : goals) {
             System.out.println(goal);
         }
@@ -111,7 +111,7 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
-        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(DatabaseHandler.getInstance().getUserIDFromUsername(username));
         for (Goal goal : goals) {
             System.out.println(goal);
         }
