@@ -1,13 +1,9 @@
 package Controllers;
 
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import sample.*;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
@@ -95,9 +90,6 @@ public class LogActivityController implements Initializable {
     private HashMap<NutritionItem, Integer> snack;
     private HashMap<NutritionItem, Integer> dinner;
 
-    //Custom Item button
-    @FXML private Button addCustomItem;
-
     private DatabaseHandler dh;
     private User user;
 
@@ -116,41 +108,10 @@ public class LogActivityController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        //Set exerciseMinutesField to digits only
-        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        exerciseMinutesField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    exerciseMinutesField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
-
-        //Set weightField to digits only
-        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        weightField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    weightField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
-
-        //Set foodQuantity to digits only
-        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        foodQuantity.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    foodQuantity.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
+        //Set number fields to digits only
+        setDigitsOnly(exerciseMinutesField);
+        setDigitsOnly(weightField);
+        setDigitsOnly(foodQuantity);
 
         //Get DatabaseHandler instance
         dh = DatabaseHandler.getInstance();
@@ -219,10 +180,8 @@ public class LogActivityController implements Initializable {
 
     /**
      * Method for submitting an exercise entry from the app to the database.
-     *
-     * @param actionEvent a mouseclick event on the submit button.
      */
-    public void submitExercise(ActionEvent actionEvent) {
+    public void submitExercise() {
         //Empty message to user
         exercisePopUp.setText("");
 
@@ -260,34 +219,9 @@ public class LogActivityController implements Initializable {
     }
 
     /**
-     * Private helper method for checking input values to exercise fields and setting a label.
-     *
-     * @param exercise the exercise value entered.
-     * @param minutesText the minutes value entered.
-     * @return a boolean representing whether the fields have been correctly completed.
-     */
-    private boolean checkExerciseFields(String exercise, String minutesText) {
-        if (exercise == null || exercise.equals("")) { //No exercise entered
-            exercisePopUp.setText("Please enter an exercise");
-            return false;
-        }
-        else if (minutesText == null || minutesText.equals("")) { //No minutes entered
-            exercisePopUp.setText("Please enter how many minutes for");
-            return false;
-        }
-        else if (Integer.parseInt(minutesText) == 0) { //0 entered for minutes
-            exercisePopUp.setText("Minutes must be greater than 0");
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Method for submitting a weight entry from the app to the database.
-     *
-     * @param actionEvent a mouseclick event on the submit button.
      */
-    public void submitWeight(ActionEvent actionEvent) {
+    public void submitWeight() {
         //Empty messages to user
         weightFieldsLabel.setText("");
         weightDateLabel.setText("");
@@ -313,39 +247,6 @@ public class LogActivityController implements Initializable {
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * Private helper method for checking weight entry input values.
-     *
-     * @param weightText the weight value entered.
-     * @param weightUnit the weight unit entered.
-     * @param date the entry date entered.
-     * @return a boolean value representing whether the update was successful.
-     */
-    private boolean checkWeightFields(String weightText, String weightUnit, LocalDate date) {
-        if (weightText == null || weightText.equals("")) { //No weight entered
-            weightFieldsLabel.setText("Please enter a weight value");
-            return false;
-        }
-        else if (Float.parseFloat(weightText) == 0) { //0 weight entered
-            weightFieldsLabel.setText("Weight cannot be 0");
-            return false;
-        }
-        else if (weightUnit == null || weightUnit.equals("")) { //No unit selected
-            weightFieldsLabel.setText("Please select a unit");
-            return false;
-        }
-        else if (date == null) { //No date selected
-            weightDateLabel.setText("Please select a date");
-            return false;
-        }
-        else if (date.isAfter(LocalDate.now())) { //Future date selected
-            weightDateLabel.setText("Date cannot be in the future");
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -410,40 +311,9 @@ public class LogActivityController implements Initializable {
     }
 
     /**
-     * Private helper method for checking the input values for adding foods to meals.
-     *
-     * @param meal the meal selected.
-     * @param food the food entered.
-     * @param quantityText the quantity consumed.
-     * @return a boolean value representing whether the input was successful.
-     */
-    private boolean checkFoodFields(String meal, String food, String quantityText) {
-        if (meal == null || meal.equals("")) { //No meal entered
-            foodFieldsLabel.setText("Please select a valid meal");
-            return false;
-        }
-        else if (food == null || food.equals("")) { //No food entered
-            foodFieldsLabel.setText("Please select a valid food");
-            return false;
-        }
-        else if (quantityText == null || quantityText.equals("")) { //No quantity entered
-            foodFieldsLabel.setText("Please enter an amount consumed");
-            return false;
-        }
-        else if (Integer.parseInt(quantityText) == 0) { //0 entered for quantity
-            foodFieldsLabel.setText("Quantity cannot be 0");
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Method to add completed meals to the database.
-     *
-     * @param actionEvent a mouseclick on the save changes button.
      */
-    public void submitFood(ActionEvent actionEvent) {
+    public void submitFood() {
         //Empty messages to user
         foodFieldsLabel.setText("");
         foodDateLabel.setText("");
@@ -551,25 +421,6 @@ public class LogActivityController implements Initializable {
     }
 
     /**
-     * Private helper method for checking whether the date value for adding a food value is suitable.
-     *
-     * @param date the date entered.
-     * @return a boolean value representing whether the update was successful.
-     */
-    private boolean checkFoodDate(LocalDate date) {
-        if (date == null) { //No date selected
-            foodDateLabel.setText("Please enter a date");
-            return false;
-        }
-        else if (date.isAfter(LocalDate.now())) { //Future date selected
-            foodDateLabel.setText("Date cannot be in the future");
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Method to set the table contents on each of the meal tabs to the content of their respective
      * maps.
      */
@@ -602,9 +453,153 @@ public class LogActivityController implements Initializable {
     }
 
     /**
+     * Method to handle custom nutrition item creation
+     *
+     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
+     */
+    public void customNutritionItemButtonAction() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateNutritionItem.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(part);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /**
+     * Method to handle custom exercise item creation
+     *
+     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
+     */
+    public void customExerciseItemButtonAction() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateExerciseItem.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(part);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /**
+     * Private helper method to set a field to digits only.
+     * //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+     *
+     * @param textField the TextField to set to only accept digits.
+     */
+    private void setDigitsOnly(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+    }
+
+    /**
+     * Private helper method for checking input values to exercise fields and setting a label.
+     *
+     * @param exercise the exercise value entered.
+     * @param minutesText the minutes value entered.
+     * @return a boolean representing whether the fields have been correctly completed.
+     */
+    private boolean checkExerciseFields(String exercise, String minutesText) {
+        if (exercise == null || exercise.equals("")) { //No exercise entered
+            exercisePopUp.setText("Please enter an exercise");
+            return false;
+        }
+        else if (minutesText == null || minutesText.equals("")) { //No minutes entered
+            exercisePopUp.setText("Please enter how many minutes for");
+            return false;
+        }
+        else if (Integer.parseInt(minutesText) == 0) { //0 entered for minutes
+            exercisePopUp.setText("Minutes must be greater than 0");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Private helper method for checking weight entry input values.
+     *
+     * @param weightText the weight value entered.
+     * @param weightUnit the weight unit entered.
+     * @param date the entry date entered.
+     * @return a boolean value representing whether the update was successful.
+     */
+    private boolean checkWeightFields(String weightText, String weightUnit, LocalDate date) {
+        if (weightText == null || weightText.equals("")) { //No weight entered
+            weightFieldsLabel.setText("Please enter a weight value");
+            return false;
+        }
+        else if (Float.parseFloat(weightText) == 0) { //0 weight entered
+            weightFieldsLabel.setText("Weight cannot be 0");
+            return false;
+        }
+        else if (weightUnit == null || weightUnit.equals("")) { //No unit selected
+            weightFieldsLabel.setText("Please select a unit");
+            return false;
+        }
+        else if (date == null) { //No date selected
+            weightDateLabel.setText("Please select a date");
+            return false;
+        }
+        else if (date.isAfter(LocalDate.now())) { //Future date selected
+            weightDateLabel.setText("Date cannot be in the future");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Private helper method for checking the input values for adding foods to meals.
+     *
+     * @param meal the meal selected.
+     * @param food the food entered.
+     * @param quantityText the quantity consumed.
+     * @return a boolean value representing whether the input was successful.
+     */
+    private boolean checkFoodFields(String meal, String food, String quantityText) {
+        if (meal == null || meal.equals("")) { //No meal entered
+            foodFieldsLabel.setText("Please select a valid meal");
+            return false;
+        }
+        else if (food == null || food.equals("")) { //No food entered
+            foodFieldsLabel.setText("Please select a valid food");
+            return false;
+        }
+        else if (quantityText == null || quantityText.equals("")) { //No quantity entered
+            foodFieldsLabel.setText("Please enter an amount consumed");
+            return false;
+        }
+        else if (Integer.parseInt(quantityText) == 0) { //0 entered for quantity
+            foodFieldsLabel.setText("Quantity cannot be 0");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Private helper method for checking whether the date value for adding a food value is suitable.
+     *
+     * @param date the date entered.
+     * @return a boolean value representing whether the update was successful.
+     */
+    private boolean checkFoodDate(LocalDate date) {
+        if (date == null) { //No date selected
+            foodDateLabel.setText("Please enter a date");
+            return false;
+        }
+        else if (date.isAfter(LocalDate.now())) { //Future date selected
+            foodDateLabel.setText("Date cannot be in the future");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Wrapper class for table rows, wraps food name and calories into one class.
      */
-    public class FoodItem {
+    public static class FoodItem {
         private SimpleStringProperty foodName;
         private SimpleDoubleProperty calories;
 
@@ -654,31 +649,5 @@ public class LogActivityController implements Initializable {
         public void setCalories(double calories) {
             this.calories = new SimpleDoubleProperty(calories);
         }
-    }
-
-    /**
-     * Method to handle custom nutrition item creation
-     *
-     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
-     */
-    public void customNutritionItemButtonAction() throws IOException {
-        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateNutritionItem.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(part);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    /**
-     * Method to handle custom exercise item creation
-     *
-     * @throws IOException Throws an IOException whenever it is possible for a file to be missing
-     */
-    public void customExerciseItemButtonAction() throws IOException {
-        Parent part = FXMLLoader.load(getClass().getResource("/FXML/CreateExerciseItem.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(part);
-        stage.setScene(scene);
-        stage.show();
     }
 }
