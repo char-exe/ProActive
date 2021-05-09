@@ -89,9 +89,9 @@
 /*    -fx-background-color: #57c444;*/
 /*}*/
 
-/*.notificationBar {*/
-/*    -fx-background-color: #FFFF05;*/
-/*}*/
+.notificationBar {
+    -fx-background-color: #FFFF05;
+}
 
 .sideBar {
     -fx-background-color: #68C799;

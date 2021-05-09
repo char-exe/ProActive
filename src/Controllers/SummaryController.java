@@ -3,6 +3,7 @@ package Controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -16,9 +17,7 @@ import sample.User;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * A class to control the summary viewing page of the ProActive App. Handles the adding of data to the graphs and the
@@ -118,6 +117,21 @@ public class SummaryController implements Initializable
     private LocalDate vitaminsChartDate = LocalDate.now();
 
     private final Tooltip nextWeekTooltip = new Tooltip("You cannot summarise the future!");
+
+    private final List<String> colourHexList = Arrays.asList(
+            "#000710",
+            "#003f5c",
+            "#2f4b7c",
+            "#665191",
+            "#a05195",
+            "#d45087",
+            "#f95d6a",
+            "#ff7c43",
+            "#ffa600",
+            "#c8ff00",
+            "#57c444",
+            "#FFFF05"
+    );
 
     /**
      * Initializes the graphs with formatted axes and dummy data.
@@ -406,6 +420,7 @@ public class SummaryController implements Initializable
         }
 
         // For each nutrient series, add series to chart
+        int colourPos = 0;
         for(XYChart.Series series : nutrientSeries){
 
             nutritionChart.getData().add(series);
@@ -424,7 +439,30 @@ public class SummaryController implements Initializable
 
             }
 
+//            try {
+//                Node line = series.getNode().lookup(".chart-series-line");
+//                line.setStyle("-fx-fill: " + colourHexList.get(colourPos));
+//            } catch (Exception e){
+//                System.out.println(e.getMessage());
+//            }
+//
+//            colourPos++;
+
         }
+
+//        for (int i = 0; i < nutritionChart.getData().size(); i++) {
+//
+//            Set<Node> nodes = nutritionChart.lookupAll(".series" + i);
+//
+//            for(Node n : nodes){
+//
+//                n.setStyle(
+//                        "-fx-background-color: " + colourHexList.get(i)
+//                );
+//
+//            }
+//
+//        }
 
         for(XYChart.Series series : mineralsSeries){
 
