@@ -3,7 +3,6 @@ package sample;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -788,25 +787,6 @@ class UserTest {
         );
 
         assertThrows(NullPointerException.class, () -> batman.addGoal(null));
-    }
-
-    @Test
-    void illegalAddGoal() {
-        User batman = new User(
-                "Bruce",
-                "Wayne",
-                User.Sex.MALE,
-                LocalDate.of(1998, 3, 9),
-                "manbat@gmail.com",
-                "bwayne1998"
-        );
-
-        assertThrows(IllegalArgumentException.class, () -> batman.addGoal(new SystemGoal(
-                1.0f, Goal.Unit.PROTEIN,
-                LocalDate.now().plusDays(1),
-                SystemGoal.UpdatePeriod.DAILY,
-                SystemGoal.Category.DAY_TO_DAY))
-        );
     }
 
     @Test

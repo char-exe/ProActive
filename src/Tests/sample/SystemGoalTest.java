@@ -144,19 +144,6 @@ class SystemGoalTest {
 
         assertEquals(LocalDate.now(), systemGoal.getEndDate());
     }
-    @Test
-    void getProgress() {
-        SystemGoal systemGoal = new SystemGoal(
-                1,
-                Goal.Unit.PROTEIN,
-                LocalDate.now(),
-                SystemGoal.UpdatePeriod.DAILY,
-                SystemGoal.Category.DAY_TO_DAY,
-                true
-        );
-
-        assertEquals(0, systemGoal.getProgress());
-    }
 
     @Test
     void testToStringNotMinutes() {

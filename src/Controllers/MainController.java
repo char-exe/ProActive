@@ -10,20 +10,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import sample.DatabaseHandler;
-import sample.Goal;
 import sample.GoalGenerator;
 import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.security.Key;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 /**
@@ -75,7 +74,6 @@ public class MainController implements Initializable {
      * @param user Takes in a user object
      */
     public void initData(User user){
-        System.out.println(user);
         this.user = user;
     }
 
@@ -93,7 +91,7 @@ public class MainController implements Initializable {
 
         SummaryController summaryController = loader.getController();
         summaryController.initData(user);
-        summaryController.setData();
+        summaryController.initChartData();
 
         GoalGenerator gg = new GoalGenerator(user);
         user.setSystemGoals(gg.generateGoals());

@@ -3,18 +3,20 @@ package sample;
 import java.time.LocalDate;
 
 /**
- * Abstract class for modelling a user goal in the ProActive app by its target amount, concerned units, end date,
- * current progress, and completion status.
+ * Abstract class for modelling a user goal in the ProActive app by its target amount, concerned units, and end date.
  *
  * @author Samuel Scarfe
  *
- * @version 1.2
+ * @version 1.4
  *
  * 1.0 - First working version.
  * 1.1 - Updated with minimum target amounts as part of automatic goal generation.
  * 1.2 - Increased units to include vitamins and minerals. Updated all units with a unit string, this is preferable
  *       over a to string due to the variable nature of translation from unit to unit string.
  * 1.3 - Extended to include group_id and methods to support this.
+ * 1.4 - Refactored such that an inheritance hierarchy is more clearly defined. Progress, active, completed, and groupId
+ *       no longer instance variables of Goal. Instead they and their respective methods have been placed in
+ *       appropriate subclasses.
  */
 public abstract class Goal {
 
@@ -50,7 +52,9 @@ public abstract class Goal {
          */
         private final int minimum;
 
-
+        /**
+         * The string that will be used to show this unit's unit type.
+         */
         private final String unitString;
 
         /**
@@ -71,6 +75,11 @@ public abstract class Goal {
             return this.minimum;
         }
 
+        /**
+         * Gets the unit string for this unit.
+         *
+         * @return the unit string for this unit.
+         */
         public String getUnitString() {
             return unitString;
         }
@@ -88,30 +97,18 @@ public abstract class Goal {
      * The end date of the goal.
      */
     protected LocalDate endDate;
-    /**
-     * The current progress of the goal.
-     */
-    protected float progress;
-
-    protected boolean active;
-
-    protected boolean completed;
 
     /**
-     * If the goal was derived from a group goal it will have a group id, else this value will be 0
+     * Default constructor.
      */
-    protected int group_id;
-
     protected Goal() {
         this.target = -1;
         this.unit = null;
         this.endDate = null;
-        this.progress = -1;
     }
 
     /**
-     * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
-     * Intended for use at initial creation of a goal.
+     * Constructs a goal from a target amount, unit, and end date.
      *
      * @param target  the target amount of the goal.
      * @param unit    the units targeted by the goal.
@@ -123,69 +120,6 @@ public abstract class Goal {
         this.target    = target;
         this.unit      = unit;
         this.endDate   = endDate;
-        this.progress  = 0;
-        this.active    = endDate.isAfter(LocalDate.now());
-        this.completed = progress >= target;
-        this.group_id = 0;
-    }
-
-    /**
-     * Constructs a goal from a target amount, unit, end date, progress amount, and current status. Intended for use
-     * when pulling user goals from the database.
-     *
-     * @param target    the target amount of the goal.
-     * @param unit      the units targeted by the goal.
-     * @param endDate   the end date of the goal.
-     * @param progress  the current progress of the goal.
-     */
-    public Goal(float target, Unit unit, LocalDate endDate, float progress) {
-        checkConstructorInputs(target, unit, endDate, progress);
-        this.target    = target;
-        this.unit      = unit;
-        this.endDate   = endDate;
-        this.progress  = progress;
-        this.active    = endDate.isAfter(LocalDate.now());
-        this.completed = progress >= target;
-        this.group_id = 0;
-    }
-
-    /**
-     * Constructs a goal from a target amount, unit, and end date. Initialises progress to 0 and status to ongoing.
-     * Intended for use at initial creation of a goal from a group goal.
-     *
-     * @param target  the target amount of the goal.
-     * @param unit    the units targeted by the goal.
-     * @param endDate the end date of the goal.
-     * @param group_id the id of the group the goal is associated with.
-     */
-    public Goal(float target, Unit unit, LocalDate endDate, int group_id) {
-        this.target    = target;
-        this.unit      = unit;
-        this.endDate   = endDate;
-        this.progress  = 0;
-        this.active    = endDate.isAfter(LocalDate.now());
-        this.completed = progress >= target;
-        this.group_id = group_id;
-    }
-
-    /**
-     * Constructs a goal from a target amount, unit, end date, progress amount, and current status. Intended for use
-     * when pulling user instances of group goals from the database.
-     *
-     * @param target    the target amount of the goal.
-     * @param unit      the units targeted by the goal.
-     * @param endDate   the end date of the goal.
-     * @param progress  the current progress of the goal.
-     * @param group_id the id of the group the goal is associated with.
-     */
-    public Goal(float target, Unit unit, LocalDate endDate, float progress, int group_id) {
-        this.target    = target;
-        this.unit      = unit;
-        this.endDate   = endDate;
-        this.progress  = progress;
-        this.active    = endDate.isAfter(LocalDate.now());
-        this.completed = progress >= target;
-        this.group_id = group_id;
     }
 
     /**
@@ -216,66 +150,6 @@ public abstract class Goal {
     }
 
     /**
-     * Gets the progress amount for this goal.
-     *
-     * @return the progress amount for this goal.
-     */
-    public float getProgress() {
-        return this.progress;
-    }
-
-    /**
-     * Gets the active status of this goal.
-     *
-     * @return the active status of this goal.
-     */
-    public boolean isActive() {
-        return this.active;
-    }
-
-    /**
-     * Gets the completed status of this goal.
-     *
-     * @return the completed status of this goal.
-     */
-    public boolean isCompleted() {
-        return this.completed;
-    }
-
-    /**
-     * Gets the group_id for the goal (Note this is default 0 if no group is associated with this goal).
-     *
-     * @return the group_id for this goal.
-     */
-    public int getGroup_id() { return group_id; }
-
-    /**
-     * Increments the current progress by the passed amount, provided the goal is marked as ongoing. Updates the goal
-     * status to completed if the target has been met.
-     *
-     * @param unit unit used for the goal.
-     * @param update the amount to increment progress by.
-     * @param user the user object, used for finding group goal to allow notification calls
-     */
-    public boolean updateProgress(Unit unit, float update, User user) {
-        if (this.active && !this.completed && this.unit == unit) {
-
-            this.progress = this.progress + update;
-
-            if (this.progress > this.target) {
-                this.completed = true;
-                NotificationHandler.getInstance().sendGoalNotificationWithEmail_Fade(user.getEmail(), this);
-                if (this.getGroup_id() > 0){
-                    //Group group = DatabaseHandler.getInstance().getGroupFromID(this.getGroup_id());
-                    //group.sendGroupNotifications(user, this);
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Combines the target and unit for use in sending notifications about goal completment.
      * @return the target value and unit with a space between them.
      */
@@ -283,6 +157,11 @@ public abstract class Goal {
         return (getTarget() + " " + getUnit());
     }
 
+    /**
+     * Returns a String representation of this Goal.
+     *
+     * @return a String representation of this Goal.
+     */
     public String toString() {
 
         if (this.unit.getMinimum() > -1) { //If this is a fitness goal
@@ -309,21 +188,6 @@ public abstract class Goal {
         }
         if (endDate == null) {
             throw new NullPointerException();
-        }
-    }
-
-    /**
-     * Private helper method for checking constructor inputs for the long constructor.
-     *
-     * @param target the target for this Goal.
-     * @param unit the unit for this Goal.
-     * @param endDate the endDate for this Goal.
-     * @param progress the progress for this Goal.
-     */
-    private void checkConstructorInputs(float target, Unit unit, LocalDate endDate, float progress) {
-        checkConstructorInputs(target, unit, endDate);
-        if (progress < 0) {
-            throw new IllegalArgumentException();
         }
     }
 }

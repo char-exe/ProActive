@@ -52,7 +52,7 @@ public class User {
     private LocalDate dob;
     private final String email;
     private Set<Group> groupMemberships = new HashSet<Group>();
-    private ArrayList<Goal> goals;
+    private ArrayList<UserGoal> goals;
     private ArrayList<SystemGoal> systemGoals;
     private ArrayList<GroupGoal> groupGoals;
     private final String username;
@@ -83,10 +83,7 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
-        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(DatabaseHandler.getInstance().getUserIDFromUsername(username));
-        for (Goal goal : goals) {
-            System.out.println(goal);
-        }
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -111,10 +108,7 @@ public class User {
         this.username = username;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
-        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(DatabaseHandler.getInstance().getUserIDFromUsername(username));
-        for (Goal goal : goals) {
-            System.out.println(goal);
-        }
+        this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -220,7 +214,7 @@ public class User {
      *
      * @return this user's goals as an ArrayList.
      */
-    public ArrayList<Goal> getGoals() {
+    public ArrayList<UserGoal> getGoals() {
         return this.goals;
     }
 
@@ -356,16 +350,22 @@ public class User {
      *
      * @param goal the goal to be added.
      */
-    public void addGoal(Goal goal) {
+    public void addGoal(UserGoal goal) {
         if (goal == null) {
             throw new NullPointerException();
-        }
-        if (goal instanceof SystemGoal) {
-            throw new IllegalArgumentException();
         }
 
         this.goals.add(goal);
         DatabaseHandler.getInstance().insertGoal(this.getUsername(), goal);
+    }
+
+    public void addGroupGoal(GroupGoal groupGoal) {
+        if (groupGoal == null) {
+            throw new NullPointerException();
+        }
+
+        this.goals.add(groupGoal);
+        DatabaseHandler.getInstance().insertGoal(this.getUsername(), groupGoal);
     }
 
     /**
@@ -376,11 +376,11 @@ public class User {
      */
     public void updateGoals(Goal.Unit unit, int amount) {
         //for each goal
-        for (Goal goal : goals) {
+        for (UserGoal userGoal : goals) {
             //if the goal is updated
-            if (goal.updateProgress(unit, amount, this)) {
+            if (userGoal.updateProgress(unit, amount)) {
                 //update the goal in the database
-                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+                DatabaseHandler.getInstance().updateGoal(username, userGoal, amount);
             }
         }
     }
@@ -395,15 +395,15 @@ public class User {
         if (unit == null) {
             throw new NullPointerException();
         }
-        if (amount < 1) {
+        if (amount < 0) {
             throw new IllegalArgumentException();
         }
         //for each goal
-        for (Goal goal : goals) {
+        for (UserGoal userGoal : goals) {
             //if the goal is updated
-            if (goal.updateProgress(unit, amount, this)) {
+            if (userGoal.updateProgress(unit, amount)) {
                 //update the goal in the database
-                DatabaseHandler.getInstance().updateGoal(username, goal, amount);
+                DatabaseHandler.getInstance().updateGoal(username, userGoal, amount);
             }
         }
     }
@@ -487,25 +487,20 @@ public class User {
      * Method to mark a goal as not active and update it's end date to today's date, functionally equivalent to
      * quitting it.
      *
-     * @param goal the goal to quit.
+     * @param userGoal the goal to quit.
      */
-    public void quitGoal(Goal goal) {
-        if (goal == null) {
+    public void quitGoal(UserGoal userGoal) {
+        if (userGoal == null) {
             throw new NullPointerException();
         }
-        for (Goal g : this.goals) {
-            if (g == goal) {
-                ((IndividualGoal)g).quitGoal();
-                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, goal);
+        for (UserGoal ug : this.goals) {
+            if (ug == userGoal) {
+                ug.quitGoal();
+                DatabaseHandler.getInstance().quitGoalInDatabase(this.username, userGoal);
             }
         }
     }
-
-    //Class-Specific Methods
     /*
-    public ArrayList<Goal> getGoals(){
-        To be implemented in Sprint 2
-    }
 
     public void joinGroup(Group group){
 
@@ -557,29 +552,27 @@ public class User {
      * @param email Stores the unique email address of the User
      * @param username Stores the unique username of the User
      */
-    private void checkConstructorInputs(String firstname, String surname, Sex sex, LocalDate dob, String email,
-                                        String username) {
+    private void checkConstructorInputs(
+            String firstname, String surname, Sex sex, LocalDate dob, String email, String username) {
         if (firstname == null) {
             throw new NullPointerException();
         }
         if (surname == null) {
             throw new NullPointerException();
         }
-        if (sex == null){
+        if (sex == null) {
             throw new NullPointerException();
         }
-        if (dob == null){
+        if (dob == null) {
             throw new NullPointerException();
         }
         if (dob.compareTo(LocalDate.now()) > 0) {
             throw new IllegalArgumentException();
         }
-        if (email == null)
-        {
+        if (email == null) {
             throw new NullPointerException();
         }
-        if (username == null)
-        {
+        if (username == null) {
             throw new NullPointerException();
         }
 
@@ -665,20 +658,5 @@ public class User {
         else {
             return false;
         }
-    }
-
-
-    /**
-     * Test Harness
-     *
-     * @param args Command line arguments
-     */
-    public static void main(String[] args) {
-        User user = new User("test","test", Sex.MALE, 0.1f, 0.1f,
-                LocalDate.of(1999, Month.DECEMBER, 28), "test@gmail.com", "testy");
-
-//        System.out.println(user.getDob().toString());
-//        System.out.println(user);
-
     }
 }

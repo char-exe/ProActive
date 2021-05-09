@@ -4,8 +4,7 @@ import java.time.LocalDate;
 
 
 /**
- * A class to represent a goal created automatically by the application. System Goals function similarly to Individual
- * Goals, but with extra flags for their update period and accepted status. System Goals are intended to be stored in
+ * A class to represent a goal created automatically by the application. System Goals are intended to be stored in
  * and loaded from the database.
  *
  * @author Samuel Scarfe
@@ -16,14 +15,31 @@ import java.time.LocalDate;
  */
 public class SystemGoal extends Goal {
 
+    /**
+     * The update period for this SystemGoal.
+     */
     private final UpdatePeriod updatePeriod;
+
+    /**
+     * The category for this SystemGoal.
+     */
     private final Category category;
+
+    /**
+     * The accepted status for this SystemGoal
+     */
     private boolean accepted;
 
+    /**
+     * Enum class to represent update periods for goals.
+     */
     public enum UpdatePeriod {
         DAILY, WEEKLY
     }
 
+    /**
+     * Enum class to represent categories for goals.
+     */
     public enum Category {
         DAY_TO_DAY, STAY, PUSH
     }
@@ -38,9 +54,7 @@ public class SystemGoal extends Goal {
      * @param updatePeriod the update period for this SystemGoal.
      * @param category     the category for this SystemGoal.
      */
-    public SystemGoal(
-            float target, Unit unit, LocalDate endDate, UpdatePeriod updatePeriod, Category category
-    ) {
+    public SystemGoal(float target, Unit unit, LocalDate endDate, UpdatePeriod updatePeriod, Category category) {
         super(target, unit, endDate);
 
         if (updatePeriod == null) {

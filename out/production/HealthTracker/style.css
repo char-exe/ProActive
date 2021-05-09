@@ -17,14 +17,32 @@
 .chart-series-line {
     -fx-stroke-width: 4px;
     -fx-effect: null;
-}
-
-
-.default-color0.chart-series-line {
     -fx-stroke: #6f9dea;
 }
 
-.default-color0 {
+.chart-series-line:hover {
+    -fx-stroke-width: 6px;
+    -fx-stroke: #ffa601;
+}
+
+.chart-line-symbol {
+    -fx-scale-x: 1.25;
+    -fx-scale-y: 1.25;
+}
+
+.chart-line-symbol:hover{
+    -fx-scale-x: 1.6;
+    -fx-scale-y: 1.6;
+    -fx-background-color: #ffa601;
+}
+
+.default-color0,
+.default-color1,
+.default-color2,
+.default-color3,
+.default-color4,
+.default-color5,
+.default-color6 {
     -fx-background-color: #4472C4;
 }
 
@@ -140,4 +158,26 @@
     -fx-background-color: white;
     -fx-border-radius: 50px;
     -fx-background-radius: 50px;
+}
+
+.graph {
+    -fx-background-radius: 40px;
+    -fx-border-radius: 40px;
+}
+
+.cycleWeekBox {
+    -fx-background-color: #4472C4;
+    -fx-background-radius: 0 0 18 18;
+    -fx-border-radius: 0 0 18 18;
+}
+
+.graph {
+    -fx-background-radius: 40px;
+    -fx-border-radius: 40px;
+}
+
+.cycleWeekBox {
+    -fx-background-color: #4472C4;
+    -fx-background-radius: 0 0 18 18;
+    -fx-border-radius: 0 0 18 18;
 }
