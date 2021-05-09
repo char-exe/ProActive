@@ -350,10 +350,8 @@ public class LogActivityController implements Initializable {
 
     /**
      * Method to add individual food items to meals.
-     *
-     * @param actionEvent a mouseclick on the add button.
      */
-    public void addFoodToMeal(ActionEvent actionEvent) {
+    public void addFoodToMeal() {
         //Empty messages to user
         foodFieldsLabel.setText("");
         foodDateLabel.setText("");
