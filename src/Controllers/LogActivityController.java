@@ -370,31 +370,31 @@ public class LogActivityController implements Initializable {
             switch (meal) {
                 case "Breakfast":
                     if (breakfast.containsKey(nutritionItem)) {
-                        breakfast.put(nutritionItem, breakfast.get(food) + quantity); //Increment existing
+                        breakfast.put(nutritionItem, breakfast.get(nutritionItem) + quantity); //Increment existing
                     }
                     else {
                         breakfast.put(nutritionItem, quantity); //Add new
                     }
                     break;
                 case "Lunch":
-                    if (lunch.containsKey(food)) {
-                        lunch.put(nutritionItem, lunch.get(food) + quantity); //Increment existing
+                    if (lunch.containsKey(nutritionItem)) {
+                        lunch.put(nutritionItem, lunch.get(nutritionItem) + quantity); //Increment existing
                     }
                     else {
                         lunch.put(nutritionItem, quantity); //Add new
                     }
                     break;
                 case "Dinner":
-                    if (dinner.containsKey(food)) {
-                        dinner.put(nutritionItem, dinner.get(food) + quantity); //Increment existing
+                    if (dinner.containsKey(nutritionItem)) {
+                        dinner.put(nutritionItem, dinner.get(nutritionItem) + quantity); //Increment existing
                     }
                     else {
                         dinner.put(nutritionItem, quantity); //Add new
                     }
                     break;
                 case "Snacks":
-                    if (snack.containsKey(food)) {
-                        snack.put(nutritionItem, snack.get(food) + quantity); //Increment existing
+                    if (snack.containsKey(nutritionItem)) {
+                        snack.put(nutritionItem, snack.get(nutritionItem) + quantity); //Increment existing
                     }
                     else {
                         snack.put(nutritionItem, quantity); //Add new
