@@ -816,7 +816,9 @@ public class DatabaseHandler {
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
-            exerciseId = rs.getInt("id");
+            while (rs.next()) {
+                exerciseId = rs.getInt("id");
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -844,8 +846,14 @@ public class DatabaseHandler {
             throw new IllegalArgumentException();
         }
 
+        int exerciseId = getExerciseId(exercise);
+
+        if (exerciseId == -1) {
+            throw new IllegalStateException();
+        }
+
         String sql = "INSERT INTO activity (exercise_id, user_id, duration, date_of)" +
-                     "VALUES('" + getExerciseId(exercise)  + "', '" + getUserIDFromUsername(username) +
+                     "VALUES('" + exerciseId  + "', '" + getUserIDFromUsername(username) +
                      "','" + duration + "','" + LocalDate.now().toString() + "')";
 
         Statement stmt  = conn.createStatement();

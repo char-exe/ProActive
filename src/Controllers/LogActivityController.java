@@ -38,18 +38,19 @@ import java.util.ResourceBundle;
  *
  * @version 1.7
  *
- * 1.0 - Initial commit, dummy file.
- * 1.1 - Implemented simple exercise logging to database.
- * 1.2 - Implemented simple weight logging to database.
- * 1.3 - Implemented simple food logging to database.
- * 1.4 - Implemented value checking for logging, preventing null values and future dates.
- * 1.5 - Implemented table view for added foods, with reference to
- *       https://medium.com/@keeptoo/adding-data-to-javafx-tableview-stepwise-df582acbae4f.
- *       General commenting.
- * 1.6 - Implemented goal updating.
- * 1.7 - Implemented ability to create custom exercise and food items
- * 1.8 - Corrected int casts to float casts, in line with the database.
- * 1.9 - Updated goal updating for wider range of nutritional goals. Encapsulated goal updating in a private method.
+ * 1.0  - Initial commit, dummy file.
+ * 1.1  - Implemented simple exercise logging to database.
+ * 1.2  - Implemented simple weight logging to database.
+ * 1.3  - Implemented simple food logging to database.
+ * 1.4  - Implemented value checking for logging, preventing null values and future dates.
+ * 1.5  - Implemented table view for added foods, with reference to
+ *        https://medium.com/@keeptoo/adding-data-to-javafx-tableview-stepwise-df582acbae4f.
+ *        General commenting.
+ * 1.6  - Implemented goal updating.
+ * 1.7  - Implemented ability to create custom exercise and food items
+ * 1.8  - Corrected int casts to float casts, in line with the database.
+ * 1.9  - Updated goal updating for wider range of nutritional goals. Encapsulated goal updating in a private method.
+ * 1.10 - Fixed bug where exercises not listed in exercise table could be logged in activities table with id -1.
  */
 public class LogActivityController implements Initializable {
 
@@ -231,11 +232,18 @@ public class LogActivityController implements Initializable {
 
         if (checkExerciseFields(exercise, minutesText)) {
             int minutes = Integer.parseInt(minutesText); //Convert after checking as empty string needs to be checked
-            ExerciseItem exerciseItem = dh.getExerciseItem(exercise);
             //Try to add to database and show appropriate success/fail message to user
             try {
-                dh.insertExercise(user.getUsername(), exercise, minutes);
-                user.updateGoals(Goal.Unit.valueOf(exercise.toUpperCase(Locale.ROOT)), minutes);
+                dh.insertExercise(user.getUsername(), exercise, minutes); //Throws IllegalStateException
+                ExerciseItem exerciseItem = dh.getExerciseItem(exercise);
+
+                try {
+                    user.updateGoals(Goal.Unit.valueOf(exercise.toUpperCase(Locale.ROOT)), minutes);
+                }
+                catch (IllegalArgumentException e) { //Exercise not in enum (i.e. custom exercise)
+                    System.out.println("Caught attempted invalid goals update.");
+                }
+
                 user.updateGoals(Goal.Unit.EXERCISE, minutes);
                 user.updateGoals(Goal.Unit.BURNED, exerciseItem.calculateBurn(minutes));
                 exercisePopUp.setText(exercise + " for " + minutesText + " minutes added to database");
@@ -243,6 +251,10 @@ public class LogActivityController implements Initializable {
             catch (SQLException e) {
                 exercisePopUp.setText("Error adding " + exercise + " for " + minutesText + " minutes to database");
                 e.printStackTrace();
+            }
+            catch (IllegalStateException e) { //Exercise not in table
+                exercisePopUp.setText("Error adding " + exercise + " for " + minutesText + " minutes to database. " +
+                                      "If this is a custom activity make sure to add it first.");
             }
         }
     }
