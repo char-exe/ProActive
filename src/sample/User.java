@@ -84,9 +84,6 @@ public class User {
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
         this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
-        for (Goal goal : goals) {
-            System.out.println(goal);
-        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -112,9 +109,6 @@ public class User {
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
         this.groupGoals = DatabaseHandler.getInstance().selectGroupGoals(this);
-        for (Goal goal : goals) {
-            System.out.println(goal);
-        }
 
         this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
@@ -506,12 +500,7 @@ public class User {
             }
         }
     }
-
-    //Class-Specific Methods
     /*
-    public ArrayList<Goal> getGoals(){
-        To be implemented in Sprint 2
-    }
 
     public void joinGroup(Group group){
 
@@ -563,29 +552,27 @@ public class User {
      * @param email Stores the unique email address of the User
      * @param username Stores the unique username of the User
      */
-    private void checkConstructorInputs(String firstname, String surname, Sex sex, LocalDate dob, String email,
-                                        String username) {
+    private void checkConstructorInputs(
+            String firstname, String surname, Sex sex, LocalDate dob, String email, String username) {
         if (firstname == null) {
             throw new NullPointerException();
         }
         if (surname == null) {
             throw new NullPointerException();
         }
-        if (sex == null){
+        if (sex == null) {
             throw new NullPointerException();
         }
-        if (dob == null){
+        if (dob == null) {
             throw new NullPointerException();
         }
         if (dob.compareTo(LocalDate.now()) > 0) {
             throw new IllegalArgumentException();
         }
-        if (email == null)
-        {
+        if (email == null) {
             throw new NullPointerException();
         }
-        if (username == null)
-        {
+        if (username == null) {
             throw new NullPointerException();
         }
 
@@ -671,20 +658,5 @@ public class User {
         else {
             return false;
         }
-    }
-
-
-    /**
-     * Test Harness
-     *
-     * @param args Command line arguments
-     */
-    public static void main(String[] args) {
-        User user = new User("test","test", Sex.MALE, 0.1f, 0.1f,
-                LocalDate.of(1999, Month.DECEMBER, 28), "test@gmail.com", "testy");
-
-//        System.out.println(user.getDob().toString());
-//        System.out.println(user);
-
     }
 }

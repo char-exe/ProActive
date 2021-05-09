@@ -74,7 +74,6 @@ public class MainController implements Initializable {
      * @param user Takes in a user object
      */
     public void initData(User user){
-        System.out.println(user);
         this.user = user;
     }
 
