@@ -140,7 +140,9 @@ public class CaptchaHandler implements Initializable {
             loader.setLocation(getClass().getResource("/FXML/EmailValidation.fxml"));
 
             Parent emailParent = loader.load();
+
             Scene sceneEmail = new Scene(emailParent);
+
             EmailValidationController controller = loader.getController();
             stage.setScene(sceneEmail);
             controller.initData(user, token, hash, salt);

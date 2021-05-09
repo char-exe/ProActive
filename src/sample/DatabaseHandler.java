@@ -2,6 +2,7 @@ package sample;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -1014,18 +1015,18 @@ public class DatabaseHandler
 
     /**
      * Adds a token to the groupInvTable
-     *
+     *  @param goal the updated goal to be updated in the database.
+     * @param time
      * @param username the user's username.
-     * @param goal the updated goal to be updated in the database.
      */
-    public void addInvToken(String tokenVal, int time, String groupName, String username) {
+    public void addInvToken(String tokenVal, LocalDateTime time, String groupName, String username) {
         //Get userID from the username
         int userID = getUserIDFromUsername(username);
 
         //Get the time 36 hours after token creation
-        int timeDelay = time + 129600;
+        time = time.plusHours(36);
 
-        String sql = "INSERT INTO groupInvTable (tokenVal, timeDelay, groupName, userID) VALUES '" + tokenVal +"', " + time + ", '" + groupName + "', '" + username + "';";
+        String sql = "INSERT INTO groupInvTable (tokenVal, timeDelay, groupName, userID) VALUES ('" + tokenVal +"', '" + time + "', '" + groupName + "', " + userID + ");";
         System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
@@ -1034,8 +1035,72 @@ public class DatabaseHandler
         catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
+
+    public String getGroupNameFromInv(String tokenVal){
+        String sql = "SELECT groupName FROM groupInvTable WHERE tokenVal = '" + tokenVal + "';";
+
+        String groupName = "";
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            while (rs.next()) {
+                groupName = rs.getString("groupName");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return groupName;
+    }
+
+    public int getUserIDFromInv(String tokenVal){
+        String sql = "SELECT userID FROM groupInvTable WHERE tokenVal = '" + tokenVal + "';";
+
+        int userID = -1;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            while (rs.next()) {
+                userID = rs.getInt("userID");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userID;
+    }
+
+    public LocalDateTime getTimeoutFromInv(String tokenVal){
+        String sql = "SELECT timeDelay FROM groupInvTable WHERE tokenVal = '" + tokenVal + "';";
+
+        LocalDateTime time = null;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+            while (rs.next()) {
+                time = LocalDateTime.parse(rs.getString("timeDelay"));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return time;
+    }
+
+    public void deleteGroupInv(String tokenVal){
+        String sql = "DELETE FROM groupInvTable WHERE tokenVal = '" + tokenVal + "';";
+        try {Statement stmt = this.conn.createStatement();
+             stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Method to retrieve water intake for user on a certain day, if no entry is found method returns 0

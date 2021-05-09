@@ -5,11 +5,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.util.converter.LocalDateTimeStringConverter;
 import sample.DatabaseHandler;
 import sample.EmailHandler;
 import sample.TokenHandler;
 
 import javax.mail.Session;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.util.Calendar;
 import java.util.Properties;
 
 /**
@@ -32,19 +37,30 @@ public class UIGroupItemController {
         Session emailSession = emailHandler.createSession(emailHandler.SetUpEmailHandler());
 
         String token = TokenHandler.createUniqueToken(7);
-//        DatabaseHandler.getInstance().addTokenEntry(token, System.currentTimeMillis()/1000);
 
         if (!(email == null)){
             invitePopUp.setText("Invite sent to " + inviteInput.getText());
-            DatabaseHandler.getInstance().addInvToken(token, (int) System.currentTimeMillis()/1000, groupNameLabel.getText(), inviteInput.getText());
-            EmailHandler.getInstance().sendGroupInvite(emailSession, email, groupNameLabel.getText(), token);
+            DatabaseHandler.getInstance().addInvToken(
+                                                        token,
+                                                        LocalDateTime.now(),
+                                                        groupNameLabel.getText(),
+                                                        inviteInput.getText()
+            );
+            EmailHandler.getInstance().sendGroupInvite(
+                                                        emailSession,
+                                                        email,
+                                                        groupNameLabel.getText(),
+                                                        token
+            );
         }else{
             invitePopUp.setText("No User Found With This Username");
         }
     }
 
     public static void main(String[] args) {
-        int time = (int) ((System.currentTimeMillis()/1000) + 129600);
-        System.out.println(time) ;
+        LocalDateTime s = LocalDateTime.now();
+        System.out.println(s);
+        s = s.plusHours(36);
+        System.out.println(s);
     }
 }
