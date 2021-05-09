@@ -1,5 +1,8 @@
 package sample;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A class to represent a nutrition item in the application as it appears in the database.
  *
@@ -380,6 +383,49 @@ public class NutritionItem {
      */
     public double getVitCMg() {
         return vitCMg;
+    }
+
+    public HashMap<String, Double> getMacroNutrients(){
+        return new HashMap<>(Map.ofEntries(
+                Map.entry("kcal", kcal),
+                Map.entry("Protein (g)", proteinG),
+                Map.entry("Fat (g)",fatG),
+                Map.entry("Carbs (g)", carbsG),
+                Map.entry("Sugar (g)", sugarG),
+                Map.entry("Fibre (g)", fibreG),
+                Map.entry("Cholestrol (mg)", cholesterolMg)
+        ));
+    }
+
+    public HashMap<String, Double> getMinerals(){
+        return new HashMap<>(Map.ofEntries(
+                Map.entry("Potassium (mg)", potassiumMg),
+                Map.entry("Sodium (mg)", sodiumMg),
+                Map.entry("Calcium (mg)", calciumMg),
+                Map.entry("Magnesium (mg)", magnesiumMg),
+                Map.entry("Zinc (mg)", zincMg),
+                Map.entry("Copper (mg)", copperMg),
+                Map.entry("Selenium (ug)", seleniumUg),
+                Map.entry("Iodine (ug)", iodineUg),
+                Map.entry("Chloride (mg)",chlorideMg),
+                Map.entry("Phosphorus (mg)", phosphorusMg),
+                Map.entry("Iron (mg)", ironMg)
+
+        ));
+    }
+
+    public HashMap<String, Double> getVitamins(){
+        return new HashMap<>(Map.ofEntries(
+                Map.entry("Folate (ug)", folateUg),
+                Map.entry("Niacin (mg)", niacinMg),
+                Map.entry("Riboflavin (mg)", riboflavinMg),
+                Map.entry("Thiamin (mg)", thiaminMg),
+                Map.entry("Vitamin B6 (mg)", vitB6Mg),
+                Map.entry("Vitamin B12 (ug)", vitB12Ug),
+                Map.entry("Vitamin C (mg)", vitCMg),
+                Map.entry("Vitamin A (ug)", vitAUg),
+                Map.entry("Vitamin D (ug)", vitDUg)
+        ));
     }
 
     /**
