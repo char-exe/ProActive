@@ -114,11 +114,16 @@ public class GroupController implements Initializable {
                 Button groupOwnershipTransfer = (Button) groupNameLabelHbox.getChildren().get(1);
                 groupNameLabel.setText(group.getName());
 
+                HBox leaveDeleteButtonHBox = (HBox) groupNameLabelHbox.getChildren().get(2);
+                Button leaveDeleteButton = (Button) leaveDeleteButtonHBox.getChildren().get(0);
+
                 // Get group container from node list
                 HBox groupContainer = (HBox) children.get(1);
 
                 // Get user list from groupContainer children
-                VBox userList = (VBox) groupContainer.getChildren().get(0);
+                VBox userListVBox = (VBox) groupContainer.getChildren().get(0);
+                ScrollPane userListScroll = (ScrollPane) userListVBox.getChildren().get(1);
+                VBox userList = (VBox) userListScroll.getContent();
 
                 Label ownerLabel = new Label("Owner: " + group.getOwner().getUser().getUsername());
                 ownerLabel.setUnderline(true);
@@ -172,9 +177,18 @@ public class GroupController implements Initializable {
                     groupInviteButtonHbox.setManaged(false);
                     groupInviteButton.setManaged(false);
                     groupInviteInputLabel.setManaged(false);
-                }
-                if ((!(userRole == null)) && !(userRole.equals("Owner"))){
                     groupOwnershipTransfer.setManaged(false);
+                    leaveDeleteButton.setText("Leave Group");
+                    leaveDeleteButton.setOnAction(
+                            actionEvent -> UIGroupItemController.leaveGroup(user, groupNameLabel.getText()));
+                }
+                if ((!(userRole == null)) && (userRole.equals("Admin"))){
+                    groupOwnershipTransfer.setManaged(false);
+                }
+                if ((!(userRole == null)) && (userRole.equals("Owner"))){
+                    leaveDeleteButton.setText("Delete Group");
+                    leaveDeleteButton.setOnAction(
+                            actionEvent -> UIGroupItemController.deleteGroup(groupNameLabel.getText()));
                 }
 
                 int stylesIndex = 0;

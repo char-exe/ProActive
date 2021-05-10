@@ -2305,15 +2305,21 @@ public class DatabaseHandler {
         return weight;
     }
 
-
-
-    public static void main(String[] args) {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-        System.out.println(dh.isMemberOfGroup("sscar", "TestGroup1"));
-    }
-
     public Group getGroupObjectFromGroupName(String text) {
         return getGroup(getGroupIDFromName(text));
+
+    }
+
+    public void removeUserFromGroup(int userID, int groupID) {
+        String sql = "DELETE FROM Group_Membership WHERE user_id = " + userID + " AND group_id = " + groupID;
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
     }
 }
