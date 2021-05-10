@@ -837,13 +837,6 @@ class DatabaseHandlerTest {
     }
 
     @Test
-    void nullUserSelectGroupGoals() {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-
-        assertThrows(NullPointerException.class, () -> dh.selectGroupGoals(null));
-    }
-
-    @Test
     void nullUsernameInsertGroupGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
@@ -889,13 +882,6 @@ class DatabaseHandlerTest {
     }
 
  */
-
-    @Test
-    void nullGroupNameGetGroupObjectFromGroupName() {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-
-        assertThrows(NullPointerException.class, () -> dh.getGroupObjectFromGroupName(null));
-    }
 
     @Test
     void zeroGroupIdGetGroupNameFromID() {
