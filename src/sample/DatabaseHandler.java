@@ -2207,7 +2207,6 @@ public class DatabaseHandler {
             throwables.printStackTrace();
         }
 
-
         return groups;
     }
 }
