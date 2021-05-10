@@ -175,70 +175,70 @@ class IndividualGoalTest {
     void nullUnitUpdate() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0);
 
-        assertThrows(NullPointerException.class, () -> individualGoal.updateProgress(null, 1));
+        assertThrows(NullPointerException.class, () -> individualGoal.updateProgress(null, 1, "test"));
     }
 
     @Test
     void zeroValueUpdate() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0);
 
-        assertThrows(IllegalArgumentException.class, () -> individualGoal.updateProgress(Goal.Unit.PROTEIN, 0));
+        assertThrows(IllegalArgumentException.class, () -> individualGoal.updateProgress(Goal.Unit.PROTEIN, 0, "test"));
     }
 
     @Test
     void negativeValueUpdate() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0);
 
-        assertThrows(IllegalArgumentException.class, () -> individualGoal.updateProgress(Goal.Unit.PROTEIN, -1));
+        assertThrows(IllegalArgumentException.class, () -> individualGoal.updateProgress(Goal.Unit.PROTEIN, -1, "test"));
     }
 
     @Test
     void NotActiveCompletedIncorrectUnitUpdate() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 1);
 
-        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.CARBS, 1));
+        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.CARBS, 1, "test"));
     }
 
     @Test
     void NotActiveNotCompletedIncorrectUnitUpdate() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 0);
 
-        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.CARBS, 1));
+        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.CARBS, 1, "test"));
     }
 
     @Test
     void NotActiveCompletedCorrectUnitUpdate() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 1);
 
-        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.PROTEIN, 1));
+        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test"));
     }
 
     @Test
     void ActiveNotCompletedIncorrectUnitUpdate() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0);
 
-        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.CARBS, 1));
+        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.CARBS, 1, "test"));
     }
 
     @Test
     void NotActiveNotCompletedCorrectUnitUpdate() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 0);
 
-        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.PROTEIN, 1));
+        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test"));
     }
 
     @Test
     void successfulUpdate() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0);
 
-        assertTrue(() -> individualGoal.updateProgress(Goal.Unit.PROTEIN, 1));
+        assertTrue(() -> individualGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test"));
     }
 
     @Test
     void updateMarksCompletedAndActive() {
         IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0);
 
-        individualGoal.updateProgress(Goal.Unit.PROTEIN, 1);
+        individualGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test");
 
         assertTrue(individualGoal.isCompleted());
         assertFalse(individualGoal.isActive());
@@ -248,7 +248,7 @@ class IndividualGoalTest {
     void UpdateDoesNotMarkCompletedAndActive() {
         IndividualGoal individualGoal = new IndividualGoal(2, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0);
 
-        individualGoal.updateProgress(Goal.Unit.PROTEIN, 1);
+        individualGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test");
 
         assertFalse(individualGoal.isCompleted());
         assertTrue(individualGoal.isActive());

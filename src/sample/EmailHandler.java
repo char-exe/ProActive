@@ -275,7 +275,8 @@ public class EmailHandler {
 
             System.out.println("Goal Completion sent");
 
-        } catch (MessagingException e) {
+        }
+        catch (MessagingException e) {
             e.printStackTrace();
         }
     }

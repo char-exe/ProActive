@@ -179,80 +179,73 @@ class GroupGoalTest {
     void nullUnitUpdate() {
         GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);
 
-        assertThrows(NullPointerException.class, () -> groupGoal.updateProgress(null, 1));
-    }
-
-    @Test
-    void zeroValueUpdate() {
-        GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);
-
-        assertThrows(IllegalArgumentException.class, () -> groupGoal.updateProgress(Goal.Unit.PROTEIN, 0));
+        assertThrows(NullPointerException.class, () -> groupGoal.updateProgress(null, 1, "test"));
     }
 
     @Test
     void negativeValueUpdate() {
         GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);
 
-        assertThrows(IllegalArgumentException.class, () -> groupGoal.updateProgress(Goal.Unit.PROTEIN, -1));
+        assertThrows(IllegalArgumentException.class, () -> groupGoal.updateProgress(Goal.Unit.PROTEIN, -1, "test"));
     }
 
     @Test
     void NotActiveCompletedIncorrectUnitUpdate() {
         GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 1, 1);
 
-        assertFalse(() -> groupGoal.updateProgress(Goal.Unit.CARBS, 1));
+        assertFalse(() -> groupGoal.updateProgress(Goal.Unit.CARBS, 1, "test"));
     }
 
     @Test
     void NotActiveNotCompletedIncorrectUnitUpdate() {
         GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 0, 1);
 
-        assertFalse(() -> groupGoal.updateProgress(Goal.Unit.CARBS, 1));
+        assertFalse(() -> groupGoal.updateProgress(Goal.Unit.CARBS, 1, "test"));
     }
 
     @Test
     void NotActiveCompletedCorrectUnitUpdate() {
-        IndividualGoal individualGoal = new IndividualGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 1);
+        GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 0, 1);
 
-        assertFalse(() -> individualGoal.updateProgress(Goal.Unit.PROTEIN, 1));
+        assertFalse(() -> groupGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test"));
     }
 
     @Test
     void ActiveNotCompletedIncorrectUnitUpdate() {
         GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);
 
-        assertFalse(() -> groupGoal.updateProgress(Goal.Unit.CARBS, 1));
+        assertFalse(() -> groupGoal.updateProgress(Goal.Unit.CARBS, 1, "test"));
     }
 
     @Test
     void NotActiveNotCompletedCorrectUnitUpdate() {
         GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 0, 1);
 
-        assertFalse(() -> groupGoal.updateProgress(Goal.Unit.PROTEIN, 1));
+        assertFalse(() -> groupGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test"));
     }
 
     @Test
     void successfulUpdate() {
         GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);
 
-        assertTrue(() -> groupGoal.updateProgress(Goal.Unit.PROTEIN, 1));
+        assertTrue(() -> groupGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test"));
     }
 
     @Test
-    void updateMarksCompletedAndActive() {
+    void updateMarksCompletedAndInactive() {
         GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);
 
-        groupGoal.updateProgress(Goal.Unit.PROTEIN, 1);
+        groupGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test");
 
         assertTrue(groupGoal.isCompleted());
         assertFalse(groupGoal.isActive());
     }
 
     @Test
-    void UpdateDoesNotMarkCompletedAndActive() {
+    void UpdateDoesNotMarkCompletedAndInactive() {
         GroupGoal groupGoal = new GroupGoal(2, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);
 
-        groupGoal.updateProgress(Goal.Unit.PROTEIN, 1);
+        groupGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test");
 
         assertFalse(groupGoal.isCompleted());
         assertTrue(groupGoal.isActive());

@@ -1,5 +1,6 @@
 package sample;
 
+import javax.mail.Session;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -63,9 +64,19 @@ public class Group {
      */
     public void sendGroupNotifications (String username, Goal goal) {
         for (GroupMember member : this.getMembers()) {
-            if (!member.getUser().getUsername().equals(username)) {
-                NotificationHandler.getInstance().sendGroupEmail(member.getUser().getEmail(), goal, username);
-            }
+            notifyMembers(username, goal, member);
+        }
+        for (GroupAdmin admin : this.getAdmins()) {
+            notifyMembers(username, goal, admin);
+        }
+    }
+
+    private void notifyMembers(String username, Goal goal, GroupMember member) {
+        if (!member.getUser().getUsername().equals(username)) {
+            System.out.println(member.getUser().getUsername());
+            EmailHandler emailHandler = EmailHandler.getInstance();
+            Session session = emailHandler.createSession();
+            emailHandler.sendGroupGoalCompletion(session, member.getUser().getEmail(), goal, username);
         }
     }
 
