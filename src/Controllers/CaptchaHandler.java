@@ -1,6 +1,5 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -34,7 +33,7 @@ public class CaptchaHandler implements Initializable {
     lacks any good offline captcha generators. */
     String[] tempArray = {"DmpsTL", "7CTBKQ", "WQESWw", "vVtSZb", "GG1Nov", "yVrDPZ", "OKinC4",
             "oBUwvE", "t3wg3Z", "OwVKkz"};
-    private ArrayList<String> captchaList = new ArrayList<>();
+    private final ArrayList<String> captchaList = new ArrayList<>();
 
     //random number generator for selecting a random index
     private final Random generator = new Random();
@@ -76,6 +75,8 @@ public class CaptchaHandler implements Initializable {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        assert captchaFileStream != null;
         Image captchaImage = new Image(captchaFileStream);
 
         //Set the captcha image
@@ -115,12 +116,10 @@ public class CaptchaHandler implements Initializable {
      * Method to validate whether user input matches the captcha, if it does, send a preliminary validation email,
      * close the current scene and open the email validation scene
      *
-     * @param actionEvent Takes in an event that causes this method to fire
-     *
      * @throws IOException throws an exception if there is an input/output error, occurs primarily when a scene is
      *                     not recognized
      */
-    public void validateCaptcha(ActionEvent actionEvent) throws IOException {
+    public void validateCaptcha() throws IOException {
         //Instantiate Email and Database Handlers, will need email as the initial verification token will be sent from
         //this class at time of submission whereon forward it will be handled by the EmailValidationController
         DatabaseHandler db = DatabaseHandler.getInstance();
@@ -160,12 +159,10 @@ public class CaptchaHandler implements Initializable {
     /**
      * Method to take the user back to the splash page
      *
-     * @param actionEvent Takes in an event that causes this method to fire
-     *
      * @throws IOException throws an exception if there is an input/output error, occurs primarily when a scene is
      *                     not recognized
      */
-    public void cancelButtonAction(ActionEvent actionEvent) throws IOException {
+    public void cancelButtonAction() throws IOException {
         Stage parentScene = (Stage) cancelButton.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
