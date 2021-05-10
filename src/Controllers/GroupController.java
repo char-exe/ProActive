@@ -63,7 +63,6 @@ public class GroupController implements Initializable {
     @FXML void joinGroupButtonAction(ActionEvent actionEvent) throws SQLException {
         joinGroupConfirmPopUp.setText("");
         String tokenInput = joinGroupInput.getText();
-/*
         int userID = dh.getUserIDFromUsername(user.getUsername());
         String groupName = dh.getGroupNameFromInv(tokenInput);
         int groupInvUserID = dh.getUserIDFromInv(tokenInput);
@@ -76,10 +75,10 @@ public class GroupController implements Initializable {
             dh.deleteGroupInv(tokenInput);
             joinGroupConfirmPopUp.setText("Successfully joined " + groupName);
         }else{
-            joinGroupConfirmPopUp.setText("Something went wrong when joining the group, please make sure the invite was meant for this user and has not expired (36 hours)");
+            joinGroupConfirmPopUp.setText("Something went wrong when joining the group, please make sure the " +
+                                          "invite was meant for this user and has not expired (36 hours)"
+                                         );
         }
-
- */
     }
 
     public void initUserGroupData(){

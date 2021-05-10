@@ -2205,6 +2205,73 @@ public class DatabaseHandler {
         return goals;
     }
 
+    public String getGroupNameFromInv(String tokenInput) {
+        String sql = "SELECT groupID FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
+
+        String groupName = null;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                groupName = DatabaseHandler.getInstance().getGroupNameFromID(rs.getInt("groupID"));
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return groupName;
+    }
+
+    public int getUserIDFromInv(String tokenInput) {
+        String sql = "SELECT userID FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
+
+        int userID = -1;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                userID = rs.getInt("userID");
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return userID;
+    }
+
+    public LocalDateTime getTimeoutFromInv(String tokenInput){
+        String sql = "SELECT userID FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
+
+        LocalDateTime time = null;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                time = LocalDateTime.parse(rs.getString("userID"));
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return time;
+    }
+
+    public void deleteGroupInv(String tokenInput){
+        String sql = "DELETE FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
+
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
 
         LocalDateTime time = LocalDateTime.now();
