@@ -17,7 +17,7 @@
       </Label>
       <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="450.0">
          <children>
-            <VBox fx:id="groupMembersList" HBox.hgrow="ALWAYS">
+            <VBox fx:id="groupMembersList" prefHeight="138.0" prefWidth="238.0" HBox.hgrow="NEVER">
                <children>
                   <Label text="Users">
                      <font>
