@@ -1129,7 +1129,7 @@ public class DatabaseHandler {
         LocalDateTime time = LocalDateTime.now();
         time = time.plusHours(36);
 
-        String sql = "INSERT INTO groupInvTable (tokenVal, expiry_time, groupID, userID) VALUES ('" + tokenVal +"', " + time + ", '" + groupID + "', " + userID + ");";
+        String sql = "INSERT INTO groupInvTable (tokenVal, expiry_time, groupID, userID) VALUES ('" + tokenVal +"', '" + time + "', " + groupID + ", " + userID + ");";
         System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
@@ -2046,7 +2046,7 @@ public class DatabaseHandler {
      * @return Returns a String value representing the name of the Group
      */
     public String getGroupNameFromID(int groupId) {
-        if (groupId < 1) {
+        if (groupId < 0) {
             throw new IllegalArgumentException();
         }
 
@@ -2242,14 +2242,14 @@ public class DatabaseHandler {
     }
 
     public LocalDateTime getTimeoutFromInv(String tokenInput){
-        String sql = "SELECT userID FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
+        String sql = "SELECT expiry_time FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
 
         LocalDateTime time = null;
 
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                time = LocalDateTime.parse(rs.getString("userID"));
+                time = LocalDateTime.parse(rs.getString("expiry_time"));
             }
         }
         catch (SQLException throwables) {
@@ -2272,10 +2272,44 @@ public class DatabaseHandler {
         }
     }
 
-    public static void main(String[] args) {
+    public boolean isMemberOfGroup(String userName, String groupName){
+        String sql = "SELECT * FROM group_membership WHERE User_Id = " + getUserIDFromUsername(userName)  +
+                     " AND Group_Id = " +  getGroupIDFromName(groupName) + ";";
 
-        LocalDateTime time = LocalDateTime.now();
-        time = time.plusHours(36);
-        System.out.println(time);
+        boolean isMember = false;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+             isMember = rs.next();
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return isMember;
+    }
+
+    public boolean isInvExpired(String tokenInput){
+        String sql = "SELECT expiry_time FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
+
+        LocalDateTime time = null;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                time = LocalDateTime.parse(rs.getString("expiry_time"));
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        assert time != null;
+        return LocalDateTime.now().isAfter(time);
+
+    }
+
+    public static void main(String[] args) {
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+        System.out.println(dh.isMemberOfGroup("sscar", "TestGroup1"));
     }
 }
