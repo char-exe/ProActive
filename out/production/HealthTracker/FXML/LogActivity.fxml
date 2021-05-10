@@ -191,14 +191,6 @@
                                                                       <TableColumn fx:id="breakfastCaloriesColumn" prefWidth="201.99998474121094" text="Calories" />
                                                                     </columns>
                                                                   </TableView>
-                                                                  <Label text="To delete food entry: select item and press DEL key" textFill="#ffb247">
-                                                                     <VBox.margin>
-                                                                        <Insets />
-                                                                     </VBox.margin>
-                                                                     <font>
-                                                                        <Font name="System Bold" size="12.0" />
-                                                                     </font>
-                                                                  </Label>
                                                                   <HBox alignment="CENTER">
                                                                      <VBox.margin>
                                                                         <Insets />
