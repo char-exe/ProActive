@@ -2,6 +2,7 @@ package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -9,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.EmailHandler;
@@ -16,7 +18,9 @@ import sample.TokenHandler;
 
 import javax.mail.Session;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * Class To Control The UIGroupItem, this contains
@@ -25,11 +29,18 @@ import java.util.Properties;
  *
  * @version 1.0
  */
-public class UIGroupItemController {
+public class UIGroupItemController implements Initializable {
     @FXML TextField inviteInput;
     @FXML Button inviteButton;
     @FXML Label invitePopUp;
     @FXML Label groupNameLabel;
+
+    @FXML HBox groupInfoContainer;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        //groupInfoContainer.set
+    }
 
     @FXML public void inviteButtonAction(){
 

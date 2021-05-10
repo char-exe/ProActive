@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" prefHeight="260.0" prefWidth="613.0" styleClass="groupNode" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.UIGroupItemController">
+<VBox alignment="TOP_CENTER" prefWidth="613.0" spacing="5.0" styleClass="groupNode" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.UIGroupItemController">
    <children>
       <HBox alignment="CENTER" prefHeight="41.0" prefWidth="450.0">
          <children>
@@ -21,7 +21,7 @@
             </Button>
          </children>
       </HBox>
-      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="450.0">
+      <HBox fx:id="groupInfoContainer" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="550.0">
          <children>
             <VBox fx:id="groupMembersList" prefHeight="138.0" prefWidth="238.0" HBox.hgrow="NEVER">
                <children>
@@ -77,6 +77,9 @@
          <children>
             <Button fx:id="inviteButton" mnemonicParsing="false" onAction="#inviteButtonAction" prefHeight="27.0" prefWidth="76.0" text="Invite User" />
          </children>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
       </HBox>
    </children>
 </VBox>
