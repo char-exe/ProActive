@@ -35,9 +35,13 @@ public class UIGroupItemController {
 //        DatabaseHandler.getInstance().addTokenEntry(token, System.currentTimeMillis()/1000);
 
         if (!(email == null)){
-            invitePopUp.setText("Invite sent to " + inviteInput.getText());
-            DatabaseHandler.getInstance().addInvToken(token, groupNameLabel.getText(), inviteInput.getText());
-            EmailHandler.getInstance().sendGroupInvite(emailSession, email, groupNameLabel.getText(), token);
+            if (DatabaseHandler.getInstance().isMemberOfGroup(inviteInput.getText(), groupNameLabel.getText())){
+                invitePopUp.setText("You Cannot Invite Users Which Are Already Members Of This Group");
+            }else{
+                invitePopUp.setText("Invite sent to " + inviteInput.getText());
+                DatabaseHandler.getInstance().addInvToken(token, groupNameLabel.getText(), inviteInput.getText());
+                EmailHandler.getInstance().sendGroupInvite(emailSession, email, groupNameLabel.getText(), token);
+            }
         }else{
             invitePopUp.setText("No User Found With This Username");
         }
