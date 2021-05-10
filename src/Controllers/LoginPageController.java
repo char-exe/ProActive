@@ -42,6 +42,7 @@ public class LoginPageController {
     @FXML private Label passwordError;
     @FXML private Button escapeHome;
     @FXML private Button forgotPasswordButton;
+    @FXML private Button forgotUsernameButton;
 
     /**
      * Getter for username
@@ -190,8 +191,21 @@ public class LoginPageController {
      *
      * @param actionEvent Takes in the event that caused this method to be called
      */
-    public void forgotUsername(ActionEvent actionEvent) {
-        //TODO create method that reminds users of their username
+    public void forgotUsername(ActionEvent actionEvent) throws IOException {
+        Stage parentScene = (Stage) forgotUsernameButton.getScene().getWindow();
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/ForgottenUsernamePage.fxml"));
+
+        Parent forgotParent = loader.load();
+
+        Scene sceneParent = new Scene(forgotParent);
+
+        ForgottenUsernamePageController controller = loader.getController();
+        stage.setScene(sceneParent);
+
+        parentScene.close();
+        stage.show();
     }
 
     /**
