@@ -273,6 +273,8 @@ public class ManageProfilePageController implements Initializable {
      * @return Returns a float representing BMI
      */
     private float calculateBMI(){
+        user.setHeight(dh.getHeightFromUserID(dh.getUserIDFromUsername(user.getUsername())));
+        user.setWeight(dh.getMostRecentWeightValFromID(dh.getUserIDFromUsername(user.getUsername())));
         float userHeightMeters = (float) (user.getHeight()/39.97);
         return (user.getWeight()/(userHeightMeters*userHeightMeters));
     }
