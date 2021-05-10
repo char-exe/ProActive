@@ -220,6 +220,13 @@ public class LoginPageController {
         ForgottenUsernamePageController controller = loader.getController();
         stage.setScene(sceneParent);
 
+        stage.setMinWidth(350);
+        stage.setMinHeight(300);
+        stage.setMaxWidth(550);
+        stage.setMaxHeight(500);
+
+        stage.setTitle("ProActive");
+
         parentScene.close();
         stage.show();
     }
