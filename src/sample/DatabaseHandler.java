@@ -1110,12 +1110,9 @@ public class DatabaseHandler {
      *
      * @param username the user's username.
      */
-    public void addInvToken(String tokenVal, int time, String groupName, String username) {
+    public void addInvToken(String tokenVal, String groupName, String username) {
         if (tokenVal == null) {
             throw new NullPointerException();
-        }
-        if (time < 0) {
-            throw new IllegalArgumentException();
         }
         if (groupName == null) {
             throw new NullPointerException();
@@ -1126,11 +1123,13 @@ public class DatabaseHandler {
 
         //Get userID from the username
         int userID = getUserIDFromUsername(username);
+        int groupID = getGroupIDFromName(groupName);
 
         //Get the time 36 hours after token creation
-        int timeDelay = time + 129600;
+        LocalDateTime time = LocalDateTime.now();
+        time = time.plusHours(36);
 
-        String sql = "INSERT INTO groupInvTable (tokenVal, expiry_time, groupID, userID) VALUES '" + tokenVal +"', " + time + ", '" + groupName + "', '" + username + "';";
+        String sql = "INSERT INTO groupInvTable (tokenVal, expiry_time, groupID, userID) VALUES ('" + tokenVal +"', " + time + ", '" + groupID + "', " + userID + ");";
         System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
@@ -2175,5 +2174,12 @@ public class DatabaseHandler {
         }
 
         return groups;
+    }
+
+    public static void main(String[] args) {
+
+        LocalDateTime time = LocalDateTime.now();
+        time = time.plusHours(36);
+        System.out.println(time);
     }
 }

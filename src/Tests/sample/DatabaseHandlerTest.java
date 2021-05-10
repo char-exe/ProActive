@@ -784,7 +784,7 @@ class DatabaseHandlerTest {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
         assertThrows(NullPointerException.class, () -> dh.addInvToken(
-                null, 1, "Justice League", "bwayne1998")
+                null, "Justice League", "bwayne1998")
         );
     }
 
@@ -793,7 +793,7 @@ class DatabaseHandlerTest {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
         assertThrows(IllegalArgumentException.class, () -> dh.addInvToken(
-                "T0K3N", -1, "Justice League", "bwayne1998")
+                "T0K3N",  "Justice League", "bwayne1998")
         );
     }
 
@@ -802,7 +802,7 @@ class DatabaseHandlerTest {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
         assertThrows(NullPointerException.class, () -> dh.addInvToken(
-                "T0K3N", 1, null, "bwayne1998")
+                "T0K3N", null, "bwayne1998")
         );
     }
 
@@ -811,7 +811,7 @@ class DatabaseHandlerTest {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
         assertThrows(NullPointerException.class, () -> dh.addInvToken(
-                "T0K3N", 1, "Justice League", null)
+                "T0K3N", "Justice League", null)
         );
     }
 

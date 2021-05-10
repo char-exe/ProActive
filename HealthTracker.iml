@@ -29,5 +29,6 @@
     <orderEntry type="library" name="sqlite" level="application" />
     <orderEntry type="library" name="JavaFX" level="application" />
     <orderEntry type="library" name="Mail" level="application" />
+    <orderEntry type="library" name="activation" level="application" />
   </component>
 </module>

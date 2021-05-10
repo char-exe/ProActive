@@ -36,7 +36,7 @@ public class UIGroupItemController {
 
         if (!(email == null)){
             invitePopUp.setText("Invite sent to " + inviteInput.getText());
-            DatabaseHandler.getInstance().addInvToken(token, (int) System.currentTimeMillis()/1000, groupNameLabel.getText(), inviteInput.getText());
+            DatabaseHandler.getInstance().addInvToken(token, groupNameLabel.getText(), inviteInput.getText());
             EmailHandler.getInstance().sendGroupInvite(emailSession, email, groupNameLabel.getText(), token);
         }else{
             invitePopUp.setText("No User Found With This Username");
