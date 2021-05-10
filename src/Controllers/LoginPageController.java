@@ -108,6 +108,15 @@ public class LoginPageController {
 
                 stage.setScene(homeScene);
 
+                stage.setMinWidth(800);
+                stage.setMinHeight(500);
+
+                stage.setWidth(1000);
+                stage.setHeight(800);
+
+//                stage.setMaxWidth(1400);
+//                stage.setMaxHeight(800);
+
                 main.initData(user);
                 main.homeScreen();
 
