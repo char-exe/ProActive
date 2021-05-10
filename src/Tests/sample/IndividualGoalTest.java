@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit testing for Goal and IndividualGoal
+ * Unit testing for IndividualGoal
  *
  * @author Samuel Scarfe
  */
@@ -52,7 +52,13 @@ class IndividualGoalTest {
 
     @Test
     void successfulSystemGoalConstructor() {
-        SystemGoal systemGoal = new SystemGoal(100, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY, SystemGoal.Category.DAY_TO_DAY);
+        SystemGoal systemGoal = new SystemGoal(
+                100,
+                Goal.Unit.PROTEIN,
+                LocalDate.now().plusDays(1),
+                SystemGoal.UpdatePeriod.DAILY,
+                SystemGoal.Category.DAY_TO_DAY
+        );
 
         assertDoesNotThrow(() -> new IndividualGoal(systemGoal));
     }

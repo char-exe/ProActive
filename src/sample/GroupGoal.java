@@ -26,10 +26,7 @@ public class GroupGoal extends IndividualGoal {
      */
     private final int groupId;
 
-    /**
-     * Boolean status for whether this goal has been accepted by the User that it has been presented to.
-     */
-    private boolean accepted;
+
 
     /**
      * Constructs a GroupGoal from a target amount, unit, end date, and groupId. Initialises progress to 0 and status to
@@ -47,20 +44,22 @@ public class GroupGoal extends IndividualGoal {
         }
 
         this.groupId = groupId;
-        this.accepted = false;
+
     }
 
     /**
      * Constructs a GroupGoal from a target amount, unit, end date, progress amount, and groupId. Intended for use
      * when loading user goals from the database.
+     *
      * @param target   the target amount for this goal.
      * @param unit     the units targeted by this goal.
      * @param endDate  the end date of the goal.
      * @param progress the current progress of the goal.
      * @param groupId  the id of the group associated with the goal.
      */
-    public GroupGoal(float target, Unit unit, LocalDate endDate, int progress, int groupId) {
-        this(target, unit, endDate, progress, groupId, true);
+    public GroupGoal(float target, Unit unit, LocalDate endDate, float progress, int groupId) {
+        super(target, unit, endDate, progress);
+        this.groupId = groupId;
     }
 
     /**
@@ -73,15 +72,18 @@ public class GroupGoal extends IndividualGoal {
      * @param progress the current progress of the goal.
      * @param groupId  the id of the group associated with the goal.
      */
-    public GroupGoal(float target, Unit unit, LocalDate endDate, int progress, int groupId, boolean accepted) {
-        super(target, unit, endDate, progress);
-        if (groupId < 1) {
-            throw new IllegalArgumentException("groupID's start from 1");
-        }
+    public GroupGoal(float target, Unit unit, LocalDate endDate, float progress, int groupId) {
+        this(target, unit, endDate, progress, groupId);
 
-        this.groupId = groupId;
-        this.accepted = accepted;
+
     }
+
+    public GroupGoal(float target, Unit unit, LocalDate endDate, float progress, int groupId) {
+        super(target, unit, endDate, progress);
+        this.groupId = groupId;
+    }
+
+
 
     /**
      * Gets the accepted status for this goal.

@@ -9,41 +9,43 @@ import java.util.Map;
  * @author Evan Clayton?
  * @author Samuel Scarfe
  *
- * @version 1.2
+ * @version 1.3
  *
  * 1.0 - First working version.
  * 1.1 - Added Javadoc and exceptions. Removed no argument constructor. Wrote JUnit test class.
  * 1.2 - Added vitamins and minerals.
+ * 1.3 - Implemented equals and hashCode to fix bug in LogActivityController whereby repeated additions of
+ *       NutritionItems with the same name would not increment the counter.
  */
 public class NutritionItem {
-    private String name;
-    private double kcal;
-    private double proteinG;
-    private double fatG;
-    private double carbsG;
-    private double sugarG;
-    private double fibreG;
-    private double cholesterolMg;
-    private double sodiumMg;
-    private double potassiumMg;
-    private double calciumMg;
-    private double magnesiumMg;
-    private double phosphorusMg;
-    private double ironMg;
-    private double copperMg;
-    private double zincMg;
-    private double chlorideMg;
-    private double seleniumUg;
-    private double iodineUg;
-    private double vitAUg;
-    private double vitDUg;
-    private double thiaminMg;
-    private double riboflavinMg;
-    private double niacinMg;
-    private double vitB6Mg;
-    private double vitB12Ug;
-    private double folateUg;
-    private double vitCMg;
+    private final String name;
+    private final double kcal;
+    private final double proteinG;
+    private final double fatG;
+    private final double carbsG;
+    private final double sugarG;
+    private final double fibreG;
+    private final double cholesterolMg;
+    private final double sodiumMg;
+    private final double potassiumMg;
+    private final double calciumMg;
+    private final double magnesiumMg;
+    private final double phosphorusMg;
+    private final double ironMg;
+    private final double copperMg;
+    private final double zincMg;
+    private final double chlorideMg;
+    private final double seleniumUg;
+    private final double iodineUg;
+    private final double vitAUg;
+    private final double vitDUg;
+    private final double thiaminMg;
+    private final double riboflavinMg;
+    private final double niacinMg;
+    private final double vitB6Mg;
+    private final double vitB12Ug;
+    private final double folateUg;
+    private final double vitCMg;
 
     /**
      * Basic constructor for a NutritionItem. Initialises name, kcal, proteinG, fatG, carbsG, sugarG, fibreG, and
@@ -426,6 +428,39 @@ public class NutritionItem {
                 Map.entry("Vitamin A (ug)", vitAUg),
                 Map.entry("Vitamin D (ug)", vitDUg)
         ));
+    }
+
+    /**
+     * Evaluates whether this NutritionItem is equal to a passed Object. Equality is assessed such that only
+     * NutritionItems can be equal, and only if they have the same name. NutritionItems are restricted in the database
+     * such that the names must be unique, so measuring equality in this way maintains parity between the database and
+     * the application.
+     *
+     * @param o the object to be measured for equality.
+     * @return  a boolean representing whether this NutritionItem is equal to the passed object.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof NutritionItem)) {
+            return  false;
+        }
+
+        return this.name.equals(((NutritionItem) o).name);
+    }
+
+    /**
+     * Retrieves a hash value for this NutritionItem. As NutritionItems are required to have unique names in the
+     * database, using the native String hashCode method for name is valid and simple. Were this not guaranteed then
+     * this function may need to consider calculating different prime modulus of each nutrient in turn.
+     *
+     * @return the hash value for this NutritionItem.
+     */
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
     }
 
     /**

@@ -97,7 +97,6 @@ public class GoalGenerator {
             float target = db.getRecommendedIntake(unit, user.getAge(), user.getSex());
             //generate a goal for today with the RDI
             if (target > 0) {
-                System.out.println(target);
                 goals.add(new SystemGoal(target, unit, LocalDate.now().plusDays(1), SystemGoal.UpdatePeriod.DAILY, SystemGoal.Category.DAY_TO_DAY));
             }
         }
@@ -124,7 +123,7 @@ public class GoalGenerator {
             int index = random.nextInt(completedGoals.size());
             IndividualGoal current = completedGoals.remove(index);
             Goal.Unit unit = current.getUnit();
-            System.out.println("call");
+
             //Create new SystemGoals by checking the user's average work rate in that task
             float averageWorkRate = user.getAverageWorkRate(unit, 28);
 

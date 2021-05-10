@@ -41,6 +41,7 @@ public class LoginPageController {
     @FXML private Label usernameError;
     @FXML private Label passwordError;
     @FXML private Button escapeHome;
+    @FXML private Button forgotPasswordButton;
 
     /**
      * Getter for username
@@ -164,8 +165,21 @@ public class LoginPageController {
      *
      * @param actionEvent Takes in the event that caused this method to be called
      */
-    public void forgotPassword(ActionEvent actionEvent) {
-        //TODO create method that allows a user to update their password
+    public void forgotPassword(ActionEvent actionEvent) throws IOException {
+        Stage parentScene = (Stage) forgotPasswordButton.getScene().getWindow();
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/ForgottenPasswordPage.fxml"));
+
+        Parent forgotParent = loader.load();
+
+        Scene sceneParent = new Scene(forgotParent);
+
+        ForgottenPasswordPageController controller = loader.getController();
+        stage.setScene(sceneParent);
+
+        parentScene.close();
+        stage.show();
     }
 
     /**

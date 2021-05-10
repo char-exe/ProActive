@@ -786,7 +786,7 @@ class UserTest {
                 "bwayne1998"
         );
 
-        assertThrows(NullPointerException.class, () -> batman.addIndividualGoal(null));
+        assertThrows(NullPointerException.class, () -> batman.addGoal(null));
     }
 
     @Test

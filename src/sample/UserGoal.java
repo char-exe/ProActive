@@ -55,6 +55,10 @@ public abstract class UserGoal extends Goal {
      */
     public UserGoal(float target, Unit unit, LocalDate endDate, float progress) {
         super(target, unit, endDate);
+        if (progress < 0) {
+            throw new IllegalArgumentException();
+        }
+
         this.progress = progress;
         this.completed = progress >= target;
         this.active    = endDate.isAfter(LocalDate.now()) && !this.completed;
@@ -107,7 +111,7 @@ public abstract class UserGoal extends Goal {
         if (unit == null) {
             throw new NullPointerException();
         }
-        if (update < 1) {
+        if (update < 0) {
             throw new IllegalArgumentException();
         }
 
