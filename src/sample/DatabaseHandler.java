@@ -2305,8 +2305,15 @@ public class DatabaseHandler {
         return weight;
     }
 
+
+
     public static void main(String[] args) {
         DatabaseHandler dh = DatabaseHandler.getInstance();
         System.out.println(dh.isMemberOfGroup("sscar", "TestGroup1"));
+    }
+
+    public Group getGroupObjectFromGroupName(String text) {
+        return getGroup(getGroupIDFromName(text));
+
     }
 }
