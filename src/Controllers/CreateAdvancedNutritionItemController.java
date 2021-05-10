@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -318,12 +319,15 @@ public class CreateAdvancedNutritionItemController implements Initializable {
 
     }
 
+    /**
+     * Method to cancel creating an advanced nutrition item and close the window
+     */
     @FXML public void cancelButtonAction(){
         Stage parentScene = (Stage) cancelButton.getScene().getWindow();
 
         parentScene.close();
-
     }
+
     /**
      * Method to check that a string representing a double is a valid double before casting, copied and adapted from
      * https://stackoverflow.com/questions/767759/occurrences-of-substring-in-a-string
