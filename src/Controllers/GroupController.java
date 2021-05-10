@@ -82,8 +82,6 @@ public class GroupController implements Initializable {
  */
     }
 
-
-
     public void initUserGroupData(){
 
         for(Group group : dh.getUserGroups(user.getUsername())){

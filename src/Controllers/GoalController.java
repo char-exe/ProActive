@@ -3,8 +3,6 @@ package Controllers;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,7 +24,6 @@ import javafx.fxml.FXML;
  * A controller for the goals page of the app.
  *
  * @author Samuel Scarfe
- * @author Evan Clayton
  *
  * @version 1.4
  *
@@ -35,6 +32,7 @@ import javafx.fxml.FXML;
  * 1.2 - Implemented automatic goal generation. Extended goal setting for vitamins and minerals.
  * 1.3 - Added goal management. Updated styling. Removed now superfluous inner class GoalItem.
  * 1.4 - Added functionality for group goals tab.
+ * 1.5 - Removed GroupGoals tab.
  */
 
 public class GoalController implements Initializable {
@@ -44,9 +42,6 @@ public class GoalController implements Initializable {
     //Our Goals For You tab
     @FXML private VBox ourGoalsVbox;
     @FXML private ChoiceBox<String> ourGoalsDropDown;
-
-    //Group Goals tab
-    @FXML private VBox groupGoalsVbox;
 
     //Set Your Own tab
     @FXML private TextField dietAmountField;
