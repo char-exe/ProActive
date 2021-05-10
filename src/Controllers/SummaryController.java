@@ -421,16 +421,16 @@ public class SummaryController implements Initializable
 
         // For each nutrient series, add series to chart
         int colourPos = 0;
-        for(XYChart.Series series : nutrientSeries){
+        for(XYChart.Series series : nutrientSeries) {
 
             nutritionChart.getData().add(series);
 
             // Setting tooltip
             for (Object d : series.getData()) {
 
-                String value = ((XYChart.Data<Number, Number>) d).getYValue().toString();
+                String value = series.getName() + ": " +((XYChart.Data<Number, Number>) d).getYValue();
 
-                if(value.endsWith(".0"))
+                if (value.endsWith(".0"))
                     value = value.substring(0, value.length() - 2);
 
                 Tooltip t = new Tooltip(value);
@@ -439,30 +439,7 @@ public class SummaryController implements Initializable
 
             }
 
-//            try {
-//                Node line = series.getNode().lookup(".chart-series-line");
-//                line.setStyle("-fx-fill: " + colourHexList.get(colourPos));
-//            } catch (Exception e){
-//                System.out.println(e.getMessage());
-//            }
-//
-//            colourPos++;
-
         }
-
-//        for (int i = 0; i < nutritionChart.getData().size(); i++) {
-//
-//            Set<Node> nodes = nutritionChart.lookupAll(".series" + i);
-//
-//            for(Node n : nodes){
-//
-//                n.setStyle(
-//                        "-fx-background-color: " + colourHexList.get(i)
-//                );
-//
-//            }
-//
-//        }
 
         for(XYChart.Series series : mineralsSeries){
 
@@ -471,7 +448,7 @@ public class SummaryController implements Initializable
             // Setting tooltip
             for (Object d : series.getData()) {
 
-                String value = ((XYChart.Data<Number, Number>) d).getYValue().toString();
+                String value = series.getName() + ": " +((XYChart.Data<Number, Number>) d).getYValue().toString();
 
                 if(value.endsWith(".0"))
                     value = value.substring(0, value.length() - 2);
@@ -491,7 +468,7 @@ public class SummaryController implements Initializable
             // Setting tooltip
             for (Object d : series.getData()) {
 
-                String value = ((XYChart.Data<Number, Number>) d).getYValue().toString();
+                String value = series.getName() + ": " +((XYChart.Data<Number, Number>) d).getYValue().toString();
 
                 if(value.endsWith(".0"))
                     value = value.substring(0, value.length() - 2);

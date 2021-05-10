@@ -15,6 +15,11 @@ public class Main extends Application {
         primaryStage.setTitle("ProActive");
         primaryStage.setScene(new Scene(root));
 
+        primaryStage.setMinWidth(350);
+        primaryStage.setMinHeight(300);
+        primaryStage.setMaxWidth(550);
+        primaryStage.setMaxHeight(500);
+
         primaryStage.show();
 
         //VBox content = FXMLLoader.load(getClass().getResource("SplashPage.fxml"));
@@ -50,4 +55,5 @@ public class Main extends Application {
 
         launch(args);
     }
+
 }
