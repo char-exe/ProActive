@@ -1082,7 +1082,7 @@ public class DatabaseHandler {
         if (goal == null) {
             throw new NullPointerException();
         }
-        if (amount < 1) {
+        if (amount < 0) {
             throw new IllegalArgumentException();
         }
 

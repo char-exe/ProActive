@@ -128,7 +128,7 @@ public abstract class UserGoal extends Goal {
                 }
 
                 NotificationHandler notificationHandler = NotificationHandler.getInstance();
-                notificationHandler.displayNotification("Goal Complete: " + this.toString());
+                notificationHandler.displayFadeNotification("Goal Complete: " + this.toString() + ", Set another in Goals!");
             }
 
             return true; //Goal updated

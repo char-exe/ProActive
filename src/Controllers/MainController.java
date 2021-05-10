@@ -108,7 +108,6 @@ public class MainController implements Initializable {
 
         main.setCenter(scrollPane);
         toggleButtonFocus(homeButton);
-        showNotification("message");
 
         // Sets application window title
         ((Stage) main.getScene().getWindow()).setTitle("ProActive");
@@ -128,7 +127,6 @@ public class MainController implements Initializable {
         logActivityController.initData(user);
         main.setCenter(vBox);
         toggleButtonFocus(logActivityButton);
-        showBlinkNotification("Now with animations");
     }
 
     /**
@@ -179,7 +177,7 @@ public class MainController implements Initializable {
      *
      * @throws IOException Throws an IOException whenever it is possible a file could be missing
      */
-    @FXML private void manageProfileScreen() throws IOException {
+    @FXML private void manageProfileScreen() throws IOException, InterruptedException {
         FXMLLoader loader = new FXMLLoader();
         //loader.setLocation(getClass().getClassLoader().getResource("src/FXML/ManageProfilePage.fxml"));
         loader.setLocation(getClass().getResource("/FXML/ManageProfilePage.fxml"));
@@ -254,7 +252,7 @@ public class MainController implements Initializable {
      *
      * @param message Text to be displayed.
      */
-    public void showFadeNotification(String message){
+    public void showFadeNotification(String message) {
         notification.setText(message);
 
         notification.setVisible(true);

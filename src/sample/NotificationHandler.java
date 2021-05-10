@@ -54,7 +54,6 @@ public class NotificationHandler {
      * @param message The text to be displayed.
      */
     public void displayNotification(String message){
-        System.out.println("called");
         mainController.showNotification(message);
     }
 
