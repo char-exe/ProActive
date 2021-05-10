@@ -126,6 +126,9 @@ public abstract class UserGoal extends Goal {
                 if (this instanceof GroupGoal) {
                     ((GroupGoal) this).notifyGroup(username);
                 }
+
+                NotificationHandler notificationHandler = NotificationHandler.getInstance();
+                notificationHandler.displayNotification("Goal Complete: " + this.toString());
             }
 
             return true; //Goal updated

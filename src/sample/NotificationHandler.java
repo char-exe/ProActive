@@ -25,7 +25,7 @@ public class NotificationHandler {
 
 
     private static MainController mainController;
-    private static final EmailHandler emailHandler = EmailHandler.getInstance();
+    private static EmailHandler emailHandler = null;
     private static Session session;
 
     /**
@@ -35,15 +35,8 @@ public class NotificationHandler {
      * @throws IOException
      */
     private NotificationHandler() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
-        try {
-            Parent root = loader.load(); //had to put in a try catch to avoid throwing IOException so that singleton pattern can be used
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        MainController controller = loader.<MainController>getController();
-        this.mainController = controller;
-        this.session = emailHandler.createSession();
+        emailHandler = EmailHandler.getInstance();
+        session = emailHandler.createSession();
     }
 
     /**
@@ -52,12 +45,16 @@ public class NotificationHandler {
      */
     public static NotificationHandler getInstance() { return INSTANCE; }
 
+    public void initMainController(MainController mainController) {
+        NotificationHandler.mainController = mainController;
+    }
     /**
      * Method that calls the showNotification method from the MainController
      *
      * @param message The text to be displayed.
      */
     public void displayNotification(String message){
+        System.out.println("called");
         mainController.showNotification(message);
     }
 
@@ -117,9 +114,4 @@ public class NotificationHandler {
         displayFadeNotification(message);
         emailHandler.sendGoalCompletion(session, email, goal);
     }
-
-    public void sendGroupEmail (String email, Goal goal, String username) {
-        emailHandler.sendGroupGoalCompletion(session, email, goal, username);
-    }
-
 }

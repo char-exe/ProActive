@@ -239,7 +239,7 @@ public class EmailHandler {
                     InternetAddress.parse(to)
             );
             message.setSubject("You Have Completed A Goal!");
-            message.setText("You have successfully completed the goal \"" + goal.getMessageFragment()
+            message.setText("You have successfully completed the goal \"" + goal.toString()
                     + "\" Congratulations!");
 
             Transport.send(message);
@@ -269,7 +269,7 @@ public class EmailHandler {
             );
             message.setSubject(username + " Has Completed A Group Goal!");
             message.setText(username + " has successfully completed the group goal \""
-                    + goal.getMessageFragment() + "\" Wish Them Congratulations!");
+                    + goal.toString() + "\" Wish Them Congratulations!");
 
             Transport.send(message);
 

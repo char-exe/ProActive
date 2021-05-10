@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import sample.GoalGenerator;
+import sample.NotificationHandler;
 import sample.User;
 
 import java.io.IOException;
@@ -66,6 +67,8 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //logo.setImage(new Image("src/Resources/proactive.png"));
+        NotificationHandler notificationHandler = NotificationHandler.getInstance();
+        notificationHandler.initMainController(this);
     }
 
     /**
@@ -105,7 +108,7 @@ public class MainController implements Initializable {
 
         main.setCenter(scrollPane);
         toggleButtonFocus(homeButton);
-        showNotification("");
+        showNotification("message");
 
         // Sets application window title
         ((Stage) main.getScene().getWindow()).setTitle("ProActive");
@@ -217,6 +220,9 @@ public class MainController implements Initializable {
      * @param message Text to be displayed in the notification bar.
      */
     public void showNotification(String message){
+        System.out.println("called");
+        System.out.println(message);
+        notification.setText("");
         notification.setText(message);
 
         notification.setVisible(true);
