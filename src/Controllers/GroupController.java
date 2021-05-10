@@ -6,12 +6,13 @@ import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXML;
 import sample.*;
@@ -70,11 +71,12 @@ public class GroupController implements Initializable {
 
         System.out.println("Got here");
 
-        if (userID == groupInvUserID && LocalDateTime.now().isBefore(beforeNow)){
+        if (userID == groupInvUserID && LocalDateTime.now().isBefore(beforeNow)) {
             dh.joinGroup(user.getUsername(), groupName);
             dh.deleteGroupInv(tokenInput);
             joinGroupConfirmPopUp.setText("Successfully joined " + groupName);
-        }else{
+        }
+        else {
             joinGroupConfirmPopUp.setText("Something went wrong when joining the group, please make sure the " +
                                           "invite was meant for this user and has not expired (36 hours)"
                                          );
@@ -83,11 +85,12 @@ public class GroupController implements Initializable {
 
     public void initUserGroupData(){
 
-        for(Group group : dh.getUserGroups(user.getUsername())){
+        for(Group group : dh.getUserGroups(user.getUsername())) {
             VBox groupNode = null;
             try {
                 groupNode = FXMLLoader.load(getClass().getResource("/FXML/UIGroupItem.fxml"));
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -121,6 +124,8 @@ public class GroupController implements Initializable {
 
                 // Get goal list from groupContainer children
                 VBox goalList = (VBox) groupContainer.getChildren().get(2);
+                ScrollPane goalScrollPane = (ScrollPane) goalList.getChildren().get(1);
+                VBox goalScroller = (VBox) goalScrollPane.getContent();
 
                 //Seperator between group details and group invite settings
                 Separator s = (Separator) children.get(2);
@@ -146,7 +151,7 @@ public class GroupController implements Initializable {
 
                 //If a user is an admin or an owner of a group, there are no restrictions on whether they can invite
                 //users to a group
-                if ((!(userRole == null)) && userRole.equals("Member")){
+                if ((!(userRole == null)) && userRole.equals("Member")) {
                     s.setManaged(false);
                     groupInvite.setManaged(false);
                     groupInviteLabelHbox.setManaged(false);
@@ -158,7 +163,56 @@ public class GroupController implements Initializable {
                     groupInviteInputLabel.setManaged(false);
                 }
 
+                int stylesIndex = 0;
+                String[] styles = {"groupGoalsHboxOdd", "groupGoalsHboxEven"};
 
+                for (GroupGoal groupGoal : group.getGroupGoals()) {
+                    System.out.println(groupGoal);
+                    Region region1 = new Region();
+                    Region region2 = new Region();
+                    HBox.setHgrow(region1, Priority.ALWAYS);
+                    HBox.setHgrow(region2, Priority.ALWAYS);
+                    Label label = new Label(groupGoal.toString());
+                    HBox innerBox = new HBox(region1, label, region2);
+                    HBox.setHgrow(innerBox, Priority.ALWAYS);
+                    innerBox.setAlignment(Pos.CENTER);
+
+
+                    //Create button
+                    Button button = new Button();
+
+                    //Set button text based on goal status
+                    if (user.getGoals().contains(groupGoal)) {
+                        button.setText("Accepted");
+                    } else {
+                        button.setText("Click to accept");
+                    }
+
+                    button.setMinWidth(95); //Width set such that it doesn't change when text changes
+
+                    //Set button action
+                    button.setOnAction(e -> {
+                        if (!user.getGoals().contains(groupGoal)) { //If goal not labelled accepted
+                            user.addGoal(new GroupGoal(
+                                    groupGoal.getTarget(),
+                                    groupGoal.getUnit(),
+                                    groupGoal.getEndDate(),
+                                    groupGoal.getGroupId())
+                            ); //Add to the user's individual goals
+                            button.setText("Accepted"); //Update button text
+                        }
+                    });
+
+                    HBox hbox = new HBox(innerBox, button);
+                    hbox.getStyleClass().add(styles[stylesIndex]);
+                    hbox.setAlignment(Pos.CENTER);
+                    VBox.setMargin(hbox, new Insets(5, 5, 5, 5));
+
+                    goalScroller.getChildren().add(hbox);
+
+
+                    stylesIndex = ++stylesIndex%2; //Increment then mod 2
+                }
 
                 groupsContainer.getChildren().add(groupNode);
 
