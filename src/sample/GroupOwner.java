@@ -9,6 +9,12 @@ public class GroupOwner extends GroupAdmin{
         this.user = user;
         this.group = group;
     }
+
+    @Override
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public String toString(){
         return this.user.toString();
