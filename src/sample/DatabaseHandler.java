@@ -8,8 +8,6 @@ import java.util.Locale;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import sample.*;
-
 /**
  * Contains ways to interact with the backend database of the ProActive app, contains a number of
  * enums which contain first each table in the database, then each column in that table, for example
@@ -1887,6 +1885,53 @@ public class DatabaseHandler {
             System.out.println(e.getMessage());
         }
         return -1;
+    }
+
+    public boolean createGroup(String name, String username){
+        String checkIfExistsSQL = "SELECT COUNT(*) FROM group_table WHERE Group_Name = '" + name + "'";
+
+        boolean groupNameTaken = true;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(checkIfExistsSQL)) {
+
+            if(rs.getInt(1) == 0) {
+                groupNameTaken = false;
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        if(!groupNameTaken){
+
+            try (Statement stmt = this.conn.createStatement()) {
+
+                stmt.executeUpdate("INSERT INTO group_table(Group_Name) VALUES('" + name + "')");
+
+                ResultSet rs = stmt.executeQuery(
+                        "SELECT Group_Id FROM group_table WHERE Group_Name = '" + name + "'"
+                );
+
+                int groupId = rs.getInt("Group_Id");
+
+                stmt.executeUpdate(
+                        "INSERT INTO group_membership(User_Id, Group_Id, Group_Role) VALUES(" +
+                                getUserIDFromUsername(username) + "," + groupId + ", 'Owner')"
+                );
+
+                return true;
+
+            } catch (SQLException throwables) {
+
+                throwables.printStackTrace();
+
+            }
+
+        }
+
+        return !groupNameTaken;
+
     }
 
     /**

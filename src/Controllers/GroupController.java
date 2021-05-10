@@ -2,19 +2,20 @@ package Controllers;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXML;
+import javafx.stage.Stage;
 import sample.*;
 
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class GroupController implements Initializable {
     @FXML private ChoiceBox<String> exerciseDropDown;
     @FXML private DatePicker exerciseDate;
     @FXML private Label exerciseLabel;
+    @FXML private Button createGroupButton;
 
     private DatabaseHandler dh;
     private User user;
@@ -465,5 +467,36 @@ public class GroupController implements Initializable {
         }
 
         return true; //All fields fine
+    }
+
+    public void createGroup(ActionEvent actionEvent) throws IOException {
+//        Stage parentScene = (Stage) createGroupButton.getScene().getWindow();
+//        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/CreateGroupPage.fxml"));
+
+        Parent parent = loader.load();
+
+        Stage stage = new Stage();
+
+        Scene sceneParent = new Scene(parent);
+
+        stage.setScene(sceneParent);
+
+        CreateGroupController controller = loader.getController();
+
+        controller.initData(user);
+
+        stage.setMinWidth(350);
+        stage.setMinHeight(300);
+        stage.setMaxWidth(550);
+        stage.setMaxHeight(500);
+
+        stage.setTitle("ProActive - Create a group");
+
+        stage.showAndWait();
+
+        initViewGroups();
+
     }
 }
