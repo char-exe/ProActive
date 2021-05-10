@@ -320,6 +320,26 @@ public class DatabaseHandler {
         return false;
     }
 
+    public boolean checkEmailUnique(String email){
+        if (email == null) {
+            throw new NullPointerException();
+        }
+
+        String sql = "SELECT * FROM user WHERE email = '" + email + "'";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (!rs.next()) {
+                return true;
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
     /**
      * Method to insert a weight value into the weight_entry database table
      *
