@@ -1,9 +1,7 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -101,7 +99,7 @@ public class SummaryController implements Initializable
     @FXML private Button mineralsChartNextWeekButton;
     @FXML private Button vitaminsChartNextWeekButton;
 
-    private ToggleGroup summaryGroup = new ToggleGroup();
+    private final ToggleGroup summaryGroup = new ToggleGroup();
     @FXML private ToggleButton nutritionSummary;
     @FXML private ToggleButton activitySummary;
 
@@ -117,21 +115,6 @@ public class SummaryController implements Initializable
     private LocalDate vitaminsChartDate = LocalDate.now();
 
     private final Tooltip nextWeekTooltip = new Tooltip("You cannot summarise the future!");
-
-    private final List<String> colourHexList = Arrays.asList(
-            "#000710",
-            "#003f5c",
-            "#2f4b7c",
-            "#665191",
-            "#a05195",
-            "#d45087",
-            "#f95d6a",
-            "#ff7c43",
-            "#ffa600",
-            "#c8ff00",
-            "#57c444",
-            "#FFFF05"
-    );
 
     /**
      * Initializes the graphs with formatted axes and dummy data.
@@ -208,9 +191,9 @@ public class SummaryController implements Initializable
         formatAxis(vitaminsDateAxis, latest);
 
         // Array list to contain all nutrient chart series
-        ArrayList<XYChart.Series> nutrientSeries = new ArrayList<>();
-        ArrayList<XYChart.Series> mineralsSeries = new ArrayList<>();
-        ArrayList<XYChart.Series> vitaminsSeries = new ArrayList<>();
+        ArrayList<XYChart.Series<Number, Number>> nutrientSeries = new ArrayList<>();
+        ArrayList<XYChart.Series<Number, Number>> mineralsSeries = new ArrayList<>();
+        ArrayList<XYChart.Series<Number, Number>> vitaminsSeries = new ArrayList<>();
 
         // Hashmap to contain all macros summed for each day
         HashMap<String, HashMap<String, Double>> macros = new HashMap<>();
@@ -299,183 +282,68 @@ public class SummaryController implements Initializable
         }
 
         // For each date in macros HashMap
-        for(String date : macros.keySet()){
+        setNutrientGraph(dc, nutrientSeries, macros);
 
-            // For each macro nutrient in date
-            for(String macroName : macros.get(date).keySet()){
+        setNutrientGraph(dc, mineralsSeries, minerals);
 
-                // Indicator to whether series list already contains a series for specific macro nutrient
-                boolean containsSeries = false;
-
-                // For each series name in nutrition collection
-                for(XYChart.Series series : nutrientSeries) {
-
-                    // If series name is the same as macro name
-                    if (series.getName() == macroName) {
-
-                        containsSeries = true;
-
-                        series.getData().add(new XYChart.Data<>(dc.fromString(date), macros.get(date).get(macroName)));
-
-                        break;
-
-                    }
-
-                }
-
-                if(!containsSeries){
-
-                    XYChart.Series newSeries = new XYChart.Series();
-
-                    newSeries.getData().add(new XYChart.Data<>(dc.fromString(date), macros.get(date).get(macroName)));
-
-                    newSeries.setName(macroName);
-
-                    nutrientSeries.add(newSeries);
-
-                }
-
-            }
-
-        }
-
-        for(String date : minerals.keySet()){
-
-            // For each macro nutrient in date
-            for(String mineralName : minerals.get(date).keySet()){
-
-                // Indicator to whether series list already contains a series for specific macro nutrient
-                boolean containsSeries = false;
-
-                // For each series name in nutrition collection
-                for(XYChart.Series series : mineralsSeries) {
-
-                    // If series name is the same as macro name
-                    if (series.getName() == mineralName) {
-
-                        containsSeries = true;
-
-                        series.getData().add(new XYChart.Data<>(dc.fromString(date), minerals.get(date).get(mineralName)));
-
-                        break;
-
-                    }
-
-                }
-
-                if(!containsSeries){
-
-                    XYChart.Series newSeries = new XYChart.Series();
-
-                    newSeries.getData().add(new XYChart.Data<>(dc.fromString(date), minerals.get(date).get(mineralName)));
-
-                    newSeries.setName(mineralName);
-
-                    mineralsSeries.add(newSeries);
-
-                }
-
-            }
-
-        }
-
-        for(String date : vitamins.keySet()){
-
-            // For each macro nutrient in date
-            for(String vitaminName : vitamins.get(date).keySet()){
-
-                // Indicator to whether series list already contains a series for specific macro nutrient
-                boolean containsSeries = false;
-
-                // For each series name in nutrition collection
-                for(XYChart.Series series : vitaminsSeries) {
-
-                    // If series name is the same as macro name
-                    if (series.getName() == vitaminName) {
-
-                        containsSeries = true;
-
-                        series.getData().add(new XYChart.Data<>(dc.fromString(date), vitamins.get(date).get(vitaminName)));
-
-                        break;
-
-                    }
-
-                }
-
-                if(!containsSeries){
-
-                    XYChart.Series newSeries = new XYChart.Series();
-
-                    newSeries.getData().add(new XYChart.Data<>(dc.fromString(date), vitamins.get(date).get(vitaminName)));
-
-                    newSeries.setName(vitaminName);
-
-                    vitaminsSeries.add(newSeries);
-
-                }
-
-            }
-
-        }
+        setNutrientGraph(dc, vitaminsSeries, vitamins);
 
         // For each nutrient series, add series to chart
-        int colourPos = 0;
-        for(XYChart.Series series : nutrientSeries) {
+        for(XYChart.Series<Number, Number> series : nutrientSeries) {
 
             nutritionChart.getData().add(series);
 
             // Setting tooltip
-            for (Object d : series.getData()) {
+            for (XYChart.Data<Number, Number> d : series.getData()) {
 
-                String value = series.getName() + ": " +((XYChart.Data<Number, Number>) d).getYValue();
+                String value = series.getName() + ": " + d.getYValue();
 
                 if (value.endsWith(".0"))
                     value = value.substring(0, value.length() - 2);
 
                 Tooltip t = new Tooltip(value);
                 t.setShowDelay(javafx.util.Duration.millis(0));
-                Tooltip.install(((XYChart.Data<Number, Number>) d).getNode(), t);
+                Tooltip.install(d.getNode(), t);
 
             }
 
         }
 
-        for(XYChart.Series series : mineralsSeries){
+        for(XYChart.Series<Number, Number> series : mineralsSeries){
 
             mineralsChart.getData().add(series);
 
             // Setting tooltip
-            for (Object d : series.getData()) {
+            for (XYChart.Data<Number, Number> d : series.getData()) {
 
-                String value = series.getName() + ": " +((XYChart.Data<Number, Number>) d).getYValue().toString();
+                String value = series.getName() + ": " + d.getYValue().toString();
 
                 if(value.endsWith(".0"))
                     value = value.substring(0, value.length() - 2);
 
                 Tooltip t = new Tooltip(value);
                 t.setShowDelay(javafx.util.Duration.millis(0));
-                Tooltip.install(((XYChart.Data<Number, Number>) d).getNode(), t);
+                Tooltip.install(d.getNode(), t);
 
             }
 
         }
 
-        for(XYChart.Series series : vitaminsSeries){
+        for(XYChart.Series<Number, Number> series : vitaminsSeries){
 
             vitaminsChart.getData().add(series);
 
             // Setting tooltip
-            for (Object d : series.getData()) {
+            for (XYChart.Data<Number, Number> d : series.getData()) {
 
-                String value = series.getName() + ": " +((XYChart.Data<Number, Number>) d).getYValue().toString();
+                String value = series.getName() + ": " + d.getYValue().toString();
 
                 if(value.endsWith(".0"))
                     value = value.substring(0, value.length() - 2);
 
                 Tooltip t = new Tooltip(value);
                 t.setShowDelay(javafx.util.Duration.millis(0));
-                Tooltip.install(((XYChart.Data<Number, Number>) d).getNode(), t);
+                Tooltip.install(d.getNode(), t);
 
             }
 
@@ -580,6 +448,48 @@ public class SummaryController implements Initializable
         nutritionSummarySection.setVisible(false);
         nutritionSummarySection.setManaged(false);
 
+    }
+
+    private void setNutrientGraph(DateConverter dc, ArrayList<XYChart.Series<Number, Number>> nutrientSeries, HashMap<String, HashMap<String, Double>> macros) {
+        for(String date : macros.keySet()){
+
+            // For each macro nutrient in date
+            for(String macroName : macros.get(date).keySet()){
+
+                // Indicator to whether series list already contains a series for specific macro nutrient
+                boolean containsSeries = false;
+
+                // For each series name in nutrition collection
+                for(XYChart.Series<Number, Number> series : nutrientSeries) {
+
+                    // If series name is the same as macro name
+                    if (series.getName().equals(macroName)) {
+
+                        containsSeries = true;
+
+                        series.getData().add(new XYChart.Data<>(dc.fromString(date), macros.get(date).get(macroName)));
+
+                        break;
+
+                    }
+
+                }
+
+                if(!containsSeries){
+
+                    XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+
+                    newSeries.getData().add(new XYChart.Data<>(dc.fromString(date), macros.get(date).get(macroName)));
+
+                    newSeries.setName(macroName);
+
+                    nutrientSeries.add(newSeries);
+
+                }
+
+            }
+
+        }
     }
 
     public void setWeightChartData(){
@@ -751,7 +661,7 @@ public class SummaryController implements Initializable
         formatAxis(nutritionDateAxis, nutritionChartDate);
 
         // Array list to contain all nutrient chart series
-        ArrayList<XYChart.Series> nutrientSeries = new ArrayList<>();
+        ArrayList<XYChart.Series<Number, Number>> nutrientSeries = new ArrayList<>();
 
         // Hashmap to contain all macros summed for each day
         HashMap<String, HashMap<String, Double>> macros = new HashMap<>();
@@ -771,7 +681,7 @@ public class SummaryController implements Initializable
                 // Get macro nutrients for each NutritionItem
                 HashMap<String, Double> itemMacros = item.getMacroNutrients();
 
-                // For each macro nutritent
+                // For each macro nutrient
                 for (String macroName : itemMacros.keySet()) {
 
                     // If macro nutrient already exists, add value to entry
@@ -797,62 +707,24 @@ public class SummaryController implements Initializable
         }
 
         // For each date in macros HashMap
-        for(String date : macros.keySet()){
-
-            // For each macro nutrient in date
-            for(String macroName : macros.get(date).keySet()){
-
-                // Indicator to whether series list already contains a series for specific macro nutrient
-                boolean containsSeries = false;
-
-                // For each series name in nutrition collection
-                for(XYChart.Series series : nutrientSeries) {
-
-                    // If series name is the same as macro name
-                    if (series.getName() == macroName) {
-
-                        containsSeries = true;
-
-                        series.getData().add(new XYChart.Data<>(dc.fromString(date), macros.get(date).get(macroName)));
-
-                        break;
-
-                    }
-
-                }
-
-                if(!containsSeries){
-
-                    XYChart.Series newSeries = new XYChart.Series();
-
-                    newSeries.getData().add(new XYChart.Data<>(dc.fromString(date), macros.get(date).get(macroName)));
-
-                    newSeries.setName(macroName);
-
-                    nutrientSeries.add(newSeries);
-
-                }
-
-            }
-
-        }
+        setNutrientGraph(dc, nutrientSeries, macros);
 
         // For each nutrient series, add series to chart
-        for(XYChart.Series series : nutrientSeries){
+        for(XYChart.Series<Number, Number> series : nutrientSeries){
 
             nutritionChart.getData().add(series);
 
             // Setting tooltip
-            for (Object d : series.getData()) {
+            for (XYChart.Data<Number, Number> d : series.getData()) {
 
-                String value = ((XYChart.Data<Number, Number>) d).getYValue().toString();
+                String value = d.getYValue().toString();
 
                 if(value.endsWith(".0"))
                     value = value.substring(0, value.length() - 2);
 
                 Tooltip t = new Tooltip(value);
                 t.setShowDelay(javafx.util.Duration.millis(0));
-                Tooltip.install(((XYChart.Data<Number, Number>) d).getNode(), t);
+                Tooltip.install(d.getNode(), t);
 
             }
 
@@ -869,7 +741,7 @@ public class SummaryController implements Initializable
         formatAxis(mineralsDateAxis, mineralsChartDate);
 
         // Array list to contain all nutrient chart series
-        ArrayList<XYChart.Series> mineralsSeries = new ArrayList<>();
+        ArrayList<XYChart.Series<Number, Number>> mineralsSeries = new ArrayList<>();
 
         // Hashmap to contain all macros summed for each day
         HashMap<String, HashMap<String, Double>> minerals = new HashMap<>();
@@ -912,61 +784,23 @@ public class SummaryController implements Initializable
 
         }
 
-        for(String date : minerals.keySet()){
+        setNutrientGraph(dc, mineralsSeries, minerals);
 
-            // For each macro nutrient in date
-            for(String mineralName : minerals.get(date).keySet()){
-
-                // Indicator to whether series list already contains a series for specific macro nutrient
-                boolean containsSeries = false;
-
-                // For each series name in nutrition collection
-                for(XYChart.Series series : mineralsSeries) {
-
-                    // If series name is the same as macro name
-                    if (series.getName() == mineralName) {
-
-                        containsSeries = true;
-
-                        series.getData().add(new XYChart.Data<>(dc.fromString(date), minerals.get(date).get(mineralName)));
-
-                        break;
-
-                    }
-
-                }
-
-                if(!containsSeries){
-
-                    XYChart.Series newSeries = new XYChart.Series();
-
-                    newSeries.getData().add(new XYChart.Data<>(dc.fromString(date), minerals.get(date).get(mineralName)));
-
-                    newSeries.setName(mineralName);
-
-                    mineralsSeries.add(newSeries);
-
-                }
-
-            }
-
-        }
-
-        for(XYChart.Series series : mineralsSeries){
+        for(XYChart.Series<Number, Number> series : mineralsSeries){
 
             mineralsChart.getData().add(series);
 
             // Setting tooltip
-            for (Object d : series.getData()) {
+            for (XYChart.Data<Number, Number> d : series.getData()) {
 
-                String value = ((XYChart.Data<Number, Number>) d).getYValue().toString();
+                String value = d.getYValue().toString();
 
                 if(value.endsWith(".0"))
                     value = value.substring(0, value.length() - 2);
 
                 Tooltip t = new Tooltip(value);
                 t.setShowDelay(javafx.util.Duration.millis(0));
-                Tooltip.install(((XYChart.Data<Number, Number>) d).getNode(), t);
+                Tooltip.install(d.getNode(), t);
 
             }
 
@@ -983,7 +817,7 @@ public class SummaryController implements Initializable
         formatAxis(vitaminsDateAxis, vitaminsChartDate);
 
         // Array list to contain all nutrient chart series
-        ArrayList<XYChart.Series> vitaminsSeries = new ArrayList<>();
+        ArrayList<XYChart.Series<Number, Number>> vitaminsSeries = new ArrayList<>();
 
         // Hashmap to contain all macros summed for each day
         HashMap<String, HashMap<String, Double>> vitamins = new HashMap<>();
@@ -1026,75 +860,35 @@ public class SummaryController implements Initializable
 
         }
 
-        for(String date : vitamins.keySet()){
+        setNutrientGraph(dc, vitaminsSeries, vitamins);
 
-            // For each macro nutrient in date
-            for(String vitaminName : vitamins.get(date).keySet()){
-
-                // Indicator to whether series list already contains a series for specific macro nutrient
-                boolean containsSeries = false;
-
-                // For each series name in nutrition collection
-                for(XYChart.Series series : vitaminsSeries) {
-
-                    // If series name is the same as macro name
-                    if (series.getName() == vitaminName) {
-
-                        containsSeries = true;
-
-                        series.getData().add(new XYChart.Data<>(dc.fromString(date), vitamins.get(date).get(vitaminName)));
-
-                        break;
-
-                    }
-
-                }
-
-                if(!containsSeries){
-
-                    XYChart.Series newSeries = new XYChart.Series();
-
-                    newSeries.getData().add(new XYChart.Data<>(dc.fromString(date), vitamins.get(date).get(vitaminName)));
-
-                    newSeries.setName(vitaminName);
-
-                    vitaminsSeries.add(newSeries);
-
-                }
-
-            }
-
-        }
-
-        for(XYChart.Series series : vitaminsSeries){
+        for(XYChart.Series<Number, Number> series : vitaminsSeries){
 
             vitaminsChart.getData().add(series);
 
             // Setting tooltip
-            for (Object d : series.getData()) {
+            for (XYChart.Data<Number,Number> d : series.getData()) {
 
-                String value = ((XYChart.Data<Number, Number>) d).getYValue().toString();
+                String value = d.getYValue().toString();
 
                 if(value.endsWith(".0"))
                     value = value.substring(0, value.length() - 2);
 
                 Tooltip t = new Tooltip(value);
                 t.setShowDelay(javafx.util.Duration.millis(0));
-                Tooltip.install(((XYChart.Data<Number, Number>) d).getNode(), t);
+                Tooltip.install(d.getNode(), t);
 
             }
-
         }
-
     }
 
-    public void weightPrevWeek(ActionEvent actionEvent) {
+    public void weightPrevWeek() {
         weightChartNextWeekButton.setTooltip(null);
         weightChartDate = weightChartDate.minusDays(7);
         setWeightChartData();
     }
 
-    public void weightNextWeek(ActionEvent actionEvent) {
+    public void weightNextWeek() {
         if(!weightChartDate.plusDays(7).isAfter(LocalDate.now())){
             weightChartDate = weightChartDate.plusDays(7);
             setWeightChartData();
@@ -1103,13 +897,13 @@ public class SummaryController implements Initializable
         }
     }
 
-    public void intakePrevWeek(ActionEvent actionEvent) {
+    public void intakePrevWeek() {
         intakeChartNextWeekButton.setTooltip(null);
         intakeChartDate = intakeChartDate.minusDays(7);
         setIntakeChartData();
     }
 
-    public void intakeNextWeek(ActionEvent actionEvent) {
+    public void intakeNextWeek() {
         if(!intakeChartDate.plusDays(7).isAfter(LocalDate.now())){
             intakeChartDate = intakeChartDate.plusDays(7);
             setIntakeChartData();
@@ -1118,13 +912,13 @@ public class SummaryController implements Initializable
         }
     }
 
-    public void burnPrevWeek(ActionEvent actionEvent) {
+    public void burnPrevWeek() {
         burnChartNextWeekButton.setTooltip(null);
         burnChartDate = burnChartDate.minusDays(7);
         setBurnChartData();
     }
 
-    public void burnNextWeek(ActionEvent actionEvent) {
+    public void burnNextWeek() {
         if(!burnChartDate.plusDays(7).isAfter(LocalDate.now())){
             burnChartDate = burnChartDate.plusDays(7);
             setBurnChartData();
@@ -1133,13 +927,13 @@ public class SummaryController implements Initializable
         }
     }
 
-    public void spentPrevWeek(ActionEvent actionEvent) {
+    public void spentPrevWeek() {
         spentChartNextWeekButton.setTooltip(null);
         spentChartDate = spentChartDate.minusDays(7);
         setSpentChartData();
     }
 
-    public void spentNextWeek(ActionEvent actionEvent) {
+    public void spentNextWeek() {
         if(!spentChartDate.plusDays(7).isAfter(LocalDate.now())){
             spentChartDate = spentChartDate.plusDays(7);
             setSpentChartData();
@@ -1148,13 +942,13 @@ public class SummaryController implements Initializable
         }
     }
 
-    public void nutritionPrevWeek(ActionEvent actionEvent) {
+    public void nutritionPrevWeek() {
         nutritionChartNextWeekButton.setTooltip(null);
         nutritionChartDate = nutritionChartDate.minusDays(7);
         setNutritionChart();
     }
 
-    public void nutritionNextWeek(ActionEvent actionEvent) {
+    public void nutritionNextWeek() {
         if(!nutritionChartDate.plusDays(7).isAfter(LocalDate.now())){
             nutritionChartDate = nutritionChartDate.plusDays(7);
             setNutritionChart();
@@ -1163,13 +957,13 @@ public class SummaryController implements Initializable
         }
     }
 
-    public void mineralsPrevWeek(ActionEvent actionEvent) {
+    public void mineralsPrevWeek() {
         mineralsChartNextWeekButton.setTooltip(null);
         mineralsChartDate = mineralsChartDate.minusDays(7);
         setMineralsChart();
     }
 
-    public void mineralsNextWeek(ActionEvent actionEvent) {
+    public void mineralsNextWeek() {
         if(!mineralsChartDate.plusDays(7).isAfter(LocalDate.now())){
             mineralsChartDate = mineralsChartDate.plusDays(7);
             setMineralsChart();
@@ -1178,13 +972,13 @@ public class SummaryController implements Initializable
         }
     }
 
-    public void vitaminsPrevWeek(ActionEvent actionEvent) {
+    public void vitaminsPrevWeek() {
         vitaminsChartNextWeekButton.setTooltip(null);
         vitaminsChartDate = vitaminsChartDate.minusDays(7);
         setVitaminsChart();
     }
 
-    public void vitaminsNextWeek(ActionEvent actionEvent) {
+    public void vitaminsNextWeek() {
         if(!vitaminsChartDate.plusDays(7).isAfter(LocalDate.now())){
             vitaminsChartDate = vitaminsChartDate.plusDays(7);
             setVitaminsChart();
@@ -1210,7 +1004,7 @@ public class SummaryController implements Initializable
      */
     private static class DateConverter extends StringConverter<Number>
     {
-        private LocalDate latest;
+        private final LocalDate latest;
 
         public DateConverter(LocalDate latest) {
             this.latest = latest;
@@ -1238,9 +1032,8 @@ public class SummaryController implements Initializable
         @Override
         public Number fromString(String s)
         {
-            LocalDate d1 = latest;
             LocalDate d2 = LocalDate.parse(s);
-            Duration diff = Duration.between(d1.atStartOfDay(), d2.atStartOfDay());
+            Duration diff = Duration.between(latest.atStartOfDay(), d2.atStartOfDay());
 
             return diff.toDays() + 7;
         }

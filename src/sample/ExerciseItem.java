@@ -3,7 +3,6 @@ package sample;
 /**
  * Class to represent an exercise undertaken by the User in the Application.
  *
- * @author Evan Clayton?
  * @author Samuel Scarfe
  *
  * @version 1.1
@@ -18,12 +17,12 @@ public class ExerciseItem {
     /**
      * The name of the exercise.
      */
-    private String name;
+    private final String name;
 
     /**
      * The burn rate of the exercise in calories per minute.
      */
-    private int burnRate;
+    private final int burnRate;
 
     /**
      * Constructs an exercise from a name and a caloric burn rate.

@@ -4,9 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.io.*;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.util.Scanner;
 
 /**

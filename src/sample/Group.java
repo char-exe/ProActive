@@ -11,7 +11,7 @@ public class Group {
     private GroupOwner owner;
     private Set<GroupAdmin> admins = new HashSet<>();
     private Set<GroupMember> members = new HashSet<>();
-    private ArrayList<GroupGoal> groupGoals = new ArrayList<>();
+    private ArrayList<GroupGoal> groupGoals;
 
     public Group(String name, GroupOwner owner){
         this.name = name;
@@ -48,10 +48,6 @@ public class Group {
 //    public String createInvite(){
 //
 //    }
-
-    public void setGroupGoal(String type, int target){
-
-    }
 
     public void deleteGroup(){
 

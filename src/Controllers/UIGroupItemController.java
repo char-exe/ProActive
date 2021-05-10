@@ -1,6 +1,5 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -10,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.EmailHandler;
@@ -19,7 +17,6 @@ import sample.TokenHandler;
 import javax.mail.Session;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
@@ -63,7 +60,7 @@ public class UIGroupItemController implements Initializable {
         }
     }
 
-    public void changeOwnershipButtonAction(ActionEvent actionEvent) throws IOException {
+    public void changeOwnershipButtonAction() throws IOException {
 
         FXMLLoader load = new FXMLLoader();
 

@@ -509,7 +509,7 @@ public class DatabaseHandler {
      * @return a NutritionItem represented by the passed ID.
      */
     public NutritionItem getNutritionItem(int foodID)  {
-        if (foodID < 201) {
+        if (foodID < 0) {
             throw new IllegalArgumentException();
         }
         String sql = "SELECT * FROM food WHERE id = " + foodID;
