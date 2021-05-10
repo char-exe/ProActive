@@ -92,7 +92,7 @@ public class MainController implements Initializable {
 
         SummaryController summaryController = loader.getController();
         summaryController.initData(user);
-        summaryController.initChartData();
+        summaryController.initChartData(LocalDate.now());
 
         GoalGenerator gg = new GoalGenerator(user);
         user.setSystemGoals(gg.generateGoals());
