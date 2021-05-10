@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import sample.DatabaseHandler;
 import sample.EmailHandler;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class ForgottenUsernamePageController {
 
     @FXML
     protected void submit() throws IOException {
-        if (emailField.getText().matches(EMAILREGEX)) {
+        if (emailField.getText().matches(EMAILREGEX) && !DatabaseHandler.getInstance().checkEmailUnique(emailField.getText())) {
             //send the email with the code
             EmailHandler.getInstance().sendUsernameRecoveryEmailCSS(EmailHandler.getInstance().createSession(), emailField.getText());
 
