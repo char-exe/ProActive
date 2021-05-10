@@ -315,11 +315,11 @@ public class EmailHandler {
     /**
      * Method to send an email with CSS formatting to a user that has forgotten their password.
      *
-     * @param session     Takes a session object, this is required to send any emails.
-     * @param to          Takes a To Address, this is the address that the email will be sent to.
+     * @param session Takes a session object, this is required to send any emails.
+     * @param to      Takes a To Address, this is the address that the email will be sent to.
      */
     public void sendRecoveryEmailCSS(Session session, String to){
-        String token = TokenHandler.createUniqueTokenWithoutArgument();
+        String token = TokenHandler.createUniqueToken(8);
         String username = DatabaseHandler.getInstance().getUsernameFromEmail(to);
         int userID = DatabaseHandler.getInstance().getUserIDFromUsername(username);
         DatabaseHandler.getInstance().insertRecoveryCode(userID, token);
