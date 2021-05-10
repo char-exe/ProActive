@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import sample.*;
+
 /**
  * A class to represent a user in a health tracking application, most/all error checking is completed
  * inside of the registration form.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="SQLite - proactive.db">
-  <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.21">
+<dataSource name="proactive.db">
+  <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.20">
     <root id="1">
       <ServerVersion>3.34.0</ServerVersion>
     </root>
@@ -2091,43 +2091,48 @@ user_id</RefColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="656" parent="185" name="user_pk">
+    <index id="656" parent="185" name="user_email_uindex">
+      <ColNames>email</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="657" parent="185" name="user_pk">
       <ColNames>user_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>user_user_id_uindex</UnderlyingIndexName>
     </key>
-    <column id="657" parent="186" name="entry_id">
+    <column id="658" parent="186" name="entry_id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="658" parent="186" name="user_id">
+    <column id="659" parent="186" name="user_id">
       <Position>2</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="659" parent="186" name="weight">
+    <column id="660" parent="186" name="weight">
       <Position>3</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="660" parent="186" name="date_of">
+    <column id="661" parent="186" name="date_of">
       <Position>4</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="661" parent="186" name="weight_entry_entry_id_uindex">
+    <index id="662" parent="186" name="weight_entry_entry_id_uindex">
       <ColNames>entry_id</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="662" parent="186" name="weight_entry_pk">
+    <key id="663" parent="186" name="weight_entry_pk">
       <ColNames>entry_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>weight_entry_entry_id_uindex</UnderlyingIndexName>
     </key>
-    <foreign-key id="663" parent="186">
+    <foreign-key id="664" parent="186">
       <ColNames>user_id</ColNames>
       <RefTableName>user</RefTableName>
       <RefKeyName>user_pk</RefKeyName>

@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import sample.*;
+
 /**
  * Contains ways to interact with the backend database of the ProActive app, contains a number of
  * enums which contain first each table in the database, then each column in that table, for example

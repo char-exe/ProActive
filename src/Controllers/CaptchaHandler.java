@@ -13,10 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import sample.DatabaseHandler;
-import sample.EmailHandler;
-import sample.TokenHandler;
-import sample.User;
+import sample.*;
 
 import javax.mail.Session;
 import java.io.*;
