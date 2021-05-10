@@ -7,15 +7,21 @@
 
 <VBox alignment="TOP_CENTER" prefHeight="260.0" prefWidth="613.0" styleClass="groupNode" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.UIGroupItemController">
    <children>
-      <Label fx:id="groupNameLabel" text="*group name*">
-         <font>
-            <Font size="16.0" />
-         </font>
-         <VBox.margin>
-            <Insets bottom="5.0" top="5.0" />
-         </VBox.margin>
-      </Label>
-      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="610.0">
+      <HBox alignment="CENTER" prefHeight="41.0" prefWidth="450.0">
+         <children>
+            <Label fx:id="groupNameLabel" alignment="CENTER" text="*group name*">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Button fx:id="changeOwnershipButton" mnemonicParsing="false" onAction="#changeOwnershipButtonAction" text="Change Ownership">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="138.0" prefWidth="450.0">
          <children>
             <VBox fx:id="groupMembersList" prefHeight="138.0" prefWidth="238.0" HBox.hgrow="NEVER">
                <children>

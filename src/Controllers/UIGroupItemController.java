@@ -1,15 +1,21 @@
 package Controllers;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.EmailHandler;
 import sample.TokenHandler;
 
 import javax.mail.Session;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -32,7 +38,6 @@ public class UIGroupItemController {
         Session emailSession = emailHandler.createSession();
 
         String token = TokenHandler.createUniqueToken(7);
-//        DatabaseHandler.getInstance().addTokenEntry(token, System.currentTimeMillis()/1000);
 
         if (!(email == null)){
             if (DatabaseHandler.getInstance().isMemberOfGroup(inviteInput.getText(), groupNameLabel.getText())){
@@ -47,8 +52,25 @@ public class UIGroupItemController {
         }
     }
 
-    public static void main(String[] args) {
-        int time = (int) ((System.currentTimeMillis()/1000) + 129600);
-        System.out.println(time) ;
+    public void changeOwnershipButtonAction(ActionEvent actionEvent) throws IOException {
+
+        FXMLLoader load = new FXMLLoader();
+
+        load.setLocation(getClass().getResource("/FXML/ChangeOwnership.fxml"));
+
+        Parent changeOwnershipParent = load.load();
+
+        Stage stage = new Stage();
+
+        Scene sceneOwnership = new Scene(changeOwnershipParent);
+
+        stage.setScene(sceneOwnership);
+
+        ChangeOwnershipController controller = load.getController();
+        stage.setScene(sceneOwnership);
+        controller.initData(DatabaseHandler.getInstance().getGroupObjectFromGroupName(groupNameLabel.getText()));
+
+        stage.show();
+
     }
 }

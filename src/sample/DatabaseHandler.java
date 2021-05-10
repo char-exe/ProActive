@@ -204,6 +204,25 @@ public class DatabaseHandler {
         }
         return userID;
     }
+
+    public float getHeightFromUserID(int userID){
+
+        float userHeight = -1;
+
+        String sql = "SELECT height FROM user WHERE user_id= " + userID + "";
+
+        try (Statement stmt  = this.conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                userHeight = rs.getFloat("height");
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return userHeight;
+
+    }
     /**
      * Method to find the username of a user based on their UserID
      *
@@ -2243,6 +2262,47 @@ public class DatabaseHandler {
         assert time != null;
         return LocalDateTime.now().isAfter(time);
 
+    }
+
+    public void changeGroupOwnership(Group group, User user) {
+        String sql  = "UPDATE group_membership SET Group_Role = 'Admin' WHERE User_Id = " +
+                       getUserIDFromUsername(group.getOwner().getUser().getUsername()) + " AND Group_Id = " +
+                       getGroupIDFromName(group.getName());
+
+
+        String sql2 = "UPDATE group_membership SET Group_Role = 'Owner' WHERE User_Id = " +
+                       getUserIDFromUsername(user.getUsername()) + " AND Group_Id = " +
+                       getGroupIDFromName(group.getName());
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql2);
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        System.out.println(sql);
+        System.out.println(sql2);
+    }
+
+    public float getMostRecentWeightValFromID(int userID) {
+        String sql = "SELECT weight FROM weight_entry WHERE user_id = " + userID + " ORDER BY entry_id DESC LIMIT 1;";
+
+        float weight = -1;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                weight = rs.getFloat("weight");
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return weight;
     }
 
     public static void main(String[] args) {
