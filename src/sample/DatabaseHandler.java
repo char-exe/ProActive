@@ -8,8 +8,6 @@ import java.util.Locale;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import sample.*;
-
 /**
  * Contains ways to interact with the backend database of the ProActive app, contains a number of
  * enums which contain first each table in the database, then each column in that table, for example
@@ -205,7 +203,16 @@ public class DatabaseHandler {
         return userID;
     }
 
-    public float getHeightFromUserID(int userID){
+    /**
+     * Method to get a user's height from their userID.
+     *
+     * @param userID the User's unique ID.
+     * @return the User's height.
+     */
+    public float getHeightFromUserID(int userID) {
+        if (userID < 0) {
+            throw new IllegalArgumentException();
+        }
 
         float userHeight = -1;
 
@@ -223,6 +230,7 @@ public class DatabaseHandler {
         return userHeight;
 
     }
+
     /**
      * Method to find the username of a user based on their UserID
      *
@@ -341,6 +349,12 @@ public class DatabaseHandler {
         return false;
     }
 
+    /**
+     * Method to check whether an email submitted already features in the user database.
+     *
+     * @param email the email to be checked.
+     * @return a boolean representing whether the email features in the database.
+     */
     public boolean checkEmailUnique(String email){
         if (email == null) {
             throw new NullPointerException();
@@ -488,7 +502,16 @@ public class DatabaseHandler {
         return nutritionItem;
     }
 
+    /**
+     * Method to get a NutritionItem based on a foodID.
+     *
+     * @param foodID the NutritionItem's unique ID.
+     * @return a NutritionItem represented by the passed ID.
+     */
     public NutritionItem getNutritionItem(int foodID)  {
+        if (foodID < 201) {
+            throw new IllegalArgumentException();
+        }
         String sql = "SELECT * FROM food WHERE id = " + foodID;
 
         NutritionItem nutritionItem = null;
@@ -515,7 +538,7 @@ public class DatabaseHandler {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println();
+
         return nutritionItem;
     }
 
@@ -825,9 +848,22 @@ public class DatabaseHandler {
         return entries;
     }
 
+    /**
+     * Method to get a user's food entries from between today and a given passed date.
+     *
+     * @param username the user's username.
+     * @param latest the earliest date to be queried.
+     * @return a HashMap of String dates of consumption against NutritionItems.
+     */
     public HashMap<String, ArrayList<NutritionItem>> getNutrientEntries(String username, LocalDate latest){
         if (username == null) {
             throw new NullPointerException();
+        }
+        if (latest == null) {
+            throw new NullPointerException();
+        }
+        if (latest.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException();
         }
 
         HashMap<String, ArrayList<NutritionItem>> result = new HashMap<>();
@@ -1257,7 +1293,6 @@ public class DatabaseHandler {
 
         return role;
     }
-
 
     /**
      * Method to set the amount of water intake on a given day and store it into the meal table.
@@ -1704,45 +1739,6 @@ public class DatabaseHandler {
     }
 
     /**
-     * Method to insert a new group goal into the database.
-     *
-     * @param username username for the user the goal is for.
-     * @param goal the group goal object to be inserted.
-     */
-    public void insertGroupGoal(String username, GroupGoal goal) {
-        if (username == null ) {
-            throw new NullPointerException();
-        }
-        if (goal == null) {
-            throw new NullPointerException();
-        }
-
-        float target = goal.getTarget();
-        String unit = goal.getUnit().toString();
-        String endDate = goal.getEndDate().toString();
-        int group_id = goal.getGroupId();
-        int user_id = getUserIDFromUsername(username);
-
-        String sqlIns = "INSERT INTO group_goal(group_id, target, unit, end_date) " +
-                "VALUES(?,?,?,?,?,?)";
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sqlIns)){
-            pstmt.setFloat(1,target);
-            pstmt.setString(2, unit);
-            pstmt.setString(3, endDate);
-            pstmt.setInt(4, group_id);
-            pstmt.setInt(5, getUserIDFromUsername(username));
-            pstmt.setInt(6, user_id);
-
-            pstmt.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
      * Method to find the username of a user based on their email address. This is used in password recovery.
      *
      * @param email Takes in an email address.
@@ -1771,73 +1767,24 @@ public class DatabaseHandler {
     }
 
     /**
-     * Method to insert a token for a group invite into the database with an expiry time of 30 minutes from method call.
-     *
-     * @param groupId id of the group the invite is for.
-     * @param token token used for the invite.
+     * Inserts a recovery code for a forgotten password into the database with a 30 min expiry time.
+     * @param userId ID of the user the code is for.
+     * @param token The unique token used for the recovery code.
      */
-
-    public void insertGroupInvite(int groupId, String token, int userId) {
-        if (groupId < 1) {
+    public void insertRecoveryCode (int userId, String token) {
+        if (userId < 0) {
             throw new IllegalArgumentException();
         }
         if (token == null) {
             throw new NullPointerException();
         }
 
-        LocalDateTime current_time = LocalDateTime.now();
-        LocalDateTime expiry_time = current_time.plusMinutes(30); //set time for 30 minutes from now
-        String expiry_time_string = expiry_time.toString();
-
-        String sql = "INSERT INTO groupInvTable(tokenVal, expiry_time, groupID, userID) VALUES('" +
-                token + "','" + expiry_time_string + "','" + groupId + "','" + userId + "')";
-        try {
-            Statement stmt = this.conn.createStatement();
-            stmt.executeUpdate(sql);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Method to check if an invite token is still within the valid time and for the correct user.
-     *
-     * @param token     Invite token string.
-     * @param user_id   ID of the user the invite is being checked for.
-     * @return          Returns true if the invite is valid, else returns false.
-     */
-    public boolean checkGroupInvite (String token, int user_id) {
-        LocalDateTime current_time = LocalDateTime.now();
-
-        String sql = "SELECT expiry_time, userID FROM groupInvTable WHERE " + "tokenVal = '" + token + "'";
-        try (Statement stmt = this.conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            if (rs.next()) {
-                String expiry_time_string = rs.getString("expiryTime");
-                LocalDateTime expiryTime = LocalDateTime.parse(expiry_time_string);
-                int tokenUserID = rs.getInt("userID");
-                return LocalDateTime.now().isBefore(expiryTime) && user_id == tokenUserID;
-
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
-    }
-
-    /**
-     * Inserts a recovery code for a forgotten password into the database with a 30 min expiry time.
-     * @param user_id ID of the user the code is for.
-     * @param token The unique token used for the recovery code.
-     */
-    public void insertRecoveryCode (int user_id, String token) {
-        LocalDateTime current_time = LocalDateTime.now();
-        LocalDateTime expiry_time = current_time.plusMinutes(30);//set time for 30 minutes from now
-        String expiry_time_string = expiry_time.toString();
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime expiryTime = currentTime.plusMinutes(30);//set time for 30 minutes from now
+        String expiryTimeString = expiryTime.toString();
 
         String sql = "INSERT INTO passwordRecoveryCodes(userID, recoveryCode, expiryTime) VALUES('" +
-                user_id + "','" + token + "','" + expiry_time_string + "')";
+                userId + "','" + token + "','" + expiryTimeString + "')";
         try {
             Statement stmt = this.conn.createStatement();
             stmt.executeUpdate(sql);
@@ -1854,6 +1801,10 @@ public class DatabaseHandler {
      * @return Returns true if valid, else returns false.
      */
     public boolean checkRecoveryCode (String token) {
+        if (token == null) {
+            throw new NullPointerException();
+        }
+
         String sql = "SELECT expiryTime FROM passwordRecoveryCodes WHERE " + "recoveryCode = '" + token + "'";
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -2305,13 +2256,6 @@ public class DatabaseHandler {
         return weight;
     }
 
-
-
-    public static void main(String[] args) {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-        System.out.println(dh.isMemberOfGroup("sscar", "TestGroup1"));
-    }
-
     public Group getGroupObjectFromGroupName(String text) {
         return getGroup(getGroupIDFromName(text));
 
@@ -2337,18 +2281,71 @@ public class DatabaseHandler {
         return groupNames;
     }
 
-    public void addGroupGoal(String groupName, GroupGoal goal) {
-        String sql = "INSERT INTO group_goal(group_id, target, unit, end_date) VALUES('" +
-                getGroupIDFromName(groupName) + "', '" + goal.getTarget() + "', '" + goal.getUnit() +
+    public boolean addGroupGoal(String groupName, GroupGoal goal) {
+        String sqlSel = "SELECT * FROM group_goal WHERE group_id = '" + getGroupIDFromName(groupName) + "' AND " +
+                "target = '" + goal.getTarget() + "' AND unit = '" + goal.getUnit().toString() +
+                "' AND end_date = '" + goal.getEndDate().toString() + "'";
+
+        try (Statement stmtSel = this.conn.createStatement();
+             ResultSet rs = stmtSel.executeQuery(sqlSel)) {
+            if (rs.next()) {
+                return false;
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        String sqlIns = "INSERT INTO group_goal(group_id, target, unit, end_date) VALUES('" +
+                getGroupIDFromName(groupName) + "', '" + goal.getTarget() + "', '" + goal.getUnit().toString() +
                 "', '" + goal.getEndDate().toString() + "')";
 
         try {
             Statement stmt = this.conn.createStatement();
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sqlIns);
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return true;
+    }
+
+    public static void main(String[] args) {
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+        System.out.println(dh.isMemberOfGroup("sscar", "TestGroup1"));
+    }
+
+    /**
+     * Method to update a user's stored hash and salt values.
+     *
+     * @param userID the id of the user to update.
+     * @param hash   their new hash.
+     * @param salt   the salt used for that hash.
+     */
+    public void updatePassword(int userID, byte[] hash, byte[] salt) {
+        if (userID < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (hash == null) {
+            throw new NullPointerException();
+        }
+        if (salt == null) {
+            throw new NullPointerException();
+        }
+
+        String sql = "UPDATE user SET hash = ?, salt = ? WHERE user_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setBytes(1,hash);
+            pstmt.setBytes(2, salt);
+            pstmt.setInt(3, userID);
+
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 }

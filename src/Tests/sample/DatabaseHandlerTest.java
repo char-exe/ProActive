@@ -835,7 +835,7 @@ class DatabaseHandlerTest {
 
         assertThrows(NullPointerException.class, () -> dh.getEmailFromUsername(null));
     }
-
+/*
     @Test
     void nullUsernameInsertGroupGoal() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
@@ -852,6 +852,8 @@ class DatabaseHandlerTest {
         assertThrows(NullPointerException.class, () -> dh.insertGroupGoal("bwayne1998", null));
     }
 
+
+ */
 
     @Test
     void nullEmailGetUsernameFromEmail() {

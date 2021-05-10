@@ -1,9 +1,6 @@
 package Controllers;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -19,7 +16,6 @@ import sample.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -30,12 +26,15 @@ import java.util.ResourceBundle;
  * A controller for the Group page of the app.
  *
  * @author Charlie Jones
+ * @author Samuel Scarfe
  *
- * @version 1.1
+ * @version 1.2
  *
  * 1.0 - Initial commit, dummy file.
  * 1.1 - Added initialise function, and populate groups section with all groups the user has joined. It also displays
- *  the group members of each group but not yet the goals
+ *       the group members of each group but not yet the goals.
+ * 1.2 - Adding group goal viewing, joining, and setting.
+ * 1.3 - Refactored into private methods to improve readability.
  */
 public class GroupController implements Initializable {
 
@@ -62,56 +61,24 @@ public class GroupController implements Initializable {
     private HashMap<String, Goal.Unit> nutrientsMap;
 
     /**
+     * Method to be called once all FXML elements have been loaded, combined with initData acts as a pseudo-constructor
+     *
+     * @param url FXML defined parameter
+     * @param resourceBundle FXML defined parameter
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        dh = DatabaseHandler.getInstance();
+    }
+
+    /**
      * Method to allow data to be passed into this scene from another
      *
      * @param user Takes in a user object
      */
     public void initData(User user) {
         this.user = user;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        dh = DatabaseHandler.getInstance();
-
-    }
-
-    @FXML void joinGroupButtonAction(ActionEvent actionEvent) throws SQLException {
-        joinGroupConfirmPopUp.setText("");
-        String tokenInput = joinGroupInput.getText();
-        int userID = dh.getUserIDFromUsername(user.getUsername());
-        String groupName = dh.getGroupNameFromInv(tokenInput);
-        int groupInvUserID = dh.getUserIDFromInv(tokenInput);
-        LocalDateTime beforeNow = dh.getTimeoutFromInv(tokenInput);
-
-        System.out.println("Got here");
-        if (userID == groupInvUserID && LocalDateTime.now().isBefore(beforeNow)){
-            if(!dh.isMemberOfGroup(user.getUsername(), groupName)) {
-                dh.joinGroup(user.getUsername(), groupName);
-                joinGroupConfirmPopUp.setText("Successfully joined " + groupName);
-            }else {
-                joinGroupConfirmPopUp.setText("You Cannot Join This Group As You Are Already A Member, " +
-                                              "this token has been removed from the system"
-                                             );
-
-            }
-            dh.deleteGroupInv(tokenInput);
-        }else{
-            joinGroupConfirmPopUp.setText("Something went wrong when joining the group, please make sure the " +
-                                          "invite was meant for this user and has not expired (36 hours)"
-                                          );
-
-            if (dh.isInvExpired(tokenInput)){
-                dh.deleteGroupInv(tokenInput);
-            }
-
-        }
-    }
-
-    public void initUserGroupData(){
-
-        initViewGroups();
 
         nutrientsMap = new HashMap<>();
 
@@ -137,12 +104,58 @@ public class GroupController implements Initializable {
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, t, t1) -> {
             if ("View Groups".equals(t1.getText()))
             {
-                initViewGroups();
+                initUserGroupData();
             }
         });
     }
 
-    private void initViewGroups() {
+    /**
+     * Method to control group joining action.
+     */
+    @FXML
+    void joinGroupButtonAction() {
+        joinGroupConfirmPopUp.setText(""); //Empty pop up label
+        String tokenInput = joinGroupInput.getText(); //Retrieve token input
+
+        //Retrieve user token answer
+        int userID = dh.getUserIDFromUsername(user.getUsername());
+        String groupName = dh.getGroupNameFromInv(tokenInput);
+        int groupInvUserID = dh.getUserIDFromInv(tokenInput);
+        LocalDateTime beforeNow = dh.getTimeoutFromInv(tokenInput);
+
+        //If user has been invited and invite has not expired
+        if (userID == groupInvUserID && LocalDateTime.now().isBefore(beforeNow)) {
+            //if the user is not already a member
+            if(!dh.isMemberOfGroup(user.getUsername(), groupName)) {
+                dh.joinGroup(user.getUsername(), groupName);
+                joinGroupConfirmPopUp.setText("Successfully joined " + groupName);
+            }
+            else { //User is already a member
+                joinGroupConfirmPopUp.setText(
+                        "You Cannot Join This Group As You Are Already A Member, " +
+                                "this token has been removed from the system"
+                );
+            }
+            dh.deleteGroupInv(tokenInput);
+        }
+        else { //User has not been invited, or token has expired.
+            joinGroupConfirmPopUp.setText(
+                    "Something went wrong when joining the group, please make sure the " +
+                            "invite was meant for this user and has not expired (36 hours)"
+            );
+
+            if (dh.isInvExpired(tokenInput)) {
+                dh.deleteGroupInv(tokenInput);
+            }
+
+        }
+    }
+
+    /**
+     * Method to instantiate all of a User's Group Memberships, each as a box in a scroll pane.
+     */
+    public void initUserGroupData(){
+
         groupsContainer.getChildren().clear();
         for(Group group : dh.getUserGroups(user.getUsername())) {
 
@@ -156,135 +169,172 @@ public class GroupController implements Initializable {
 
             if(groupNode != null){
 
-                // Extracting children nodes from UIGroupItem.fxml
+                //Extracting children nodes from UIGroupItem.fxml
                 ObservableList<Node> children = groupNode.getChildren();
 
-                // Get group name label from node list
+                //Get group name label from node list
                 HBox groupNameLabelHbox = (HBox) children.get(0);
                 Label groupNameLabel = (Label) groupNameLabelHbox.getChildren().get(0);
-                Button groupOwnershipTransfer = (Button) groupNameLabelHbox.getChildren().get(1);
                 groupNameLabel.setText(group.getName());
 
-                // Get group container from node list
+                //Get group container from node list
                 HBox groupContainer = (HBox) children.get(1);
 
-                // Get user list from groupContainer children
+                //Get user list section
                 VBox userList = (VBox) groupContainer.getChildren().get(0);
 
-                Label ownerLabel = new Label("Owner: " + group.getOwner().getUser().getUsername());
-                ownerLabel.setUnderline(true);
-                userList.getChildren().add(ownerLabel);
+                //Display members
+                setMembers(group, userList);
 
-                for(GroupAdmin groupAdmin : group.getAdmins())
-                    userList.getChildren().add(new Label("Admin: " + groupAdmin.getUser().getUsername()));
+                //Get the role of the user
+                String userRole = DatabaseHandler.getInstance().getGroupRoleFromUsername(groupNameLabel.getText(), user.getUsername());
 
-                userList.getChildren().add(new Label(""));
-
-                for(GroupMember groupMember : group.getMembers())
-                    userList.getChildren().add(new Label(groupMember.getUser().getUsername()));
-
+                //Set permissions based on role
+                setPermissions(userRole, children);
 
                 // Get goal list from groupContainer children
                 VBox goalList = (VBox) groupContainer.getChildren().get(2);
                 ScrollPane goalScrollPane = (ScrollPane) goalList.getChildren().get(1);
                 VBox goalScroller = (VBox) goalScrollPane.getContent();
 
-                //Seperator between group details and group invite settings
-                Separator s = (Separator) children.get(2);
-
-                //Determine logic on allowing members to send invites
-                VBox groupInvite = (VBox) children.get(3);
-
-                //Get the Label to be modified for group invites
-                HBox groupInviteLabelHbox = (HBox) groupInvite.getChildren().get(0);
-                Label groupInvitePopUp = (Label) groupInviteLabelHbox.getChildren().get(0);
-                //Get the TextField to be modified for group invites
-
-                HBox groupInviteInputHbox = (HBox) groupInvite.getChildren().get(1);
-                Label groupInviteInputLabel = (Label) groupInviteInputHbox.getChildren().get(0);
-                TextField groupInviteInput = (TextField) groupInviteInputHbox.getChildren().get(1);
-
-                //Get the Button to be modified for group invites
-                HBox groupInviteButtonHbox = (HBox) children.get(4);
-                Button groupInviteButton = (Button) groupInviteButtonHbox.getChildren().get(0);
-
-                //Get the role of the user
-                String userRole = DatabaseHandler.getInstance().getGroupRoleFromUsername(groupNameLabel.getText(), user.getUsername());
-
-                //If a user is an admin or an owner of a group, there are no restrictions on whether they can invite
-                //users to a group
-                if ((!(userRole == null)) && userRole.equals("Member")) {
-                    s.setManaged(false);
-                    groupInvite.setManaged(false);
-                    groupInviteLabelHbox.setManaged(false);
-                    groupInvitePopUp.setManaged(false);
-                    groupInviteInputHbox.setManaged(false);
-                    groupInviteInput.setManaged(false);
-                    groupInviteButtonHbox.setManaged(false);
-                    groupInviteButton.setManaged(false);
-                    groupInviteInputLabel.setManaged(false);
-                }
-                if ((!(userRole == null)) && !(userRole.equals("Owner"))){
-                    groupOwnershipTransfer.setManaged(false);
-                }
-
-                int stylesIndex = 0;
-                String[] styles = {"groupGoalsHboxOdd", "groupGoalsHboxEven"};
-
-                for (GroupGoal groupGoal : group.getGroupGoals()) {
-                    System.out.println(groupGoal);
-                    Region region1 = new Region();
-                    Region region2 = new Region();
-                    HBox.setHgrow(region1, Priority.ALWAYS);
-                    HBox.setHgrow(region2, Priority.ALWAYS);
-                    Label label = new Label(groupGoal.toString());
-                    HBox innerBox = new HBox(region1, label, region2);
-                    HBox.setHgrow(innerBox, Priority.ALWAYS);
-                    innerBox.setAlignment(Pos.CENTER);
-
-
-                    //Create button
-                    Button button = new Button();
-
-                    //Set button text based on goal status
-                    if (user.getGoals().contains(groupGoal)) {
-                        button.setText("Accepted");
-                    } else {
-                        button.setText("Click to accept");
-                    }
-
-                    button.setMinWidth(95); //Width set such that it doesn't change when text changes
-
-                    //Set button action
-                    button.setOnAction(e -> {
-                        if (!user.getGoals().contains(groupGoal)) { //If goal not labelled accepted
-                            user.addGoal(new GroupGoal(
-                                    groupGoal.getTarget(),
-                                    groupGoal.getUnit(),
-                                    groupGoal.getEndDate(),
-                                    groupGoal.getGroupId())
-                            ); //Add to the user's individual goals
-                            button.setText("Accepted"); //Update button text
-                        }
-                    });
-
-                    HBox hbox = new HBox(innerBox, button);
-                    hbox.getStyleClass().add(styles[stylesIndex]);
-                    hbox.setAlignment(Pos.CENTER);
-                    VBox.setMargin(hbox, new Insets(5, 5, 5, 5));
-
-                    goalScroller.getChildren().add(hbox);
-
-
-                    stylesIndex = ++stylesIndex%2; //Increment then mod 2
-                }
+                //View group goals
+                showGroupGoals(group, goalScroller);
 
                 groupsContainer.getChildren().add(groupNode);
-
-
-
-
             }
+        }
+    }
+
+    /**
+     * Private helper method to show group members and their roles.
+     * @param group the group whose members are to be shown.
+     * @param userList a VBox wherein the members will be displayed.
+     */
+    private void setMembers(Group group, VBox userList) {
+        //Display owner
+        Label ownerLabel = new Label("Owner: " + group.getOwner().getUser().getUsername());
+        ownerLabel.setUnderline(true);
+        userList.getChildren().add(ownerLabel);
+
+        //Display admins
+        for(GroupAdmin groupAdmin : group.getAdmins())
+            userList.getChildren().add(new Label("Admin: " + groupAdmin.getUser().getUsername()));
+
+        userList.getChildren().add(new Label(""));
+
+        //Display members
+        for(GroupMember groupMember : group.getMembers())
+            userList.getChildren().add(new Label(groupMember.getUser().getUsername()));
+    }
+
+    /**
+     * Private helper method to show variable content based on user permissions in a group.
+     *
+     * @param userRole the user's role in a group.
+     * @param children a list of nodes containing all those nodes with variable permissions.
+     */
+    private void setPermissions(String userRole, ObservableList<Node> children) {
+        //Seperator between group details and group invite settings
+        Separator s = (Separator) children.get(2);
+
+        //Determine logic on allowing members to send invites
+        VBox groupInvite = (VBox) children.get(3);
+
+        //Get the Label to be modified for group invites
+        HBox groupInviteLabelHbox = (HBox) groupInvite.getChildren().get(0);
+        Label groupInvitePopUp = (Label) groupInviteLabelHbox.getChildren().get(0);
+
+        //Get the TextField to be modified for group invites
+        HBox groupInviteInputHbox = (HBox) groupInvite.getChildren().get(1);
+        Label groupInviteInputLabel = (Label) groupInviteInputHbox.getChildren().get(0);
+        TextField groupInviteInput = (TextField) groupInviteInputHbox.getChildren().get(1);
+
+        //Get the Button to be modified for group invites
+        HBox groupInviteButtonHbox = (HBox) children.get(4);
+        Button groupInviteButton = (Button) groupInviteButtonHbox.getChildren().get(0);
+
+        // Get group ownership transfer button from node list
+        HBox groupNameLabelHbox = (HBox) children.get(0);
+        Button groupOwnershipTransfer = (Button) groupNameLabelHbox.getChildren().get(1);
+
+        //If a user is an admin or an owner of a group, there are no restrictions on whether they can invite
+        //users to a group
+        if ((!(userRole == null)) && userRole.equals("Member")) {
+            s.setManaged(false);
+            groupInvite.setManaged(false);
+            groupInviteLabelHbox.setManaged(false);
+            groupInvitePopUp.setManaged(false);
+            groupInviteInputHbox.setManaged(false);
+            groupInviteInput.setManaged(false);
+            groupInviteButtonHbox.setManaged(false);
+            groupInviteButton.setManaged(false);
+            groupInviteInputLabel.setManaged(false);
+        }
+        if ((!(userRole == null)) && !(userRole.equals("Owner"))){
+            groupOwnershipTransfer.setManaged(false);
+        }
+    }
+
+    /**
+     * Private helper method to display a Groups goals and allow them to be accepted by users.
+     *
+     * @param group the group whose goals are to be shown.
+     * @param goalScroller a scrollable window in which to show the goals.
+     */
+    private void showGroupGoals(Group group, VBox goalScroller) {
+
+        //Alternating styles sheets with index to change with every added goal.
+        int stylesIndex = 0;
+        String[] styles = {"groupGoalsHboxOdd", "groupGoalsHboxEven"};
+
+        for (GroupGoal groupGoal : group.getGroupGoals()) {
+            //Show goal string in the centre of an HBox.
+            Region region1 = new Region();
+            Region region2 = new Region();
+            HBox.setHgrow(region1, Priority.ALWAYS);
+            HBox.setHgrow(region2, Priority.ALWAYS);
+            Label label = new Label(groupGoal.toString());
+            HBox innerBox = new HBox(region1, label, region2);
+            HBox.setHgrow(innerBox, Priority.ALWAYS);
+            innerBox.setAlignment(Pos.CENTER);
+
+
+            //Create button
+            Button button = new Button();
+
+            //Set button text based on goal status
+            if (user.getGoals().contains(groupGoal)) {
+                button.setText("Accepted");
+            }
+            else {
+                button.setText("Click to accept");
+            }
+
+            button.setMinWidth(95); //Width set such that it doesn't change when text changes
+
+            //Set button action
+            button.setOnAction(e -> {
+                if (!user.getGoals().contains(groupGoal)) { //If goal not labelled accepted
+                    user.addGoal(new GroupGoal(
+                            groupGoal.getTarget(),
+                            groupGoal.getUnit(),
+                            groupGoal.getEndDate(),
+                            groupGoal.getGroupId())
+                    ); //Add to the user's individual goals
+                    button.setText("Accepted"); //Update button text
+                }
+            });
+
+            //Add label and button to HBox
+            HBox hbox = new HBox(innerBox, button);
+            hbox.getStyleClass().add(styles[stylesIndex]);
+            hbox.setAlignment(Pos.CENTER);
+            VBox.setMargin(hbox, new Insets(5, 5, 5, 5));
+
+            //Add goal to screen.
+            goalScroller.getChildren().add(hbox);
+
+            stylesIndex = ++stylesIndex%2; //Increment then mod 2
         }
     }
 
@@ -304,9 +354,13 @@ public class GroupController implements Initializable {
             float amount = Float.parseFloat(amountText); //Need to check as a string first to check for empty input.
 
             GroupGoal goal = new GroupGoal(amount, nutrientsMap.get(unitsText), dateText, dh.getGroupIDFromName(groupName));
-            dh.addGroupGoal(groupName, goal);
-            dietLabel.setText("Group Goal added : " + goal);
-            initViewGroups();
+            if (dh.addGroupGoal(groupName, goal)) {
+                dietLabel.setText("Group Goal added : " + goal);
+                initUserGroupData();
+            }
+            else {
+                dietLabel.setText("This goal already exists in " + groupName);
+            }
         }
     }
 
@@ -326,9 +380,13 @@ public class GroupController implements Initializable {
 
             //Create goal and present message to user
             GroupGoal goal = new GroupGoal(amount, Goal.Unit.BURNED, dateText, dh.getGroupIDFromName(groupName));
-            dh.addGroupGoal(groupName, goal);
-            calorieLabel.setText("Goal added : " + goal);
-            initViewGroups();
+            if (dh.addGroupGoal(groupName, goal)) {
+                calorieLabel.setText("Goal added : " + goal);
+                initUserGroupData();
+            }
+            else {
+                calorieLabel.setText(("This goal already exists in " + groupName));
+            }
         }
     }
 
@@ -355,9 +413,13 @@ public class GroupController implements Initializable {
             else {
                 goal = new GroupGoal(amount, Goal.Unit.valueOf(unitsText.toUpperCase(Locale.ROOT)), dateText, dh.getGroupIDFromName(groupName));
             }
-            dh.addGroupGoal(groupName, goal);
-            exerciseLabel.setText("Goal added : " + goal);
-            initViewGroups();
+            if (dh.addGroupGoal(groupName, goal)) {
+                exerciseLabel.setText("Goal added : " + goal);
+                initUserGroupData();
+            }
+            else {
+                exerciseLabel.setText("This goal already exists in " + groupName);
+            }
         }
     }
 

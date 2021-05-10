@@ -1,17 +1,23 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 
 /**
  * A class to control the RecoveryCodePage FXML file.
@@ -26,24 +32,44 @@ public class RecoveryCodePageController {
     @FXML protected Label recoveryCodePopUp;
     @FXML protected TextField recoveryCodeField;
     @FXML protected Label passwordFieldPopUp;
-    @FXML protected TextField passwordField;
+    @FXML protected PasswordField passwordField;
+    @FXML protected PasswordField repeatPasswordField;
     @FXML protected Button submitButton;
     @FXML protected Button cancelButton;
 
     private final String PASSWORDREGEX  = "(?=.*\\w)(?=.*[!@#$%^&+='()*,./:;<>?{|}~])(?=\\S+$).{8,}";
 
-
     /**
      * Method to check for both a valid recovery code and valid new password.
      * If both are valid the user's password is updated.
      */
-    public void submit() {
+    public void submit() throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (DatabaseHandler.getInstance().checkRecoveryCode(recoveryCodeField.getText())) {
-            if (passwordField.getText().matches(PASSWORDREGEX)) {
-                //Sam please do the password insertion stuff here.
-                //Thank you again for doing this :)
-                //The method below gets you the userID which I hope will be helpful.
-                //int userID = DatabaseHandler.getInstance().getUserIDFromRecoveryCode(recoveryCodeField.getText());
+            String password = passwordField.getText();
+
+            if (password.matches(PASSWORDREGEX)) {
+                String repeatPassword = repeatPasswordField.getText();
+                if (password.equals(repeatPassword)) {
+                    int userID = DatabaseHandler.getInstance().getUserIDFromRecoveryCode(recoveryCodeField.getText());
+
+                    //Password hashing
+                    SecureRandom sr = new SecureRandom();
+                    byte[] salt = new byte[16];
+                    sr.nextBytes(salt);
+
+                    KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+                    SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+                    byte[] hash = factory.generateSecret(spec).getEncoded();
+
+                    DatabaseHandler.getInstance().updatePassword(userID, hash, salt);
+
+
+                    passwordFieldPopUp.setText("Password reset, return to login to proceed");
+                }
+                else {
+                    passwordFieldPopUp.setText("Passwords do not match");
+                }
             }
             else {
                 passwordFieldPopUp.setText("Invalid password. Please try again. ");
@@ -52,16 +78,16 @@ public class RecoveryCodePageController {
         else {
             recoveryCodePopUp.setText("This code is invalid. Please try a different code. ");
         }
+
+
     }
 
     /**
      * Method to cancel and send user back to the forgotten password page
      *
-     * @param actionEvent This refers to the button that will cause this method to be called
-     *
      * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
      */
-    @FXML protected void cancel(ActionEvent actionEvent) throws IOException {
+    @FXML protected void cancel() throws IOException {
         Stage parentScene = (Stage) cancelButton.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
@@ -79,6 +105,4 @@ public class RecoveryCodePageController {
         parentScene.close();
         stage.show();
     }
-
-
 }

@@ -78,6 +78,7 @@ public class MainController implements Initializable {
      */
     public void initData(User user){
         this.user = user;
+        System.out.println(user);
     }
 
     /**
@@ -187,7 +188,6 @@ public class MainController implements Initializable {
         mppc.initData(user);
         main.setCenter(vBox);
         toggleButtonFocus(manageProfileButton);
-        showFadeNotification("Ghost text");
     }
 
     /**
