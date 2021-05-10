@@ -1050,7 +1050,7 @@ public class DatabaseHandler {
             while (rs.next()) {
                 float target = rs.getFloat("target");
                 Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
-                int progress = rs.getInt("progress");
+                float progress = rs.getInt("progress");
                 LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
                 int group_id = rs.getInt("group_id");
 
@@ -2174,6 +2174,35 @@ public class DatabaseHandler {
         }
 
         return groups;
+    }
+
+    public ArrayList<GroupGoal> loadGroupGoals(String name) {
+        if (name == null) {
+            throw new NullPointerException();
+        }
+
+        String sql = "SELECT group_id, target, unit, end_date FROM group_goal WHERE group_id = " +
+                getGroupIDFromName(name);
+
+        ArrayList<GroupGoal> goals = new ArrayList<>();
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+
+                int groupId = rs.getInt("group_id");
+                float target = rs.getFloat("target");
+                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
+
+                goals.add(new GroupGoal(target, unit, endDate, groupId));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return goals;
     }
 
     public static void main(String[] args) {

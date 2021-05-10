@@ -1,6 +1,7 @@
 package sample;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Class for modelling a group user goal in the ProActive app by its target amount, concerned units, end date,
@@ -81,6 +82,24 @@ public class GroupGoal extends IndividualGoal {
      */
     public int getGroupId() {
         return groupId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof GroupGoal)) {
+            return false;
+        }
+
+        return this.target == ((GroupGoal) o).getTarget() && this.unit == ((GroupGoal) o).getUnit()
+                && this.endDate.equals(((GroupGoal) o).getEndDate()) && this.groupId == ((GroupGoal) o).getGroupId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(target, unit, endDate, groupId);
     }
 }
 
