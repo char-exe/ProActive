@@ -4,11 +4,13 @@ import com.sun.javafx.scene.control.InputField;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,6 +19,9 @@ import sample.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 /**
@@ -33,8 +38,9 @@ import java.util.ResourceBundle;
 public class GroupController implements Initializable {
 
     @FXML private VBox groupsContainer;
-    @FXML private HBox hboxGroupInvite;
-    @FXML private VBox vboxGroupInvite;
+    @FXML private TextField joinGroupInput;
+    @FXML private Button joinGroupButton;
+
 
     private DatabaseHandler dh;
     private User user;
@@ -53,6 +59,22 @@ public class GroupController implements Initializable {
 
         dh = DatabaseHandler.getInstance();
 
+    }
+
+    @FXML void joinGroupButtonAction(ActionEvent actionEvent) throws SQLException {
+        String tokenInput = joinGroupInput.getText();
+
+        int userID = dh.getUserIDFromUsername(user.getUsername());
+        String groupName = dh.getGroupNameFromInv(tokenInput);
+        int groupInvUserID = dh.getUserIDFromInv(tokenInput);
+        LocalDateTime beforeNow = dh.getTimeoutFromInv(tokenInput);
+
+        System.out.println("Got here");
+
+        if (userID == groupInvUserID && LocalDateTime.now().isBefore(beforeNow)){
+            dh.joinGroup(user.getUsername(), groupName);
+            dh.deleteGroupInv(tokenInput);
+        }
     }
 
     public void initUserGroupData(){
@@ -96,15 +118,19 @@ public class GroupController implements Initializable {
                 // Get goal list from groupContainer children
                 VBox goalList = (VBox) groupContainer.getChildren().get(2);
 
+                //Seperator between group details and group invite settings
+                Separator s = (Separator) children.get(2);
+
                 //Determine logic on allowing members to send invites
                 VBox groupInvite = (VBox) children.get(3);
 
                 //Get the Label to be modified for group invites
                 HBox groupInviteLabelHbox = (HBox) groupInvite.getChildren().get(0);
                 Label groupInvitePopUp = (Label) groupInviteLabelHbox.getChildren().get(0);
-
                 //Get the TextField to be modified for group invites
+
                 HBox groupInviteInputHbox = (HBox) groupInvite.getChildren().get(1);
+                Label groupInviteInputLabel = (Label) groupInviteInputHbox.getChildren().get(0);
                 TextField groupInviteInput = (TextField) groupInviteInputHbox.getChildren().get(1);
 
                 //Get the Button to be modified for group invites
@@ -116,16 +142,16 @@ public class GroupController implements Initializable {
 
                 //If a user is an admin or an owner of a group, there are no restrictions on whether they can invite
                 //users to a group
-                if(!(userRole == null)){
-                    if (!userRole.equals("Member")) {
-                        groupInvitePopUp.setText("");
-                        groupInviteInput.setEditable(true);
-                        groupInviteButton.setDisable(false);
-                    }
-                    else{
-                        groupInvite.setManaged(false);
-                        groupInviteInputHbox.setManaged(false);
-                    }
+                if ((!(userRole == null)) && userRole.equals("Member")){
+                    s.setManaged(false);
+                    groupInvite.setManaged(false);
+                    groupInviteLabelHbox.setManaged(false);
+                    groupInvitePopUp.setManaged(false);
+                    groupInviteInputHbox.setManaged(false);
+                    groupInviteInput.setManaged(false);
+                    groupInviteButtonHbox.setManaged(false);
+                    groupInviteButton.setManaged(false);
+                    groupInviteInputLabel.setManaged(false);
                 }
 
 
