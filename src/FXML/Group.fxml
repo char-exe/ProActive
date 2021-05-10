@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="800.0" spacing="10.0" styleClass="base" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GroupController">
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="10.0" styleClass="base" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GroupController">
    <children>
       <Label text="Groups">
          <VBox.margin>
@@ -22,50 +17,160 @@
          <font>
             <Font size="22.0" />
          </font></Label>
-      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="base" stylesheets="@../style.css" VBox.vgrow="ALWAYS">
-         <content>
-            <HBox alignment="CENTER" styleClass="base">
-               <children>
-                  <VBox spacing="15.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <VBox alignment="CENTER" spacing="5.0">
+      <TabPane fx:id="tabPane" prefHeight="550.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <tabs>
+          <Tab text="View Groups">
+               <content>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="base" stylesheets="@../style.css" BorderPane.alignment="CENTER">
+                           <content>
+                              <HBox alignment="CENTER" styleClass="base">
+                                 <children>
+                                    <VBox spacing="15.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <VBox alignment="CENTER" spacing="5.0">
+                                             <children>
+                                                <Label text="Join group">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="joinGroupInput" maxWidth="150.0" />
+                                                <Button fx:id="joinGroupButton" mnemonicParsing="false" onAction="#joinGroupButtonAction" text="Join" />
+                                                <Label fx:id="joinGroupConfirmPopUp" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="5.0" />
+                                             </VBox.margin>
+                                          </VBox>
+                                          <Separator prefWidth="200.0" />
+                                          <VBox alignment="CENTER" spacing="5.0">
+                                             <children>
+                                                <Label text="Current groups">
+                                                   <font>
+                                                      <Font size="24.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </VBox>
+                                          <VBox fx:id="groupsContainer" alignment="CENTER" layoutX="10.0" layoutY="128.0" spacing="20.0">
+                                             <VBox.margin>
+                                                <Insets bottom="25.0" left="100.0" right="100.0" />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </content>
+                        </ScrollPane>
+                     </center>
+                  </BorderPane>
+               </content></Tab>
+          <Tab text="Set Goals">
+               <content>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Label text="Join group">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                              </Label>
-                              <TextField fx:id="joinGroupInput" maxWidth="150.0" />
-                              <Button fx:id="joinGroupButton" mnemonicParsing="false" onAction="#joinGroupButtonAction" text="Join" />
-                              <Label fx:id="joinGroupConfirmPopUp" />
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Select a Group you administrate">
+                                             <font>
+                                                <Font size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <ChoiceBox fx:id="groupsAdministrated" prefWidth="150.0" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Dietary">
+                                             <font>
+                                                <Font size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <TextField fx:id="dietAmount" />
+                                                <ChoiceBox fx:id="dietDropDown" prefWidth="150.0" />
+                                                <DatePicker fx:id="dietDate" />
+                                                <Button mnemonicParsing="false" onAction="#setDietGoal" text="Set" />
+                                             </children>
+                                             <padding>
+                                                <Insets top="25.0" />
+                                             </padding>
+                                          </HBox>
+                                          <Label fx:id="dietLabel" text="Label" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Calorie Burn">
+                                             <font>
+                                                <Font size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                             <children>
+                                                <TextField fx:id="calorieAmount" />
+                                                <DatePicker fx:id="calorieDate" />
+                                                <Button mnemonicParsing="false" onAction="#setCaloriesGoal" text="Set" />
+                                             </children>
+                                             <padding>
+                                                <Insets top="25.0" />
+                                             </padding>
+                                          </HBox>
+                                          <Label fx:id="calorieLabel" text="Label" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Time Exercising">
+                                             <font>
+                                                <Font size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                             <children>
+                                                <ChoiceBox fx:id="exerciseDropDown" prefWidth="150.0" />
+                                                <TextField fx:id="exerciseAmount" promptText="Minutes..." />
+                                                <DatePicker fx:id="exerciseDate" />
+                                                <Button mnemonicParsing="false" onAction="#setExerciseGoal" text="Set" />
+                                             </children>
+                                             <padding>
+                                                <Insets top="25.0" />
+                                             </padding>
+                                          </HBox>
+                                          <Label fx:id="exerciseLabel" text="Label" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
                            </children>
-                           <VBox.margin>
-                              <Insets top="5.0" />
-                           </VBox.margin>
                         </VBox>
-                        <Separator prefWidth="200.0" />
-                        <VBox alignment="CENTER" spacing="5.0">
-                           <children>
-                              <Label text="Current groups">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </VBox>
-                        <VBox fx:id="groupsContainer" alignment="CENTER" layoutX="10.0" layoutY="128.0" spacing="20.0">
-                           <VBox.margin>
-                              <Insets bottom="25.0" left="100.0" right="100.0" />
-                           </VBox.margin>
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </VBox>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-         </content>
-      </ScrollPane>
+                     </center>
+                  </BorderPane>
+               </content></Tab>
+        </tabs>
+      </TabPane>
    </children>
 </VBox>
