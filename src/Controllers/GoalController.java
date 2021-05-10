@@ -119,7 +119,8 @@ public class GoalController implements Initializable {
         //Instantiate dropdowns
         dietUnitSelect.getItems().addAll(nutrientsMap.keySet());
         exerciseSelect.getItems().add("Any Exercise");
-        exerciseSelect.getItems().addAll(dh.getExerciseNames());
+        exerciseSelect.getItems().addAll("Walking", "Jogging", "Running", "Football", "Rugby", "Yoga", "Tennis",
+                "Swimming", "Cycling", "Karate", "Hiking", "Cleaning", "Boxing", "Billiards", "Judo");
         ourGoalsDropDown.getItems().addAll("All Goals", "Fitness", "Nutrition");
         ourGoalsDropDown.setValue("All Goals");
 
@@ -573,119 +574,5 @@ public class GoalController implements Initializable {
         }
 
         return true; //All fields fine
-    }
-
-    /**
-     * Wrapper class for table rows, wraps target, unit, progress, end date, and completed status into a holding class.
-     */
-    public class GoalItem {
-        private SimpleFloatProperty target;
-        private SimpleStringProperty unit;
-        private SimpleFloatProperty progress;
-        private SimpleStringProperty endDate;
-        private SimpleBooleanProperty completed;
-
-        /**
-         * Constructs a goal item from a goal.
-         *
-         * @param userGoal The goal to be parsed as a goal item.
-         */
-        public GoalItem(UserGoal userGoal) {
-            this.target = new SimpleFloatProperty(userGoal.getTarget());
-            this.unit = new SimpleStringProperty(userGoal.getUnit().toString());
-            this.progress = new SimpleFloatProperty(userGoal.getProgress());
-            this.endDate = new SimpleStringProperty(userGoal.getEndDate().toString());
-            this.completed = new SimpleBooleanProperty(userGoal.isCompleted());
-        }
-
-        /**
-         * Gets the target for this goal item.
-         *
-         * @return the target for this goal item.
-         */
-        public Float getTarget() {
-            return this.target.get();
-        }
-
-        /**
-         * Sets the target for this goal item to the passed value.
-         *
-         * @param target the new target value.
-         */
-        public void setTarget(int target) {
-            this.target = new SimpleFloatProperty(target);
-        }
-
-        /**
-         * Gets the unit for this goal item.
-         *
-         * @return the nit for this goal item.
-         */
-        public String getUnit() {
-            return this.unit.get();
-        }
-
-        /**
-         * Sets the unit for this goal item to the passed value.
-         *
-         * @param unit the new unit value.
-         */
-        public void setUnit(String unit) {
-            this.unit = new SimpleStringProperty(unit);
-        }
-
-        /**
-         * Gets the progress for this goal item.
-         *
-         * @return the progress for this goal item.
-         */
-        public Float getProgress() {
-            return this.progress.get();
-        }
-
-        /**
-         * Sets the progress for this goal item to the passed value.
-         *
-         * @param progress the new progress value.
-         */
-        public void setProgress(float progress) {
-            this.progress = new SimpleFloatProperty(progress);
-        }
-
-        /**
-         * Gets the end date for this goal item.
-         *
-         * @return the end date for this goal item.
-         */
-        public String getEndDate() {
-            return this.endDate.get();
-        }
-
-        /**
-         * Sets the end date for this goal item to the passed value.
-         *
-         * @param endDate the new end date value.
-         */
-        public void setEndDate(String endDate) {
-            this.endDate = new SimpleStringProperty(endDate);
-        }
-
-        /**
-         * Gets the completed status for this goal item.
-         *
-         * @return the completed status for this goal item.
-         */
-        public Boolean getCompleted() {
-            return this.completed.get();
-        }
-
-        /**
-         * Sets the completed status for this goal item to the passed value.
-         *
-         * @param completed the new completed status value.
-         */
-        public void setCompleted(boolean completed) {
-            this.completed = new SimpleBooleanProperty(completed);
-        }
     }
 }

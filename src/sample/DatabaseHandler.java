@@ -2316,4 +2316,39 @@ public class DatabaseHandler {
         return getGroup(getGroupIDFromName(text));
 
     }
+
+    public ArrayList<String> getGroupsAdministrated(String username) {
+        String sql = "SELECT Group_Name FROM group_table INNER JOIN group_membership ON group_membership.Group_Id = " +
+                     "group_table.Group_Id WHERE group_membership.User_Id = '" + getUserIDFromUsername(username) + "' " +
+                     "AND (group_membership.Group_Role = 'Owner' OR group_membership.Group_Role = 'Admin')";
+
+        ArrayList<String> groupNames = new ArrayList<>();
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                groupNames.add(rs.getString("Group_Name"));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return groupNames;
+    }
+
+    public void addGroupGoal(String groupName, GroupGoal goal) {
+        String sql = "INSERT INTO group_goal(group_id, target, unit, end_date) VALUES('" +
+                getGroupIDFromName(groupName) + "', '" + goal.getTarget() + "', '" + goal.getUnit() +
+                "', '" + goal.getEndDate().toString() + "')";
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
