@@ -1,5 +1,6 @@
 package sample;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,10 +10,12 @@ public class Group {
     private GroupOwner owner;
     private Set<GroupAdmin> admins = new HashSet<>();
     private Set<GroupMember> members = new HashSet<>();
+    private ArrayList<GroupGoal> groupGoals = new ArrayList<>();
 
     public Group(String name, GroupOwner owner){
         this.name = name;
         this.owner = owner;
+        this.groupGoals = DatabaseHandler.getInstance().loadGroupGoals(this.name);
     }
 
     public Group(String name){
@@ -96,5 +99,9 @@ public class Group {
     @Override
     public String toString(){
         return this.name + "{" + this.owner + ", " + this.admins + ", " + this.members + "}";
+    }
+
+    public ArrayList<GroupGoal> getGroupGoals() {
+        return groupGoals;
     }
 }
