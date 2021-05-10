@@ -13,7 +13,6 @@ import sample.*;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.mail.Session;
 import java.io.IOException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
@@ -22,7 +21,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.time.LocalDate;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
@@ -113,7 +111,7 @@ public class RegFormController implements Initializable {
             if(!db.checkUserNameUnique(username)){
                 usernamePopUp.setText("Username Not Unique, Please Enter A New One");
             }
-            if(!db.checkEmailUnique(email)){
+            if(db.checkEmailUnique(email)){
                 emailPopUp.setText("Email Not Unique, Please Enter A New One");
             } else{
                 Stage parentScene = (Stage) submitButton.getScene().getWindow();

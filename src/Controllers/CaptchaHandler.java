@@ -178,5 +178,4 @@ public class CaptchaHandler implements Initializable {
         parentScene.close();
         stage.show();
     }
-
 }

@@ -33,7 +33,7 @@ public class ForgottenUsernamePageController {
 
     @FXML
     protected void submit() throws IOException {
-        if (emailField.getText().matches(EMAILREGEX) && !DatabaseHandler.getInstance().checkEmailUnique(emailField.getText())) {
+        if (emailField.getText().matches(EMAILREGEX) && DatabaseHandler.getInstance().checkEmailUnique(emailField.getText())) {
             //send the email with the code
             EmailHandler.getInstance().sendUsernameRecoveryEmailCSS(EmailHandler.getInstance().createSession(), emailField.getText());
 

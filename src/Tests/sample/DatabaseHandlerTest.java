@@ -835,25 +835,6 @@ class DatabaseHandlerTest {
 
         assertThrows(NullPointerException.class, () -> dh.getEmailFromUsername(null));
     }
-/*
-    @Test
-    void nullUsernameInsertGroupGoal() {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-
-        GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 1);
-
-        assertThrows(NullPointerException.class, () -> dh.insertGroupGoal(null, groupGoal));
-    }
-
-    @Test
-    void nullGoalInsertGroupGoal() {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-
-        assertThrows(NullPointerException.class, () -> dh.insertGroupGoal("bwayne1998", null));
-    }
-
-
- */
 
     @Test
     void nullEmailGetUsernameFromEmail() {
@@ -861,29 +842,6 @@ class DatabaseHandlerTest {
 
         assertThrows(NullPointerException.class, () -> dh.getUsernameFromEmail(null));
     }
-/*
-    @Test
-    void zeroIdInsertGroupInvite() {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-
-        assertThrows(IllegalArgumentException.class, () -> dh.insertGroupInvite(0, "T0K3N"));
-    }
-
-    @Test
-    void negativeIdInsertGroupInvite() {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-
-        assertThrows(IllegalArgumentException.class, () -> dh.insertGroupInvite(-1, "T0K3N"));
-    }
-
-    @Test
-    void nullTokenInsertGroupInvite() {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-
-        assertThrows(NullPointerException.class, () -> dh.insertGroupInvite(1, null));
-    }
-
- */
 
     @Test
     void zeroGroupIdGetGroupNameFromID() {

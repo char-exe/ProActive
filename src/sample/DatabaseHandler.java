@@ -366,13 +366,13 @@ public class DatabaseHandler {
             Statement stmt = this.conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (!rs.next()) {
-                return true;
+                return false;
             }
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
+        return true;
     }
 
     /**
@@ -1827,12 +1827,15 @@ public class DatabaseHandler {
      * @return The userID associated with the token or -1 if there was an error retrieving the userID
      */
     public int getUserIDFromRecoveryCode (String token) {
+        if (token == null) {
+            throw new NullPointerException();
+        }
+
         String sql = "SELECT userID FROM passwordRecoveryCodes WHERE " + "recoveryCode = '" + token + "'";
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                int user_id = rs.getInt("userID");
-                return user_id;
+            if (rs.next()) {
+                return rs.getInt("userID");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -2083,6 +2086,12 @@ public class DatabaseHandler {
         return groups;
     }
 
+    /**
+     * Method to load all GroupGoals for a given Group.
+     *
+     * @param name the name of the Group.
+     * @return the Group's GroupGoals as an ArrayList.
+     */
     public ArrayList<GroupGoal> loadGroupGoals(String name) {
         if (name == null) {
             throw new NullPointerException();
@@ -2112,7 +2121,17 @@ public class DatabaseHandler {
         return goals;
     }
 
+    /**
+     * Method to get the name of a group by a particular invite code.
+     *
+     * @param tokenInput the code to be queried.
+     * @return the name of the group corresponding to the invite code.
+     */
     public String getGroupNameFromInv(String tokenInput) {
+        if (tokenInput == null) {
+            throw new NullPointerException();
+        }
+
         String sql = "SELECT groupID FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
 
         String groupName = null;
@@ -2130,7 +2149,17 @@ public class DatabaseHandler {
         return groupName;
     }
 
+    /**
+     * Method to get a user ID from a group invite.
+     *
+     * @param tokenInput the group invite code to query.
+     * @return the user ID corresponding to the invite code.
+     */
     public int getUserIDFromInv(String tokenInput) {
+        if (tokenInput == null) {
+            throw new NullPointerException();
+        }
+
         String sql = "SELECT userID FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
 
         int userID = -1;
@@ -2148,7 +2177,17 @@ public class DatabaseHandler {
         return userID;
     }
 
+    /**
+     * Method to get the timeout value of a given group invite token.
+     *
+     * @param tokenInput the token to be queried.
+     * @return a LocalDateTime object representing the expiry time of the token.
+     */
     public LocalDateTime getTimeoutFromInv(String tokenInput){
+        if (tokenInput == null) {
+            throw new NullPointerException();
+        }
+
         String sql = "SELECT expiry_time FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
 
         LocalDateTime time = null;
@@ -2159,14 +2198,23 @@ public class DatabaseHandler {
                 time = LocalDateTime.parse(rs.getString("expiry_time"));
             }
         }
-        catch (SQLException throwables) {
-            throwables.printStackTrace();
+        catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return time;
     }
 
+    /**
+     * Method to delete a group invite token from the database.
+     *
+     * @param tokenInput the token to be deleted.
+     */
     public void deleteGroupInv(String tokenInput){
+        if (tokenInput == null) {
+            throw new NullPointerException();
+        }
+
         String sql = "DELETE FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
 
 
@@ -2179,7 +2227,21 @@ public class DatabaseHandler {
         }
     }
 
-    public boolean isMemberOfGroup(String userName, String groupName){
+    /**
+     * Method to check whether a given user is a member of a given group.
+     *
+     * @param userName the username of the user to be queried.
+     * @param groupName the name of the group to be queried.
+     * @return a boolean value representing whether the user is a member of the group.
+     */
+    public boolean isMemberOfGroup(String userName, String groupName) {
+        if (userName == null) {
+            throw new NullPointerException();
+        }
+        if (groupName == null) {
+            throw new NullPointerException();
+        }
+
         String sql = "SELECT * FROM group_membership WHERE User_Id = " + getUserIDFromUsername(userName)  +
                      " AND Group_Id = " +  getGroupIDFromName(groupName) + ";";
 
@@ -2195,7 +2257,17 @@ public class DatabaseHandler {
         return isMember;
     }
 
-    public boolean isInvExpired(String tokenInput){
+    /**
+     * Method to check whether a given invite token has passed its expiry time.
+     *
+     * @param tokenInput the token to be queried.
+     * @return a boolean value representing whether the token has expired.
+     */
+    public boolean isInvExpired(String tokenInput) {
+        if (tokenInput == null) {
+            throw new NullPointerException();
+        }
+
         String sql = "SELECT expiry_time FROM groupInvTable WHERE tokenVal = '" + tokenInput + "';";
 
         LocalDateTime time = null;
@@ -2215,7 +2287,20 @@ public class DatabaseHandler {
 
     }
 
+    /**
+     * Method to change the ownership of a given group to a given user.
+     *
+     * @param group the group whose ownership is to be changed.
+     * @param user the user to be marked as the new owner.
+     */
     public void changeGroupOwnership(Group group, User user) {
+        if (group == null) {
+            throw new NullPointerException();
+        }
+        if (user == null) {
+            throw new NullPointerException();
+        }
+
         String sql  = "UPDATE group_membership SET Group_Role = 'Admin' WHERE User_Id = " +
                        getUserIDFromUsername(group.getOwner().getUser().getUsername()) + " AND Group_Id = " +
                        getGroupIDFromName(group.getName());
@@ -2238,7 +2323,17 @@ public class DatabaseHandler {
         System.out.println(sql2);
     }
 
+    /**
+     * Method to get a user's most recent weight.
+     *
+     * @param userID the user's unique ID.
+     * @return the user's most recent weight value.
+     */
     public float getMostRecentWeightValFromID(int userID) {
+        if (userID < 0) {
+            throw new IllegalArgumentException();
+        }
+
         String sql = "SELECT weight FROM weight_entry WHERE user_id = " + userID + " ORDER BY entry_id DESC LIMIT 1;";
 
         float weight = -1;
@@ -2256,12 +2351,30 @@ public class DatabaseHandler {
         return weight;
     }
 
-    public Group getGroupObjectFromGroupName(String text) {
-        return getGroup(getGroupIDFromName(text));
+    /**
+     * Method to get a Group from a given group name
+     * @param groupName the name of the group.
+     * @return the Group matching the name.
+     */
+    public Group getGroupObjectFromGroupName(String groupName) {
+        if (groupName == null) {
+            throw new NullPointerException();
+        }
 
+        return getGroup(getGroupIDFromName(groupName));
     }
 
+    /**
+     * Method to get a list of all groups where a user has admin rights.
+     *
+     * @param username the user to be queried.
+     * @return an ArrayList containing the names of all Groups in which this user is an admin or owner.
+     */
     public ArrayList<String> getGroupsAdministrated(String username) {
+        if (username == null) {
+            throw new NullPointerException();
+        }
+
         String sql = "SELECT Group_Name FROM group_table INNER JOIN group_membership ON group_membership.Group_Id = " +
                      "group_table.Group_Id WHERE group_membership.User_Id = '" + getUserIDFromUsername(username) + "' " +
                      "AND (group_membership.Group_Role = 'Owner' OR group_membership.Group_Role = 'Admin')";
@@ -2281,7 +2394,21 @@ public class DatabaseHandler {
         return groupNames;
     }
 
+    /**
+     * Method to add a GroupGoal to the database for a Group.
+     *
+     * @param groupName the name of the Group owning the GroupGoal.
+     * @param goal the GroupGoal to be added.
+     * @return a boolean value representing whether the goal was already owned by the group.
+     */
     public boolean addGroupGoal(String groupName, GroupGoal goal) {
+        if (groupName == null) {
+            throw new NullPointerException();
+        }
+        if (goal == null) {
+            throw new NullPointerException();
+        }
+
         String sqlSel = "SELECT * FROM group_goal WHERE group_id = '" + getGroupIDFromName(groupName) + "' AND " +
                 "target = '" + goal.getTarget() + "' AND unit = '" + goal.getUnit().toString() +
                 "' AND end_date = '" + goal.getEndDate().toString() + "'";
@@ -2309,11 +2436,6 @@ public class DatabaseHandler {
         }
 
         return true;
-    }
-
-    public static void main(String[] args) {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-        System.out.println(dh.isMemberOfGroup("sscar", "TestGroup1"));
     }
 
     /**
@@ -2347,5 +2469,10 @@ public class DatabaseHandler {
         {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+        System.out.println(dh.isMemberOfGroup("sscar", "TestGroup1"));
     }
 }
