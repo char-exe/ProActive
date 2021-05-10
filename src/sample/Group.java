@@ -22,6 +22,7 @@ public class Group {
     public Group(String name){
         this.name = name;
         this.owner = null;
+        this.groupGoals = DatabaseHandler.getInstance().loadGroupGoals(this.name);
     }
 
     public void addMember(GroupMember member){
