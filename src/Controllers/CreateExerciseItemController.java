@@ -28,14 +28,7 @@ public class CreateExerciseItemController implements Initializable {
 
     @FXML public Label nameInputPopUp;
     @FXML public Label caloricBurnPopUp;
-    
 
-    //Regex for nameInput textField
-    private final String NAMEINPUTREGEX = "[a-zA-Z]*";
-
-    //https://www.regular-expressions.info/floatingpoint.html
-    //Regex for inputfields that will take doubles
-    private final String INTEGERINPUTREGEX = "[0-9]+";
 
     /**
      * Method to run after all FXML elements have been loaded, used for imposing restrictions on FXML elements
@@ -99,6 +92,8 @@ public class CreateExerciseItemController implements Initializable {
      */
     @FXML protected boolean checkFirstName(){
         String name = nameInput.getText();
+        //Regex for nameInput textField
+        String NAMEINPUTREGEX = "[a-zA-Z]*";
         if (name.matches(NAMEINPUTREGEX)){
             nameInputPopUp.setText("");
             return true;
@@ -116,6 +111,9 @@ public class CreateExerciseItemController implements Initializable {
      */
     @FXML protected boolean checkBurnRateInput(){
         String burnRate = caloricBurnInput.getText();
+        //https://www.regular-expressions.info/floatingpoint.html
+        //Regex for inputfields that will take doubles
+        String INTEGERINPUTREGEX = "[0-9]+";
         if (burnRate.matches(INTEGERINPUTREGEX)){
             caloricBurnPopUp.setText("");
             return true;

@@ -9,7 +9,7 @@ import java.util.Scanner;
 /**
  * Class to control the Terms and conditions FXML file
  *
- * @author ??
+ * @author Andrew Storey
  *
  * @version 1.0
  */

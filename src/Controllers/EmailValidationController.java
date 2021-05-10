@@ -1,6 +1,5 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -104,7 +103,7 @@ public class EmailValidationController implements Initializable{
             dh.deleteToken(initialToken);
             dh.createUserEntry(user, hash, salt);
 
-            escapeHome(new ActionEvent());
+            escapeHome();
         }
     }
 
@@ -126,11 +125,9 @@ public class EmailValidationController implements Initializable{
     /**
      * Method to cancel registration and send user back to the splash page
      *
-     * @param actionEvent This refers to the button that will cause this method to be called
-     *
      * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
      */
-    @FXML protected void escapeHome(ActionEvent actionEvent) throws IOException {
+    @FXML protected void escapeHome() throws IOException {
         Stage parentScene = (Stage) homeButton.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();

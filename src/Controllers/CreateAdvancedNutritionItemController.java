@@ -1,13 +1,9 @@
 package Controllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
@@ -40,11 +36,6 @@ public class CreateAdvancedNutritionItemController implements Initializable {
                             iodineInputPopUp, vitAInputPopUp, vitDInputPopUp, thiaminInputPopUp, riboflavinInputPopUp,
                             niacinInputPopUp, vitB6InputPopUp, vitB12InputPopUp, folateInputPopUp, vitCInputPopUp;
 
-    private NutritionItem n;
-    
-
-    //Regex for nameInput textField
-    private final String NAMEINPUTREGEX = "[a-zA-Z]*";
 
     //https://www.regular-expressions.info/floatingpoint.html
     //Regex for inputfields that will take doubles
@@ -274,7 +265,7 @@ public class CreateAdvancedNutritionItemController implements Initializable {
 
         if (checkInputs()){
 
-            n = new NutritionItem(
+            NutritionItem n = new NutritionItem(
                     nameInput.getText(),
                     Double.parseDouble(kcalInput.getText()),
                     Double.parseDouble(proteinInput.getText()),
@@ -375,6 +366,8 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      */
     @FXML protected boolean checkFirstName(){
         String name = nameInput.getText();
+        //Regex for nameInput textField
+        String NAMEINPUTREGEX = "[a-zA-Z]*";
         if (name.matches(NAMEINPUTREGEX)){
             nameInputPopUp.setText("");
             return true;

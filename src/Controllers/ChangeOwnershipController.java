@@ -1,6 +1,5 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -36,13 +35,13 @@ public class ChangeOwnershipController implements Initializable {
         adminComboBox.getItems().addAll(group.getAdmins());
     }
 
-    public void cancelButtonAction(ActionEvent actionEvent) {
+    public void cancelButtonAction() {
         Stage parentScene = (Stage) cancelButton.getScene().getWindow();
 
         parentScene.close();
     }
 
-    public void confirmButtonAction(ActionEvent actionEvent) {
+    public void confirmButtonAction() {
         if (confirmCount == 1){
             DatabaseHandler.getInstance().changeGroupOwnership(group, adminComboBox.getValue().getUser());
             confirmPopUp.setTextFill(Paint.valueOf("#00FF00"));

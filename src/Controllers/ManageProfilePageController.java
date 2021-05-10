@@ -1,8 +1,5 @@
 package Controllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -54,7 +51,6 @@ public class ManageProfilePageController implements Initializable {
 
     //https://www.regular-expressions.info/floatingpoint.html
     //Regex for inputfields that will take doubles
-    private final String DOUBLEINPUTREGEX = "[-+]?[0-9]*\\.?[0-9]+";
 
     //Regex for inputField checking
     private final String INPUTFIELDNONNUMERIC = "^\\d*\\.?\\d*";
@@ -122,10 +118,8 @@ public class ManageProfilePageController implements Initializable {
     /**
      * Method that handles the submit button action, checks to see which values have been modified, then performs
      * update operations directly on the database user object
-     *
-     * @param actionEvent Takes in the event that causes this method to be called
      */
-    public void submitButtonAction(ActionEvent actionEvent) {
+    public void submitButtonAction() {
         System.out.println("submitButton");
         sexLabel.setText("");
         dobLabel.setText("");
@@ -281,10 +275,8 @@ public class ManageProfilePageController implements Initializable {
 
     /**
      * Method to calculate BMI and display/hide it on a button press
-     *
-     * @param actionEvent JavaFX defined parameter
      */
-    @FXML private void showBMIButtonAction(ActionEvent actionEvent){
+    @FXML private void showBMIButtonAction(){
         DecimalFormat df = new DecimalFormat("#.##");
         float BMI = calculateBMI();
         if (BMILabel.getText().equals("??")){
@@ -350,12 +342,11 @@ public class ManageProfilePageController implements Initializable {
         return checkWaistInput() && checkNeckInput() && checkHipsInput();
     }
 
-    @FXML private void bodyFatSubmitAction(ActionEvent actionEvent){
+    @FXML private void bodyFatSubmitAction() {
 
         if (checkBodyFatInputs()){
             float waist;
             float neck;
-            float hips;
             if (user.getSex().equals("Male")){
                 waist = Float.parseFloat(bodyFatWaistInput.getText());
                 neck = Float.parseFloat(bodyFatNeckInput.getText());

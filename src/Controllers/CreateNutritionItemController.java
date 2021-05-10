@@ -49,11 +49,6 @@ public class CreateNutritionItemController implements Initializable {
     @FXML public Button advancedCreationButton;
     @FXML public Button cancelButton;
 
-    private NutritionItem n;
-    
-
-    //Regex for nameInput textField
-    private final String NAMEINPUTREGEX = "[a-zA-Z]*";
 
     //https://www.regular-expressions.info/floatingpoint.html
     //Regex for inputfields that will take doubles
@@ -72,85 +67,57 @@ public class CreateNutritionItemController implements Initializable {
 
         //Set kcalInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        kcalInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    kcalInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        kcalInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                kcalInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set proteinInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        proteinInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    proteinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        proteinInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                proteinInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set fatInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        fatInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    fatInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        fatInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                fatInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set carbsInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        carbsInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    carbsInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        carbsInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                carbsInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set sugarInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        sugarInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    sugarInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        sugarInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                sugarInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set fibreInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        fibreInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    fibreInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        fibreInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                fibreInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
 
         //Set cholesterolInput to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        fatInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("^\\d*\\.?\\d*")) {
-                    cholesterolInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
-                }
+        fatInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("^\\d*\\.?\\d*")) {
+                cholesterolInput.setText(newValue.replaceAll("[^\\d*\\.?\\d*]", ""));
             }
         });
     }
@@ -167,14 +134,14 @@ public class CreateNutritionItemController implements Initializable {
         if (checkInputs()){
             Stage parentScene = (Stage) submitButton.getScene().getWindow();
 
-            n = new NutritionItem(nameInput.getText(),
-                                  Double.parseDouble(kcalInput.getText()),
-                                  Double.parseDouble(proteinInput.getText()),
-                                  Double.parseDouble(fatInput.getText()),
-                                  Double.parseDouble(carbsInput.getText()),
-                                  Double.parseDouble(sugarInput.getText()),
-                                  Double.parseDouble(fibreInput.getText()),
-                                  Double.parseDouble(cholesterolInput.getText()));
+            NutritionItem n = new NutritionItem(nameInput.getText(),
+                    Double.parseDouble(kcalInput.getText()),
+                    Double.parseDouble(proteinInput.getText()),
+                    Double.parseDouble(fatInput.getText()),
+                    Double.parseDouble(carbsInput.getText()),
+                    Double.parseDouble(sugarInput.getText()),
+                    Double.parseDouble(fibreInput.getText()),
+                    Double.parseDouble(cholesterolInput.getText()));
 
             dbh.addNutritionItem(n);
 
@@ -235,6 +202,8 @@ public class CreateNutritionItemController implements Initializable {
      */
     @FXML protected boolean checkFirstName(){
         String name = nameInput.getText();
+        //Regex for nameInput textField
+        String NAMEINPUTREGEX = "[a-zA-Z]*";
         if (name.matches(NAMEINPUTREGEX)){
             nameInputPopUp.setText("");
             return true;

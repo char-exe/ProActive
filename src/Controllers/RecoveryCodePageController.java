@@ -37,8 +37,6 @@ public class RecoveryCodePageController {
     @FXML protected Button submitButton;
     @FXML protected Button cancelButton;
 
-    private final String PASSWORDREGEX  = "(?=.*\\w)(?=.*[!@#$%^&+='()*,./:;<>?{|}~])(?=\\S+$).{8,}";
-
     /**
      * Method to check for both a valid recovery code and valid new password.
      * If both are valid the user's password is updated.
@@ -47,6 +45,7 @@ public class RecoveryCodePageController {
         if (DatabaseHandler.getInstance().checkRecoveryCode(recoveryCodeField.getText())) {
             String password = passwordField.getText();
 
+            String PASSWORDREGEX = "(?=.*\\w)(?=.*[!@#$%^&+='()*,./:;<>?{|}~])(?=\\S+$).{8,}";
             if (password.matches(PASSWORDREGEX)) {
                 String repeatPassword = repeatPasswordField.getText();
                 if (password.equals(repeatPassword)) {

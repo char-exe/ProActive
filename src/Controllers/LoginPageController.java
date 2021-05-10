@@ -1,19 +1,15 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
-import sample.GoalGenerator;
 import sample.User;
 
 import javax.crypto.SecretKeyFactory;
@@ -66,10 +62,8 @@ public class LoginPageController {
      * Method for handling the login event, this will create a connection to the database, hash the password which was
      * passed in and compare it to the hashed password stored in the database, if they match then it will pass the user
      * as a persistent object to the main FXML document, close the current scene and open the main scene
-     *
-     * @param actionEvent takes in the event which causes this mathod to be called
      */
-    public void login(ActionEvent actionEvent) {
+    public void login() {
         username = usernameField.getText();
         password = passwordField.getText();
 
@@ -173,9 +167,8 @@ public class LoginPageController {
      *
      * May be moved to another controller specific to password retrieval
      *
-     * @param actionEvent Takes in the event that caused this method to be called
      */
-    public void forgotPassword(ActionEvent actionEvent) throws IOException {
+    public void forgotPassword() throws IOException {
         Stage parentScene = (Stage) forgotPasswordButton.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
@@ -205,9 +198,8 @@ public class LoginPageController {
      *
      * May be moved to another controller specific to username retrieval
      *
-     * @param actionEvent Takes in the event that caused this method to be called
      */
-    public void forgotUsername(ActionEvent actionEvent) throws IOException {
+    public void forgotUsername() throws IOException {
         Stage parentScene = (Stage) forgotUsernameButton.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
@@ -234,11 +226,9 @@ public class LoginPageController {
     /**
      * Method to cancel registration and send user back to the splash page
      *
-     * @param actionEvent This refers to the button that will cause this method to be called
-     *
      * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
      */
-    @FXML protected void escapeHomeAction(ActionEvent actionEvent) throws IOException {
+    @FXML protected void escapeHomeAction() throws IOException {
         Stage parentScene = (Stage) escapeHome.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();

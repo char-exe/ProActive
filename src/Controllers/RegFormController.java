@@ -1,6 +1,5 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -34,13 +33,6 @@ import java.util.ResourceBundle;
  */
 public class RegFormController implements Initializable {
 
-    //Regexes for checking components
-    private final String FIRSTNAMEREGEX = "[A-Z][a-z]*";
-    private final String LASTNAMEREGEX  = "[a-zA-Z]+([ '-][a-zA-Z]+)*";
-    private final String EMAILREGEX     = "^\\w+.?\\w+@\\w+[.]\\w+([.]\\w+){0,2}$";
-    private final String USERNAMEREGEX  = "^[a-zA-Z0-9_-]{5,16}$";
-    private final String PASSWORDREGEX  = "(?=.*\\w)(?=.*[!@#$%^&+='()*,./:;<>?{|}~])(?=\\S+$).{8,}";
-
 
     @FXML public Label firstNamePopUp;
     @FXML public Label lastNamePopUp;
@@ -61,7 +53,7 @@ public class RegFormController implements Initializable {
     @FXML public Hyperlink termsConsLink;
     @FXML public CheckBox termsCheckBox;
     @FXML public Button submitButton;
-    @FXML public ChoiceBox sexCombo;
+    @FXML public ChoiceBox<String> sexCombo;
     @FXML public DatePicker dateField;
     @FXML public TextField heightField;
     @FXML public TextField weightField;
@@ -72,14 +64,12 @@ public class RegFormController implements Initializable {
      * Method to take the inputs from registration form fields, validate them, hash the password and pass a
      * constructed User object into the captcha handler
      *
-     * @param event Takes in the event that causes this method to be called
-     *
      * @throws IOException Throws an exception whenever it is possible for a file to be missing
      * @throws NoSuchAlgorithmException Thrown when the specified cryptographic algorithm is not available
      * @throws InvalidKeySpecException Thrown if the key provided does not meet the specification for the cryptographic
      *                                 algorithm
      */
-    @FXML protected void handleSubmitButtonAction(ActionEvent event) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    @FXML protected void handleSubmitButtonAction() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         if (checkConditions()){
 
@@ -94,7 +84,7 @@ public class RegFormController implements Initializable {
             float height        = Float.parseFloat(heightField.getText());
             float weight        = Float.parseFloat(weightField.getText());
             String username     = usernameField.getText();
-            String sex          = sexCombo.getValue().toString();
+            String sex          = sexCombo.getValue();
             String password     = passwordField.getText();
 
             //Password hashing
@@ -170,6 +160,8 @@ public class RegFormController implements Initializable {
      */
     @FXML protected boolean CheckFirstName(){
         String name = firstNameField.getText();
+        //Regexes for checking components
+        String FIRSTNAMEREGEX = "[A-Z][a-z]*";
         if (name.matches(FIRSTNAMEREGEX)){
             firstNamePopUp.setText("");
             return true;
@@ -187,6 +179,7 @@ public class RegFormController implements Initializable {
      */
     @FXML protected boolean CheckLastName(){
         String name = lastNameField.getText();
+        String LASTNAMEREGEX = "[a-zA-Z]+([ '-][a-zA-Z]+)*";
         if (name.matches(LASTNAMEREGEX)){
             lastNamePopUp.setText("");
             return true;
@@ -205,6 +198,7 @@ public class RegFormController implements Initializable {
     @FXML protected boolean CheckEmail(){
         //needs to check for email ragax
         String email = emailField.getText();
+        String EMAILREGEX = "^\\w+.?\\w+@\\w+[.]\\w+([.]\\w+){0,2}$";
         if (email.matches(EMAILREGEX)){
             emailPopUp.setText("");
             return true;
@@ -222,6 +216,7 @@ public class RegFormController implements Initializable {
      */
     @FXML protected boolean CheckUsername(){
         String username = usernameField.getText();
+        String USERNAMEREGEX = "^[a-zA-Z0-9_-]{5,16}$";
         if (username.matches(USERNAMEREGEX)){
             usernamePopUp.setText("");
             return true;
@@ -242,6 +237,7 @@ public class RegFormController implements Initializable {
         if (repeatPasswordField.getText().length() != 0){CheckRepeatPassword();}
 
         String password = passwordField.getText();
+        String PASSWORDREGEX = "(?=.*\\w)(?=.*[!@#$%^&+='()*,./:;<>?{|}~])(?=\\S+$).{8,}";
         if(password.matches(PASSWORDREGEX)){
             passwordPopUp.setText("");
             return true;
@@ -306,11 +302,9 @@ public class RegFormController implements Initializable {
     /**
      * Method to cancel registration and send user back to the splash page
      *
-     * @param actionEvent This refers to the button that will cause this method to be called
-     *
      * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
      */
-    @FXML protected void escapeHomeAction(ActionEvent actionEvent) throws IOException {
+    @FXML protected void escapeHomeAction() throws IOException {
         Stage parentScene = (Stage) escapeHome.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();

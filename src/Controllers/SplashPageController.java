@@ -1,13 +1,11 @@
 package Controllers;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,8 +20,6 @@ import java.util.ResourceBundle;
  * @version 1.0
  */
 public class SplashPageController implements Initializable {
-
-    @FXML private TextField usernameField;
 
     /**
      * Method to run after all FXML elements have been loaded
