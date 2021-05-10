@@ -40,16 +40,18 @@ public class CaptchaHandler implements Initializable {
     private ArrayList<String> captchaList = new ArrayList<>();
 
     //random number generator for selecting a random index
-    private Random generator = new Random();
+    private final Random generator = new Random();
 
     private User user;
-    private String captcha;
+    private String captcha = "";
     private byte[] hash;
     private byte[] salt;
+    private int prevIndex = 0;
     @FXML ImageView captchaImageBox;
     @FXML TextField captchaInput;
     @FXML Label incorrectInputLabel;
     @FXML Button captchaSubmit;
+    @FXML Button retryButton;
     @FXML Button cancelButton;
 
     /**
@@ -59,12 +61,15 @@ public class CaptchaHandler implements Initializable {
      */
     public String serveCaptcha(){
 
-        //Randomly select a captcha to serve
         int captchaIndex = generator.nextInt(captchaList.size());
-        String captcha = captchaList.get(captchaIndex);
 
-        //Print the string representation of the captcha, for diagnostic purposes, will be removed in production
-        System.out.println(captcha);
+        while(captchaIndex == prevIndex){
+            captchaIndex = generator.nextInt(captchaList.size());
+        }
+
+        prevIndex = captchaIndex;
+
+        String captcha = captchaList.get(captchaIndex);
 
         File file = new File("src/Resources/CaptchaImages/" +captcha+".JPG");
 
@@ -78,6 +83,7 @@ public class CaptchaHandler implements Initializable {
 
         //Set the captcha image
         captchaImageBox.setImage(captchaImage);
+
         return captcha;
     }
 

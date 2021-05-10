@@ -48,9 +48,16 @@ public class SplashPageController implements Initializable {
 
         Scene loginScene = new Scene(logIn);
 
-        Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
-        window.setScene(loginScene);
+        stage.setMinWidth(450);
+        stage.setMinHeight(450);
+        stage.setMaxWidth(650);
+        stage.setMaxHeight(500);
+
+        stage.setTitle("ProActive");
+
+        stage.setScene(loginScene);
 
     }
 
@@ -66,9 +73,16 @@ public class SplashPageController implements Initializable {
 
         Scene signUpScene = new Scene(signUp);
 
-        Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
-        window.setScene(signUpScene);
+        stage.setMinWidth(500);
+        stage.setMinHeight(850);
+        stage.setMaxWidth(650);
+        stage.setMaxHeight(950);
+
+        stage.setTitle("ProActive");
+
+        stage.setScene(signUpScene);
 
     }
 }

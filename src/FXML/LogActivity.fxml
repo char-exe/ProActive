@@ -124,7 +124,7 @@
                      <center>
                         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
                            <children>
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                              <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
                                        <children>
@@ -175,9 +175,9 @@
                                           <Label fx:id="foodDateLabel" />
                                        </children>
                                     </VBox>
-                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                    <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <TabPane fx:id="mealTabPane" prefHeight="200.0" prefWidth="200.0" styleClass="nutritionTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                                          <TabPane fx:id="mealTabPane" styleClass="nutritionTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                                             <tabs>
                                               <Tab text="Breakfast">
                                                    <content>
@@ -278,7 +278,7 @@
                                           </TabPane>
                                           <HBox alignment="CENTER" spacing="5.0">
                                              <children>
-                                                <ComboBox fx:id="mealSelect" prefHeight="26.0" prefWidth="81.0" promptText="Meal" />
+                                                <ComboBox fx:id="mealSelect" promptText="Meal" HBox.hgrow="ALWAYS" />
                                                 <ComboBox fx:id="foodComboBox" editable="true" prefHeight="35.0" prefWidth="150.0" promptText="Select food item..." />
                                                 <TextField fx:id="foodQuantity" prefHeight="26.0" prefWidth="87.0" promptText="Quantity (g)" />
                                              </children>

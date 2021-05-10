@@ -7,6 +7,7 @@ import java.io.*;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.util.Scanner;
 
 /**
  * Class to control the Terms and conditions FXML file
@@ -25,17 +26,16 @@ public class TermsAndConsController {
      * @throws IOException Throws an IOException whenever a file is potentially not where it is expected to be
      */
     @FXML protected void initialize() throws IOException {
-        String content = "";
-        DataInputStream file = new DataInputStream(new BufferedInputStream(new FileInputStream("src/Resources/TermsAndConditions.txt")));
-        String line;
-        for (int i= 0; i< 259; i++){
-            line = file.readLine() + "\n";
-            if (line==null){
-                break;
-            }
-            content += line;
+        StringBuilder content = new StringBuilder(10000000);
+
+        File termsAndConds = new File("src/Resources/TermsAndConditions.txt");
+        Scanner reader = new Scanner(termsAndConds);
+        while (reader.hasNextLine()){
+            content.append(reader.nextLine()).append("\n");
         }
-        termsText.setText(content);
+        reader.close();
+        termsText.setText(content.toString());
+
     }
 
 }

@@ -42,6 +42,7 @@ public class LoginPageController {
     @FXML private Label passwordError;
     @FXML private Button escapeHome;
     @FXML private Button forgotPasswordButton;
+    @FXML private Button forgotUsernameButton;
 
     /**
      * Getter for username
@@ -106,6 +107,15 @@ public class LoginPageController {
                 Scene homeScene = new Scene(homePageParent);
 
                 stage.setScene(homeScene);
+
+                stage.setMinWidth(800);
+                stage.setMinHeight(500);
+
+                stage.setWidth(1000);
+                stage.setHeight(800);
+
+//                stage.setMaxWidth(1400);
+//                stage.setMaxHeight(800);
 
                 main.initData(user);
                 main.homeScreen();
@@ -178,6 +188,13 @@ public class LoginPageController {
         ForgottenPasswordPageController controller = loader.getController();
         stage.setScene(sceneParent);
 
+        stage.setMinWidth(350);
+        stage.setMinHeight(300);
+        stage.setMaxWidth(550);
+        stage.setMaxHeight(500);
+
+        stage.setTitle("ProActive");
+
         parentScene.close();
         stage.show();
     }
@@ -190,8 +207,28 @@ public class LoginPageController {
      *
      * @param actionEvent Takes in the event that caused this method to be called
      */
-    public void forgotUsername(ActionEvent actionEvent) {
-        //TODO create method that reminds users of their username
+    public void forgotUsername(ActionEvent actionEvent) throws IOException {
+        Stage parentScene = (Stage) forgotUsernameButton.getScene().getWindow();
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/ForgottenUsernamePage.fxml"));
+
+        Parent forgotParent = loader.load();
+
+        Scene sceneParent = new Scene(forgotParent);
+
+        ForgottenUsernamePageController controller = loader.getController();
+        stage.setScene(sceneParent);
+
+        stage.setMinWidth(350);
+        stage.setMinHeight(300);
+        stage.setMaxWidth(550);
+        stage.setMaxHeight(500);
+
+        stage.setTitle("ProActive");
+
+        parentScene.close();
+        stage.show();
     }
 
     /**
@@ -215,6 +252,13 @@ public class LoginPageController {
 
         SplashPageController controller = loader.getController();
         stage.setScene(sceneParent);
+
+        stage.setMinWidth(350);
+        stage.setMinHeight(300);
+        stage.setMaxWidth(550);
+        stage.setMaxHeight(500);
+
+        stage.setTitle("ProActive");
 
         parentScene.close();
         stage.show();

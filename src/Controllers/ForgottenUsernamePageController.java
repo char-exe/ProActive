@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.EmailHandler;
+
 import java.io.IOException;
 
 /**
@@ -20,7 +21,7 @@ import java.io.IOException;
  * @version 1.0
  */
 
-public class ForgottenPasswordPageController {
+public class ForgottenUsernamePageController {
 
     @FXML protected Label emailFieldPopUp;
     @FXML protected TextField emailField;
@@ -33,25 +34,9 @@ public class ForgottenPasswordPageController {
     protected void submit() throws IOException {
         if (emailField.getText().matches(EMAILREGEX)) {
             //send the email with the code
-            EmailHandler.getInstance().sendRecoveryEmailCSS(EmailHandler.getInstance().createSession(), emailField.getText());
+            EmailHandler.getInstance().sendUsernameRecoveryEmailCSS(EmailHandler.getInstance().createSession(), emailField.getText());
 
-            //navigate to next page
-            Stage parentScene = (Stage) submitButton.getScene().getWindow();
-            Stage stage = new Stage();
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/FXML/RecoveryCodePage.fxml"));
-
-            Parent splashParent = loader.load();
-
-            Scene sceneParent = new Scene(splashParent);
-
-            stage.setScene(sceneParent);
-
-            RecoveryCodePageController controller = loader.getController();
-            stage.setScene(sceneParent);
-
-            parentScene.close();
-            stage.show();
+            emailFieldPopUp.setText("Your Username has been emailed to the address provided");
 
         }
         else {

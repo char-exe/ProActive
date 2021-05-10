@@ -288,9 +288,8 @@ public class EmailHandler {
      * @param session     Takes a session object, this is required to send any emails.
      * @param to          Takes a To Address, this is the address that the email will be sent to.
      */
-    /*
     public void sendRecoveryEmail(Session session, String to){
-        String token = TokenHandler.createUniqueToken();
+        String token = TokenHandler.createUniqueToken(8);
         String username = DatabaseHandler.getInstance().getUsernameFromEmail(to);
         int userID = DatabaseHandler.getInstance().getUserIDFromUsername(username);
         DatabaseHandler.getInstance().insertRecoveryCode(userID, token);
@@ -312,7 +311,6 @@ public class EmailHandler {
             e.printStackTrace();
         }
     }
-    */
 
     /**
      * Method to send an email with CSS formatting to a user that has forgotten their password.
@@ -358,6 +356,58 @@ public class EmailHandler {
                             "   <p>You have requested a recovery code for resetting your password. " +
                             "Please enter the code below in the ProActive App.</p>" +
                             "   <p><strong> " + token + " </strong></p>" +
+                            "</body>",
+                    "text/html");
+
+            Transport.send(message);
+
+            System.out.println("Recovery Email Sent");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method to send an email with CSS formatting to a user that has forgotten their password.
+     *
+     * @param session     Takes a session object, this is required to send any emails.
+     * @param to          Takes a To Address, this is the address that the email will be sent to.
+     */
+    public void sendUsernameRecoveryEmailCSS(Session session, String to){
+        String username = DatabaseHandler.getInstance().getUsernameFromEmail(to);
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL));
+            System.out.println(to);
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject("ProActive Username Recovery");
+            message.setContent(
+                    "<head>" +
+                            "   <style>" +
+                            "       h1{" +
+                            "           background-color:#CCCCCC;" +
+                            "           border-radius:20px;" +
+                            "           font-size:40px;" +
+                            "           text-align:center;" +
+                            "           padding:25px;" +
+                            "           color:black;" +
+                            "       }" +
+                            "       p{" +
+                            "           background-color:#CCCCCC;" +
+                            "           border-radius:20px;" +
+                            "           font-size:20px;" +
+                            "           text-align:center;" +
+                            "           padding:20px;" +
+                            "           color:black;" +
+                            "       }" +
+                            "   </style>" +
+                            "</head>" +
+                            "<body>" +
+                            "   <h1>ProActive</h1>" +
+                            "   <p>You have requested the username for your account in the ProActive App.</p>" +
+                            "   <p><strong> " + username + " </strong></p>" +
                             "</body>",
                     "text/html");
 

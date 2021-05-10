@@ -8,11 +8,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox alignment="CENTER" prefWidth="500.0" styleClass="base" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ForgottenPasswordPageController">
+<VBox alignment="CENTER" styleClass="base" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ForgottenUsernamePageController">
    <children>
       <HBox alignment="CENTER" prefHeight="75.0" prefWidth="600.0">
          <children>
+            <Label fx:id="emailFieldPopUp" text=" " textFill="#d31a1a" />
             <ImageView fx:id="logo" fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Resources/proactive.png" />
@@ -28,7 +28,7 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="88.0" prefWidth="600.0">
          <children>
-            <Label text="A recovery code will be sent to your email address upon submission." />
+            <Label text="Your accounts username will be sent to your email address upon submission" />
          </children>
       </HBox>
       <HBox alignment="CENTER" prefHeight="63.0" prefWidth="600.0">

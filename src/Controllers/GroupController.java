@@ -69,15 +69,26 @@ public class GroupController implements Initializable {
         LocalDateTime beforeNow = dh.getTimeoutFromInv(tokenInput);
 
         System.out.println("Got here");
-
         if (userID == groupInvUserID && LocalDateTime.now().isBefore(beforeNow)){
-            dh.joinGroup(user.getUsername(), groupName);
+            if(!dh.isMemberOfGroup(user.getUsername(), groupName)) {
+                dh.joinGroup(user.getUsername(), groupName);
+                joinGroupConfirmPopUp.setText("Successfully joined " + groupName);
+            }else {
+                joinGroupConfirmPopUp.setText("You Cannot Join This Group As You Are Already A Member, " +
+                                              "this token has been removed from the system"
+                                             );
+
+            }
             dh.deleteGroupInv(tokenInput);
-            joinGroupConfirmPopUp.setText("Successfully joined " + groupName);
         }else{
             joinGroupConfirmPopUp.setText("Something went wrong when joining the group, please make sure the " +
                                           "invite was meant for this user and has not expired (36 hours)"
-                                         );
+                                          );
+
+            if (dh.isInvExpired(tokenInput)){
+                dh.deleteGroupInv(tokenInput);
+            }
+
         }
     }
 

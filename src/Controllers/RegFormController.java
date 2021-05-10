@@ -109,10 +109,13 @@ public class RegFormController implements Initializable {
 
             byte[] hash = factory.generateSecret(spec).getEncoded();
 
-            //Check that username inputted was unique
+            //Check that username and email inputted was unique
             if(!db.checkUserNameUnique(username)){
-                usernamePopUp.setText("Username Not Unique, Please Select a new one");
-            }else {
+                usernamePopUp.setText("Username Not Unique, Please Enter A New One");
+            }
+            if(!db.checkEmailUnique(email)){
+                emailPopUp.setText("Email Not Unique, Please Enter A New One");
+            } else{
                 Stage parentScene = (Stage) submitButton.getScene().getWindow();
                 Stage stage = new Stage();
                 User user = new User(firstName, lastName, User.Sex.valueOf(sex.toUpperCase(Locale.ROOT)), height, weight, dob, email, username);
@@ -323,6 +326,13 @@ public class RegFormController implements Initializable {
 
         SplashPageController controller = loader.getController();
         stage.setScene(sceneParent);
+
+        stage.setMinWidth(350);
+        stage.setMinHeight(300);
+        stage.setMaxWidth(550);
+        stage.setMaxHeight(500);
+
+        stage.setTitle("ProActive");
 
         parentScene.close();
         stage.show();
