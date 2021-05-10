@@ -2328,6 +2328,29 @@ public class DatabaseHandler {
 
     }
 
+    public void changeGroupOwnership(Group group, User user) {
+        String sql  = "UPDATE group_membership SET Group_Role = 'Admin' WHERE User_Id = " +
+                       getUserIDFromUsername(group.getOwner().getUser().getUsername()) + " AND Group_Id = " +
+                       getGroupIDFromName(group.getName());
+
+
+        String sql2 = "UPDATE group_membership SET Group_Role = 'Owner' WHERE User_Id = " +
+                       getUserIDFromUsername(user.getUsername()) + " AND Group_Id = " +
+                       getGroupIDFromName(group.getName());
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql2);
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        System.out.println(sql);
+        System.out.println(sql2);
+    }
+
     public static void main(String[] args) {
         DatabaseHandler dh = DatabaseHandler.getInstance();
         System.out.println(dh.isMemberOfGroup("sscar", "TestGroup1"));

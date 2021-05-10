@@ -59,7 +59,6 @@ public class GroupController implements Initializable {
 
     }
 
-
     @FXML void joinGroupButtonAction(ActionEvent actionEvent) throws SQLException {
         joinGroupConfirmPopUp.setText("");
         String tokenInput = joinGroupInput.getText();
@@ -108,7 +107,9 @@ public class GroupController implements Initializable {
                 ObservableList<Node> children = groupNode.getChildren();
 
                 // Get group name label from node list
-                Label groupNameLabel = (Label) children.get(0);
+                HBox groupNameLabelHbox = (HBox) children.get(0);
+                Label groupNameLabel = (Label) groupNameLabelHbox.getChildren().get(0);
+                Button groupOwnershipTransfer = (Button) groupNameLabelHbox.getChildren().get(1);
                 groupNameLabel.setText(group.getName());
 
                 // Get group container from node list
@@ -167,6 +168,9 @@ public class GroupController implements Initializable {
                     groupInviteButtonHbox.setManaged(false);
                     groupInviteButton.setManaged(false);
                     groupInviteInputLabel.setManaged(false);
+                }
+                if ((!(userRole == null)) && !(userRole.equals("Owner"))){
+                    groupOwnershipTransfer.setManaged(false);
                 }
 
 
