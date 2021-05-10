@@ -24,7 +24,7 @@ public class GroupGoal extends IndividualGoal {
     /**
      * ID for the Group that this goal is linked to.
      */
-    private final int groupId;
+    private int groupId;
 
 
 
@@ -72,36 +72,7 @@ public class GroupGoal extends IndividualGoal {
      * @param progress the current progress of the goal.
      * @param groupId  the id of the group associated with the goal.
      */
-    public GroupGoal(float target, Unit unit, LocalDate endDate, float progress, int groupId) {
-        this(target, unit, endDate, progress, groupId);
 
-
-    }
-
-    public GroupGoal(float target, Unit unit, LocalDate endDate, float progress, int groupId) {
-        super(target, unit, endDate, progress);
-        this.groupId = groupId;
-    }
-
-
-
-    /**
-     * Gets the accepted status for this goal.
-     *
-     * @return the accepted status for this goal.
-     */
-    public boolean isAccepted() {
-        return accepted;
-    }
-
-    /**
-     * Sets the accepted status for this goal.
-     *
-     * @param accepted the new accepted status for this goal.
-     */
-    public void setAccepted(boolean accepted) {
-        this.accepted = accepted;
-    }
 
     /**
      * Gets the group_id for the goal (Note this is default 0 if no group is associated with this goal).

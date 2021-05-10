@@ -581,52 +581,6 @@ public class GoalController implements Initializable {
     }
 
     /**
-     * Method to instantiate Group Goals tab. Assigns a row to each goal, with a button to accept the goal on
-     * the row.
-     */
-    public void showGroupGoals() {
-        //For goal in user's system goals
-        for (GroupGoal groupGoal : user.getGroupGoals()) {
-
-            //Add label and button for goal
-            HBox hbox = new HBox();
-            groupGoalsVbox.getChildren().add(hbox);
-            hbox.getChildren().add(new Label(groupGoal.toString()));
-            Button button = new Button();
-
-            //Set button text based on goal status
-            if (groupGoal.isAccepted()) {
-                button.setText("Accepted");
-            }
-            else {
-                button.setText("Click to accept");
-            }
-
-            //Set button action such that if the goal is not accepted it is added to the user's goals, set to
-            //accepted, updated in the database, and then the button updated.
-            EventHandler<ActionEvent> event = e -> {
-                if (!groupGoal.isAccepted()) {
-                    user.addGoal(new GroupGoal(
-                            groupGoal.getTarget(),
-                            groupGoal.getUnit(),
-                            groupGoal.getEndDate(),
-                            groupGoal.getProgress(),
-                            groupGoal.getGroupId(),
-                            groupGoal.isAccepted())
-                    );
-                    groupGoal.setAccepted(true);
-                    user.saveGroupGoals();
-                    button.setText("Accepted");
-                }
-            };
-
-            button.setOnAction(event);
-
-            hbox.getChildren().add(button);
-        }
-    }
-
-    /**
      * Wrapper class for table rows, wraps target, unit, progress, end date, and completed status into a holding class.
      */
     public class GoalItem {

@@ -135,7 +135,7 @@ public class MainController implements Initializable {
      */
     @FXML private void groupsScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("FXML/Group.fxml"));
+        loader.setLocation(getClass().getResource("/FXML/Group.fxml"));
         VBox vBox = loader.load();
 //        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/Group.fxml"));
 
@@ -167,7 +167,6 @@ public class MainController implements Initializable {
         GoalController gc = loader.getController();
         gc.initData(user);
         gc.showSystemGoals();
-        gc.showGroupGoals();
         main.setCenter(vBox);
         toggleButtonFocus(goalsButton);
     }

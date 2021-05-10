@@ -757,25 +757,6 @@ class UserTest {
     }
 
     @Test
-    void successfulSetGroupGoals() {
-        User batman = new User(
-                "Bruce",
-                "Wayne",
-                User.Sex.MALE,
-                LocalDate.of(1998, 3, 9),
-                "manbat@gmail.com",
-                "bwayne1998"
-        );
-
-        ArrayList<GroupGoal> groupGoals = new ArrayList<>();
-
-
-        batman.setGroupGoals(groupGoals);
-
-        assertEquals(groupGoals, batman.getGroupGoals());
-    }
-
-    @Test
     void nullAddGoal() {
         User batman = new User(
                 "Bruce",

@@ -61,22 +61,6 @@ class GroupGoalTest {
     }
 
     @Test
-    void isAccepted() {
-        GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 1, 1);
-
-        assertTrue(groupGoal.isAccepted());
-
-    }
-
-    @Test
-    void setAccepted() {
-        GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 1, 1);
-        groupGoal.setAccepted(false);
-
-        assertFalse(groupGoal.isAccepted());
-    }
-
-    @Test
     void getGroupId() {
         GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now(), 1, 1);
 

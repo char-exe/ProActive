@@ -859,40 +859,6 @@ class DatabaseHandlerTest {
         assertThrows(NullPointerException.class, () -> dh.insertGroupGoal("bwayne1998", null));
     }
 
-    @Test
-    void nullUsernameRefreshGroupGoals() {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-
-        ArrayList<GroupGoal> groupGoals = new ArrayList<>();
-
-        groupGoals.add(new GroupGoal(
-                1,
-                Goal.Unit.PROTEIN,
-                LocalDate.now().plusDays(1),
-                1
-        ));
-        groupGoals.add(new GroupGoal(
-                1,
-                Goal.Unit.PROTEIN,
-                LocalDate.now().plusDays(1),
-                1
-        ));
-        groupGoals.add(new GroupGoal(
-                1,
-                Goal.Unit.PROTEIN,
-                LocalDate.now().plusDays(1),
-                1
-        ));
-
-        assertThrows(NullPointerException.class, () -> dh.refreshGroupGoals(null, groupGoals));
-    }
-
-    @Test
-    void nullGroupGoalsRefreshGroupGoals() {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-
-        assertThrows(NullPointerException.class, () -> dh.refreshGroupGoals("bwayne1998", null));
-    }
 
     @Test
     void nullEmailGetUsernameFromEmail() {
@@ -900,7 +866,7 @@ class DatabaseHandlerTest {
 
         assertThrows(NullPointerException.class, () -> dh.getUsernameFromEmail(null));
     }
-
+/*
     @Test
     void zeroIdInsertGroupInvite() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
@@ -921,6 +887,8 @@ class DatabaseHandlerTest {
 
         assertThrows(NullPointerException.class, () -> dh.insertGroupInvite(1, null));
     }
+
+ */
 
     @Test
     void nullGroupNameGetGroupObjectFromGroupName() {

@@ -1130,7 +1130,7 @@ public class DatabaseHandler {
         //Get the time 36 hours after token creation
         int timeDelay = time + 129600;
 
-        String sql = "INSERT INTO groupInvTable (tokenVal, expiryTime, groupID, userID) VALUES '" + tokenVal +"', " + time + ", '" + groupName + "', '" + username + "';";
+        String sql = "INSERT INTO groupInvTable (tokenVal, expiry_time, groupID, userID) VALUES '" + tokenVal +"', " + time + ", '" + groupName + "', '" + username + "';";
         System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
@@ -1674,8 +1674,9 @@ public class DatabaseHandler {
             throw new NullPointerException();
         }
 
+        ArrayList<GroupGoal> goals = new ArrayList<>();
         for (Group group: getUserGroups(user.getUsername())) {
-            ArrayList<GroupGoal> goals = new ArrayList<>();
+
 
             String sql = "SELECT target, unit, end_date FROM group_goal WHERE " +
                     "group_id = '" + getGroupIDFromName(group.getName()) + "'";
@@ -1686,10 +1687,10 @@ public class DatabaseHandler {
                     float target = rs.getFloat("target");
                     Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
                     LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
-                    GroupGoal groupGoal = new GroupGoal(target, unit, endDate);
-                    if (!user.hasGoal(groupGoal)) {
-                        goals.add(new IndividualGoal(groupGoal));
-                    }
+                    //GroupGoal groupGoal = new GroupGoal(target, unit, endDate);
+                    //if (!user.hasGoal(groupGoal)) {
+                        //goals.add(new IndividualGoal(groupGoal));
+                    //}
 
                 }
             } catch (SQLException e) {
@@ -1717,11 +1718,10 @@ public class DatabaseHandler {
         String unit = goal.getUnit().toString();
         String endDate = goal.getEndDate().toString();
         int group_id = goal.getGroupId();
-        boolean accepted = goal.isAccepted();
         int user_id = getUserIDFromUsername(username);
 
-        String sqlIns = "INSERT INTO group_goal(group_id, target, unit, end_date, user_id, accepted)" +
-                "VALUES(?,?,?,?,?,?,?)";
+        String sqlIns = "INSERT INTO group_goal(group_id, target, unit, end_date) " +
+                "VALUES(?,?,?,?,?,?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sqlIns)){
             pstmt.setFloat(1,target);
@@ -1730,7 +1730,6 @@ public class DatabaseHandler {
             pstmt.setInt(4, group_id);
             pstmt.setInt(5, getUserIDFromUsername(username));
             pstmt.setInt(6, user_id);
-            pstmt.setBoolean(7, accepted);
 
             pstmt.executeUpdate();
         }
@@ -1738,38 +1737,6 @@ public class DatabaseHandler {
         {
             System.out.println(e.getMessage());
         }
-    }
-
-    /**
-     * A method to refresh a user's Group Goals in the database. Intended to be called every time they are updated such
-     * that the database maintains parity with the application. Deletes the goals currently stored and then Inserts
-     * the passed ArrayList.
-     *
-     * @param username the user's username
-     * @param groupGoals the user's Group Goals
-     */
-    public void refreshGroupGoals(String username, ArrayList<GroupGoal> groupGoals) {
-        if (username == null) {
-            throw new NullPointerException();
-        }
-        if (groupGoals == null) {
-            throw new NullPointerException();
-        }
-
-        String sqlDel = "DELETE FROM group_goal WHERE user_id = '" + getUserIDFromUsername(username) + "'";
-
-        try {
-            Statement stmt = this.conn.createStatement();
-            stmt.executeUpdate(sqlDel);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        for (GroupGoal groupGoal : groupGoals) {
-           insertGroupGoal(username, groupGoal);
-        }
-
     }
 
     /**
@@ -1819,7 +1786,7 @@ public class DatabaseHandler {
         LocalDateTime expiry_time = current_time.plusMinutes(30); //set time for 30 minutes from now
         String expiry_time_string = expiry_time.toString();
 
-        String sql = "INSERT INTO groupInvTable(tokenVal, expiryTime, groupID, userID) VALUES('" +
+        String sql = "INSERT INTO groupInvTable(tokenVal, expiry_time, groupID, userID) VALUES('" +
                 token + "','" + expiry_time_string + "','" + groupId + "','" + userId + "')";
         try {
             Statement stmt = this.conn.createStatement();
@@ -1840,7 +1807,7 @@ public class DatabaseHandler {
     public boolean checkGroupInvite (String token, int user_id) {
         LocalDateTime current_time = LocalDateTime.now();
 
-        String sql = "SELECT expiryTime, userID FROM groupInvTable WHERE " + "tokenVal = '" + token + "'";
+        String sql = "SELECT expiry_time, userID FROM groupInvTable WHERE " + "tokenVal = '" + token + "'";
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
