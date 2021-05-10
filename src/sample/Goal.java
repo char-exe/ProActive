@@ -1,6 +1,7 @@
 package sample;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Abstract class for modelling a user goal in the ProActive app by its target amount, concerned units, and end date.
@@ -170,6 +171,19 @@ public abstract class Goal {
         }
 
         return this.target + " " + this.unit.getUnitString() + " by " + this.endDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Goal)) return false;
+        Goal goal = (Goal) o;
+        return Float.compare(goal.getTarget(), getTarget()) == 0 && getUnit() == goal.getUnit() && getEndDate().equals(goal.getEndDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTarget(), getUnit(), getEndDate());
     }
 
     /**

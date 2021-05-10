@@ -500,6 +500,21 @@ public class User {
             }
         }
     }
+
+    /**
+     * Method to check if a user has a goal identical to a new goal that they are trying to add.
+     * @param newGoal The goal object trying to be added.
+     * @return True if there is an identical goal, otherwise false.
+     */
+    public boolean hasGoal(Goal newGoal) {
+        for (Goal goal:goals){
+            if (newGoal.equals(goal)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /*
 
     public void joinGroup(Group group){

@@ -1605,27 +1605,28 @@ public class DatabaseHandler {
             throw new NullPointerException();
         }
 
-        ArrayList<GroupGoal> goals = new ArrayList<>();
+        for (Group group: getUserGroups(user.getUsername())) {
+            ArrayList<GroupGoal> goals = new ArrayList<>();
 
-        String sql = "SELECT group_id, target, unit, end_date, accepted FROM group_goal WHERE " +
-                     "user_id = '" + getUserIDFromUsername(user.getUsername()) + "'";
+            String sql = "SELECT target, unit, end_date FROM group_goal WHERE " +
+                    "group_id = '" + getGroupIDFromName(group.getName()) + "'";
 
-        try (Statement stmt = this.conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                float target = rs.getFloat("target");
-                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
-                LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
-                int group_id = rs.getInt("group_id");
-                boolean accepted = rs.getBoolean("accepted");
+            try (Statement stmt = this.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    float target = rs.getFloat("target");
+                    Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                    LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
+                    GroupGoal groupGoal = new GroupGoal(target, unit, endDate);
+                    if (!user.hasGoal(groupGoal)) {
+                        goals.add(new IndividualGoal(groupGoal));
+                    }
 
-                goals.add(new GroupGoal(target, unit, endDate, 0, group_id, accepted));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         return goals;
     }
 
@@ -1737,7 +1738,7 @@ public class DatabaseHandler {
      * @param token token used for the invite.
      */
 
-    public void insertGroupInvite(int groupId, String token) {
+    public void insertGroupInvite(int groupId, String token, int userId) {
         if (groupId < 1) {
             throw new IllegalArgumentException();
         }
@@ -1749,8 +1750,8 @@ public class DatabaseHandler {
         LocalDateTime expiry_time = current_time.plusMinutes(30); //set time for 30 minutes from now
         String expiry_time_string = expiry_time.toString();
 
-        String sql = "INSERT INTO group_invites(group_id, token, expiry_time) VALUES('" +
-                groupId + "','" + token + "','" + expiry_time_string + "')";
+        String sql = "INSERT INTO groupInvTable(tokenVal, expiryTime, groupID, userID) VALUES('" +
+                token + "','" + expiry_time_string + "','" + groupId + "','" + userId + "')";
         try {
             Statement stmt = this.conn.createStatement();
             stmt.executeUpdate(sql);
@@ -2044,6 +2045,28 @@ public class DatabaseHandler {
 
         return getGroup(groupID);
 
+    }
+
+    public ArrayList<GroupGoal> getGroupGoalsFromGroupID(int groupID) {
+        ArrayList<GroupGoal> goals = new ArrayList<GroupGoal>();
+        String sql = "SELECT target, unit, end_date FROM group_goal WHERE group_id = " + groupID;
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                float target = rs.getFloat("target");
+                Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
+                LocalDate end_date = LocalDate.parse(rs.getString("end_date"));
+
+                GroupGoal groupGoal = new GroupGoal(target, unit, end_date, 0.0f, groupID);
+
+                goals.add(groupGoal);
+
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return goals;
     }
 
     /**

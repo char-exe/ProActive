@@ -64,4 +64,14 @@ public class IndividualGoal extends UserGoal {
         this.completed = this.progress >= this.target;
         this.active = this.endDate.isAfter(LocalDate.now()) && !this.completed;
     }
+
+    public IndividualGoal(GroupGoal groupGoal) {
+        if (groupGoal == null) {
+            throw new NullPointerException();
+        }
+
+        this.target = groupGoal.target;
+
+    }
+
 }
