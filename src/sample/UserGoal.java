@@ -107,7 +107,7 @@ public abstract class UserGoal extends Goal {
      *
      * @param update the amount to increment progress by
      */
-    public boolean updateProgress(Unit unit, float update) {
+    public boolean updateProgress(Unit unit, float update, String username) {
         if (unit == null) {
             throw new NullPointerException();
         }
@@ -122,10 +122,15 @@ public abstract class UserGoal extends Goal {
             if (this.progress >= this.target) { //if completed
                 this.completed = true;
                 this.active = false;
+
+                if (this instanceof GroupGoal) {
+                    ((GroupGoal) this).notifyGroup(username);
+                }
             }
-            return true; //Goal completed
+
+            return true; //Goal updated
         }
-        return false; //Goal not completed
+        return false; //Goal not updated
     }
 
     /**

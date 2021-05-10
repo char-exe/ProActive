@@ -373,15 +373,6 @@ public class User {
         DatabaseHandler.getInstance().insertGoal(this.getUsername(), goal);
     }
 
-    public void addGroupGoal(GroupGoal groupGoal) {
-        if (groupGoal == null) {
-            throw new NullPointerException();
-        }
-
-        this.goals.add(groupGoal);
-        DatabaseHandler.getInstance().insertGoal(this.getUsername(), groupGoal);
-    }
-
     /**
      * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
      *
@@ -392,7 +383,7 @@ public class User {
         //for each goal
         for (UserGoal userGoal : goals) {
             //if the goal is updated
-            if (userGoal.updateProgress(unit, amount)) {
+            if (userGoal.updateProgress(unit, amount, this.username)) {
                 //update the goal in the database
                 DatabaseHandler.getInstance().updateGoal(username, userGoal, amount);
             }
@@ -415,7 +406,7 @@ public class User {
         //for each goal
         for (UserGoal userGoal : goals) {
             //if the goal is updated
-            if (userGoal.updateProgress(unit, amount)) {
+            if (userGoal.updateProgress(unit, amount, this.username)) {
                 //update the goal in the database
                 DatabaseHandler.getInstance().updateGoal(username, userGoal, amount);
             }

@@ -257,9 +257,9 @@ public class EmailHandler {
      * @param session     Takes a session object, this is required to send any emails.
      * @param to          Takes a To Address, this is the address that the email will be sent to.
      * @param goal        Takes the goal that has been completed.
-     * @param user        User that completed the goal.
+     * @param username        User that completed the goal.
      */
-    public void sendGroupGoalCompletion(Session session, String to, Goal goal, User user){
+    public void sendGroupGoalCompletion(Session session, String to, Goal goal, String username){
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
@@ -267,8 +267,8 @@ public class EmailHandler {
                     Message.RecipientType.TO,
                     InternetAddress.parse(to)
             );
-            message.setSubject(user.getUsername() + " Has Completed A Group Goal!");
-            message.setText(user.getUsername() + " has successfully completed the group goal \""
+            message.setSubject(username + " Has Completed A Group Goal!");
+            message.setText(username + " has successfully completed the group goal \""
                     + goal.getMessageFragment() + "\" Wish Them Congratulations!");
 
             Transport.send(message);

@@ -64,24 +64,18 @@ public class GroupGoal extends IndividualGoal {
     }
 
     /**
-     * Constructs a goal from a target amount, unit, end date, progress amount, and current status. Intended for use
-     * when pulling group goals from the database.
-     *
-     * @param target   the target amount of the goal.
-     * @param unit     the units targeted by the goal.
-     * @param endDate  the end date of the goal.
-     * @param progress the current progress of the goal.
-     * @param groupId  the id of the group associated with the goal.
-     */
-
-
-    /**
      * Gets the group_id for the goal (Note this is default 0 if no group is associated with this goal).
      *
      * @return the group_id for this goal.
      */
     public int getGroupId() {
         return groupId;
+    }
+
+    public void notifyGroup(String username) {
+        Group group = DatabaseHandler.getInstance().getGroupObjectFromGroupId(this.groupId);
+
+        group.sendGroupNotifications(username, this);
     }
 
     @Override

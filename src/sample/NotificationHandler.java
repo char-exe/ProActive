@@ -118,8 +118,8 @@ public class NotificationHandler {
         emailHandler.sendGoalCompletion(session, email, goal);
     }
 
-    public void sendGroupEmail (String email, Goal goal, User user) {
-        emailHandler.sendGroupGoalCompletion(session, email, goal, user);
+    public void sendGroupEmail (String email, Goal goal, String username) {
+        emailHandler.sendGroupGoalCompletion(session, email, goal, username);
     }
 
 }

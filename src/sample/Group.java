@@ -58,13 +58,13 @@ public class Group {
     /**
      * Method to send goal notifications after the completion of a group goal by a group member. The group members
      * that are not the user who completed the goal all informed of the goal's completion by an email.
-     * @param user the user that completed the group goal.
+     * @param username the username of the user that completed the group goal.
      * @param goal the goal that was completed.
      */
-    public void sendGroupNotifications (User user, Goal goal) {
+    public void sendGroupNotifications (String username, Goal goal) {
         for (GroupMember member : this.getMembers()) {
-            if (member.getUser().getUsername() != user.getUsername()) {
-                NotificationHandler.getInstance().sendGroupEmail(member.getUser().getEmail(), goal, user);
+            if (!member.getUser().getUsername().equals(username)) {
+                NotificationHandler.getInstance().sendGroupEmail(member.getUser().getEmail(), goal, username);
             }
         }
     }
@@ -104,4 +104,5 @@ public class Group {
     public ArrayList<GroupGoal> getGroupGoals() {
         return groupGoals;
     }
+
 }
