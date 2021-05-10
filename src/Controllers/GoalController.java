@@ -1,8 +1,5 @@
 package Controllers;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -63,7 +60,6 @@ public class GoalController implements Initializable {
     @FXML private VBox completedGoalsVbox;
 
     private User user;
-    private DatabaseHandler dh;
 
     private static HashMap<String, Goal.Unit> nutrientsMap;
 
@@ -75,7 +71,6 @@ public class GoalController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.dh = DatabaseHandler.getInstance();
 
         //Set dateAmountField to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
@@ -370,13 +365,9 @@ public class GoalController implements Initializable {
 
         //For every goal
         for (UserGoal goal : user.getGoals()) {
-            boolean isActive = false;
-            boolean isCompleted = false;
 
-            if (goal instanceof IndividualGoal) {
-                isActive = ((IndividualGoal) goal).isActive();
-                isCompleted = ((IndividualGoal) goal).isCompleted();
-            }
+            boolean isActive = goal.isActive();
+            boolean isCompleted = goal.isCompleted();
 
             if (isActive && !isCompleted) { //If goal is active active and not completed
                 count++;

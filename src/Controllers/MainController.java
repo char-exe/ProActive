@@ -1,7 +1,6 @@
 package Controllers;
 
 import javafx.animation.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,8 +20,6 @@ import sample.User;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.security.Key;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
@@ -178,7 +175,7 @@ public class MainController implements Initializable {
      *
      * @throws IOException Throws an IOException whenever it is possible a file could be missing
      */
-    @FXML private void manageProfileScreen() throws IOException, InterruptedException {
+    @FXML private void manageProfileScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         //loader.setLocation(getClass().getClassLoader().getResource("src/FXML/ManageProfilePage.fxml"));
         loader.setLocation(getClass().getResource("/FXML/ManageProfilePage.fxml"));
@@ -268,11 +265,9 @@ public class MainController implements Initializable {
     /**
      * Method to log out and send user back to the splash page
      *
-     * @param actionEvent This refers to the button that will cause this method to be called
-     *
      * @throws IOException Throws an IOException, this primarily occurs when a file is not recognized
      */
-    @FXML protected void logOutAction(ActionEvent actionEvent) throws IOException {
+    @FXML protected void logOutAction() throws IOException {
         Stage parentScene = (Stage) logOutButton.getScene().getWindow();
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();

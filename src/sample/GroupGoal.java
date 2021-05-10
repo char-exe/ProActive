@@ -25,7 +25,7 @@ public class GroupGoal extends IndividualGoal {
     /**
      * ID for the Group that this goal is linked to.
      */
-    private int groupId;
+    private final int groupId;
 
 
 

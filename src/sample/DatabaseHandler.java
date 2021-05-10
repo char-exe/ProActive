@@ -2047,9 +2047,9 @@ public class DatabaseHandler {
                 group.setOwner(owner);
                 group.setAdmins(admins);
                 group.setMembers(members);
-
             }
-        } catch (SQLException throwables) {
+        }
+        catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 

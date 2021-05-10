@@ -7,7 +7,6 @@ import java.time.LocalDate;
  * current progress, and completion status.
  *
  * @author Samuel Scarfe
- * @author Evan Clayton
  *
  * @version 1.3
  *
@@ -64,14 +63,4 @@ public class IndividualGoal extends UserGoal {
         this.completed = this.progress >= this.target;
         this.active = this.endDate.isAfter(LocalDate.now()) && !this.completed;
     }
-
-    public IndividualGoal(GroupGoal groupGoal) {
-        if (groupGoal == null) {
-            throw new NullPointerException();
-        }
-
-        this.target = groupGoal.target;
-
-    }
-
 }

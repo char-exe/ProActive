@@ -281,37 +281,6 @@ public class EmailHandler {
         }
     }
 
-
-    /**
-     * Method to send an email to a user that has forgotten their password.
-     *
-     * @param session     Takes a session object, this is required to send any emails.
-     * @param to          Takes a To Address, this is the address that the email will be sent to.
-     */
-    public void sendRecoveryEmail(Session session, String to){
-        String token = TokenHandler.createUniqueToken(8);
-        String username = DatabaseHandler.getInstance().getUsernameFromEmail(to);
-        int userID = DatabaseHandler.getInstance().getUserIDFromUsername(username);
-        DatabaseHandler.getInstance().insertRecoveryCode(userID, token);
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(EMAIL));
-            message.setRecipients(
-                    Message.RecipientType.TO,
-                    InternetAddress.parse(to)
-            );
-            message.setSubject(username + ", you have requested to reset your password. Please use the following code: "
-            + token + "\n Enter this code into the app to reset your password.");
-
-            Transport.send(message);
-
-            System.out.println("Password Recovery sent");
-
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Method to send an email with CSS formatting to a user that has forgotten their password.
      *

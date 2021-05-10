@@ -1,13 +1,10 @@
 package sample;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-import sample.*;
 
 /**
  * A class to represent a user in a health tracking application, most/all error checking is completed
@@ -53,8 +50,8 @@ public class User {
     private float weight;  //Changed from int on class description storing in KG
     private LocalDate dob;
     private final String email;
-    private Set<Group> groupMemberships = new HashSet<Group>();
-    private ArrayList<UserGoal> goals;
+    private final Set<Group> groupMemberships = new HashSet<>();
+    private final ArrayList<UserGoal> goals;
     private ArrayList<SystemGoal> systemGoals;
     private final String username;
 
@@ -486,13 +483,6 @@ public class User {
 
 
     /**
-     * Method to save this user's group goals in the database. Intended for use whenever their values change such that
-     * their state will persist between logins.
-     */
-    //public void saveGroupGoals() { DatabaseHandler.getInstance().refreshGroupGoals(this.username, this.groupGoals);}
-
-
-    /**
      * Method to mark a goal as not active and update it's end date to today's date, functionally equivalent to
      * quitting it.
      *
@@ -509,28 +499,6 @@ public class User {
             }
         }
     }
-
-    /**
-     * Method to check if a user has a goal identical to a new goal that they are trying to add.
-     * @param newGoal The goal object trying to be added.
-     * @return True if there is an identical goal, otherwise false.
-     */
-    public boolean hasGoal(Goal newGoal) {
-        for (Goal goal:goals){
-            if (newGoal.equals(goal)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /*
-
-    public void joinGroup(Group group){
-
-        To be implemented in Sprint 2
-    }
-    */
 
     /**
      * Returns a String representation of this User object.

@@ -1,12 +1,9 @@
 package sample;
 
 import Controllers.MainController;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 
 import javax.mail.Session;
 import java.io.IOException;
-import java.util.Properties;
 
 /**
  * A class to be instantiated in other classes to allow for easy displaying of notifications for goals.
@@ -31,8 +28,6 @@ public class NotificationHandler {
     /**
      * Constructor that creates the link to the MainController so that the showNotification method can be called.
      * Private to enforce singleton pattern
-     *
-     * @throws IOException
      */
     private NotificationHandler() {
         emailHandler = EmailHandler.getInstance();

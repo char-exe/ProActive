@@ -6,7 +6,6 @@ import java.util.Map;
 /**
  * A class to represent a nutrition item in the application as it appears in the database.
  *
- * @author Evan Clayton?
  * @author Samuel Scarfe
  *
  * @version 1.3
