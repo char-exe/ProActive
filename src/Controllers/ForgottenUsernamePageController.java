@@ -73,5 +73,4 @@ public class ForgottenUsernamePageController {
         parentScene.close();
         stage.show();
     }
-
 }

@@ -247,14 +247,6 @@ public class CreateAdvancedNutritionItemController implements Initializable {
     }
 
     /**
-     * Method to act as a pseudo constructor for advancedNutritionItemController
-
-     */
-    public void initData(){
-
-    }
-
-    /**
      * Method to handle the submit button event
      *
      * @throws SQLException Throws an SQLException whenever it is possible for an external force to affect SQL
@@ -304,10 +296,7 @@ public class CreateAdvancedNutritionItemController implements Initializable {
             System.out.println("Item Created: " + nameInput.getText());
 
             parentScene.close();
-
-
         }
-
     }
 
     /**
@@ -364,15 +353,15 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkFirstName(){
+    @FXML protected boolean checkFirstName() {
         String name = nameInput.getText();
         //Regex for nameInput textField
         String NAMEINPUTREGEX = "[a-zA-Z]*";
-        if (name.matches(NAMEINPUTREGEX)){
+        if (name.matches(NAMEINPUTREGEX)) {
             nameInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             nameInputPopUp.setText("Please enter a valid Name");
             return false;
         }
@@ -383,13 +372,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkKcalInput(){
+    @FXML protected boolean checkKcalInput() {
         String kcal = kcalInput.getText();
-        if (kcal.matches(DOUBLEINPUTREGEX) && checkValidDouble(kcal, ".")){
+        if (kcal.matches(DOUBLEINPUTREGEX) && checkValidDouble(kcal, ".")) {
             kcalInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             kcalInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -400,13 +389,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkProteinInput(){
+    @FXML protected boolean checkProteinInput() {
         String protein = proteinInput.getText();
-        if (protein.matches(DOUBLEINPUTREGEX) && checkValidDouble(protein, ".")){
+        if (protein.matches(DOUBLEINPUTREGEX) && checkValidDouble(protein, ".")) {
             proteinInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             proteinInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -417,13 +406,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkFatInput(){
+    @FXML protected boolean checkFatInput() {
         String fat = fatInput.getText();
-        if (fat.matches(DOUBLEINPUTREGEX) && checkValidDouble(fat, ".")){
+        if (fat.matches(DOUBLEINPUTREGEX) && checkValidDouble(fat, ".")) {
             fatInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             fatInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -434,13 +423,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkCarbsInput(){
+    @FXML protected boolean checkCarbsInput() {
         String carbs = carbsInput.getText();
-        if (carbs.matches(DOUBLEINPUTREGEX) && checkValidDouble(carbs, ".")){
+        if (carbs.matches(DOUBLEINPUTREGEX) && checkValidDouble(carbs, ".")) {
             carbsInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             carbsInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -451,13 +440,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkSugarInput(){
+    @FXML protected boolean checkSugarInput() {
         String sugar = sugarInput.getText();
-        if (sugar.matches(DOUBLEINPUTREGEX) && checkValidDouble(sugar, ".")){
+        if (sugar.matches(DOUBLEINPUTREGEX) && checkValidDouble(sugar, ".")) {
             sugarInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             sugarInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -468,13 +457,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkFibreInput(){
+    @FXML protected boolean checkFibreInput() {
         String fibre = fibreInput.getText();
-        if (fibre.matches(DOUBLEINPUTREGEX) && checkValidDouble(fibre, ".")){
+        if (fibre.matches(DOUBLEINPUTREGEX) && checkValidDouble(fibre, ".")) {
             fibreInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             fibreInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -485,13 +474,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkCholesterolInput(){
+    @FXML protected boolean checkCholesterolInput() {
         String cholesterol = cholesterolInput.getText();
-        if (cholesterol.matches(DOUBLEINPUTREGEX) && checkValidDouble(cholesterol, ".")){
+        if (cholesterol.matches(DOUBLEINPUTREGEX) && checkValidDouble(cholesterol, ".")) {
             cholesterolInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             cholesterolInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -502,13 +491,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkSodiumInput(){
+    @FXML protected boolean checkSodiumInput() {
         String sodium = sodiumInput.getText();
-        if (sodium.matches(DOUBLEINPUTREGEX) && checkValidDouble(sodium, ".")){
+        if (sodium.matches(DOUBLEINPUTREGEX) && checkValidDouble(sodium, ".")) {
             sodiumInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             sodiumInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -519,13 +508,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkPotassiumInput(){
+    @FXML protected boolean checkPotassiumInput() {
         String potassium = potassiumInput.getText();
-        if (potassium.matches(DOUBLEINPUTREGEX) && checkValidDouble(potassium, ".")){
+        if (potassium.matches(DOUBLEINPUTREGEX) && checkValidDouble(potassium, ".")) {
             potassiumInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             potassiumInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -536,13 +525,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkCalciumInput(){
+    @FXML protected boolean checkCalciumInput() {
         String calcium = calciumInput.getText();
-        if (calcium.matches(DOUBLEINPUTREGEX) && checkValidDouble(calcium, ".")){
+        if (calcium.matches(DOUBLEINPUTREGEX) && checkValidDouble(calcium, ".")) {
             calciumInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             calciumInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -553,13 +542,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkMagnesiumInput(){
+    @FXML protected boolean checkMagnesiumInput() {
         String magnesium = magnesiumInput.getText();
-        if (magnesium.matches(DOUBLEINPUTREGEX) && checkValidDouble(magnesium, ".")){
+        if (magnesium.matches(DOUBLEINPUTREGEX) && checkValidDouble(magnesium, ".")) {
             magnesiumInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             magnesiumInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -570,13 +559,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkPhosphorousInput(){
+    @FXML protected boolean checkPhosphorousInput() {
         String phospherous = phosphorousInput.getText();
-        if (phospherous.matches(DOUBLEINPUTREGEX) && checkValidDouble(phospherous, ".")){
+        if (phospherous.matches(DOUBLEINPUTREGEX) && checkValidDouble(phospherous, ".")) {
             phosphorousInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             phosphorousInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -587,13 +576,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkIronInput(){
+    @FXML protected boolean checkIronInput() {
         String iron = ironInput.getText();
-        if (iron.matches(DOUBLEINPUTREGEX) && checkValidDouble(iron, ".")){
+        if (iron.matches(DOUBLEINPUTREGEX) && checkValidDouble(iron, ".")) {
             ironInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             ironInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -604,13 +593,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkCopperInput(){
+    @FXML protected boolean checkCopperInput() {
         String copper = copperInput.getText();
-        if (copper.matches(DOUBLEINPUTREGEX) && checkValidDouble(copper, ".")){
+        if (copper.matches(DOUBLEINPUTREGEX) && checkValidDouble(copper, ".")) {
             copperInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             copperInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -621,13 +610,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkZincInput(){
+    @FXML protected boolean checkZincInput() {
         String zinc = zincInput.getText();
-        if (zinc.matches(DOUBLEINPUTREGEX) && checkValidDouble(zinc, ".")){
+        if (zinc.matches(DOUBLEINPUTREGEX) && checkValidDouble(zinc, ".")) {
             zincInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             zincInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -638,13 +627,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkChlorideInput(){
+    @FXML protected boolean checkChlorideInput() {
         String chloride = chlorideInput.getText();
-        if (chloride.matches(DOUBLEINPUTREGEX) && checkValidDouble(chloride, ".")){
+        if (chloride.matches(DOUBLEINPUTREGEX) && checkValidDouble(chloride, ".")) {
             chlorideInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             chlorideInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -655,13 +644,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkSeleniumInput(){
+    @FXML protected boolean checkSeleniumInput() {
         String selenium = seleniumInput.getText();
-        if (selenium.matches(DOUBLEINPUTREGEX) && checkValidDouble(selenium, ".")){
+        if (selenium.matches(DOUBLEINPUTREGEX) && checkValidDouble(selenium, ".")) {
             seleniumInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             seleniumInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -672,13 +661,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkIodineInput(){
+    @FXML protected boolean checkIodineInput() {
         String iodine = iodineInput.getText();
-        if (iodine.matches(DOUBLEINPUTREGEX) && checkValidDouble(iodine, ".")){
+        if (iodine.matches(DOUBLEINPUTREGEX) && checkValidDouble(iodine, ".")) {
             iodineInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             iodineInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -689,13 +678,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkVitAInput(){
+    @FXML protected boolean checkVitAInput() {
         String vitA = vitAInput.getText();
-        if (vitA.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitA, ".")){
+        if (vitA.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitA, ".")) {
             vitAInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             vitAInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -706,13 +695,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkVitDInput(){
+    @FXML protected boolean checkVitDInput() {
         String vitD = vitDInput.getText();
-        if (vitD.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitD, ".")){
+        if (vitD.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitD, ".")) {
             vitDInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             vitDInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -723,13 +712,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkThiaminInput(){
+    @FXML protected boolean checkThiaminInput() {
         String thiamin = thiaminInput.getText();
-        if (thiamin.matches(DOUBLEINPUTREGEX) && checkValidDouble(thiamin, ".")){
+        if (thiamin.matches(DOUBLEINPUTREGEX) && checkValidDouble(thiamin, ".")) {
             thiaminInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             thiaminInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -740,13 +729,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkRiboflavinInput(){
+    @FXML protected boolean checkRiboflavinInput() {
         String riboflavin = riboflavinInput.getText();
-        if (riboflavin.matches(DOUBLEINPUTREGEX) && checkValidDouble(riboflavin, ".")){
+        if (riboflavin.matches(DOUBLEINPUTREGEX) && checkValidDouble(riboflavin, ".")) {
             riboflavinInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             riboflavinInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -757,13 +746,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkNiacinInput(){
+    @FXML protected boolean checkNiacinInput() {
         String niacin = niacinInput.getText();
-        if (niacin.matches(DOUBLEINPUTREGEX) && checkValidDouble(niacin, ".")){
+        if (niacin.matches(DOUBLEINPUTREGEX) && checkValidDouble(niacin, ".")) {
             niacinInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             niacinInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -774,13 +763,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkVitB6Input(){
+    @FXML protected boolean checkVitB6Input() {
         String vitB6 = vitB6Input.getText();
-        if (vitB6.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitB6, ".")){
+        if (vitB6.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitB6, ".")) {
             vitB6InputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             vitB6InputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -791,13 +780,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkVitB12Input(){
+    @FXML protected boolean checkVitB12Input() {
         String vitB12 = vitB12Input.getText();
-        if (vitB12.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitB12, ".")){
+        if (vitB12.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitB12, ".")) {
             vitB12InputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             vitB12InputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -808,13 +797,13 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkFolateInput(){
+    @FXML protected boolean checkFolateInput() {
         String folate = folateInput.getText();
-        if (folate.matches(DOUBLEINPUTREGEX) && checkValidDouble(folate, ".")){
+        if (folate.matches(DOUBLEINPUTREGEX) && checkValidDouble(folate, ".")) {
             folateInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             folateInputPopUp.setText("Please enter a valid value");
             return false;
         }
@@ -825,16 +814,15 @@ public class CreateAdvancedNutritionItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkVitCInput(){
+    @FXML protected boolean checkVitCInput() {
         String vitC = vitCInput.getText();
-        if (vitC.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitC, ".")){
+        if (vitC.matches(DOUBLEINPUTREGEX) && checkValidDouble(vitC, ".")) {
             vitCInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             vitCInputPopUp.setText("Please enter a valid value");
             return false;
         }
     }
-
 }

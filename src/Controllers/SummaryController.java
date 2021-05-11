@@ -31,62 +31,24 @@ import java.util.*;
  */
 public class SummaryController implements Initializable
 {
-    /**
-     * A chart for viewing caloric intake over 7 days.
-     */
-    @FXML
-    private LineChart<Number, Number> intakeChart;
-    /**
-     * A chart for viewing caloric burn over 7 days.
-     */
-    @FXML
-    private LineChart<Number, Number> burnChart;
-    /**
-     * A chart for view time spent exercising over 7 days.
-     */
-    @FXML
-    private LineChart<Number, Number> spentChart;
-    /**
-     * A chart for showing weight gain/loss over the last 7 days
-     */
-    @FXML
-    private LineChart<Number, Number> weightChart;
-
-
+    @FXML private LineChart<Number, Number> intakeChart;
+    @FXML private LineChart<Number, Number> burnChart;
+    @FXML private LineChart<Number, Number> spentChart;
+    @FXML private LineChart<Number, Number> weightChart;
     @FXML private LineChart<Number, Number> nutritionChart;
     @FXML private LineChart<Number, Number> mineralsChart;
     @FXML private LineChart<Number, Number> vitaminsChart;
 
-    /**
-     * The x axis for intakeChart.
-     */
-    @FXML
-    private NumberAxis intakeDateAxis;
-    /**
-     * The x axis for burnChart.
-     */
-    @FXML
-    private NumberAxis burnDateAxis;
-    /**
-     * The x axis for spentChart.
-     */
-    @FXML
-    private NumberAxis spentDateAxis;
-    /**
-     * The x axis for weightChart
-     */
-    @FXML
-    private NumberAxis weightDateAxis;
-    /**
-     * The Welcome message for summary page
-     */
+    @FXML private NumberAxis intakeDateAxis;
+    @FXML private NumberAxis burnDateAxis;
+    @FXML private NumberAxis spentDateAxis;
+    @FXML private NumberAxis weightDateAxis;
 
     @FXML private NumberAxis nutritionDateAxis;
     @FXML private NumberAxis mineralsDateAxis;
     @FXML private NumberAxis vitaminsDateAxis;
 
-    @FXML
-    private Label welcomeBackLabel;
+    @FXML private Label welcomeBackLabel;
 
     @FXML private VBox activitySummarySection;
     @FXML private VBox nutritionSummarySection;
@@ -170,6 +132,11 @@ public class SummaryController implements Initializable
 
     }
 
+    /**
+     * Method to allow for data to be transferred from another scene to this one
+     *
+     * @param user Takes in a User object to help with persistence
+     */
     public void initData(User user) {
         this.user = user;
 
@@ -177,6 +144,11 @@ public class SummaryController implements Initializable
         welcomeBackLabel.setText("Welcome Back " + user.getFirstname() + "!");
     }
 
+    /**
+     * Method to initialise the data for each chart with data for one week.
+     *
+     * @param latest the last day of the 7 day period to show data for.
+     */
     public void initChartData(LocalDate latest) {
 
         DateConverter dc = new DateConverter(latest);
@@ -450,11 +422,19 @@ public class SummaryController implements Initializable
 
     }
 
-    private void setNutrientGraph(DateConverter dc, ArrayList<XYChart.Series<Number, Number>> nutrientSeries, HashMap<String, HashMap<String, Double>> macros) {
-        for(String date : macros.keySet()){
+    /**
+     * Private helper method for setting data for the nutrition graphs.
+     *
+     * @param dc a DateConverter object to convert x axis values.
+     * @param nutrientSeries a data series of numbers against numbers.
+     * @param nutrients the nutrients data to present on the graph.
+     */
+    private void setNutrientGraph(DateConverter dc, ArrayList<XYChart.Series<Number, Number>> nutrientSeries,
+                                  HashMap<String, HashMap<String, Double>> nutrients) {
+        for(String date : nutrients.keySet()){
 
             // For each macro nutrient in date
-            for(String macroName : macros.get(date).keySet()){
+            for(String macroName : nutrients.get(date).keySet()){
 
                 // Indicator to whether series list already contains a series for specific macro nutrient
                 boolean containsSeries = false;
@@ -467,33 +447,30 @@ public class SummaryController implements Initializable
 
                         containsSeries = true;
 
-                        series.getData().add(new XYChart.Data<>(dc.fromString(date), macros.get(date).get(macroName)));
+                        series.getData().add(new XYChart.Data<>(dc.fromString(date), nutrients.get(date).get(macroName)));
 
                         break;
-
                     }
-
                 }
 
                 if(!containsSeries){
 
                     XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
 
-                    newSeries.getData().add(new XYChart.Data<>(dc.fromString(date), macros.get(date).get(macroName)));
+                    newSeries.getData().add(new XYChart.Data<>(dc.fromString(date), nutrients.get(date).get(macroName)));
 
                     newSeries.setName(macroName);
 
                     nutrientSeries.add(newSeries);
-
                 }
-
             }
-
         }
     }
 
+    /**
+     * Method to set data for the weight chart.
+     */
     public void setWeightChartData(){
-
         weightChart.getData().clear();
 
         //format each axis from showing numeric tick marks to showing the past 7 days
@@ -504,12 +481,10 @@ public class SummaryController implements Initializable
 
         HashMap<String, Integer> weightData = dh.getWeightEntries(user.getUsername(), weightChartDate);
 
-
         //Add data to each series.
         DateConverter dc = new DateConverter(weightChartDate);
 
-        for (String key : weightData.keySet())
-        {
+        for (String key : weightData.keySet()) {
             weightSeries.getData().add(new XYChart.Data<>(dc.fromString(key), weightData.get(key)));
         }
 
@@ -523,17 +498,16 @@ public class SummaryController implements Initializable
             if(value.endsWith(".0"))
                 value = value.substring(0, value.length() - 2);
 
-
             Tooltip t = new Tooltip(value);
             t.setShowDelay(javafx.util.Duration.millis(0));
             Tooltip.install(d.getNode(), t);
-
         }
-
     }
 
+    /**
+     * Method to set data for the intake chart.
+     */
     public void setIntakeChartData(){
-
         intakeChart.getData().clear();
 
         //format each axis from showing numeric tick marks to showing the past 7 days
@@ -544,12 +518,10 @@ public class SummaryController implements Initializable
 
         HashMap<String, Double> intakeData = dh.getIntakeEntries(user.getUsername(), intakeChartDate);
 
-
         //Add data to each series.
         DateConverter dc = new DateConverter(intakeChartDate);
 
-        for (String key : intakeData.keySet())
-        {
+        for (String key : intakeData.keySet()) {
             intakeSeries.getData().add(new XYChart.Data<>(dc.fromString(key), intakeData.get(key)));
         }
 
@@ -563,17 +535,16 @@ public class SummaryController implements Initializable
             if(value.endsWith(".0"))
                 value = value.substring(0, value.length() - 2);
 
-
             Tooltip t = new Tooltip(value);
             t.setShowDelay(javafx.util.Duration.millis(0));
             Tooltip.install(d.getNode(), t);
-
         }
-
     }
 
+    /**
+     * Method to set data for the burnt chart.
+     */
     public void setBurnChartData(){
-
         burnChart.getData().clear();
 
         //format each axis from showing numeric tick marks to showing the past 7 days
@@ -584,12 +555,10 @@ public class SummaryController implements Initializable
 
         HashMap<String, Float> burnData = dh.getBurnedEntries(user.getUsername(), burnChartDate);
 
-
         //Add data to each series.
         DateConverter dc = new DateConverter(burnChartDate);
 
-        for (String key : burnData.keySet())
-        {
+        for (String key : burnData.keySet()) {
             burnSeries.getData().add(new XYChart.Data<>(dc.fromString(key), burnData.get(key)));
         }
 
@@ -603,17 +572,16 @@ public class SummaryController implements Initializable
             if(value.endsWith(".0"))
                 value = value.substring(0, value.length() - 2);
 
-
             Tooltip t = new Tooltip(value);
             t.setShowDelay(javafx.util.Duration.millis(0));
             Tooltip.install(d.getNode(), t);
-
         }
-
     }
 
+    /**
+     * Method to set data for the burnt chart.
+     */
     public void setSpentChartData(){
-
         spentChart.getData().clear();
 
         //format each axis from showing numeric tick marks to showing the past 7 days
@@ -624,12 +592,10 @@ public class SummaryController implements Initializable
 
         HashMap<String, Integer> spentData = dh.getSpentEntries(user.getUsername(), spentChartDate);
 
-
         //Add data to each series.
         DateConverter dc = new DateConverter(spentChartDate);
 
-        for (String key : spentData.keySet())
-        {
+        for (String key : spentData.keySet()) {
             spentSeries.getData().add(new XYChart.Data<>(dc.fromString(key), spentData.get(key)));
         }
 
@@ -643,15 +609,15 @@ public class SummaryController implements Initializable
             if(value.endsWith(".0"))
                 value = value.substring(0, value.length() - 2);
 
-
             Tooltip t = new Tooltip(value);
             t.setShowDelay(javafx.util.Duration.millis(0));
             Tooltip.install(d.getNode(), t);
-
         }
-
     }
 
+    /**
+     * Method to set data for the nutrition charts.
+     */
     public void setNutritionChart(){
         nutritionChart.getData().clear();
 
@@ -690,20 +656,13 @@ public class SummaryController implements Initializable
                         allItemMacrosSummed.put(
                                 macroName, allItemMacrosSummed.get(macroName) + itemMacros.get(macroName)
                         );
-
-                        // Else, add entry for new macro nutrient
-                    } else {
-
-                        allItemMacrosSummed.put(macroName, itemMacros.get(macroName));
-
                     }
-
+                    else { //add entry for new macro nutrient
+                        allItemMacrosSummed.put(macroName, itemMacros.get(macroName));
+                    }
                 }
-
             }
-
             macros.put(date, allItemMacrosSummed);
-
         }
 
         // For each date in macros HashMap
@@ -725,13 +684,13 @@ public class SummaryController implements Initializable
                 Tooltip t = new Tooltip(value);
                 t.setShowDelay(javafx.util.Duration.millis(0));
                 Tooltip.install(d.getNode(), t);
-
             }
-
         }
-
     }
 
+    /**
+     * Method to set data for the minerals chart.
+     */
     public void setMineralsChart(){
         mineralsChart.getData().clear();
 
@@ -768,20 +727,13 @@ public class SummaryController implements Initializable
                         allItemMineralsSummed.put(
                                 mineralName, allItemMineralsSummed.get(mineralName) + itemMinerals.get(mineralName)
                         );
-
-                        // Else, add entry for new macro nutrient
-                    } else {
-
-                        allItemMineralsSummed.put(mineralName, itemMinerals.get(mineralName));
-
                     }
-
+                    else { //add entry for new macro nutrient
+                        allItemMineralsSummed.put(mineralName, itemMinerals.get(mineralName));
+                    }
                 }
-
             }
-
             minerals.put(date, allItemMineralsSummed);
-
         }
 
         setNutrientGraph(dc, mineralsSeries, minerals);
@@ -801,13 +753,13 @@ public class SummaryController implements Initializable
                 Tooltip t = new Tooltip(value);
                 t.setShowDelay(javafx.util.Duration.millis(0));
                 Tooltip.install(d.getNode(), t);
-
             }
-
         }
-
     }
 
+    /**
+     * Method to set data for the vitamins chart.
+     */
     public void setVitaminsChart(){
         vitaminsChart.getData().clear();
 
@@ -844,20 +796,13 @@ public class SummaryController implements Initializable
                         allItemVitaminsSummed.put(
                                 vitaminName, allItemVitaminsSummed.get(vitaminName) + itemVitamins.get(vitaminName)
                         );
-
-                        // Else, add entry for new macro nutrient
-                    } else {
-
-                        allItemVitaminsSummed.put(vitaminName, itemVitamins.get(vitaminName));
-
                     }
-
+                    else { //add entry for new macro nutrient
+                        allItemVitaminsSummed.put(vitaminName, itemVitamins.get(vitaminName));
+                    }
                 }
-
             }
-
             vitamins.put(date, allItemVitaminsSummed);
-
         }
 
         setNutrientGraph(dc, vitaminsSeries, vitamins);
@@ -877,112 +822,160 @@ public class SummaryController implements Initializable
                 Tooltip t = new Tooltip(value);
                 t.setShowDelay(javafx.util.Duration.millis(0));
                 Tooltip.install(d.getNode(), t);
-
             }
         }
     }
 
+    /**
+     * Method to move the weight chart back one week.
+     */
     public void weightPrevWeek() {
         weightChartNextWeekButton.setTooltip(null);
         weightChartDate = weightChartDate.minusDays(7);
         setWeightChartData();
     }
 
+    /**
+     * Method to move the weight chart forward one week.
+     */
     public void weightNextWeek() {
-        if(!weightChartDate.plusDays(7).isAfter(LocalDate.now())){
+        if(!weightChartDate.plusDays(7).isAfter(LocalDate.now())) {
             weightChartDate = weightChartDate.plusDays(7);
             setWeightChartData();
-        } else {
+        }
+        else {
             weightChartNextWeekButton.setTooltip(nextWeekTooltip);
         }
     }
 
+    /**
+     * Method to move the intake chart back one week.
+     */
     public void intakePrevWeek() {
         intakeChartNextWeekButton.setTooltip(null);
         intakeChartDate = intakeChartDate.minusDays(7);
         setIntakeChartData();
     }
 
+    /**
+     * Method to move the intake chart forward one week.
+     */
     public void intakeNextWeek() {
-        if(!intakeChartDate.plusDays(7).isAfter(LocalDate.now())){
+        if(!intakeChartDate.plusDays(7).isAfter(LocalDate.now())) {
             intakeChartDate = intakeChartDate.plusDays(7);
             setIntakeChartData();
-        } else {
+        }
+        else {
             intakeChartNextWeekButton.setTooltip(nextWeekTooltip);
         }
     }
 
+    /**
+     * Method to move the burnt chart back one week.
+     */
     public void burnPrevWeek() {
         burnChartNextWeekButton.setTooltip(null);
         burnChartDate = burnChartDate.minusDays(7);
         setBurnChartData();
     }
 
+    /**
+     * Method to move the burnt chart forward one week.
+     */
     public void burnNextWeek() {
-        if(!burnChartDate.plusDays(7).isAfter(LocalDate.now())){
+        if(!burnChartDate.plusDays(7).isAfter(LocalDate.now())) {
             burnChartDate = burnChartDate.plusDays(7);
             setBurnChartData();
-        } else {
+        }
+        else {
             burnChartNextWeekButton.setTooltip(nextWeekTooltip);
         }
     }
 
+    /**
+     * Method to move the spent chart back one week.
+     */
     public void spentPrevWeek() {
         spentChartNextWeekButton.setTooltip(null);
         spentChartDate = spentChartDate.minusDays(7);
         setSpentChartData();
     }
 
+    /**
+     * Method to move the spent chart forward one week.
+     */
     public void spentNextWeek() {
-        if(!spentChartDate.plusDays(7).isAfter(LocalDate.now())){
+        if(!spentChartDate.plusDays(7).isAfter(LocalDate.now())) {
             spentChartDate = spentChartDate.plusDays(7);
             setSpentChartData();
-        } else {
+        }
+        else {
             spentChartNextWeekButton.setTooltip(nextWeekTooltip);
         }
     }
 
+    /**
+     * Method to move the macronutrients chart back one week.
+     */
     public void nutritionPrevWeek() {
         nutritionChartNextWeekButton.setTooltip(null);
         nutritionChartDate = nutritionChartDate.minusDays(7);
         setNutritionChart();
     }
 
+    /**
+     * Method to move the macronutrients chart forward one week.
+     */
     public void nutritionNextWeek() {
-        if(!nutritionChartDate.plusDays(7).isAfter(LocalDate.now())){
+        if(!nutritionChartDate.plusDays(7).isAfter(LocalDate.now())) {
             nutritionChartDate = nutritionChartDate.plusDays(7);
             setNutritionChart();
-        } else {
+        }
+        else {
             nutritionChartNextWeekButton.setTooltip(nextWeekTooltip);
         }
     }
 
+    /**
+     * Method to move the minerals chart back one week.
+     */
     public void mineralsPrevWeek() {
         mineralsChartNextWeekButton.setTooltip(null);
         mineralsChartDate = mineralsChartDate.minusDays(7);
         setMineralsChart();
     }
 
+    /**
+     * Method to move the minerals chart forward one week.
+     */
     public void mineralsNextWeek() {
-        if(!mineralsChartDate.plusDays(7).isAfter(LocalDate.now())){
+        if(!mineralsChartDate.plusDays(7).isAfter(LocalDate.now())) {
             mineralsChartDate = mineralsChartDate.plusDays(7);
             setMineralsChart();
-        } else {
+        }
+        else {
             mineralsChartNextWeekButton.setTooltip(nextWeekTooltip);
         }
     }
 
+    /**
+     * Method to move the vitamins chart back one week.
+     */
     public void vitaminsPrevWeek() {
         vitaminsChartNextWeekButton.setTooltip(null);
         vitaminsChartDate = vitaminsChartDate.minusDays(7);
         setVitaminsChart();
     }
 
+    /**
+     * Method to move the vitamins chart forward one week.
+     */
     public void vitaminsNextWeek() {
-        if(!vitaminsChartDate.plusDays(7).isAfter(LocalDate.now())){
+        if(!vitaminsChartDate.plusDays(7).isAfter(LocalDate.now())) {
             vitaminsChartDate = vitaminsChartDate.plusDays(7);
             setVitaminsChart();
-        } else {
+        }
+        else {
             vitaminsChartNextWeekButton.setTooltip(nextWeekTooltip);
         }
     }

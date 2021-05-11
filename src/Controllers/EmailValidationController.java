@@ -140,7 +140,4 @@ public class EmailValidationController implements Initializable{
         parentScene.close();
         stage.show();
     }
-
-    public static void main(String[] args) {
-    }
 }

@@ -61,6 +61,31 @@ public class RegFormController implements Initializable {
     @FXML public TextField weightField;
 
     /**
+     * Method to be called once all FXML elements have been loaded
+     *
+     * @param url FXML defined resource
+     * @param resourceBundle FXML defined resource
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        sexCombo.getItems().removeAll(sexCombo.getItems());
+        sexCombo.getItems().addAll("Male", "Female", "Other");
+        dateField.setEditable(false);
+
+        heightField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                heightField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+        weightField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                weightField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+    }
+
+    /**
      * Method to take the inputs from registration form fields, validate them, hash the password and pass a
      * constructed User object into the captcha handler
      *
@@ -159,7 +184,7 @@ public class RegFormController implements Initializable {
                 stage.show();
             }
         }
-        else{
+        else {
             submitButton.setTextFill(Paint.valueOf("#bf2323"));
         }
     }
@@ -169,7 +194,7 @@ public class RegFormController implements Initializable {
      *
      * @return Returns true if all checks are true, false otherwise
      */
-    public boolean checkConditions(){
+    public boolean checkConditions() {
         return CheckFirstName() && CheckLastName() && CheckEmail() && CheckPassword() && CheckRepeatPassword() && CheckTermsBox() && CheckUsername();
     }
 
@@ -191,7 +216,7 @@ public class RegFormController implements Initializable {
      *
      * @return returns true if check is passed
      */
-    @FXML protected boolean CheckFirstName(){
+    @FXML protected boolean CheckFirstName() {
         String name = firstNameField.getText();
         //Regexes for checking components
         String FIRSTNAMEREGEX = "[A-Z][a-z]*";
@@ -199,7 +224,7 @@ public class RegFormController implements Initializable {
             firstNamePopUp.setText("");
             return true;
         }
-        else{
+        else {
             firstNamePopUp.setText("Please enter a valid Name");
             return false;
         }
@@ -210,14 +235,14 @@ public class RegFormController implements Initializable {
      *
      * @return returns true if check is passed
      */
-    @FXML protected boolean CheckLastName(){
+    @FXML protected boolean CheckLastName() {
         String name = lastNameField.getText();
         String LASTNAMEREGEX = "[a-zA-Z]+([ '-][a-zA-Z]+)*";
-        if (name.matches(LASTNAMEREGEX)){
+        if (name.matches(LASTNAMEREGEX)) {
             lastNamePopUp.setText("");
             return true;
         }
-        else{
+        else {
             lastNamePopUp.setText("Please enter a valid Name.");
             return false;
         }
@@ -228,15 +253,15 @@ public class RegFormController implements Initializable {
      *
      * @return returns true if check is passed
      */
-    @FXML protected boolean CheckEmail(){
-        //needs to check for email ragax
+    @FXML protected boolean CheckEmail() {
+        //needs to check for email regex
         String email = emailField.getText();
         String EMAILREGEX = "^\\w+.?\\w+@\\w+[.]\\w+([.]\\w+){0,2}$";
-        if (email.matches(EMAILREGEX)){
+        if (email.matches(EMAILREGEX)) {
             emailPopUp.setText("");
             return true;
         }
-        else{
+        else {
             emailPopUp.setText("Please Enter Valid Email");
             return false;
         }
@@ -247,14 +272,14 @@ public class RegFormController implements Initializable {
      *
      * @return returns true if check is passed
      */
-    @FXML protected boolean CheckUsername(){
+    @FXML protected boolean CheckUsername() {
         String username = usernameField.getText();
         String USERNAMEREGEX = "^[a-zA-Z0-9_-]{5,16}$";
-        if (username.matches(USERNAMEREGEX)){
+        if (username.matches(USERNAMEREGEX)) {
             usernamePopUp.setText("");
             return true;
         }
-        else{
+        else {
             usernamePopUp.setText("Please only include characters and numbers, min 5 characters, max 16");
             return false;
         }
@@ -265,17 +290,19 @@ public class RegFormController implements Initializable {
      *
      * @return returns true if check is passed
      */
-    @FXML protected boolean CheckPassword(){
+    @FXML protected boolean CheckPassword() {
 
-        if (repeatPasswordField.getText().length() != 0){CheckRepeatPassword();}
+        if (repeatPasswordField.getText().length() != 0) {
+            CheckRepeatPassword();
+        }
 
         String password = passwordField.getText();
         String PASSWORDREGEX = "(?=.*\\w)(?=.*[!@#$%^&+='()*,./:;<>?{|}~])(?=\\S+$).{8,}";
-        if(password.matches(PASSWORDREGEX)){
+        if(password.matches(PASSWORDREGEX)) {
             passwordPopUp.setText("");
             return true;
         }
-        else{
+        else {
             passwordPopUp.setText("Needs to include minimum of 8 Characters, 1 Digit and 1 Special character (@#$%^&+=)");
             return false;
         }
@@ -286,13 +313,13 @@ public class RegFormController implements Initializable {
      *
      * @return returns true if check is passed
      */
-    @FXML protected boolean CheckRepeatPassword(){
-        if (!passwordField.getText().equals(repeatPasswordField.getText())){
+    @FXML protected boolean CheckRepeatPassword() {
+        if (!passwordField.getText().equals(repeatPasswordField.getText())) {
             repeatPasswordPopUp.setText("Passwords do not match.");
             submitButton.setTextFill(Paint.valueOf("darkred"));
             return false;
         }
-        else{
+        else {
             submitButton.setTextFill(Paint.valueOf("black"));
             repeatPasswordPopUp.setText("");
             return true;
@@ -304,45 +331,20 @@ public class RegFormController implements Initializable {
      *
      * @return returns true if check is passed
      */
-    @FXML protected boolean CheckTermsBox(){
-        if (termsCheckBox.isSelected()&&!termsConsLink.getTextFill().equals(Paint.valueOf("darkred"))){
+    @FXML protected boolean CheckTermsBox() {
+        if (termsCheckBox.isSelected()&&!termsConsLink.getTextFill().equals(Paint.valueOf("darkred"))) {
             return true;
         }
-        else if(termsCheckBox.isSelected()&&termsConsLink.getTextFill().equals(Paint.valueOf("darkred"))){
+        else if(termsCheckBox.isSelected()&&termsConsLink.getTextFill().equals(Paint.valueOf("darkred"))) {
             termsConsLink.setTextFill(Paint.valueOf("black"));
             submitButton.setTextFill(Paint.valueOf("black"));
             return true;
         }
-        else{
+        else {
             termsConsLink.setTextFill(Paint.valueOf("darkred"));
             submitButton.setTextFill(Paint.valueOf("darkred"));
             return false;
         }
-    }
-
-    /**
-     * Method to be called once all FXML elements have been loaded
-     *
-     * @param url FXML defined resource
-     * @param resourceBundle FXML defined resource
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        sexCombo.getItems().removeAll(sexCombo.getItems());
-        sexCombo.getItems().addAll("Male", "Female", "Other");
-        dateField.setEditable(false);
-
-        heightField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                heightField.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
-
-        weightField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                weightField.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
     }
 
     /**

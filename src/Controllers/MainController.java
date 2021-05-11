@@ -52,7 +52,6 @@ public class MainController implements Initializable {
 
 
     private User user;
-
     private Button lastUsedButton = new Button();
 
     /**
@@ -193,7 +192,7 @@ public class MainController implements Initializable {
      *
      * @param selectedButton Takes in a button object, this will allow for disabling/enabling
      */
-    private void toggleButtonFocus(Button selectedButton){
+    private void toggleButtonFocus(Button selectedButton) {
         lastUsedButton.setDisable(false);
 
         //Setting temporary background colour for selected button
@@ -206,7 +205,6 @@ public class MainController implements Initializable {
         //Restoring original background colour for de-selected button
         selectedButton.setBackground(new Background(
                 new BackgroundFill(Color.rgb(120,120,120), null, null)));
-
     }
 
     /**
@@ -214,7 +212,7 @@ public class MainController implements Initializable {
      *
      * @param message Text to be displayed in the notification bar.
      */
-    public void showNotification(String message){
+    public void showNotification(String message) {
         System.out.println("called");
         System.out.println(message);
         notification.setText("");
@@ -229,7 +227,7 @@ public class MainController implements Initializable {
      *
      * @param message Text to be displayed.
      */
-    public void showBlinkNotification(String message){
+    public void showBlinkNotification(String message) {
         notification.setText(message);
 
         notification.setVisible(true);
@@ -241,7 +239,6 @@ public class MainController implements Initializable {
         );
         blinkTimeline.setCycleCount(3);
         blinkTimeline.play();
-
     }
 
     /**
@@ -292,5 +289,4 @@ public class MainController implements Initializable {
         parentScene.close();
         stage.show();
     }
-
 }

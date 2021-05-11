@@ -34,11 +34,21 @@ public class UIGroupItemController implements Initializable {
 
     @FXML HBox groupInfoContainer;
 
+    /**
+     * Initializes the graphs with formatted axes and dummy data.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized.
+     * @see javafx.fxml.Initializable
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //groupInfoContainer.set
     }
 
+    /**
+     * Method to control the action of the invite button.
+     */
     @FXML public void inviteButtonAction(){
 
         String email = DatabaseHandler.getInstance().getEmailFromUsername(inviteInput.getText());
@@ -67,6 +77,11 @@ public class UIGroupItemController implements Initializable {
         }
     }
 
+    /**
+     * Method to control the action of the change ownership button.
+     *
+     * @throws IOException if the loading of the change ownership page throws an IOException.
+     */
     public void changeOwnershipButtonAction() throws IOException {
 
         FXMLLoader load = new FXMLLoader();
@@ -86,6 +101,5 @@ public class UIGroupItemController implements Initializable {
         controller.initData(DatabaseHandler.getInstance().getGroupObjectFromGroupName(groupNameLabel.getText()));
 
         stage.show();
-
     }
 }

@@ -50,8 +50,6 @@ public class CreateExerciseItemController implements Initializable {
                 }
             }
         });
-
-
     }
 
     /**
@@ -73,7 +71,6 @@ public class CreateExerciseItemController implements Initializable {
             parentScene.close();
 
         }
-
     }
 
     /**
@@ -81,7 +78,7 @@ public class CreateExerciseItemController implements Initializable {
      *
      * @return True if all checks are true, false otherwise
      */
-    public boolean checkInputs(){
+    public boolean checkInputs() {
         return checkFirstName() && checkBurnRateInput();
     }
 
@@ -90,15 +87,15 @@ public class CreateExerciseItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkFirstName(){
+    @FXML protected boolean checkFirstName() {
         String name = nameInput.getText();
         //Regex for nameInput textField
         String NAMEINPUTREGEX = "[a-zA-Z]*";
-        if (name.matches(NAMEINPUTREGEX)){
+        if (name.matches(NAMEINPUTREGEX)) {
             nameInputPopUp.setText("");
             return true;
         }
-        else{
+        else {
             nameInputPopUp.setText("Please enter a valid Name");
             return false;
         }
@@ -109,19 +106,18 @@ public class CreateExerciseItemController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkBurnRateInput(){
+    @FXML protected boolean checkBurnRateInput() {
         String burnRate = caloricBurnInput.getText();
         //https://www.regular-expressions.info/floatingpoint.html
         //Regex for inputfields that will take doubles
         String INTEGERINPUTREGEX = "[0-9]+";
-        if (burnRate.matches(INTEGERINPUTREGEX)){
+        if (burnRate.matches(INTEGERINPUTREGEX)) {
             caloricBurnPopUp.setText("");
             return true;
         }
-        else{
+        else {
             caloricBurnInput.setText("Please enter a valid value");
             return false;
         }
     }
-
 }

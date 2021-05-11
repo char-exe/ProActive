@@ -112,8 +112,6 @@ public class ManageProfilePageController implements Initializable {
         bodyFatHipsInput.setEditable(this.user.getSex().equals("Female"));
         System.out.println(this.user.getSex());
         System.out.println(this.user);
-
-
     }
 
     /**
@@ -267,7 +265,7 @@ public class ManageProfilePageController implements Initializable {
      *
      * @return Returns a float representing BMI
      */
-    private float calculateBMI(){
+    private float calculateBMI() {
         user.setHeight(dh.getHeightFromUserID(dh.getUserIDFromUsername(user.getUsername())));
         user.setWeight(dh.getMostRecentWeightValFromID(dh.getUserIDFromUsername(user.getUsername())));
         float userHeightMeters = (float) (user.getHeight()/39.97);
@@ -284,10 +282,9 @@ public class ManageProfilePageController implements Initializable {
         if (BMILabel.getText().equals("??")) {
             BMILabel.setText(String.valueOf(df.format(BMI)));
         }
-        else{
+        else {
             BMILabel.setText("??");
         }
-
     }
 
     /**
@@ -302,7 +299,7 @@ public class ManageProfilePageController implements Initializable {
             bodyFatHipsPopUp.setText("");
             return true;
         }
-        else{
+        else {
             bodyFatWaistPopUp.setText("Invalid");
             return false;
         }
