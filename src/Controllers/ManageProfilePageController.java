@@ -277,12 +277,14 @@ public class ManageProfilePageController implements Initializable {
     /**
      * Method to calculate BMI and display/hide it on a button press
      */
-    @FXML private void showBMIButtonAction(){
+    @FXML
+    private void showBMIButtonAction() {
         DecimalFormat df = new DecimalFormat("#.##");
         float BMI = calculateBMI();
-        if (BMILabel.getText().equals("??")){
+        if (BMILabel.getText().equals("??")) {
             BMILabel.setText(String.valueOf(df.format(BMI)));
-        }else{
+        }
+        else{
             BMILabel.setText("??");
         }
 
@@ -293,9 +295,10 @@ public class ManageProfilePageController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkWaistInput(){
+    @FXML
+    private boolean checkWaistInput() {
         String name = bodyFatWaistInput.getText();
-        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")){
+        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")) {
             bodyFatHipsPopUp.setText("");
             return true;
         }
@@ -310,13 +313,14 @@ public class ManageProfilePageController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkNeckInput(){
+    @FXML
+    private boolean checkNeckInput() {
         String name = bodyFatNeckInput.getText();
-        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")){
+        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")) {
             bodyFatNeckPopUp.setText("");
             return true;
         }
-        else{
+        else {
             bodyFatNeckPopUp.setText("Invalid");
             return false;
         }
@@ -327,37 +331,50 @@ public class ManageProfilePageController implements Initializable {
      *
      * @return True if check is passed
      */
-    @FXML protected boolean checkHipsInput(){
+    @FXML
+    private boolean checkHipsInput() {
         String name = bodyFatHipsInput.getText();
-        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")){
+        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")) {
             bodyFatHipsPopUp.setText("");
             return true;
         }
-        else{
+        else {
             bodyFatHipsPopUp.setText("Invalid");
             return false;
         }
     }
 
-    public boolean checkBodyFatInputs(){
+    /**
+     * Private helper method to check inputs for body fat calculation.
+     *
+     * @return a boolean value representing whether inputs have been completed correctly.
+     */
+    private boolean checkBodyFatInputs() {
         return checkWaistInput() && checkNeckInput() && checkHipsInput();
     }
 
-    @FXML private void bodyFatSubmitAction() {
+    /**
+     * Private method to control action of submitting for body fat calculation. Calculates and displays a
+     * User's body fat from given inputs.
+     */
+    @FXML
+    private void bodyFatSubmitAction() {
 
-        if (checkBodyFatInputs()){
+        if (checkBodyFatInputs()) {
             float waist;
             float neck;
-            if (user.getSex().equals("Male")){
+            float hips;
+            if (user.getSex().equals("Male")) {
+
                 waist = Float.parseFloat(bodyFatWaistInput.getText());
                 neck = Float.parseFloat(bodyFatNeckInput.getText());
                 float bfp = (float) ((float) 495.0 / (1.0324 - (0.19077 * (Math.log10((double) waist - neck)))) +
                                                             (0.15456 * Math.log10(user.getHeight()))) - 450;
                 System.out.println(bfp);
-                if (bodyFatLabel.getText().equals("??")){
+                if (bodyFatLabel.getText().equals("??")) {
                     bodyFatLabel.setText(String.valueOf(bfp));
                 }
-                else{
+                else {
                     bodyFatLabel.setText("??");
                 }
             }

@@ -187,7 +187,7 @@ public class GroupController implements Initializable {
     /**
      * Method to instantiate all of a User's Group Memberships, each as a box in a scroll pane.
      */
-    public void initUserGroupData(){
+    public void initUserGroupData() {
 
         groupsContainer.getChildren().clear();
         for(Group group : dh.getUserGroups(user.getUsername())) {

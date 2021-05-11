@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
  * @author Owen Tasker
  * @author Charlie Jones
  *
- * @version 1.7
+ * @version 1.10
  *
  * 1.0  - Initial commit, dummy file.
  * 1.1  - Implemented simple exercise logging to database.

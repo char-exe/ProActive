@@ -31,9 +31,17 @@ import java.util.Set;
  */
 public class User {
 
+    /**
+     * Enum class representing the sex value that a User can take.
+     */
     public enum Sex {
         MALE,FEMALE,OTHER;
 
+        /**
+         * Returns a string representation of this Sex.
+         *
+         * @return a string representation of this Sex.
+         */
         @Override
         public String toString(){
             String name = this.name();
@@ -500,14 +508,71 @@ public class User {
         }
     }
 
+
+    /**
+     * Public method for adding a group membership to the user's list of memberships.
+     *
+     * @param group Takes a the group object for the group being joined.
+     */
+    public void joinGroup(Group group) {
+        groupMemberships.add(group);
+    }
+
+    /**
+     * Method for removing a user from a group
+     *
+     * @param group Group object for the group the user is to leave.
+     */
+    public void leaveGroup(Group group) {
+        groupMemberships.remove(group);
+    }
+
+    /**
+     * Method to check for group membership.
+     *
+     * @param group Group object for the group you are checking the user is a member of.
+     * @return returns true if they are a member, false if they are not.
+     */
+    public boolean isGroupMemberOf(Group group) {
+        return groupMemberships.contains(group);
+    }
+
     /**
      * Returns a String representation of this User object.
      *
      * @return returns a String containing Users firstname, surname and sex
      */
     @Override
-    public String toString(){
+    public String toString() {
         return this.firstname + " " + this.surname + " " + this.age + " " + this.getSex();
+    }
+
+    /**
+     * Returns a boolean value representing whether this User is equal to a passed Object.
+     *
+     * @param o the Object to be tested for equality.
+     * @return true if the username of this User is equal to that of o. false otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+
+        return this.username.equals(((User) o).getUsername());
+    }
+
+    /**
+     * Returns a hashcode representation of this User.
+     *
+     * @return a hashcode representation of this User.
+     */
+    @Override
+    public int hashCode() {
+        return this.username.hashCode();
     }
 
     /**
@@ -614,41 +679,6 @@ public class User {
         final String LASTNAMEREGEX  = "[a-zA-Z]+([ '-][a-zA-Z]+)*";
         if (!surname.matches(LASTNAMEREGEX)) {
             throw new IllegalArgumentException("First name contains illegal characters.");
-        }
-    }
-
-    /**
-     * Public method for adding a group membership to the user's list of memberships.
-     *
-     * @param group Takes a the group object for the group being joined.
-     */
-    public void joinGroup(Group group) {
-        if (groupMemberships.contains(group) == false) {
-            groupMemberships.add(group);
-        }
-    }
-
-    /**
-     * Method for removing a user from a group
-     * @param group Group object for the group the user is to leave.
-     */
-    public void leaveGroup(Group group) {
-        if (groupMemberships.contains(group)){
-            groupMemberships.remove(group);
-        }
-    }
-
-    /**
-     * Method to check for group membership.
-     * @param group Group object for the group you are checking the user is a member of.
-     * @return returns true if they are a member, false if they are not.
-     */
-    public boolean isGroupMemberOf(Group group){
-        if (groupMemberships.contains(group)){
-            return true;
-        }
-        else {
-            return false;
         }
     }
 }

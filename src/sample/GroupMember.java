@@ -4,6 +4,14 @@ import java.util.ArrayList;
 
 /**
  * Class to represent a member of a Group.
+ *
+ * @author ??
+ * @author Samuel Scarfe
+ *
+ * @version 1.1
+ *
+ * 1.0 - First working version.
+ * 1.1 - Javadoc, equals, and hashCode.
  */
 public class GroupMember {
 
@@ -47,5 +55,33 @@ public class GroupMember {
      */
     public User getUser() {
         return user;
+    }
+
+    /**
+     * Returns a boolean value representing whether this GroupMember is equal to a passed Object.
+     *
+     * @param o the Object to be tested for equality.
+     * @return true if the User representing this GroupMember is equal to o. False otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof GroupMember)) {
+            return false;
+        }
+
+        return this.user.equals(o);
+    }
+
+    /**
+     * Returns a hashcode representation of this GroupMember.
+     *
+     * @return a hashcode representation of this GroupMember.
+     */
+    @Override
+    public int hashCode() {
+        return this.user.hashCode();
     }
 }

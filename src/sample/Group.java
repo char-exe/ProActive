@@ -5,25 +5,132 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Class to represent a Group in the ProActive app by it's name, owner, admins, members, and GroupGoals.
+ *
+ * @author ??
+ * @author Samuel Scarfe
+ *
+ * @version 1.1
+ *
+ * 1.0 - First working version.
+ * 1.1 - Javadoc and refactoring. Equals and hashcode.
+ */
 public class Group {
 
+    /**
+     * The unique name of this Group.
+     */
     private final String name;
+    /**
+     * The owner of this Group.
+     */
     private GroupOwner owner;
+    /**
+     * This Group's admins.
+     */
     private Set<GroupAdmin> admins = new HashSet<>();
+    /**
+     * This Group's members.
+     */
     private Set<GroupMember> members = new HashSet<>();
+    /**
+     * This Group's GroupGoals.
+     */
     private ArrayList<GroupGoal> groupGoals;
 
-    public Group(String name, GroupOwner owner){
+    /**
+     * Constructs a Group from a name and an owner. Initialises GroupGoals from the database.
+     * @param name  the name of this Group.
+     * @param owner the owner of this Group.
+     */
+    public Group(String name, GroupOwner owner) {
         this.name = name;
         this.owner = owner;
         this.groupGoals = DatabaseHandler.getInstance().loadGroupGoals(this.name);
     }
 
-    public Group(String name){
+    /**
+     * Constructs a Group from a name. Initialises owner to null. Initialises GroupGoals from the database.
+     * @param name the name of this group.
+     */
+    public Group(String name) {
         this.name = name;
         this.owner = null;
         this.groupGoals = DatabaseHandler.getInstance().loadGroupGoals(this.name);
     }
+
+    /**
+     * Gets the name of this Group.
+     * @return the name of this Group.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets a set containing this Group's members.
+     *
+     * @return a set containing this Group's members.
+     */
+    public Set<GroupMember> getMembers(){
+        return Set.copyOf(members);
+    }
+
+    /**
+     * Gets a set containing this Group's admins.
+     *
+     * @return a set containing this Group's admins.
+     */
+    public Set<GroupAdmin> getAdmins() {
+        return Set.copyOf(admins);
+    }
+
+    /**
+     * Gets this Group's GroupOwner.
+     *
+     * @return this Group's GroupOwner.
+     */
+    public GroupOwner getOwner() {
+        return owner;
+    }
+
+    /**
+     * Gets this Groups GroupGoals in an ArrayList.
+     *
+     * @return an ArrayList containing this Group's GroupGoals.
+     */
+    public ArrayList<GroupGoal> getGroupGoals() {
+        return groupGoals;
+    }
+
+    /**
+     * Sets this Group's GroupMembers to the passed Set.
+     *
+     * @param members this Group's new set of members.
+     */
+    public void setMembers(Set<GroupMember> members) {
+        this.members = members;
+    }
+
+    /**
+     * Sets this Group's GroupAdmins to the passed Set.
+     *
+     * @param admins this Group's new set of admins.
+     */
+    public void setAdmins(Set<GroupAdmin> admins) {
+        this.admins = admins;
+    }
+
+    /**
+     * Sets this Group's GroupOwner to the passed GroupOwner.
+     *
+     * @param owner this Group's new GroupOwner.
+     */
+    public void setOwner(GroupOwner owner) {
+        this.owner = owner;
+    }
+
 
     public void addMember(GroupMember member){
 
@@ -61,14 +168,22 @@ public class Group {
      */
     public void sendGroupNotifications (String username, Goal goal) {
         for (GroupMember member : this.getMembers()) {
-            notifyMembers(username, goal, member);
+            notifyMember(username, goal, member);
         }
         for (GroupAdmin admin : this.getAdmins()) {
-            notifyMembers(username, goal, admin);
+            notifyMember(username, goal, admin);
         }
+        notifyMember(username, goal, owner);
     }
 
-    private void notifyMembers(String username, Goal goal, GroupMember member) {
+    /**
+     * Private helper method to notify Group members about completion of a goal.
+     *
+     * @param username the username of the user that completed the GroupGoal.
+     * @param goal the goal that was completed.
+     * @param member the member to be notified.
+     */
+    private void notifyMember(String username, Goal goal, GroupMember member) {
         if (!member.getUser().getUsername().equals(username)) {
             System.out.println(member.getUser().getUsername());
             EmailHandler emailHandler = EmailHandler.getInstance();
@@ -77,40 +192,42 @@ public class Group {
         }
     }
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setMembers(Set<GroupMember> members){
-        this.members = members;
-    }
-    public void setAdmins(Set<GroupAdmin> admins){
-        this.admins = admins;
-    }
-    public void setOwner(GroupOwner owner){
-        this.owner = owner;
-    }
-
-    public Set<GroupMember> getMembers(){
-        return members;
-    }
-
-    public Set<GroupAdmin> getAdmins() {
-        return admins;
-    }
-
-    public GroupOwner getOwner() {
-        return owner;
-    }
-
+    /**
+     * Returns a String representation of this Group.
+     *
+     * @return a String representation of this Group.
+     */
     @Override
-    public String toString(){
+    public String toString() {
         return this.name + "{" + this.owner + ", " + this.admins + ", " + this.members + "}";
     }
 
-    public ArrayList<GroupGoal> getGroupGoals() {
-        return groupGoals;
+    /**
+     * Returns a boolean value representing whether this Group is equal to a passed Object o.
+     *
+     * @param o the Object to be tested for equality.
+     * @return true if the passed Object is a Group with the same name as this Group. false otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof Group)) {
+            return false;
+        }
+
+        return this.name.equals(((Group) o).getName());
+    }
+
+    /**
+     * Returns a hashcode representation of this Group.
+     *
+     * @return a hashcode representation of this Group.
+     */
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
     }
 
 }
