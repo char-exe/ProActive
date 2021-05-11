@@ -2522,15 +2522,18 @@ public class DatabaseHandler {
     }
 
     public void removeUserFromGroup(int userID, int groupID) {
-        String sql = "DELETE FROM Group_Membership WHERE user_id = " + userID + " AND group_id = " + groupID;
+        String sql = "DELETE FROM Group_Membership WHERE user_id = " + userID + " AND group_id = " + groupID + ";";
+        String sql1= "DELETE FROM goal WHERE user_id = " + userID + " AND group_id = " + groupID + ";";
 
         try {
             Statement stmt = this.conn.createStatement();
             stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql1);
         }
         catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        System.out.println("User Left Group");
 
     }
 
@@ -2542,9 +2545,19 @@ public class DatabaseHandler {
         String sql2 = "DELETE FROM group_table WHERE Group_Id = " + groupID + ";";
         String sql3 = "DELETE FROM groupInvTable WHERE groupID = " + groupID + ";";
 
-        System.out.println(sql);
-        System.out.println(sql1);
-        System.out.println(sql2);
-        System.out.println(sql3);
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sql1);
+            stmt.executeUpdate(sql2);
+            stmt.executeUpdate(sql3);
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        System.out.println("Deleted Group: " + groupName);
+
+
     }
 }

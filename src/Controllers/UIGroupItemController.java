@@ -10,10 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import sample.DatabaseHandler;
-import sample.EmailHandler;
-import sample.TokenHandler;
-import sample.User;
+import sample.*;
 
 import javax.mail.Session;
 import java.io.IOException;
@@ -45,12 +42,13 @@ public class UIGroupItemController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        //groupInfoContainer.set
     }
 
     public static void leaveGroup(User user, String groupName){
         DatabaseHandler dh = DatabaseHandler.getInstance();
+        user.leaveGroup(dh.getGroupObjectFromGroupName(groupName));
         dh.removeUserFromGroup(dh.getUserIDFromUsername(user.getUsername()), dh.getGroupIDFromName(groupName));
+
 
     }
 
