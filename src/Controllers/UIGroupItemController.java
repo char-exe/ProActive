@@ -36,11 +36,11 @@ public class UIGroupItemController implements Initializable {
     @FXML Label invitePopUp;
     @FXML Label groupNameLabel;
     @FXML Button leaveDeleteButton;
-
     @FXML HBox groupInfoContainer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         //groupInfoContainer.set
     }
 
@@ -51,6 +51,8 @@ public class UIGroupItemController implements Initializable {
     }
 
     public static void deleteGroup(String groupName) {
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+        dh.deleteGroup(groupName);
         System.out.println("Deleting");
     }
 

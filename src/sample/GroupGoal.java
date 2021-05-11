@@ -1,6 +1,7 @@
 package sample;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -78,6 +79,12 @@ public class GroupGoal extends IndividualGoal {
         group.sendGroupNotifications(username, this);
     }
 
+    public void notifyGroup(String username, String group) {
+        Group groupObj = DatabaseHandler.getInstance().getGroupObjectFromGroupName(group);
+
+        groupObj.sendGroupNotifications(username, this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null) {
@@ -95,5 +102,12 @@ public class GroupGoal extends IndividualGoal {
     public int hashCode() {
         return Objects.hash(target, unit, endDate, groupId);
     }
+
+    public static void main(String[] args) {
+        GroupGoal g = new GroupGoal(1.0F, Unit.BOXING, LocalDate.now(), 5);
+        g.notifyGroup("OwenTest");
+    }
+
 }
+
 

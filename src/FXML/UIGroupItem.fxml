@@ -40,9 +40,9 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <ScrollPane prefHeight="145.0" prefWidth="218.0">
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="145.0" prefWidth="218.0">
                      <content>
-                        <VBox prefHeight="338.0" prefWidth="216.0" />
+                        <VBox prefHeight="143.0" prefWidth="216.0" />
                      </content>
                   </ScrollPane>
                </children>
@@ -66,7 +66,7 @@
                   </Label>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="145.0" prefWidth="349.0">
                      <content>
-                        <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="349.0" prefWidth="347.0" />
+                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="383.0" prefWidth="347.0" />
                      </content></ScrollPane>
                </children>
             </VBox>
