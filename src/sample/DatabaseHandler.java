@@ -780,36 +780,118 @@ public class DatabaseHandler {
         if (username == null) {
             throw new NullPointerException();
         }
-        if (latest == null) {
+//        if (latest == null) {
+//            throw new NullPointerException();
+//        }
+
+        HashMap<String, Float> entries = new HashMap<>();
+
+        if(latest != null) {
+
+            LocalDate prevWeek = latest.minusDays(6);
+
+            String sql = "SELECT date_of, duration, burn_rate FROM activity INNER JOIN exercise " +
+                    "ON activity.exercise_id = exercise.id WHERE user_id = '" + getUserIDFromUsername(username) +
+                    "' AND date_of BETWEEN '" + prevWeek.toString() + "' AND '" + latest.toString() + "'";
+
+            try (Statement stmt = this.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    String date = rs.getString("date_of");
+                    float burnRate = rs.getFloat("burn_rate");
+
+                    if (entries.containsKey(date)) {
+                        entries.put(date, entries.get(date) + rs.getInt("duration") * burnRate / 30);
+                    } else {
+                        entries.put(date, rs.getInt("duration") * burnRate / 30);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+
+            String sql = "SELECT date_of, duration, burn_rate, name FROM activity INNER JOIN exercise " +
+                    "ON activity.exercise_id = exercise.id WHERE user_id = '" + getUserIDFromUsername(username) + "'";
+
+            try (Statement stmt = this.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    String date = rs.getString("date_of");
+                    float burnRate = rs.getFloat("burn_rate");
+                    String name = rs.getString("name");
+
+                    if (entries.containsKey(date)) {
+                        entries.put(date, entries.get(date) + rs.getInt("duration") * burnRate / 30);
+                    } else {
+                        entries.put(date, rs.getInt("duration") * burnRate / 30);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return entries;
+    }
+
+    public HashMap<String, List<List<String>>> getBurnedEntries(String username) {
+        if (username == null) {
             throw new NullPointerException();
         }
 
-        HashMap<String, Float> entries = new HashMap<>();
-        LocalDate prevWeek = latest.minusDays(6);
+        HashMap<String, List<List<String>>> entries = new HashMap<>();
 
-        String sql = "SELECT date_of, duration, burn_rate FROM activity INNER JOIN exercise " +
-                     "ON activity.exercise_id = exercise.id WHERE user_id = '" + getUserIDFromUsername(username) +
-                     "' AND date_of BETWEEN '" + prevWeek.toString() + "' AND '" + latest.toString() + "'";
+        String sql = "SELECT date_of, duration, burn_rate, name FROM activity INNER JOIN exercise " +
+                "ON activity.exercise_id = exercise.id WHERE user_id = '" + getUserIDFromUsername(username) + "'";
 
-        try (Statement stmt  = this.conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql)) {
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 String date = rs.getString("date_of");
                 float burnRate = rs.getFloat("burn_rate");
+                String name = rs.getString("name");
+                int duartion = rs.getInt("duration");
 
                 if (entries.containsKey(date)) {
-                    entries.put(date, entries.get(date) + rs.getInt("duration") * burnRate/30);
-                }
-                else {
-                    entries.put(date, rs.getInt("duration") * burnRate/30);
+                    List<List<String>> list = entries.get(date);
+
+                    List<String> entry = new ArrayList<>();
+
+                    entry.add(name);
+
+                    entry.add(String.valueOf(duartion));
+
+                    entry.add(String.valueOf(duartion * burnRate / 30));
+
+                    list.add(entry);
+
+                    entries.put(date, list);
+
+                } else {
+                    List<List<String>> list = new ArrayList<>();
+
+                    List<String> entry = new ArrayList<>();
+
+                    entry.add(name);
+
+                    entry.add(String.valueOf(duartion));
+
+                    entry.add(String.valueOf(duartion * burnRate / 30));
+
+                    list.add(entry);
+
+                    entries.put(date, list);
                 }
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return entries;
+
     }
 
     /**
@@ -823,27 +905,47 @@ public class DatabaseHandler {
         if (username == null) {
             throw new NullPointerException();
         }
-        if (latest == null) {
-            throw new NullPointerException();
-        }
+//        if (latest == null) {
+//            throw new NullPointerException();
+//        }
 
         HashMap<String, Integer> entries = new HashMap<>();
-        LocalDate prevWeek = latest.minusDays(6);
 
-        String sql = "SELECT date_of, weight FROM weight_entry WHERE user_id = '" +
-                getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + prevWeek.toString() +
-                "' AND '" + latest.toString() + "'";
+        if(latest != null) {
 
-        try (Statement stmt  = this.conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                String date = rs.getString("date_of");
+            LocalDate prevWeek = latest.minusDays(6);
 
-                entries.put(date, rs.getInt("weight"));
+            String sql = "SELECT date_of, weight FROM weight_entry WHERE user_id = '" +
+                    getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + prevWeek.toString() +
+                    "' AND '" + latest.toString() + "'";
+
+            try (Statement stmt = this.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    String date = rs.getString("date_of");
+
+                    entries.put(date, rs.getInt("weight"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
+
+        } else {
+
+            String sql = "SELECT date_of, weight FROM weight_entry WHERE user_id = '" +
+                    getUserIDFromUsername(username) + "'";
+
+            try (Statement stmt = this.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    String date = rs.getString("date_of");
+
+                    entries.put(date, rs.getInt("weight"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
         }
 
         return entries;
@@ -860,42 +962,74 @@ public class DatabaseHandler {
         if (username == null) {
             throw new NullPointerException();
         }
-        if (latest == null) {
-            throw new NullPointerException();
-        }
-        if (latest.isAfter(LocalDate.now())) {
+//        if (latest == null) {
+//            throw new NullPointerException();
+//        }
+        if (latest != null && latest.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException();
         }
 
         HashMap<String, ArrayList<NutritionItem>> result = new HashMap<>();
         HashMap<String, Integer> entries = new HashMap<>();
-        LocalDate prevWeek = latest.minusDays(6);
 
-        String sql = "SELECT date_of, food_id FROM meal WHERE user_id = '" +
-                getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + prevWeek.toString() +
-                "' AND '" + latest.toString() + "'";
+        if(latest != null) {
+            LocalDate prevWeek = latest.minusDays(6);
 
-        try (Statement stmt  = this.conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                String date = rs.getString("date_of");
+            String sql = "SELECT date_of, food_id FROM meal WHERE user_id = '" +
+                    getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + prevWeek.toString() +
+                    "' AND '" + latest.toString() + "'";
 
-                entries.put(date, rs.getInt("food_id"));
+            try (Statement stmt = this.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    String date = rs.getString("date_of");
+
+                    entries.put(date, rs.getInt("food_id"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        for(String date : entries.keySet()){
-            if(result.containsKey(date)){
-                ArrayList<NutritionItem> items = result.get(date);
-                items.add(getNutritionItem(entries.get(date)));
-                result.put(date, items);
-            } else {
-                ArrayList<NutritionItem> item = new ArrayList<>();
-                item.add(getNutritionItem(entries.get(date)));
-                result.put(date, item);
+            for (String date : entries.keySet()) {
+                if (result.containsKey(date)) {
+                    ArrayList<NutritionItem> items = result.get(date);
+                    items.add(getNutritionItem(entries.get(date)));
+                    result.put(date, items);
+                } else {
+                    ArrayList<NutritionItem> item = new ArrayList<>();
+                    item.add(getNutritionItem(entries.get(date)));
+                    result.put(date, item);
+                }
             }
+
+        } else {
+
+            String sql = "SELECT date_of, food_id FROM meal WHERE user_id = '" +
+                    getUserIDFromUsername(username) + "'";
+
+            try (Statement stmt = this.conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    String date = rs.getString("date_of");
+
+                    entries.put(date, rs.getInt("food_id"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            for (String date : entries.keySet()) {
+                if (result.containsKey(date)) {
+                    ArrayList<NutritionItem> items = result.get(date);
+                    items.add(getNutritionItem(entries.get(date)));
+                    result.put(date, items);
+                } else {
+                    ArrayList<NutritionItem> item = new ArrayList<>();
+                    item.add(getNutritionItem(entries.get(date)));
+                    result.put(date, item);
+                }
+            }
+
         }
 
         return result;

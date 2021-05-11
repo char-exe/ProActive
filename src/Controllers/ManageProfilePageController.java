@@ -1,17 +1,22 @@
 package Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import sample.DatabaseHandler;
+import sample.NutritionItem;
 import sample.User;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.time.LocalTime;
+import java.util.*;
 
 /**
  * Class to control the Manage Profile Page FXML file
@@ -29,31 +34,40 @@ public class ManageProfilePageController implements Initializable {
     private User user;
     private DatabaseHandler dh;
 
-    @FXML public ChoiceBox<String> sexCombo;
-    @FXML public DatePicker datePick;
-    @FXML public TextField heightField;
-    @FXML public ChoiceBox<String> heightUnits;
-    @FXML public Label dobLabel;
-    @FXML public Label heightLabel;
-    @FXML public Label sexLabel;
+    @FXML private ChoiceBox<String> sexCombo;
+    @FXML private DatePicker datePick;
+    @FXML private TextField heightField;
+    @FXML private ChoiceBox<String> heightUnits;
+    @FXML private Label dobLabel;
+    @FXML private Label heightLabel;
+    @FXML private Label sexLabel;
 
-    @FXML public Button showBMIButton;
-    @FXML public Label BMILabel;
+    @FXML private Button showBMIButton;
+    @FXML private Label BMILabel;
 
-    @FXML public TextField bodyFatWaistInput;
-    @FXML public TextField bodyFatNeckInput;
-    @FXML public TextField bodyFatHipsInput;
-    @FXML public Label bodyFatWaistPopUp;
-    @FXML public Label bodyFatNeckPopUp;
-    @FXML public Label bodyFatHipsPopUp;
-    @FXML public Button bodyFatSubmit;
-    @FXML public Label bodyFatLabel;
+    @FXML private TextField bodyFatWaistInput;
+    @FXML private TextField bodyFatNeckInput;
+    @FXML private TextField bodyFatHipsInput;
+    @FXML private Label bodyFatWaistPopUp;
+    @FXML private Label bodyFatNeckPopUp;
+    @FXML private Label bodyFatHipsPopUp;
+    @FXML private Button bodyFatSubmit;
+    @FXML private Label bodyFatLabel;
+
+    @FXML private Button exportButton;
+    @FXML private Label statusLabel;
+
+    @FXML private CheckBox nutritionCheckBox;
+    @FXML private CheckBox exerciseCheckBox;
+    @FXML private CheckBox weightCheckBox;
+
+    private String csvPath = System.getProperty("user.home") + File.separator + "Downloads" + File.separator;
 
     //https://www.regular-expressions.info/floatingpoint.html
     //Regex for inputfields that will take doubles
 
     //Regex for inputField checking
-    private final String INPUTFIELDNONNUMERIC = "^\\d*\\.?\\d*";
+    private final String INPUT_FIELD_NON_NUMERIC = "^\\d*\\.?\\d*";
 
     /**
      * Pseudo-constructor for controllers, runs after FXML elements have been loaded in and as such allows for
@@ -75,29 +89,29 @@ public class ManageProfilePageController implements Initializable {
         //Set heightField to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         heightField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUTFIELDNONNUMERIC)){
-                heightField.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)){
+                heightField.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
             }
         });
 
         //Set bodyFatWaistInput to digits only
         bodyFatWaistInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
-                bodyFatWaistInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)) {
+                bodyFatWaistInput.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
             }
         });
 
         //Set bodyFatNeckInput to digits only
         bodyFatNeckInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
-                bodyFatNeckInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)) {
+                bodyFatNeckInput.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
             }
         });
 
         //Set bodyFatHipsInput to digits only
         bodyFatHipsInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
-                bodyFatHipsInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)) {
+                bodyFatHipsInput.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
             }
         });
     }
@@ -119,7 +133,7 @@ public class ManageProfilePageController implements Initializable {
      * update operations directly on the database user object
      */
     public void submitButtonAction() {
-        System.out.println("submitButton");
+
         sexLabel.setText("");
         dobLabel.setText("");
         heightLabel.setText("");
@@ -295,7 +309,7 @@ public class ManageProfilePageController implements Initializable {
     @FXML
     private boolean checkWaistInput() {
         String name = bodyFatWaistInput.getText();
-        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")) {
+        if (name.matches(INPUT_FIELD_NON_NUMERIC) && checkValidDouble(name, ".")) {
             bodyFatHipsPopUp.setText("");
             return true;
         }
@@ -313,7 +327,7 @@ public class ManageProfilePageController implements Initializable {
     @FXML
     private boolean checkNeckInput() {
         String name = bodyFatNeckInput.getText();
-        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")) {
+        if (name.matches(INPUT_FIELD_NON_NUMERIC) && checkValidDouble(name, ".")) {
             bodyFatNeckPopUp.setText("");
             return true;
         }
@@ -331,7 +345,7 @@ public class ManageProfilePageController implements Initializable {
     @FXML
     private boolean checkHipsInput() {
         String name = bodyFatHipsInput.getText();
-        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")) {
+        if (name.matches(INPUT_FIELD_NON_NUMERIC) && checkValidDouble(name, ".")) {
             bodyFatHipsPopUp.setText("");
             return true;
         }
@@ -377,5 +391,240 @@ public class ManageProfilePageController implements Initializable {
             }
         }
     }
+
+    public void exportCSV(ActionEvent actionEvent) throws IOException {
+
+        if (nutritionCheckBox.isSelected() || exerciseCheckBox.isSelected() || weightCheckBox.isSelected()) {
+
+
+            try {
+
+                statusLabel.setText("");
+                exportButton.setDisable(true);
+
+                // https://stackabuse.com/reading-and-writing-csvs-in-java/
+                ArrayList<String[]> rows = new ArrayList<>();
+                rows.add(new String[] {
+                        "USER_PROFILE",
+                });
+
+                rows.add(new String[] {
+                        user.getFirstname() + " " + user.getSurname(), user.getEmail()
+                });
+
+                if(nutritionCheckBox.isSelected()){
+
+
+                    HashMap<String, ArrayList<NutritionItem>> nutrientEntries =
+                            dh.getNutrientEntries(user.getUsername(), null);
+
+
+                    rows.add(new String[] {
+                            "NUTRITION"
+                    });
+
+
+                    rows.add(new String[] {"Date","kcal","proteinG","fatG","carbsG","sugarG","fibreG","cholesterolMg",
+                            "sodiumMg","potassiumMg","calciumMg","magnesiumMg","phosphorusMg","ironMg","copperMg",
+                            "zincMg","chlorideMg","seleniumUg","iodineUg","vitAUg","vitDUg","thiaminMg","riboflavinMg",
+                            "niacinMg","vitB6Mg","vitB12Ug","folateUg","vitCMg"});
+
+
+                    for(String date : nutrientEntries.keySet()){
+
+                        ArrayList<NutritionItem> items = nutrientEntries.get(date);
+
+                        if(items.size() > 1){
+
+                            for(NutritionItem item : items){
+
+                                rows.add(
+                                        new String[]{
+                                                date,
+                                                String.valueOf(item.getKcal()),
+                                                String.valueOf(item.getProteinG()),
+                                                String.valueOf(item.getFatG()),
+                                                String.valueOf(item.getCarbsG()),
+                                                String.valueOf(item.getSugarG()),
+                                                String.valueOf(item.getFibreG()),
+                                                String.valueOf(item.getCholesterolMg()),
+                                                String.valueOf(item.getSodiumMg()),
+                                                String.valueOf(item.getPotassiumMg()),
+                                                String.valueOf(item.getCalciumMg()),
+                                                String.valueOf(item.getMagnesiumMg()),
+                                                String.valueOf(item.getPhosphorusMg()),
+                                                String.valueOf(item.getIronMg()),
+                                                String.valueOf(item.getCopperMg()),
+                                                String.valueOf(item.getZincMg()),
+                                                String.valueOf(item.getChlorideMg()),
+                                                String.valueOf(item.getSeleniumUg()),
+                                                String.valueOf(item.getIodineUg()),
+                                                String.valueOf(item.getVitAUg()),
+                                                String.valueOf(item.getVitDUg()),
+                                                String.valueOf(item.getThiaminMg()),
+                                                String.valueOf(item.getRiboflavinMg()),
+                                                String.valueOf(item.getNiacinMg()),
+                                                String.valueOf(item.getVitB6Mg()),
+                                                String.valueOf(item.getVitB12Ug()),
+                                                String.valueOf(item.getFolateUg()),
+                                                String.valueOf(item.getVitCMg())
+                                        }
+                                );
+
+                            }
+
+                        } else {
+
+                            NutritionItem item = items.get(0);
+
+                            rows.add(
+                                    new String[]{
+                                            date,
+                                            String.valueOf(item.getKcal()),
+                                            String.valueOf(item.getProteinG()),
+                                            String.valueOf(item.getFatG()),
+                                            String.valueOf(item.getCarbsG()),
+                                            String.valueOf(item.getSugarG()),
+                                            String.valueOf(item.getFibreG()),
+                                            String.valueOf(item.getCholesterolMg()),
+                                            String.valueOf(item.getSodiumMg()),
+                                            String.valueOf(item.getPotassiumMg()),
+                                            String.valueOf(item.getCalciumMg()),
+                                            String.valueOf(item.getMagnesiumMg()),
+                                            String.valueOf(item.getPhosphorusMg()),
+                                            String.valueOf(item.getIronMg()),
+                                            String.valueOf(item.getCopperMg()),
+                                            String.valueOf(item.getZincMg()),
+                                            String.valueOf(item.getChlorideMg()),
+                                            String.valueOf(item.getSeleniumUg()),
+                                            String.valueOf(item.getIodineUg()),
+                                            String.valueOf(item.getVitAUg()),
+                                            String.valueOf(item.getVitDUg()),
+                                            String.valueOf(item.getThiaminMg()),
+                                            String.valueOf(item.getRiboflavinMg()),
+                                            String.valueOf(item.getNiacinMg()),
+                                            String.valueOf(item.getVitB6Mg()),
+                                            String.valueOf(item.getVitB12Ug()),
+                                            String.valueOf(item.getFolateUg()),
+                                            String.valueOf(item.getVitCMg())
+                                    }
+
+                            );
+
+                        }
+
+                    }
+
+
+                }
+
+                if(exerciseCheckBox.isSelected()){
+
+                    HashMap<String, List<List<String>>> exerciseEntries = dh.getBurnedEntries(user.getUsername());
+
+                    rows.add(new String[] {
+                            "EXERCISE"
+                    });
+
+
+                    rows.add(new String[]{"Date","ACTIVITY_NAME","DURATION","BURN_RATE"});
+
+                    for(String date : exerciseEntries.keySet()){
+
+
+                        List<List<String>> items = exerciseEntries.get(date);
+
+
+                        if(items.size() > 0){
+
+
+                            for(List<String> item : items){
+
+                                rows.add(
+                                        new String[]{
+                                                date,
+                                                String.valueOf(item.get(0)),
+                                                String.valueOf(item.get(1)),
+                                                String.valueOf(item.get(2))
+
+                                        }
+
+                                );
+
+                            }
+
+                        } else {
+
+                            List<String> item = items.get(0);
+
+                            rows.add(
+                                    new String[]{
+                                            date,
+                                            String.valueOf(item.get(0)),
+                                            String.valueOf(item.get(1)),
+                                            String.valueOf(item.get(2))
+
+                                    }
+
+                            );
+
+                        }
+
+                    }
+
+
+                }
+
+                if(weightCheckBox.isSelected()){
+
+                    HashMap<String, Integer> weightEntries = dh.getWeightEntries(user.getUsername(), null);
+
+                    rows.add(new String[] {
+                            "WEIGHT"
+                    });
+
+
+                    rows.add(new String[]{"Date","WEIGHT_KG"});
+
+                    for(String date : weightEntries.keySet()){
+
+                        rows.add(new String[]{
+                                date, String.valueOf(weightEntries.get(date))
+                        });
+
+                    }
+
+                }
+
+                LocalTime time = LocalTime.now();
+
+                FileWriter csvWriter = new FileWriter(
+                        new File(csvPath + "ProActive data " + LocalDate.now() + "-" + time.getHour() + "." +
+                                time.getMinute() + "." + time.getSecond() + ".csv")
+                );
+
+
+                for (String[] rowData : rows) {
+                    csvWriter.append(String.join(",", rowData));
+                    csvWriter.append("\n");
+                }
+
+                csvWriter.flush();
+                csvWriter.close();
+
+            } catch (Exception e) {
+
+                System.out.println(e.getMessage());
+
+            }
+
+            exportButton.setDisable(false);
+
+            statusLabel.setText("Exported data to: " + csvPath);
+
+        }
+
+    }
+
 }
 
