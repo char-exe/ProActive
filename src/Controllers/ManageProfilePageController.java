@@ -599,8 +599,8 @@ public class ManageProfilePageController implements Initializable {
                 LocalTime time = LocalTime.now();
 
                 FileWriter csvWriter = new FileWriter(
-                        new File(csvPath + "ProActive data " + LocalDate.now() + "-" + time.getHour() + "." +
-                                time.getMinute() + "." + time.getSecond() + ".csv")
+                        new File(csvPath + "ProActive " + user.getUsername() + " " + LocalDate.now() +
+                                "-" + time.getHour() + "." + time.getMinute() + "." + time.getSecond() + ".csv")
                 );
 
 
