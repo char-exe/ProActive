@@ -45,6 +45,13 @@ public class Group {
      * @param owner the owner of this Group.
      */
     public Group(String name, GroupOwner owner) {
+        if (name == null) {
+            throw new NullPointerException();
+        }
+        if (owner == null) {
+            throw new NullPointerException();
+        }
+
         this.name = name;
         this.owner = owner;
         this.groupGoals = DatabaseHandler.getInstance().loadGroupGoals(this.name);
@@ -55,6 +62,10 @@ public class Group {
      * @param name the name of this group.
      */
     public Group(String name) {
+        if (name == null) {
+            throw new NullPointerException();
+        }
+
         this.name = name;
         this.owner = null;
         this.groupGoals = DatabaseHandler.getInstance().loadGroupGoals(this.name);
@@ -73,7 +84,7 @@ public class Group {
      *
      * @return a set containing this Group's members.
      */
-    public Set<GroupMember> getMembers(){
+    public Set<GroupMember> getMembers() {
         return Set.copyOf(members);
     }
 
@@ -110,6 +121,10 @@ public class Group {
      * @param members this Group's new set of members.
      */
     public void setMembers(Set<GroupMember> members) {
+        if (members == null) {
+            throw new NullPointerException();
+        }
+
         this.members = members;
     }
 
@@ -119,6 +134,10 @@ public class Group {
      * @param admins this Group's new set of admins.
      */
     public void setAdmins(Set<GroupAdmin> admins) {
+        if (admins == null) {
+            throw new NullPointerException();
+        }
+
         this.admins = admins;
     }
 
@@ -128,6 +147,10 @@ public class Group {
      * @param owner this Group's new GroupOwner.
      */
     public void setOwner(GroupOwner owner) {
+        if (owner == null) {
+            throw new NullPointerException();
+        }
+
         this.owner = owner;
     }
 
@@ -167,12 +190,20 @@ public class Group {
      * @param goal the goal that was completed.
      */
     public void sendGroupNotifications (String username, Goal goal) {
-        for (GroupMember member : this.getMembers()) {
+        if (username == null) {
+            throw new NullPointerException();
+        }
+        if (goal == null) {
+            throw new NullPointerException();
+        }
+
+        for (GroupMember member : this.members) {
             notifyMember(username, goal, member);
         }
-        for (GroupAdmin admin : this.getAdmins()) {
+        for (GroupAdmin admin : this.admins) {
             notifyMember(username, goal, admin);
         }
+
         notifyMember(username, goal, owner);
     }
 
@@ -184,6 +215,16 @@ public class Group {
      * @param member the member to be notified.
      */
     private void notifyMember(String username, Goal goal, GroupMember member) {
+        if (username == null) {
+            throw new NullPointerException();
+        }
+        if (goal == null) {
+            throw new NullPointerException();
+        }
+        if (member == null) {
+            throw new NullPointerException();
+        }
+
         if (!member.getUser().getUsername().equals(username)) {
             System.out.println(member.getUser().getUsername());
             EmailHandler emailHandler = EmailHandler.getInstance();
@@ -229,5 +270,4 @@ public class Group {
     public int hashCode() {
         return this.name.hashCode();
     }
-
 }

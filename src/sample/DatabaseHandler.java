@@ -1978,7 +1978,7 @@ public class DatabaseHandler {
             throw new IllegalArgumentException();
         }
 
-        String groupName = "";
+        String groupName = null;
 
         String sql = "SELECT Group_Name FROM group_table WHERE Group_Id = " + groupId;
         try (Statement stmt = this.conn.createStatement();
@@ -2024,8 +2024,14 @@ public class DatabaseHandler {
         GroupOwner owner = null;
         Set<GroupAdmin> admins = new HashSet<>();
         Set<GroupMember> members = new HashSet<>();
+        Group group = null;
 
-        Group group = new Group(getGroupNameFromID(groupID));
+        try {
+            group = new Group(getGroupNameFromID(groupID));
+        }
+        catch (NullPointerException e) {
+            return group;
+        }
 
         String sql = "SELECT User_id, Group_Role FROM group_membership WHERE Group_Id = " + groupID;
         try (Statement stmt = this.conn.createStatement();

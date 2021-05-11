@@ -77,7 +77,9 @@ public class GroupGoal extends IndividualGoal {
     public void notifyGroup(String username) {
         Group group = DatabaseHandler.getInstance().getGroupObjectFromGroupId(this.groupId);
 
-        group.sendGroupNotifications(username, this);
+        if (!(group == null)) {
+            group.sendGroupNotifications(username, this);
+        }
     }
 
     /**
