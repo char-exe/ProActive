@@ -72,7 +72,7 @@
                                           </VBox>
                                           <VBox fx:id="groupsContainer" alignment="CENTER" layoutX="10.0" layoutY="128.0" spacing="20.0">
                                              <VBox.margin>
-                                                <Insets bottom="25.0" left="100.0" right="100.0" />
+                                                <Insets bottom="25.0" left="50.0" right="50.0" />
                                              </VBox.margin>
                                              <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -118,16 +118,16 @@
                                           </Label>
                                           <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <TextField fx:id="dietAmount" />
+                                                <TextField fx:id="dietAmount" promptText="Amount" />
                                                 <ChoiceBox fx:id="dietDropDown" prefWidth="150.0" />
-                                                <DatePicker fx:id="dietDate" />
+                                                <DatePicker fx:id="dietDate" promptText="Date" />
                                                 <Button mnemonicParsing="false" onAction="#setDietGoal" text="Set" />
                                              </children>
                                              <padding>
                                                 <Insets top="25.0" />
                                              </padding>
                                           </HBox>
-                                          <Label fx:id="dietLabel" text="Label" />
+                                          <Label fx:id="dietLabel" />
                                        </children>
                                     </VBox>
                                  </children>
@@ -143,15 +143,15 @@
                                           </Label>
                                           <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                                              <children>
-                                                <TextField fx:id="calorieAmount" />
-                                                <DatePicker fx:id="calorieDate" />
+                                                <TextField fx:id="calorieAmount" promptText="Amount" />
+                                                <DatePicker fx:id="calorieDate" promptText="Date" />
                                                 <Button mnemonicParsing="false" onAction="#setCaloriesGoal" text="Set" />
                                              </children>
                                              <padding>
                                                 <Insets top="25.0" />
                                              </padding>
                                           </HBox>
-                                          <Label fx:id="calorieLabel" text="Label" />
+                                          <Label fx:id="calorieLabel" />
                                        </children>
                                     </VBox>
                                  </children>
@@ -168,15 +168,15 @@
                                           <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                                              <children>
                                                 <ChoiceBox fx:id="exerciseDropDown" prefWidth="150.0" />
-                                                <TextField fx:id="exerciseAmount" promptText="Minutes..." />
-                                                <DatePicker fx:id="exerciseDate" />
+                                                <TextField fx:id="exerciseAmount" promptText="Minutes" />
+                                                <DatePicker fx:id="exerciseDate" promptText="Date" />
                                                 <Button mnemonicParsing="false" onAction="#setExerciseGoal" text="Set" />
                                              </children>
                                              <padding>
                                                 <Insets top="25.0" />
                                              </padding>
                                           </HBox>
-                                          <Label fx:id="exerciseLabel" text="Label" />
+                                          <Label fx:id="exerciseLabel" />
                                        </children>
                                     </VBox>
                                  </children>
