@@ -745,8 +745,8 @@ public class DatabaseHandler {
         LocalDate prevWeek = latest.minusDays(6);
 
         String sql = "SELECT date_of, duration FROM activity WHERE user_id = '" +
-                      getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + latest.toString() +
-                     "' AND '" + prevWeek.toString() + "'";
+                      getUserIDFromUsername(username) + "' AND date_of BETWEEN '" + prevWeek.toString() +
+                     "' AND '" + latest.toString() + "'";
 
         try (Statement stmt  = this.conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
@@ -765,6 +765,7 @@ public class DatabaseHandler {
             e.printStackTrace();
         }
 
+        System.out.println(entries);
         return entries;
     }
 
