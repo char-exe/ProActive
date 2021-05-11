@@ -173,19 +173,6 @@ public abstract class Goal {
         return this.target + " " + this.unit.getUnitString() + " by " + this.endDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Goal)) return false;
-        Goal goal = (Goal) o;
-        return Float.compare(goal.getTarget(), getTarget()) == 0 && getUnit() == goal.getUnit() && getEndDate().equals(goal.getEndDate());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getTarget(), getUnit(), getEndDate());
-    }
-
     /**
      * Private helper method for checking constructor inputs for the short constructor.
      *

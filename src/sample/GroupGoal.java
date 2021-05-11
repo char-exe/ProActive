@@ -27,8 +27,6 @@ public class GroupGoal extends IndividualGoal {
      */
     private final int groupId;
 
-
-
     /**
      * Constructs a GroupGoal from a target amount, unit, end date, and groupId. Initialises progress to 0 and status to
      * ongoing. Intended for use at initial creation of a goal.
@@ -45,7 +43,6 @@ public class GroupGoal extends IndividualGoal {
         }
 
         this.groupId = groupId;
-
     }
 
     /**
@@ -72,12 +69,23 @@ public class GroupGoal extends IndividualGoal {
         return groupId;
     }
 
+    /**
+     * Method to notify this GroupGoal's Group that this goal has been completed by a User.
+     *
+     * @param username the unique username of the User who has completed the goal.
+     */
     public void notifyGroup(String username) {
         Group group = DatabaseHandler.getInstance().getGroupObjectFromGroupId(this.groupId);
 
         group.sendGroupNotifications(username, this);
     }
 
+    /**
+     * Returns a boolean value representing whether this GroupGoal is equal to a passed Object.
+     *
+     * @param o the Object ot be tested for equality.
+     * @return true if o is equal to this GroupGoal.
+     */
     @Override
     public boolean equals(Object o) {
         if (o == null) {
@@ -91,6 +99,11 @@ public class GroupGoal extends IndividualGoal {
                 && this.endDate.equals(((GroupGoal) o).getEndDate()) && this.groupId == ((GroupGoal) o).getGroupId();
     }
 
+    /**
+     * Returns a hashcode representation of this GroupGoal.
+     *
+     * @return a hashcode representation of this GroupGoal.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(target, unit, endDate, groupId);

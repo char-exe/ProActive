@@ -2466,9 +2466,4 @@ public class DatabaseHandler {
             System.out.println(e.getMessage());
         }
     }
-
-    public static void main(String[] args) {
-        DatabaseHandler dh = DatabaseHandler.getInstance();
-        System.out.println(dh.isMemberOfGroup("sscar", "TestGroup1"));
-    }
 }

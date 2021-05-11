@@ -340,8 +340,8 @@ public class EmailHandler {
     /**
      * Method to send an email with CSS formatting to a user that has forgotten their password.
      *
-     * @param session     Takes a session object, this is required to send any emails.
-     * @param to          Takes a To Address, this is the address that the email will be sent to.
+     * @param session Takes a session object, this is required to send any emails.
+     * @param to      Takes a To Address, this is the address that the email will be sent to.
      */
     public void sendUsernameRecoveryEmailCSS(Session session, String to){
         String username = DatabaseHandler.getInstance().getUsernameFromEmail(to);
@@ -387,19 +387,5 @@ public class EmailHandler {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public static void main(String[] args) {
-        //General account for use with this application, dont worry about non-secure password as is ultimately
-        //a throwaway account
-        EmailHandler email = new EmailHandler();
-
-        //Create email session
-        Session session = email.createSession();
-
-        //Send a basic verification email
-        email.sendVerification(session, "owen.tasker@gmail.com", TokenHandler.createUniqueToken(5));
-
     }
 }

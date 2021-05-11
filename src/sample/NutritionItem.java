@@ -18,6 +18,8 @@ import java.util.Map;
  */
 public class NutritionItem {
     private final String name;
+
+    //Macronutrients
     private final double kcal;
     private final double proteinG;
     private final double fatG;
@@ -25,6 +27,8 @@ public class NutritionItem {
     private final double sugarG;
     private final double fibreG;
     private final double cholesterolMg;
+
+    //Minerals
     private final double sodiumMg;
     private final double potassiumMg;
     private final double calciumMg;
@@ -36,6 +40,8 @@ public class NutritionItem {
     private final double chlorideMg;
     private final double seleniumUg;
     private final double iodineUg;
+
+    //Vitamins
     private final double vitAUg;
     private final double vitDUg;
     private final double thiaminMg;

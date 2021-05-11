@@ -48,10 +48,4 @@ public class TokenHandler {
 
         return uniqueRegToken.substring(0, num);
     }
-
-    public static void main(String[] args) {
-
-        System.out.println(createUniqueToken(6));
-
-    }
 }

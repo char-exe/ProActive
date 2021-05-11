@@ -3,7 +3,6 @@ package sample;
 import Controllers.MainController;
 
 import javax.mail.Session;
-import java.io.IOException;
 
 /**
  * A class to be instantiated in other classes to allow for easy displaying of notifications for goals.
@@ -18,8 +17,6 @@ import java.io.IOException;
 public class NotificationHandler {
 
     private static final NotificationHandler INSTANCE = new NotificationHandler();
-
-
 
     private static MainController mainController;
     private static EmailHandler emailHandler = null;
@@ -38,7 +35,9 @@ public class NotificationHandler {
      * Static method to get the single instance of NotificationHandler
      * @return the NotificationHandler instance
      */
-    public static NotificationHandler getInstance() { return INSTANCE; }
+    public static NotificationHandler getInstance() {
+        return INSTANCE;
+    }
 
     public void initMainController(MainController mainController) {
         NotificationHandler.mainController = mainController;
@@ -48,7 +47,7 @@ public class NotificationHandler {
      *
      * @param message The text to be displayed.
      */
-    public void displayNotification(String message){
+    public void displayNotification(String message) {
         mainController.showNotification(message);
     }
 
@@ -57,7 +56,7 @@ public class NotificationHandler {
      *
      * @param message The text to be displayed.
      */
-    public void displayBlinkNotification(String message){
+    public void displayBlinkNotification(String message) {
         mainController.showBlinkNotification(message);
     }
 
@@ -66,7 +65,7 @@ public class NotificationHandler {
      *
      * @param message The text to be displayed.
      */
-    public void displayFadeNotification(String message){
+    public void displayFadeNotification(String message) {
         mainController.showFadeNotification(message);
     }
 

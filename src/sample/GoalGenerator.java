@@ -112,11 +112,11 @@ public class GoalGenerator {
      * @return An ArrayList of System goals containing daily fitness targets.
      */
     private ArrayList<SystemGoal> generateDailyFitness() {
-        //Get user's completed exercise goals for the past month with max target
+        //Get user's completed exercise units
         Random random = new Random();
         ArrayList<SystemGoal> systemGoals = new ArrayList<>();
         ArrayList<Goal.Unit> completedGoals = user.getCompletedGoals(LocalDate.now().minusDays(28));
-        System.out.println(completedGoals);
+
         //Select up to three at random
         while (systemGoals.size() < 3 && completedGoals.size() > 0) {
             int index = random.nextInt(completedGoals.size());
