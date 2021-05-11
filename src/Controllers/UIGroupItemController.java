@@ -55,8 +55,15 @@ public class UIGroupItemController implements Initializable {
                 DatabaseHandler.getInstance().addInvToken(token, groupNameLabel.getText(), inviteInput.getText());
                 EmailHandler.getInstance().sendGroupInvite(emailSession, email, groupNameLabel.getText(), token);
             }
-        }else{
-            invitePopUp.setText("No User Found With This Username");
+        }
+        else {
+
+            if (inviteInput.getText().equals("")) {
+                invitePopUp.setText("Please enter a username");
+            }
+            else {
+                invitePopUp.setText("No User Found With This Username");
+            }
         }
     }
 

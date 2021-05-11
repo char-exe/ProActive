@@ -42,6 +42,8 @@ public class RegFormController implements Initializable {
     @FXML public Label passwordPopUp;
     @FXML public Label repeatPasswordPopUp;
     @FXML public Label dateOfBirthPopUp;
+    @FXML public Label heightPopUp;
+    @FXML public Label weightPopUp;
     @FXML public Button escapeHome;
 
     @FXML public TextField firstNameField;
@@ -57,8 +59,6 @@ public class RegFormController implements Initializable {
     @FXML public DatePicker dateField;
     @FXML public TextField heightField;
     @FXML public TextField weightField;
-    @FXML public Label heightPopUp;
-    @FXML public Label weightPopUp;
 
     /**
      * Method to take the inputs from registration form fields, validate them, hash the password and pass a
@@ -71,6 +71,17 @@ public class RegFormController implements Initializable {
      */
     @FXML protected void handleSubmitButtonAction() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
+        firstNamePopUp.setText("");
+        lastNamePopUp.setText("");
+        emailPopUp.setText("");
+        usernamePopUp.setText("");
+        sexPopUp.setText("");
+        passwordPopUp.setText("");
+        repeatPasswordPopUp.setText("");
+        dateOfBirthPopUp.setText("");
+        heightPopUp.setText("");
+        weightPopUp.setText("");
+
         if (checkConditions()){
 
             //Instantiate Database Handler
@@ -81,8 +92,8 @@ public class RegFormController implements Initializable {
             String lastName     = lastNameField.getText();
             String email        = emailField.getText();
             LocalDate dob       = dateField.getValue();
-            float height        = Float.parseFloat(heightField.getText());
-            float weight        = Float.parseFloat(weightField.getText());
+            String heightText   = heightField.getText();
+            String weightText   = weightField.getText();
             String username     = usernameField.getText();
             String sex          = sexCombo.getValue();
             String password     = passwordField.getText();
@@ -98,12 +109,34 @@ public class RegFormController implements Initializable {
             byte[] hash = factory.generateSecret(spec).getEncoded();
 
             //Check that username and email inputted was unique
-            if(!db.checkUserNameUnique(username)){
+            if (!db.checkUserNameUnique(username)) {
                 usernamePopUp.setText("Username Not Unique, Please Enter A New One");
             }
-            if(db.checkEmailUnique(email)){
+            else if (db.checkEmailUnique(email)) {
                 emailPopUp.setText("Email Not Unique, Please Enter A New One");
-            } else{
+            }
+            else if (dateField.getValue() == null || dateField.getValue().isAfter(LocalDate.now())) {
+                dateOfBirthPopUp.setText("Please select your Date of Birth");
+            }
+            else if (heightText == null || heightText.equals("")) {
+                heightPopUp.setText("Please input your height");
+            }
+            else if (Integer.parseInt(heightText) < 1 || 349 < Integer.parseInt(heightText)) {
+                heightPopUp.setText("Height must be between 1 and 349");
+            }
+            else if (weightText == null || weightText.equals("")) {
+                weightPopUp.setText("Please input your weight");
+            }
+            else if (Integer.parseInt(weightText) < 1 || 1499 < Integer.parseInt(weightText)) {
+                weightPopUp.setText("Weight must be between 1 and 1499");
+            }
+            else if (sex == null) {
+                sexPopUp.setText("Please select a sex");
+            }
+            else {
+                float height = Float.parseFloat(heightText);
+                float weight = Float.parseFloat(weightText);
+
                 Stage parentScene = (Stage) submitButton.getScene().getWindow();
                 Stage stage = new Stage();
                 User user = new User(firstName, lastName, User.Sex.valueOf(sex.toUpperCase(Locale.ROOT)), height, weight, dob, email, username);
@@ -137,7 +170,7 @@ public class RegFormController implements Initializable {
      * @return Returns true if all checks are true, false otherwise
      */
     public boolean checkConditions(){
-        return CheckFirstName() && CheckLastName() && CheckEmail() && CheckPassword() && CheckRepeatPassword() && CheckTermsBox();
+        return CheckFirstName() && CheckLastName() && CheckEmail() && CheckPassword() && CheckRepeatPassword() && CheckTermsBox() && CheckUsername();
     }
 
     /**
@@ -204,7 +237,7 @@ public class RegFormController implements Initializable {
             return true;
         }
         else{
-            emailPopUp.setText("Please Enter Valid Email!");
+            emailPopUp.setText("Please Enter Valid Email");
             return false;
         }
     }
@@ -297,6 +330,19 @@ public class RegFormController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sexCombo.getItems().removeAll(sexCombo.getItems());
         sexCombo.getItems().addAll("Male", "Female", "Other");
+        dateField.setEditable(false);
+
+        heightField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                heightField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+        weightField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                weightField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
     }
 
     /**

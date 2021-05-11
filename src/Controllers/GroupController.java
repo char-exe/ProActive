@@ -107,6 +107,10 @@ public class GroupController implements Initializable {
                 initUserGroupData();
             }
         });
+
+        dietDate.setEditable(false);
+        calorieDate.setEditable(false);
+        exerciseDate.setEditable(false);
     }
 
     /**
@@ -139,10 +143,15 @@ public class GroupController implements Initializable {
             dh.deleteGroupInv(tokenInput);
         }
         else { //User has not been invited, or token has expired.
-            joinGroupConfirmPopUp.setText(
-                    "Something went wrong when joining the group, please make sure the " +
-                            "invite was meant for this user and has not expired (36 hours)"
-            );
+            if (tokenInput.equals("")) {
+                joinGroupConfirmPopUp.setText("Please enter an invite code");
+            }
+            else {
+                joinGroupConfirmPopUp.setText(
+                        "Something went wrong when joining the group, please make sure the " +
+                                "invite was meant for this user and has not expired (36 hours)"
+                );
+            }
 
             if (dh.isInvExpired(tokenInput)) {
                 dh.deleteGroupInv(tokenInput);

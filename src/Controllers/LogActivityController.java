@@ -113,6 +113,10 @@ public class LogActivityController implements Initializable {
         setDigitsOnly(weightField);
         setDigitsOnly(foodQuantity);
 
+        //Set date fields to date only
+        weightDateField.setEditable(false);
+        foodEntryDate.setEditable(false);
+
         //Get DatabaseHandler instance
         dh = DatabaseHandler.getInstance();
 
@@ -528,8 +532,8 @@ public class LogActivityController implements Initializable {
             weightFieldsLabel.setText("Please enter a weight value");
             return false;
         }
-        else if (Float.parseFloat(weightText) == 0) { //0 weight entered
-            weightFieldsLabel.setText("Weight cannot be 0");
+        else if (Float.parseFloat(weightText) < 1|| 1499 < Float.parseFloat(weightText)) { //0 weight entered
+            weightFieldsLabel.setText("Weight must be between 1 and 1499");
             return false;
         }
         else if (weightUnit == null || weightUnit.equals("")) { //No unit selected

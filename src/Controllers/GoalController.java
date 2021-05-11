@@ -158,6 +158,10 @@ public class GoalController implements Initializable {
                 loadPastGoals();
             }
         });
+
+        dietDateField.setEditable(false);
+        calorieDateField.setEditable(false);
+        exerciseDateField.setEditable(false);
     }
 
     /**

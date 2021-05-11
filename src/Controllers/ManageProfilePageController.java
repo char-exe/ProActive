@@ -70,6 +70,7 @@ public class ManageProfilePageController implements Initializable {
         sexCombo.getItems().addAll("Male", "Female", "Other");
         heightUnits.getItems().removeAll(heightUnits.getItems());
         heightUnits.getItems().addAll("cm", "inches");
+        datePick.setEditable(false);
 
         //Set heightField to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
