@@ -115,24 +115,23 @@ public class GoalGenerator {
         //Get user's completed exercise goals for the past month with max target
         Random random = new Random();
         ArrayList<SystemGoal> systemGoals = new ArrayList<>();
-        ArrayList<IndividualGoal> completedGoals = user.getMaxCompletedGoals(LocalDate.now().minusDays(28));
-
+        ArrayList<Goal.Unit> completedGoals = user.getCompletedGoals(LocalDate.now().minusDays(28));
+        System.out.println(completedGoals);
         //Select up to three at random
         while (systemGoals.size() < 3 && completedGoals.size() > 0) {
             int index = random.nextInt(completedGoals.size());
-            IndividualGoal current = completedGoals.remove(index);
-            Goal.Unit unit = current.getUnit();
+            Goal.Unit current = completedGoals.remove(index);
 
             //Create new SystemGoals by checking the user's average work rate in that task
-            float averageWorkRate = user.getAverageWorkRate(unit, 28);
+            float averageWorkRate = user.getAverageWorkRate(current, 28);
 
-            if (averageWorkRate < unit.getMinimum()) { //Average work rate is below minimum threshold
-                averageWorkRate = unit.getMinimum(); //Set to minimum threshold
+            if (averageWorkRate < current.getMinimum()) { //Average work rate is below minimum threshold
+                averageWorkRate = current.getMinimum(); //Set to minimum threshold
             }
 
             systemGoals.add(new SystemGoal(
                     averageWorkRate,
-                    unit,
+                    current,
                     LocalDate.now().plusDays(1),
                     SystemGoal.UpdatePeriod.DAILY,
                     SystemGoal.Category.STAY)

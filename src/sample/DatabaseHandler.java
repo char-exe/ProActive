@@ -1547,7 +1547,7 @@ public class DatabaseHandler {
      * @param earliest the earliest date to query
      * @return an ArrayList of SystemGoals representing the max achieved targets for their respective units.
      */
-    public ArrayList<IndividualGoal> selectMaxCompletedGoals(String username, LocalDate earliest) {
+    public ArrayList<Goal.Unit> selectCompletedGoals(String username, LocalDate earliest) {
         if (username == null) {
             throw new NullPointerException();
         }
@@ -1555,11 +1555,11 @@ public class DatabaseHandler {
             throw new NullPointerException();
         }
 
-        ArrayList<IndividualGoal> maxCompletedGoals = new ArrayList<>();
+        ArrayList<Goal.Unit> completedGoals = new ArrayList<>();
 
-        String sql = "SELECT MAX(target) as target, unit, end_date, progress FROM goal WHERE user_id = '" +
-                getUserIDFromUsername(username)  + "' AND end_date >= '" + earliest + "' AND progress > target " +
-                "AND unit NOT IN ('" +
+        String sql = "SELECT DISTINCT unit FROM goal WHERE user_id = '" +
+                getUserIDFromUsername(username)  + "' AND end_date >= '" + earliest + "' AND progress >= target " +
+                "GROUP BY unit HAVING unit NOT IN ('" +
                 Goal.Unit.CALORIES.toString() +    "', '" + Goal.Unit.PROTEIN.toString() +    "', '" +
                 Goal.Unit.BURNED.toString() +      "', '" + Goal.Unit.CARBS.toString() +      "', '" +
                 Goal.Unit.FIBRE.toString() +       "', '" + Goal.Unit.SODIUM.toString() +     "', '" +
@@ -1572,20 +1572,16 @@ public class DatabaseHandler {
                 Goal.Unit.THIAMIN.toString() +     "', '" + Goal.Unit.RIBOFLAVIN.toString() + "', '" +
                 Goal.Unit.NIACIN.toString() +      "', '" + Goal.Unit.VITAMIN_B6.toString() + "', '" +
                 Goal.Unit.VITAMIN_B12.toString() + "', '" + Goal.Unit.FOLATE.toString() +     "', '" +
-                Goal.Unit.VITAMIN_C.toString() +   "') " +
-                "GROUP BY unit ";
+                Goal.Unit.VITAMIN_C.toString() +   "') ";
 
 
 
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                float target = rs.getFloat("target");
                 Goal.Unit unit = Goal.Unit.valueOf(rs.getString("unit"));
-                LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
-                float progress = rs.getFloat("progress");
 
-                maxCompletedGoals.add(new IndividualGoal(target, unit, endDate, progress));
+                completedGoals.add(unit);
             }
 
         }
@@ -1593,7 +1589,7 @@ public class DatabaseHandler {
             e.printStackTrace();
         }
 
-        return maxCompletedGoals;
+        return completedGoals;
     }
 
     /**

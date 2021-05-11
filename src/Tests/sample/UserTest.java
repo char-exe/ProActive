@@ -781,7 +781,7 @@ class UserTest {
                 "bwayne1998"
         );
 
-        assertThrows(NullPointerException.class, () -> batman.getMaxCompletedGoals(null));
+        assertThrows(NullPointerException.class, () -> batman.getCompletedGoals(null));
     }
 
     @Test
@@ -795,7 +795,7 @@ class UserTest {
                 "bwayne1998"
         );
 
-        assertThrows(IllegalArgumentException.class, ()-> batman.getMaxCompletedGoals(LocalDate.now().plusDays(1)));
+        assertThrows(IllegalArgumentException.class, ()-> batman.getCompletedGoals(LocalDate.now().plusDays(1)));
     }
 
     @Test

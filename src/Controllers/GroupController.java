@@ -111,6 +111,30 @@ public class GroupController implements Initializable {
         dietDate.setEditable(false);
         calorieDate.setEditable(false);
         exerciseDate.setEditable(false);
+
+        //Set dateAmountField to digits only
+        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+        dietAmount.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("(\\d\\.\\d)*")) {
+                dietAmount.setText(newValue.replaceAll("[^(\\d\\.\\d)]", ""));
+            }
+        });
+
+        //Set calorieAmountField to digits only
+        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+        calorieAmount.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                calorieAmount.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+        //Set exerciseMinutesField to digits only
+        //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+        exerciseAmount.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                exerciseAmount.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
     }
 
     /**

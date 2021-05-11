@@ -445,7 +445,7 @@ public class User {
      * @param earliest The number of days prior to today to query
      * @return an ArrayList of SystemGoals.
      */
-    public ArrayList<IndividualGoal> getMaxCompletedGoals(LocalDate earliest) {
+    public ArrayList<Goal.Unit> getCompletedGoals(LocalDate earliest) {
         if (earliest == null) {
             throw new NullPointerException();
         }
@@ -453,7 +453,7 @@ public class User {
             throw new IllegalArgumentException();
         }
 
-        return DatabaseHandler.getInstance().selectMaxCompletedGoals(this.username, earliest);
+        return DatabaseHandler.getInstance().selectCompletedGoals(this.username, earliest);
     }
 
     /**

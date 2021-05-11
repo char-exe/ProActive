@@ -642,14 +642,14 @@ class DatabaseHandlerTest {
     void nullUsernameSelectMaxCompletedGoals() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        assertThrows(NullPointerException.class, () -> dh.selectMaxCompletedGoals(null, LocalDate.now()));
+        assertThrows(NullPointerException.class, () -> dh.selectCompletedGoals(null, LocalDate.now()));
     }
 
     @Test
     void nullEarliestSelectMaxCompletedGoals() {
         DatabaseHandler dh = DatabaseHandler.getInstance();
 
-        assertThrows(NullPointerException.class, () -> dh.selectMaxCompletedGoals("bwayne1998", null));
+        assertThrows(NullPointerException.class, () -> dh.selectCompletedGoals("bwayne1998", null));
     }
 
     @Test
