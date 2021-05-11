@@ -47,12 +47,6 @@ public class ManageProfilePageController implements Initializable {
     @FXML private Button showBMIButton;
     @FXML private Label BMILabel;
 
-    @FXML private TextField bodyFatWaistInput;
-    @FXML private TextField bodyFatNeckInput;
-    @FXML private TextField bodyFatHipsInput;
-    @FXML private Label bodyFatWaistPopUp;
-    @FXML private Label bodyFatNeckPopUp;
-    @FXML private Label bodyFatHipsPopUp;
     @FXML private Button bodyFatSubmit;
     @FXML private Label bodyFatLabel;
 
@@ -91,27 +85,6 @@ public class ManageProfilePageController implements Initializable {
                 heightField.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
             }
         });
-
-        //Set bodyFatWaistInput to digits only
-        bodyFatWaistInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)) {
-                bodyFatWaistInput.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
-            }
-        });
-
-        //Set bodyFatNeckInput to digits only
-        bodyFatNeckInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)) {
-                bodyFatNeckInput.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
-            }
-        });
-
-        //Set bodyFatHipsInput to digits only
-        bodyFatHipsInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)) {
-                bodyFatHipsInput.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
-            }
-        });
     }
 
     /**
@@ -121,7 +94,6 @@ public class ManageProfilePageController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
-        bodyFatHipsInput.setEditable(this.user.getSex().equals("Female"));
         System.out.println(this.user.getSex());
         System.out.println(this.user);
     }
@@ -300,93 +272,32 @@ public class ManageProfilePageController implements Initializable {
     }
 
     /**
-     * Method to check Waist Input field matches in regex
-     *
-     * @return True if check is passed
-     */
-    @FXML
-    private boolean checkWaistInput() {
-        String name = bodyFatWaistInput.getText();
-        if (name.matches(INPUT_FIELD_NON_NUMERIC) && checkValidDouble(name, ".")) {
-            bodyFatHipsPopUp.setText("");
-            return true;
-        }
-        else {
-            bodyFatWaistPopUp.setText("Invalid");
-            return false;
-        }
-    }
-
-    /**
-     * Method to check Neck Input field matches in regex
-     *
-     * @return True if check is passed
-     */
-    @FXML
-    private boolean checkNeckInput() {
-        String name = bodyFatNeckInput.getText();
-        if (name.matches(INPUT_FIELD_NON_NUMERIC) && checkValidDouble(name, ".")) {
-            bodyFatNeckPopUp.setText("");
-            return true;
-        }
-        else {
-            bodyFatNeckPopUp.setText("Invalid");
-            return false;
-        }
-    }
-
-    /**
-     * Method to check Hips Input field matches in regex
-     *
-     * @return True if check is passed
-     */
-    @FXML
-    private boolean checkHipsInput() {
-        String name = bodyFatHipsInput.getText();
-        if (name.matches(INPUT_FIELD_NON_NUMERIC) && checkValidDouble(name, ".")) {
-            bodyFatHipsPopUp.setText("");
-            return true;
-        }
-        else {
-            bodyFatHipsPopUp.setText("Invalid");
-            return false;
-        }
-    }
-
-    /**
-     * Private helper method to check inputs for body fat calculation.
-     *
-     * @return a boolean value representing whether inputs have been completed correctly.
-     */
-    private boolean checkBodyFatInputs() {
-        return checkWaistInput() && checkNeckInput() && checkHipsInput();
-    }
-
-    /**
      * Private method to control action of submitting for body fat calculation. Calculates and displays a
      * User's body fat from given inputs.
      */
     @FXML
     private void bodyFatSubmitAction() {
+        //Bodyfat calculation found at
+        //https://www.gaiam.com/blogs/discover/how-to-calculate-your-ideal-body-fat-percentage#
+        DecimalFormat df = new DecimalFormat("#.#");
 
-        if (checkBodyFatInputs()) {
-            float waist;
-            float neck;
-            float hips;
-            if (user.getSex().equals("Male")) {
+        double bmi = calculateBMI();
 
-                waist = Float.parseFloat(bodyFatWaistInput.getText());
-                neck = Float.parseFloat(bodyFatNeckInput.getText());
-                float bfp = (float) ((float) 495.0 / (1.0324 - (0.19077 * (Math.log10((double) waist - neck)))) +
-                                                            (0.15456 * Math.log10(user.getHeight()))) - 450;
-                System.out.println(bfp);
-                if (bodyFatLabel.getText().equals("??")) {
-                    bodyFatLabel.setText(String.valueOf(bfp));
-                }
-                else {
-                    bodyFatLabel.setText("??");
-                }
+        if (bodyFatLabel.getText().equals("??")) {
+            if (user.getSex().equals("Male")){
+                bodyFatLabel.setText(df.format((1.20*bmi) + (0.23*user.getAge()) - 16.2) + "%");
             }
+            else if(user.getSex().equals("Female")){
+                bodyFatLabel.setText(df.format((1.20*bmi) + (0.23*user.getAge()) - 5.4) + "%");
+            }
+            //Not sure how to calculate body fat percentage for non-binary people, as comprimise took difference
+            // between male and female settings
+            else{
+                bodyFatLabel.setText(df.format((1.20*bmi) + (0.23*user.getAge()) - (16.2-5.4)) + "%");
+            }
+        }
+        else {
+            bodyFatLabel.setText("??");
         }
     }
 
