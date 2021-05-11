@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import sample.DatabaseHandler;
+import sample.NutritionItem;
 import sample.User;
 
 import java.io.File;
@@ -15,10 +16,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Class to control the Manage Profile Page FXML file
@@ -58,6 +56,10 @@ public class ManageProfilePageController implements Initializable {
 
     @FXML private Button exportButton;
     @FXML private Label statusLabel;
+
+    @FXML private CheckBox nutritionCheckBox;
+    @FXML private CheckBox exerciseCheckBox;
+    @FXML private CheckBox weightCheckBox;
 
     private String csvPath = System.getProperty("user.home") + File.separator + "Downloads" + File.separator;
 
@@ -131,7 +133,7 @@ public class ManageProfilePageController implements Initializable {
      * update operations directly on the database user object
      */
     public void submitButtonAction() {
-        System.out.println("submitButton");
+
         sexLabel.setText("");
         dobLabel.setText("");
         heightLabel.setText("");
@@ -391,46 +393,238 @@ public class ManageProfilePageController implements Initializable {
     }
 
     public void exportCSV(ActionEvent actionEvent) throws IOException {
-        try {
-            statusLabel.setText("");
-            exportButton.setDisable(true);
 
-            System.out.println(dh.getNutrientEntries(user.getUsername(), null));
+        if (nutritionCheckBox.isSelected() || exerciseCheckBox.isSelected() || weightCheckBox.isSelected()) {
 
-            // https://stackabuse.com/reading-and-writing-csvs-in-java/
-            List<List<String>> rows = Arrays.asList(
-                    Arrays.asList("Jean", "author", "Java"),
-                    Arrays.asList("David", "editor", "Python"),
-                    Arrays.asList("Scott", "editor", "Node.js")
-            );
 
-            LocalTime time = LocalTime.now();
+            try {
 
-            FileWriter csvWriter = new FileWriter(
-                    new File(csvPath + "ProActive data " + LocalDate.now() + "-" + time.getHour() + "." +
-                            time.getMinute() + "." + time.getSecond() + ".csv")
-            );
+                statusLabel.setText("");
+                exportButton.setDisable(true);
 
-            csvWriter.append("Name");
-            csvWriter.append(",");
-            csvWriter.append("Role");
-            csvWriter.append(",");
-            csvWriter.append("Topic");
-            csvWriter.append("\n");
+                // https://stackabuse.com/reading-and-writing-csvs-in-java/
+                ArrayList<String[]> rows = new ArrayList<>();
+                rows.add(new String[] {
+                        "USER_PROFILE",
+                });
 
-            for (List<String> rowData : rows) {
-                csvWriter.append(String.join(",", rowData));
-                csvWriter.append("\n");
+                rows.add(new String[] {
+                        user.getFirstname() + " " + user.getSurname(), user.getEmail()
+                });
+
+                if(nutritionCheckBox.isSelected()){
+
+
+                    HashMap<String, ArrayList<NutritionItem>> nutrientEntries =
+                            dh.getNutrientEntries(user.getUsername(), null);
+
+
+                    rows.add(new String[] {
+                            "NUTRITION"
+                    });
+
+
+                    rows.add(new String[] {"Date","kcal","proteinG","fatG","carbsG","sugarG","fibreG","cholesterolMg",
+                            "sodiumMg","potassiumMg","calciumMg","magnesiumMg","phosphorusMg","ironMg","copperMg",
+                            "zincMg","chlorideMg","seleniumUg","iodineUg","vitAUg","vitDUg","thiaminMg","riboflavinMg",
+                            "niacinMg","vitB6Mg","vitB12Ug","folateUg","vitCMg"});
+
+
+                    for(String date : nutrientEntries.keySet()){
+
+                        ArrayList<NutritionItem> items = nutrientEntries.get(date);
+
+                        if(items.size() > 1){
+
+                            for(NutritionItem item : items){
+
+                                rows.add(
+                                        new String[]{
+                                                date,
+                                                String.valueOf(item.getKcal()),
+                                                String.valueOf(item.getProteinG()),
+                                                String.valueOf(item.getFatG()),
+                                                String.valueOf(item.getCarbsG()),
+                                                String.valueOf(item.getSugarG()),
+                                                String.valueOf(item.getFibreG()),
+                                                String.valueOf(item.getCholesterolMg()),
+                                                String.valueOf(item.getSodiumMg()),
+                                                String.valueOf(item.getPotassiumMg()),
+                                                String.valueOf(item.getCalciumMg()),
+                                                String.valueOf(item.getMagnesiumMg()),
+                                                String.valueOf(item.getPhosphorusMg()),
+                                                String.valueOf(item.getIronMg()),
+                                                String.valueOf(item.getCopperMg()),
+                                                String.valueOf(item.getZincMg()),
+                                                String.valueOf(item.getChlorideMg()),
+                                                String.valueOf(item.getSeleniumUg()),
+                                                String.valueOf(item.getIodineUg()),
+                                                String.valueOf(item.getVitAUg()),
+                                                String.valueOf(item.getVitDUg()),
+                                                String.valueOf(item.getThiaminMg()),
+                                                String.valueOf(item.getRiboflavinMg()),
+                                                String.valueOf(item.getNiacinMg()),
+                                                String.valueOf(item.getVitB6Mg()),
+                                                String.valueOf(item.getVitB12Ug()),
+                                                String.valueOf(item.getFolateUg()),
+                                                String.valueOf(item.getVitCMg())
+                                        }
+                                );
+
+                            }
+
+                        } else {
+
+                            NutritionItem item = items.get(0);
+
+                            rows.add(
+                                    new String[]{
+                                            date,
+                                            String.valueOf(item.getKcal()),
+                                            String.valueOf(item.getProteinG()),
+                                            String.valueOf(item.getFatG()),
+                                            String.valueOf(item.getCarbsG()),
+                                            String.valueOf(item.getSugarG()),
+                                            String.valueOf(item.getFibreG()),
+                                            String.valueOf(item.getCholesterolMg()),
+                                            String.valueOf(item.getSodiumMg()),
+                                            String.valueOf(item.getPotassiumMg()),
+                                            String.valueOf(item.getCalciumMg()),
+                                            String.valueOf(item.getMagnesiumMg()),
+                                            String.valueOf(item.getPhosphorusMg()),
+                                            String.valueOf(item.getIronMg()),
+                                            String.valueOf(item.getCopperMg()),
+                                            String.valueOf(item.getZincMg()),
+                                            String.valueOf(item.getChlorideMg()),
+                                            String.valueOf(item.getSeleniumUg()),
+                                            String.valueOf(item.getIodineUg()),
+                                            String.valueOf(item.getVitAUg()),
+                                            String.valueOf(item.getVitDUg()),
+                                            String.valueOf(item.getThiaminMg()),
+                                            String.valueOf(item.getRiboflavinMg()),
+                                            String.valueOf(item.getNiacinMg()),
+                                            String.valueOf(item.getVitB6Mg()),
+                                            String.valueOf(item.getVitB12Ug()),
+                                            String.valueOf(item.getFolateUg()),
+                                            String.valueOf(item.getVitCMg())
+                                    }
+
+                            );
+
+                        }
+
+                    }
+
+
+                }
+
+                if(exerciseCheckBox.isSelected()){
+
+                    HashMap<String, List<List<String>>> exerciseEntries = dh.getBurnedEntries(user.getUsername());
+
+                    rows.add(new String[] {
+                            "EXERCISE"
+                    });
+
+
+                    rows.add(new String[]{"Date","ACTIVITY_NAME","DURATION","BURN_RATE"});
+
+                    for(String date : exerciseEntries.keySet()){
+
+
+                        List<List<String>> items = exerciseEntries.get(date);
+
+
+                        if(items.size() > 0){
+
+
+                            for(List<String> item : items){
+
+                                rows.add(
+                                        new String[]{
+                                                date,
+                                                String.valueOf(item.get(0)),
+                                                String.valueOf(item.get(1)),
+                                                String.valueOf(item.get(2))
+
+                                        }
+
+                                );
+
+                            }
+
+                        } else {
+
+                            List<String> item = items.get(0);
+
+                            rows.add(
+                                    new String[]{
+                                            date,
+                                            String.valueOf(item.get(0)),
+                                            String.valueOf(item.get(1)),
+                                            String.valueOf(item.get(2))
+
+                                    }
+
+                            );
+
+                        }
+
+                    }
+
+
+                }
+
+                if(weightCheckBox.isSelected()){
+
+                    HashMap<String, Integer> weightEntries = dh.getWeightEntries(user.getUsername(), null);
+
+                    rows.add(new String[] {
+                            "WEIGHT"
+                    });
+
+
+                    rows.add(new String[]{"Date","WEIGHT_KG"});
+
+                    for(String date : weightEntries.keySet()){
+
+                        rows.add(new String[]{
+                                date, String.valueOf(weightEntries.get(date))
+                        });
+
+                    }
+
+                }
+
+                LocalTime time = LocalTime.now();
+
+                FileWriter csvWriter = new FileWriter(
+                        new File(csvPath + "ProActive data " + LocalDate.now() + "-" + time.getHour() + "." +
+                                time.getMinute() + "." + time.getSecond() + ".csv")
+                );
+
+
+                for (String[] rowData : rows) {
+                    csvWriter.append(String.join(",", rowData));
+                    csvWriter.append("\n");
+                }
+
+                csvWriter.flush();
+                csvWriter.close();
+
+            } catch (Exception e) {
+
+                System.out.println(e.getMessage());
+
             }
 
-            csvWriter.flush();
-            csvWriter.close();
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-        exportButton.setDisable(false);
+            exportButton.setDisable(false);
 
-        statusLabel.setText("Exported data to: " + csvPath);
+            statusLabel.setText("Exported data to: " + csvPath);
+
+        }
+
     }
+
 }
 
