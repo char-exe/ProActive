@@ -257,9 +257,6 @@ public class GroupController implements Initializable {
                 Label groupNameLabel = (Label) groupNameLabelHbox.getChildren().get(0);
                 groupNameLabel.setText(group.getName());
 
-                HBox leaveDeleteButtonHBox = (HBox) groupNameLabelHbox.getChildren().get(2);
-                Button leaveDeleteButton = (Button) leaveDeleteButtonHBox.getChildren().get(0);
-
                 //Get group container from node list
                 HBox groupContainer = (HBox) children.get(1);
 
@@ -363,17 +360,20 @@ public class GroupController implements Initializable {
             leaveDeleteButton.setText("Leave Group");
             leaveDeleteButton.setOnAction(
                     actionEvent -> UIGroupItemController.leaveGroup(user, groupNameLabel.getText()));
-
-
+            leaveDeleteButton.setOnMouseClicked(ActionEvent -> initUserGroupData());
         }
         if ((!(userRole == null)) && (userRole.equals("Admin"))) {
             groupOwnershipTransfer.setManaged(false);
+            leaveDeleteButton.setText("Leave Group");
+            leaveDeleteButton.setOnAction(
+                    actionEvent -> UIGroupItemController.leaveGroup(user, groupNameLabel.getText()));
+            leaveDeleteButton.setOnMouseClicked(ActionEvent -> initUserGroupData());
         }
         if ((!(userRole == null)) && (userRole.equals("Owner"))) {
-
             leaveDeleteButton.setText("Delete Group");
             leaveDeleteButton.setOnAction(
                     actionEvent -> UIGroupItemController.deleteGroup(groupNameLabel.getText()));
+            leaveDeleteButton.setOnMouseClicked(ActionEvent -> initUserGroupData());
         }
     }
 
