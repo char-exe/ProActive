@@ -1839,6 +1839,53 @@ public class DatabaseHandler {
         return -1;
     }
 
+    public boolean createGroup(String name, String username){
+        String checkIfExistsSQL = "SELECT COUNT(*) FROM group_table WHERE Group_Name = '" + name + "'";
+
+        boolean groupNameTaken = true;
+
+        try (Statement stmt = this.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(checkIfExistsSQL)) {
+
+            if(rs.getInt(1) == 0) {
+                groupNameTaken = false;
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        if(!groupNameTaken){
+
+            try (Statement stmt = this.conn.createStatement()) {
+
+                stmt.executeUpdate("INSERT INTO group_table(Group_Name) VALUES('" + name + "')");
+
+                ResultSet rs = stmt.executeQuery(
+                        "SELECT Group_Id FROM group_table WHERE Group_Name = '" + name + "'"
+                );
+
+                int groupId = rs.getInt("Group_Id");
+
+                stmt.executeUpdate(
+                        "INSERT INTO group_membership(User_Id, Group_Id, Group_Role) VALUES(" +
+                                getUserIDFromUsername(username) + "," + groupId + ", 'Owner')"
+                );
+
+                return true;
+
+            } catch (SQLException throwables) {
+
+                throwables.printStackTrace();
+
+            }
+
+        }
+
+        return !groupNameTaken;
+
+    }
+
     /**
      * Method to get the groupID based on the groupName
      *
@@ -2471,5 +2518,32 @@ public class DatabaseHandler {
         {
             System.out.println(e.getMessage());
         }
+    }
+
+    public void removeUserFromGroup(int userID, int groupID) {
+        String sql = "DELETE FROM Group_Membership WHERE user_id = " + userID + " AND group_id = " + groupID;
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
+    public void deleteGroup(String groupName) {
+        int groupID = getGroupIDFromName(groupName);
+
+        String sql =  "DELETE FROM group_goal WHERE group_id = " + groupID + ";";
+        String sql1 = "DELETE FROM group_membership WHERE Group_Id = " + groupID + ";";
+        String sql2 = "DELETE FROM group_table WHERE Group_Id = " + groupID + ";";
+        String sql3 = "DELETE FROM groupInvTable WHERE groupID = " + groupID + ";";
+
+        System.out.println(sql);
+        System.out.println(sql1);
+        System.out.println(sql2);
+        System.out.println(sql3);
     }
 }

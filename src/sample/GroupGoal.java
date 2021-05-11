@@ -1,6 +1,7 @@
 package sample;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -110,5 +111,7 @@ public class GroupGoal extends IndividualGoal {
     public int hashCode() {
         return Objects.hash(target, unit, endDate, groupId);
     }
+
 }
+
 

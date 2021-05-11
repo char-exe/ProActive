@@ -1,21 +1,26 @@
 package Controllers;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXML;
+import javafx.stage.Stage;
 import sample.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -55,6 +60,7 @@ public class GroupController implements Initializable {
     @FXML private ChoiceBox<String> exerciseDropDown;
     @FXML private DatePicker exerciseDate;
     @FXML private Label exerciseLabel;
+    @FXML private Button createGroupButton;
 
     private DatabaseHandler dh;
     private User user;
@@ -79,6 +85,46 @@ public class GroupController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
+    }
+
+    @FXML void joinGroupButtonAction(ActionEvent actionEvent) throws SQLException {
+        joinGroupConfirmPopUp.setText("");
+        String tokenInput = joinGroupInput.getText();
+        int userID = dh.getUserIDFromUsername(user.getUsername());
+        String groupName = dh.getGroupNameFromInv(tokenInput);
+        int groupInvUserID = dh.getUserIDFromInv(tokenInput);
+        LocalDateTime beforeNow = dh.getTimeoutFromInv(tokenInput);
+
+        System.out.println("Got here");
+        if (userID == groupInvUserID && LocalDateTime.now().isBefore(beforeNow)){
+            if(!dh.isMemberOfGroup(user.getUsername(), groupName)) {
+                dh.joinGroup(user.getUsername(), groupName);
+                joinGroupConfirmPopUp.setText("Successfully joined " + groupName);
+            }else {
+                joinGroupConfirmPopUp.setText("You Cannot Join This Group As You Are Already A Member, " +
+                                              "this token has been removed from the system"
+                                             );
+
+            }
+            dh.deleteGroupInv(tokenInput);
+        }else{
+            joinGroupConfirmPopUp.setText("Something went wrong when joining the group, please make sure the " +
+                                          "invite was meant for this user and has not expired (36 hours)"
+                                          );
+
+            if (dh.isInvExpired(tokenInput)){
+                dh.deleteGroupInv(tokenInput);
+            }
+        }
+    }
+
+    public void initUserGroupData(){
+
+        groupsAdministrated.getItems().clear();
+        dietDropDown.getItems().clear();
+        exerciseDropDown.getItems().clear();
+
+        initViewGroups();
 
         nutrientsMap = new HashMap<>();
 
@@ -165,6 +211,7 @@ public class GroupController implements Initializable {
                 );
             }
             dh.deleteGroupInv(tokenInput);
+            initUserGroupData();
         }
         else { //User has not been invited, or token has expired.
             if (tokenInput.equals("")) {
@@ -187,7 +234,7 @@ public class GroupController implements Initializable {
     /**
      * Method to instantiate all of a User's Group Memberships, each as a box in a scroll pane.
      */
-    public void initUserGroupData() {
+    public void initViewGroups() {
 
         groupsContainer.getChildren().clear();
         for(Group group : dh.getUserGroups(user.getUsername())) {
@@ -210,11 +257,16 @@ public class GroupController implements Initializable {
                 Label groupNameLabel = (Label) groupNameLabelHbox.getChildren().get(0);
                 groupNameLabel.setText(group.getName());
 
+                HBox leaveDeleteButtonHBox = (HBox) groupNameLabelHbox.getChildren().get(2);
+                Button leaveDeleteButton = (Button) leaveDeleteButtonHBox.getChildren().get(0);
+
                 //Get group container from node list
                 HBox groupContainer = (HBox) children.get(1);
 
                 //Get user list section
-                VBox userList = (VBox) groupContainer.getChildren().get(0);
+                VBox userListVBox = (VBox) groupContainer.getChildren().get(0);
+                ScrollPane userListScroll = (ScrollPane) userListVBox.getChildren().get(1);
+                VBox userList = (VBox) userListScroll.getContent();
 
                 //Display members
                 setMembers(group, userList);
@@ -302,9 +354,24 @@ public class GroupController implements Initializable {
             groupInviteButtonHbox.setManaged(false);
             groupInviteButton.setManaged(false);
             groupInviteInputLabel.setManaged(false);
-        }
-        if ((!(userRole == null)) && !(userRole.equals("Owner"))){
             groupOwnershipTransfer.setManaged(false);
+            /*
+            leaveDeleteButton.setText("Leave Group");
+            leaveDeleteButton.setOnAction(
+                    actionEvent -> UIGroupItemController.leaveGroup(user, groupNameLabel.getText()));
+
+             */
+        }
+        if ((!(userRole == null)) && (userRole.equals("Admin"))) {
+            groupOwnershipTransfer.setManaged(false);
+        }
+        if ((!(userRole == null)) && (userRole.equals("Owner"))) {
+            /*
+            leaveDeleteButton.setText("Delete Group");
+            leaveDeleteButton.setOnAction(
+                    actionEvent -> UIGroupItemController.deleteGroup(groupNameLabel.getText()));
+
+             */
         }
     }
 
@@ -560,5 +627,36 @@ public class GroupController implements Initializable {
         }
 
         return true; //All fields fine
+    }
+
+    public void createGroup(ActionEvent actionEvent) throws IOException {
+//        Stage parentScene = (Stage) createGroupButton.getScene().getWindow();
+//        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/FXML/CreateGroupPage.fxml"));
+
+        Parent parent = loader.load();
+
+        Stage stage = new Stage();
+
+        Scene sceneParent = new Scene(parent);
+
+        stage.setScene(sceneParent);
+
+        CreateGroupController controller = loader.getController();
+
+        controller.initData(user);
+
+        stage.setMinWidth(350);
+        stage.setMinHeight(300);
+        stage.setMaxWidth(550);
+        stage.setMaxHeight(500);
+
+        stage.setTitle("ProActive - Create a group");
+
+        stage.showAndWait();
+
+        initUserGroupData();
+
     }
 }
