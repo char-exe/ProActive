@@ -62,7 +62,9 @@ class GroupTest {
     //        return Set.copyOf(admins);
     //    }
     @Test
-    void getAdmins
+    void getAdmins() {
+
+    }
     //
     //    public GroupOwner getOwner() {
     //        return owner;
