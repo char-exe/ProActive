@@ -20,6 +20,7 @@ import sample.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -84,13 +85,6 @@ public class GroupController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        dh = DatabaseHandler.getInstance();
-
     }
 
     @FXML void joinGroupButtonAction(ActionEvent actionEvent) throws SQLException {
@@ -239,7 +233,7 @@ public class GroupController implements Initializable {
     /**
      * Method to instantiate all of a User's Group Memberships, each as a box in a scroll pane.
      */
-    public void initUserGroupData() {
+    public void initViewGroups() {
 
         groupsContainer.getChildren().clear();
         for(Group group : dh.getUserGroups(user.getUsername())) {
