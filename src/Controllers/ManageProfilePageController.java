@@ -1,15 +1,22 @@
 package Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import sample.DatabaseHandler;
 import sample.User;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -29,31 +36,36 @@ public class ManageProfilePageController implements Initializable {
     private User user;
     private DatabaseHandler dh;
 
-    @FXML public ChoiceBox<String> sexCombo;
-    @FXML public DatePicker datePick;
-    @FXML public TextField heightField;
-    @FXML public ChoiceBox<String> heightUnits;
-    @FXML public Label dobLabel;
-    @FXML public Label heightLabel;
-    @FXML public Label sexLabel;
+    @FXML private ChoiceBox<String> sexCombo;
+    @FXML private DatePicker datePick;
+    @FXML private TextField heightField;
+    @FXML private ChoiceBox<String> heightUnits;
+    @FXML private Label dobLabel;
+    @FXML private Label heightLabel;
+    @FXML private Label sexLabel;
 
-    @FXML public Button showBMIButton;
-    @FXML public Label BMILabel;
+    @FXML private Button showBMIButton;
+    @FXML private Label BMILabel;
 
-    @FXML public TextField bodyFatWaistInput;
-    @FXML public TextField bodyFatNeckInput;
-    @FXML public TextField bodyFatHipsInput;
-    @FXML public Label bodyFatWaistPopUp;
-    @FXML public Label bodyFatNeckPopUp;
-    @FXML public Label bodyFatHipsPopUp;
-    @FXML public Button bodyFatSubmit;
-    @FXML public Label bodyFatLabel;
+    @FXML private TextField bodyFatWaistInput;
+    @FXML private TextField bodyFatNeckInput;
+    @FXML private TextField bodyFatHipsInput;
+    @FXML private Label bodyFatWaistPopUp;
+    @FXML private Label bodyFatNeckPopUp;
+    @FXML private Label bodyFatHipsPopUp;
+    @FXML private Button bodyFatSubmit;
+    @FXML private Label bodyFatLabel;
+
+    @FXML private Button exportButton;
+    @FXML private Label statusLabel;
+
+    private String csvPath = System.getProperty("user.home") + File.separator + "Downloads" + File.separator;
 
     //https://www.regular-expressions.info/floatingpoint.html
     //Regex for inputfields that will take doubles
 
     //Regex for inputField checking
-    private final String INPUTFIELDNONNUMERIC = "^\\d*\\.?\\d*";
+    private final String INPUT_FIELD_NON_NUMERIC = "^\\d*\\.?\\d*";
 
     /**
      * Pseudo-constructor for controllers, runs after FXML elements have been loaded in and as such allows for
@@ -75,29 +87,29 @@ public class ManageProfilePageController implements Initializable {
         //Set heightField to digits only
         //https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         heightField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUTFIELDNONNUMERIC)){
-                heightField.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)){
+                heightField.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
             }
         });
 
         //Set bodyFatWaistInput to digits only
         bodyFatWaistInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
-                bodyFatWaistInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)) {
+                bodyFatWaistInput.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
             }
         });
 
         //Set bodyFatNeckInput to digits only
         bodyFatNeckInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
-                bodyFatNeckInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)) {
+                bodyFatNeckInput.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
             }
         });
 
         //Set bodyFatHipsInput to digits only
         bodyFatHipsInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(INPUTFIELDNONNUMERIC)) {
-                bodyFatHipsInput.setText(newValue.replaceAll(INPUTFIELDNONNUMERIC, ""));
+            if (!newValue.matches(INPUT_FIELD_NON_NUMERIC)) {
+                bodyFatHipsInput.setText(newValue.replaceAll(INPUT_FIELD_NON_NUMERIC, ""));
             }
         });
     }
@@ -295,7 +307,7 @@ public class ManageProfilePageController implements Initializable {
     @FXML
     private boolean checkWaistInput() {
         String name = bodyFatWaistInput.getText();
-        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")) {
+        if (name.matches(INPUT_FIELD_NON_NUMERIC) && checkValidDouble(name, ".")) {
             bodyFatHipsPopUp.setText("");
             return true;
         }
@@ -313,7 +325,7 @@ public class ManageProfilePageController implements Initializable {
     @FXML
     private boolean checkNeckInput() {
         String name = bodyFatNeckInput.getText();
-        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")) {
+        if (name.matches(INPUT_FIELD_NON_NUMERIC) && checkValidDouble(name, ".")) {
             bodyFatNeckPopUp.setText("");
             return true;
         }
@@ -331,7 +343,7 @@ public class ManageProfilePageController implements Initializable {
     @FXML
     private boolean checkHipsInput() {
         String name = bodyFatHipsInput.getText();
-        if (name.matches(INPUTFIELDNONNUMERIC) && checkValidDouble(name, ".")) {
+        if (name.matches(INPUT_FIELD_NON_NUMERIC) && checkValidDouble(name, ".")) {
             bodyFatHipsPopUp.setText("");
             return true;
         }
@@ -376,6 +388,49 @@ public class ManageProfilePageController implements Initializable {
                 }
             }
         }
+    }
+
+    public void exportCSV(ActionEvent actionEvent) throws IOException {
+        try {
+            statusLabel.setText("");
+            exportButton.setDisable(true);
+
+            System.out.println(dh.getNutrientEntries(user.getUsername(), null));
+
+            // https://stackabuse.com/reading-and-writing-csvs-in-java/
+            List<List<String>> rows = Arrays.asList(
+                    Arrays.asList("Jean", "author", "Java"),
+                    Arrays.asList("David", "editor", "Python"),
+                    Arrays.asList("Scott", "editor", "Node.js")
+            );
+
+            LocalTime time = LocalTime.now();
+
+            FileWriter csvWriter = new FileWriter(
+                    new File(csvPath + "ProActive data " + LocalDate.now() + "-" + time.getHour() + "." +
+                            time.getMinute() + "." + time.getSecond() + ".csv")
+            );
+
+            csvWriter.append("Name");
+            csvWriter.append(",");
+            csvWriter.append("Role");
+            csvWriter.append(",");
+            csvWriter.append("Topic");
+            csvWriter.append("\n");
+
+            for (List<String> rowData : rows) {
+                csvWriter.append(String.join(",", rowData));
+                csvWriter.append("\n");
+            }
+
+            csvWriter.flush();
+            csvWriter.close();
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        exportButton.setDisable(false);
+
+        statusLabel.setText("Exported data to: " + csvPath);
     }
 }
 

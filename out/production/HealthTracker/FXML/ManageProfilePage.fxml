@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ManageProfilePageController">
+<VBox prefHeight="600.0" prefWidth="800.0" styleClass="base" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ManageProfilePageController">
    <children>
       <Label text="Manage Profile" textAlignment="CENTER">
          <font>
@@ -28,9 +18,9 @@
             <Insets left="10.0" top="10.0" />
          </padding>
       </Label>
-      <TabPane prefHeight="480.0" prefWidth="700.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="480.0" prefWidth="700.0" styleClass="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <tabs>
-            <Tab text="Manage Profile">
+            <Tab styleClass="parentTab" text="Manage Profile">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <center>
@@ -108,7 +98,7 @@
                   </BorderPane>
                </content>
             </Tab>
-          <Tab text="Calculate Metrics">
+          <Tab styleClass="parentTab" text="Calculate Metrics">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <center>
@@ -280,11 +270,11 @@
                   </BorderPane>
                </content>
           </Tab>
-            <Tab text="Export Data">
+            <Tab styleClass="parentTab" text="Export Data">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <center>
-                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
                            <children>
                               <VBox prefHeight="25.0" prefWidth="615.0">
                                  <VBox.margin>
@@ -294,23 +284,37 @@
                                     <Label prefHeight="35.0" prefWidth="158.0" text="Select Information To Export" />
                                  </children>
                               </VBox>
-                              <HBox prefHeight="25.0" prefWidth="620.0">
+                              <HBox alignment="CENTER" prefHeight="25.0" prefWidth="620.0" spacing="10.0">
                                  <children>
-                                    <CheckBox mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" text="CheckBox" />
+                                    <CheckBox fx:id="nutritionCheckBox" mnemonicParsing="false" selected="true" text="Nutrition data" />
                                     <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                    <CheckBox mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" text="CheckBox" />
+                                    <CheckBox fx:id="exerciseCheckBox" mnemonicParsing="false" selected="true" text="Exercise data" />
                                     <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                    <CheckBox mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" text="CheckBox" />
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                    <CheckBox mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" text="CheckBox" />
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                    <CheckBox mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" text="CheckBox" />
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                    <CheckBox mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" text="CheckBox" />
+                                    <CheckBox fx:id="weightCheckBox" mnemonicParsing="false" selected="true" text="Weight data" />
                                  </children>
                                  <padding>
                                     <Insets left="10.0" />
                                  </padding>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="45.0" prefHeight="25.0" prefWidth="620.0" spacing="10.0">
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                                 <children>
+                                    <Button fx:id="exportButton" mnemonicParsing="false" onAction="#exportCSV" text="Export" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="10.0" layoutY="90.0" prefHeight="25.0" prefWidth="620.0" spacing="10.0">
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                                 <children>
+                                    <Label fx:id="statusLabel" textFill="#68ff54">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
                               </HBox>
                            </children>
                         </VBox>
