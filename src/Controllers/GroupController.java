@@ -112,6 +112,10 @@ public class GroupController implements Initializable {
 
     public void initUserGroupData(){
 
+        groupsAdministrated.getItems().clear();
+        dietDropDown.getItems().clear();
+        exerciseDropDown.getItems().clear();
+
         initViewGroups();
 
         nutrientsMap = new HashMap<>();
@@ -495,7 +499,7 @@ public class GroupController implements Initializable {
 
         stage.showAndWait();
 
-        initViewGroups();
+        initUserGroupData();
 
     }
 }
