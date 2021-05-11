@@ -2472,4 +2472,31 @@ public class DatabaseHandler {
             System.out.println(e.getMessage());
         }
     }
+
+    public void removeUserFromGroup(int userID, int groupID) {
+        String sql = "DELETE FROM Group_Membership WHERE user_id = " + userID + " AND group_id = " + groupID;
+
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(sql);
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
+    public void deleteGroup(String groupName) {
+        int groupID = getGroupIDFromName(groupName);
+
+        String sql =  "DELETE FROM group_goal WHERE group_id = " + groupID + ";";
+        String sql1 = "DELETE FROM group_membership WHERE Group_Id = " + groupID + ";";
+        String sql2 = "DELETE FROM group_table WHERE Group_Id = " + groupID + ";";
+        String sql3 = "DELETE FROM groupInvTable WHERE groupID = " + groupID + ";";
+
+        System.out.println(sql);
+        System.out.println(sql1);
+        System.out.println(sql2);
+        System.out.println(sql3);
+    }
 }

@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import sample.DatabaseHandler;
 import sample.EmailHandler;
 import sample.TokenHandler;
+import sample.User;
 
 import javax.mail.Session;
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class UIGroupItemController implements Initializable {
     @FXML Button inviteButton;
     @FXML Label invitePopUp;
     @FXML Label groupNameLabel;
-
+    @FXML Button leaveDeleteButton;
     @FXML HBox groupInfoContainer;
 
     /**
@@ -43,7 +44,20 @@ public class UIGroupItemController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         //groupInfoContainer.set
+    }
+
+    public static void leaveGroup(User user, String groupName){
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+        dh.removeUserFromGroup(dh.getUserIDFromUsername(user.getUsername()), dh.getGroupIDFromName(groupName));
+
+    }
+
+    public static void deleteGroup(String groupName) {
+        DatabaseHandler dh = DatabaseHandler.getInstance();
+        dh.deleteGroup(groupName);
+        System.out.println("Deleting");
     }
 
     /**

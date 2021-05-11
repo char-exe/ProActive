@@ -210,11 +210,16 @@ public class GroupController implements Initializable {
                 Label groupNameLabel = (Label) groupNameLabelHbox.getChildren().get(0);
                 groupNameLabel.setText(group.getName());
 
+                HBox leaveDeleteButtonHBox = (HBox) groupNameLabelHbox.getChildren().get(2);
+                Button leaveDeleteButton = (Button) leaveDeleteButtonHBox.getChildren().get(0);
+
                 //Get group container from node list
                 HBox groupContainer = (HBox) children.get(1);
 
                 //Get user list section
-                VBox userList = (VBox) groupContainer.getChildren().get(0);
+                VBox userListVBox = (VBox) groupContainer.getChildren().get(0);
+                ScrollPane userListScroll = (ScrollPane) userListVBox.getChildren().get(1);
+                VBox userList = (VBox) userListScroll.getContent();
 
                 //Display members
                 setMembers(group, userList);
@@ -290,23 +295,31 @@ public class GroupController implements Initializable {
         HBox groupNameLabelHbox = (HBox) children.get(0);
         Button groupOwnershipTransfer = (Button) groupNameLabelHbox.getChildren().get(1);
 
-        //If a user is an admin or an owner of a group, there are no restrictions on whether they can invite
-        //users to a group
-        if ((!(userRole == null)) && userRole.equals("Member")) {
-            s.setManaged(false);
-            groupInvite.setManaged(false);
-            groupInviteLabelHbox.setManaged(false);
-            groupInvitePopUp.setManaged(false);
-            groupInviteInputHbox.setManaged(false);
-            groupInviteInput.setManaged(false);
-            groupInviteButtonHbox.setManaged(false);
-            groupInviteButton.setManaged(false);
-            groupInviteInputLabel.setManaged(false);
-        }
-        if ((!(userRole == null)) && !(userRole.equals("Owner"))){
-            groupOwnershipTransfer.setManaged(false);
-        }
-    }
+                //If a user is an admin or an owner of a group, there are no restrictions on whether they can invite
+                //users to a group
+                if ((!(userRole == null)) && userRole.equals("Member")) {
+                    s.setManaged(false);
+                    groupInvite.setManaged(false);
+                    groupInviteLabelHbox.setManaged(false);
+                    groupInvitePopUp.setManaged(false);
+                    groupInviteInputHbox.setManaged(false);
+                    groupInviteInput.setManaged(false);
+                    groupInviteButtonHbox.setManaged(false);
+                    groupInviteButton.setManaged(false);
+                    groupInviteInputLabel.setManaged(false);
+                    groupOwnershipTransfer.setManaged(false);
+                    leaveDeleteButton.setText("Leave Group");
+                    leaveDeleteButton.setOnAction(
+                            actionEvent -> UIGroupItemController.leaveGroup(user, groupNameLabel.getText()));
+                }
+                if ((!(userRole == null)) && (userRole.equals("Admin"))){
+                    groupOwnershipTransfer.setManaged(false);
+                }
+                if ((!(userRole == null)) && (userRole.equals("Owner"))){
+                    leaveDeleteButton.setText("Delete Group");
+                    leaveDeleteButton.setOnAction(
+                            actionEvent -> UIGroupItemController.deleteGroup(groupNameLabel.getText()));
+                }
 
     /**
      * Private helper method to display a Groups goals and allow them to be accepted by users.
