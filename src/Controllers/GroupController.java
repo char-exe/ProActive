@@ -1,7 +1,6 @@
 package Controllers;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -20,7 +19,6 @@ import sample.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -33,13 +31,14 @@ import java.util.ResourceBundle;
  * @author Charlie Jones
  * @author Samuel Scarfe
  *
- * @version 1.2
+ * @version 1.4
  *
  * 1.0 - Initial commit, dummy file.
  * 1.1 - Added initialise function, and populate groups section with all groups the user has joined. It also displays
  *       the group members of each group but not yet the goals.
  * 1.2 - Adding group goal viewing, joining, and setting.
  * 1.3 - Refactored into private methods to improve readability.
+ * 1.4 - Added create group.
  */
 public class GroupController implements Initializable {
 
@@ -87,37 +86,9 @@ public class GroupController implements Initializable {
         this.user = user;
     }
 
-    @FXML void joinGroupButtonAction(ActionEvent actionEvent) throws SQLException {
-        joinGroupConfirmPopUp.setText("");
-        String tokenInput = joinGroupInput.getText();
-        int userID = dh.getUserIDFromUsername(user.getUsername());
-        String groupName = dh.getGroupNameFromInv(tokenInput);
-        int groupInvUserID = dh.getUserIDFromInv(tokenInput);
-        LocalDateTime beforeNow = dh.getTimeoutFromInv(tokenInput);
-
-        System.out.println("Got here");
-        if (userID == groupInvUserID && LocalDateTime.now().isBefore(beforeNow)){
-            if(!dh.isMemberOfGroup(user.getUsername(), groupName)) {
-                dh.joinGroup(user.getUsername(), groupName);
-                joinGroupConfirmPopUp.setText("Successfully joined " + groupName);
-            }else {
-                joinGroupConfirmPopUp.setText("You Cannot Join This Group As You Are Already A Member, " +
-                                              "this token has been removed from the system"
-                                             );
-
-            }
-            dh.deleteGroupInv(tokenInput);
-        }else{
-            joinGroupConfirmPopUp.setText("Something went wrong when joining the group, please make sure the " +
-                                          "invite was meant for this user and has not expired (36 hours)"
-                                          );
-
-            if (dh.isInvExpired(tokenInput)){
-                dh.deleteGroupInv(tokenInput);
-            }
-        }
-    }
-
+    /**
+     * Method to initialise the tab pane of the groups page.
+     */
     public void initUserGroupData(){
 
         groupsAdministrated.getItems().clear();
@@ -227,7 +198,6 @@ public class GroupController implements Initializable {
             if (dh.isInvExpired(tokenInput)) {
                 dh.deleteGroupInv(tokenInput);
             }
-
         }
     }
 
@@ -631,7 +601,12 @@ public class GroupController implements Initializable {
         return true; //All fields fine
     }
 
-    public void createGroup(ActionEvent actionEvent) throws IOException {
+    /**
+     * Method to control the action of the create group button.
+     *
+     * @throws IOException if the loading of the create group page throws an IOException.
+     */
+    public void createGroup() throws IOException {
 //        Stage parentScene = (Stage) createGroupButton.getScene().getWindow();
 //        Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();

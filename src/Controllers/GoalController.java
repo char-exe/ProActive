@@ -22,7 +22,7 @@ import javafx.fxml.FXML;
  *
  * @author Samuel Scarfe
  *
- * @version 1.4
+ * @version 1.5
  *
  * 1.0 - First working version. Functionality for adding goals implemented with simple error checking.
  * 1.1 - Implemented functionality for checking current and past goals.

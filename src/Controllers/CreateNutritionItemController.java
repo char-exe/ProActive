@@ -198,8 +198,7 @@ public class CreateNutritionItemController implements Initializable {
     @FXML protected boolean checkFirstName() {
         String name = nameInput.getText();
         //Regex for nameInput textField
-        String NAMEINPUTREGEX = "[a-zA-Z]*";
-        if (name.matches(NAMEINPUTREGEX)) {
+        if (name != null) {
             nameInputPopUp.setText("");
             return true;
         }

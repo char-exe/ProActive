@@ -159,6 +159,20 @@ class UserTest {
     }
 
     @Test
+    void futureDobConstruction() {
+        assertThrows(IllegalArgumentException.class, () -> new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                180,
+                120,
+                LocalDate.now().plusDays(1),
+                "manbat@gmail.com",
+                "bwayne1998"
+        ));
+    }
+
+    @Test
     void nullEmailConstruction() {
         assertThrows(NullPointerException.class, () -> new User(
                 "Bruce",
@@ -705,6 +719,61 @@ class UserTest {
         assertEquals(120, batman.getWeight());
     }
 
+    //    public void setDob(LocalDate dob) {
+    //        if (dob == null) {
+    //            throw new NullPointerException();
+    //        }
+    //        if (dob.isAfter(LocalDate.now())) {
+    //            throw new IllegalArgumentException();
+    //        }
+    //        this.dob = dob;
+    //        this.setAge();
+    //    }
+
+    @Test
+    void nullDobSetDob() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(NullPointerException.class, () -> batman.setDob(null));
+    }
+
+    @Test
+    void illegalDobSetDob() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> batman.setDob(LocalDate.now().plusDays(1)));
+    }
+
+    @Test
+    void successfulSetDob() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        batman.setDob(LocalDate.now().minusDays(1));
+
+        assertEquals(0, batman.getAge());
+    }
+
     @Test
     void testToString() {
         User batman = new User(
@@ -823,7 +892,7 @@ class UserTest {
                 "bwayne1998"
         );
 
-        assertThrows(NullPointerException.class, () -> batman.getAverageWorkRate(null, 0));
+        assertThrows(IllegalArgumentException.class, () -> batman.getAverageWorkRate(Goal.Unit.PROTEIN, 0));
     }
 
     @Test
@@ -837,7 +906,7 @@ class UserTest {
                 "bwayne1998"
         );
 
-        assertThrows(NullPointerException.class, () -> batman.getAverageWorkRate(null, -1));
+        assertThrows(IllegalArgumentException.class, () -> batman.getAverageWorkRate(Goal.Unit.PROTEIN, -1));
     }
 
     @Test
@@ -852,5 +921,154 @@ class UserTest {
         );
 
         assertThrows(NullPointerException.class, () -> batman.quitGoal(null));
+    }
+
+    @Test
+    void nullUnitUpdate() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(NullPointerException.class, () -> batman.updateGoals(null, 1));
+    }
+
+    @Test
+    void negativeAmountUpdate() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> batman.updateGoals(Goal.Unit.PROTEIN, -1));
+    }
+
+    @Test
+    void falseNullEquals() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertNotEquals(null, batman);
+    }
+
+    @Test
+    void falseObjectEquals() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        Object o = new Object();
+        assertNotEquals(o, batman);
+    }
+
+    @Test
+    void falseDifferentUsernameEquals() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        User manbat = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1999"
+        );
+
+        assertNotEquals(manbat, batman);
+    }
+
+    @Test
+    void trueSameUsernameEquals() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        User manbat = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        assertEquals(manbat, batman);
+    }
+
+    @Test
+    void usernamesDifferentHashcodesDifferent() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        User manbat = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1999"
+        );
+
+        assertNotEquals(manbat.hashCode(), batman.hashCode());
+    }
+
+    @Test
+    void usernamesSameHashcodesSame() {
+        User batman = new User(
+                "Bruce",
+                "Wayne",
+                User.Sex.MALE,
+                LocalDate.of(1998, 3, 9),
+                "manbat@gmail.com",
+                "bwayne1998"
+        );
+
+        User manbat = new User(
+                "Broos",
+                "Wain",
+                User.Sex.FEMALE,
+                LocalDate.of(1999, 4, 10),
+                "manbat1@gmail.com",
+                "bwayne1998"
+        );
+
+        assertEquals(manbat.hashCode(), batman.hashCode());
     }
 }

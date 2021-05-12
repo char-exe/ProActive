@@ -3,8 +3,6 @@ package sample;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A class to represent a user in a health tracking application, most/all error checking is completed
@@ -57,7 +55,6 @@ public class User {
     private float weight;  //Changed from int on class description storing in KG
     private LocalDate dob;
     private final String email;
-    private final Set<Group> groupMemberships = new HashSet<>();
     private final ArrayList<UserGoal> goals;
     private ArrayList<SystemGoal> systemGoals;
     private final String username;
@@ -74,22 +71,18 @@ public class User {
      * @param email Stores the unique email address of the User
      * @param username Stores the unique username of the User
      */
-    public User(String firstname, String surname, Sex sex, float height, float weight, LocalDate dob, String email,
-                String username){
-        checkConstructorInputs(firstname, surname, sex, height, weight, dob, email, username);
+    public User(String firstname, String surname, Sex sex, float height, float weight, LocalDate dob, String email, String username){
+        this(firstname, surname, sex, dob, email, username);
 
-        this.firstname = firstname;
-        this.surname = surname;
-        this.sex = sex;
+        if (height <= 0) {
+            throw new IllegalArgumentException();
+        }
+        if (weight <= 0) {
+            throw new IllegalArgumentException();
+        }
+
         this.height = height;
         this.weight = weight;
-        this.dob = dob;
-        this.email = email;
-        this.username = username;
-
-        this.goals = DatabaseHandler.getInstance().selectGoals(username);
-
-        this.setAge();  //Takes the current date and DOB and calculates the current age of the user
     }
 
     /**
@@ -110,35 +103,6 @@ public class User {
         this.dob = dob;
         this.email = email;
         this.username = username;
-
-        this.goals = DatabaseHandler.getInstance().selectGoals(username);
-
-        this.setAge();  //Takes the current date and DOB and calculates the current age of the user
-    }
-
-    /**
-     * Constructs a user object with only firstname, surname, sex, dob, email, height, weight and username initialised.
-     * @param firstname Stores the firstname of the User
-     * @param surname Stores the surname of the User
-     * @param sex Stores the sex of the User
-     * @param dob Stores the date of birth of the User
-     * @param email Stores the unique email address of the User
-     * @param username Stores the unique username of the User
-     * @param height Stores the height of the user
-     * @param weight Stores the weight of the user
-     *
-     */
-    public User(String firstname, String surname, Sex sex, LocalDate dob, String email, String username, float height, float weight) {
-        checkConstructorInputs(firstname, surname, sex, dob, email, username);
-
-        this.firstname = firstname;
-        this.surname = surname;
-        this.sex = sex;
-        this.dob = dob;
-        this.email = email;
-        this.username = username;
-        this.height = height;
-        this.weight = weight;
 
         this.goals = DatabaseHandler.getInstance().selectGoals(username);
 
@@ -234,12 +198,6 @@ public class User {
     public String getRealName(){
         return firstname + " " + surname;
     }
-
-    /**
-     * Method for getting the full list of groups the user belongs to.
-     * @return returns the list of group objects
-     */
-    public Set<Group> getGroupMemberships() { return groupMemberships; }
 
     /**
      * Gets the list of goals for this user.
@@ -385,23 +343,6 @@ public class User {
      * @param unit   the unit which has been input as part of a logged activity.
      * @param amount the amount of the unit which has been logged.
      */
-    public void updateGoals(Goal.Unit unit, int amount) {
-        //for each goal
-        for (UserGoal userGoal : goals) {
-            //if the goal is updated
-            if (userGoal.updateProgress(unit, amount, this.username)) {
-                //update the goal in the database
-                DatabaseHandler.getInstance().updateGoal(username, userGoal, amount);
-            }
-        }
-    }
-
-    /**
-     * Queries the user's goals to see if any are suitable for update by the passed unit and amount.
-     *
-     * @param unit   the unit which has been input as part of a logged activity.
-     * @param amount the amount of the unit which has been logged.
-     */
     public void updateGoals(Goal.Unit unit, float amount) {
         if (unit == null) {
             throw new NullPointerException();
@@ -507,35 +448,6 @@ public class User {
         }
     }
 
-
-    /**
-     * Public method for adding a group membership to the user's list of memberships.
-     *
-     * @param group Takes a the group object for the group being joined.
-     */
-    public void joinGroup(Group group) {
-        groupMemberships.add(group);
-    }
-
-    /**
-     * Method for removing a user from a group
-     *
-     * @param group Group object for the group the user is to leave.
-     */
-    public void leaveGroup(Group group) {
-        groupMemberships.remove(group);
-    }
-
-    /**
-     * Method to check for group membership.
-     *
-     * @param group Group object for the group you are checking the user is a member of.
-     * @return returns true if they are a member, false if they are not.
-     */
-    public boolean isGroupMemberOf(Group group) {
-        return groupMemberships.contains(group);
-    }
-
     /**
      * Returns a String representation of this User object.
      *
@@ -572,30 +484,6 @@ public class User {
     @Override
     public int hashCode() {
         return this.username.hashCode();
-    }
-
-    /**
-     * Private method for validating parameters passed to create an instance of a User.
-     *
-     * @param firstname Stores the firstname of the User
-     * @param surname Stores the surname of the User
-     * @param sex Stores the sex of the User
-     * @param height Stores the height of the User
-     * @param weight Stores the weight of the User
-     * @param dob Stores the date of birth of the User
-     * @param email Stores the unique email address of the User
-     * @param username Stores the unique username of the User
-     */
-    private void checkConstructorInputs(String firstname, String surname, Sex sex, float height, float weight,
-                                        LocalDate dob, String email, String username) {
-        checkConstructorInputs(firstname, surname, sex, dob, email, username);
-
-        if (height <= 0) {
-            throw new IllegalArgumentException();
-        }
-        if (weight <= 0) {
-            throw new IllegalArgumentException();
-        }
     }
 
     /**

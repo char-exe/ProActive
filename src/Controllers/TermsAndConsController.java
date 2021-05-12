@@ -32,11 +32,5 @@ public class TermsAndConsController {
         }
         reader.close();
         termsText.setText(content.toString());
-
     }
-
 }
-
-
-
-

@@ -24,13 +24,14 @@ import java.util.Arrays;
 /**
  * Class for controlling the login page FXML
  *
- * @author ??
+ * @author Evan Clayton
  *
- * @version 1.0
+ * @version 1.1
+ *
+ * 1.0 - First working version
+ * 1.1 - Implemented forgotten username and password.
  */
 public class LoginPageController {
-
-    private String username, password;
 
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
@@ -41,36 +42,18 @@ public class LoginPageController {
     @FXML private Button forgotUsernameButton;
 
     /**
-     * Getter for username
-     *
-     * @return returns the users username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * Getter for password
-     *
-     * @return returns the users password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
      * Method for handling the login event, this will create a connection to the database, hash the password which was
      * passed in and compare it to the hashed password stored in the database, if they match then it will pass the user
      * as a persistent object to the main FXML document, close the current scene and open the main scene
      */
     public void login() {
-        username = usernameField.getText();
-        password = passwordField.getText();
+        String username = usernameField.getText();
+        String password = passwordField.getText();
 
         clearInvalidUsername();
         clearInvalidPassword();
 
-        try{
+        try {
             DatabaseHandler dh = DatabaseHandler.getInstance();
 
             //Retrieve user's hashed password and salt value
@@ -108,27 +91,28 @@ public class LoginPageController {
                 stage.setWidth(1000);
                 stage.setHeight(800);
 
-//                stage.setMaxWidth(1400);
-//                stage.setMaxHeight(800);
-
                 main.initData(user);
                 main.homeScreen();
 
                 parentScene.close();
                 stage.show();
-            }else {
+            }
+            else {
                 displayInvalidPassword();
             }
         } catch (SQLException | NullPointerException userError) {
             displayInvalidUsername();
             displayInvalidPassword();
-        } catch (IOException e1){
+        }
+        catch (IOException e1) {
             System.out.println(e1.getMessage());
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             System.out.println("String passed to SecretKeyFactory.getInstance has been spelled incorrectly, or is" +
                     "otherwise incorrect.");
-        } catch (InvalidKeySpecException e) {
+        }
+        catch (InvalidKeySpecException e) {
             e.printStackTrace();
         }
     }

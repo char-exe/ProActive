@@ -654,7 +654,6 @@ public class DatabaseHandler {
      * Method to build a user object based on the username provided
      *
      * @param username username to query the database for
-     *
      * @return returns a complete user object for use as a persistent user throughout application
      */
     public User createUserObjectFromUsername(String username) throws SQLException {
@@ -687,6 +686,7 @@ public class DatabaseHandler {
      * of each day's date.
      *
      * @param username The user's username.
+     * @param latest the lastest date to be queried.
      * @return A Map of String representation of a date against calories intaken.
      */
     public HashMap<String, Double> getIntakeEntries(String username, LocalDate latest) {
@@ -731,6 +731,7 @@ public class DatabaseHandler {
      * representations of each day's date.
      *
      * @param username The user's username.
+     * @param latest the lastest date to be queried.
      * @return A Map of String representation of a date against minutes spent exercising.
      */
     public HashMap<String, Integer> getSpentEntries(String username, LocalDate latest) {
@@ -774,15 +775,16 @@ public class DatabaseHandler {
      * of each day's date.
      *
      * @param username The user's username.
+     * @param latest the lastest date to be queried.
      * @return A Map of String representation of a date against calories burned.
      */
     public HashMap<String, Float> getBurnedEntries(String username, LocalDate latest) {
         if (username == null) {
             throw new NullPointerException();
         }
-//        if (latest == null) {
-//            throw new NullPointerException();
-//        }
+        if (latest != null && latest.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException();
+        }
 
         HashMap<String, Float> entries = new HashMap<>();
 
@@ -837,6 +839,13 @@ public class DatabaseHandler {
         return entries;
     }
 
+    /**
+     * Method to get the past seven days of calories burned for the user in a Map with keys as String representations
+     * of each day's date.
+     *
+     * @param username The user's username.
+     * @return A Map of String representation of a date against calories burned.
+     */
     public HashMap<String, List<List<String>>> getBurnedEntries(String username) {
         if (username == null) {
             throw new NullPointerException();
@@ -899,15 +908,16 @@ public class DatabaseHandler {
      * of each day's date.
      *
      * @param username The user's username.
+     * @param latest the lastest date to be queried.
      * @return A Map of String representation of a date against weight entries.
      */
     public HashMap<String, Integer> getWeightEntries(String username, LocalDate latest) {
         if (username == null) {
             throw new NullPointerException();
         }
-//        if (latest == null) {
-//            throw new NullPointerException();
-//        }
+        if (latest != null && latest.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException();
+        }
 
         HashMap<String, Integer> entries = new HashMap<>();
 
@@ -962,9 +972,6 @@ public class DatabaseHandler {
         if (username == null) {
             throw new NullPointerException();
         }
-//        if (latest == null) {
-//            throw new NullPointerException();
-//        }
         if (latest != null && latest.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException();
         }
@@ -1974,6 +1981,12 @@ public class DatabaseHandler {
         return -1;
     }
 
+    /**
+     * Method to create a group in the group table.
+     * @param name the name of the group.
+     * @param username the username of the user creating the group.
+     * @return a boolean value representing whether the group was successfully created.
+     */
     public boolean createGroup(String name, String username){
         String checkIfExistsSQL = "SELECT COUNT(*) FROM group_table WHERE Group_Name = '" + name + "'";
 
@@ -1985,8 +1998,8 @@ public class DatabaseHandler {
             if(rs.getInt(1) == 0) {
                 groupNameTaken = false;
             }
-
-        } catch (SQLException throwables) {
+        }
+        catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
@@ -2008,17 +2021,13 @@ public class DatabaseHandler {
                 );
 
                 return true;
-
-            } catch (SQLException throwables) {
-
-                throwables.printStackTrace();
-
             }
-
+            catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         return !groupNameTaken;
-
     }
 
     /**
@@ -2655,6 +2664,11 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * Method to remove a user from a group.
+     * @param userID the user's user ID.
+     * @param groupID the group's group ID.
+     */
     public void removeUserFromGroup(int userID, int groupID) {
         String sql = "DELETE FROM Group_Membership WHERE user_id = " + userID + " AND group_id = " + groupID + ";";
         String sql1= "DELETE FROM goal WHERE user_id = " + userID + " AND group_id = " + groupID + ";";
@@ -2671,6 +2685,10 @@ public class DatabaseHandler {
 
     }
 
+    /**
+     * Method to delete a group from the group table.
+     * @param groupName the name of the group.
+     */
     public void deleteGroup(String groupName) {
         int groupID = getGroupIDFromName(groupName);
 
@@ -2691,7 +2709,5 @@ public class DatabaseHandler {
         }
 
         System.out.println("Deleted Group: " + groupName);
-
-
     }
 }

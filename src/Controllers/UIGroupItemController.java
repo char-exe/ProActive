@@ -44,14 +44,20 @@ public class UIGroupItemController implements Initializable {
 
     }
 
+    /**
+     * Method to control remove a User from a Group in the database.
+     * @param user the user to be removed.
+     * @param groupName the group they are to be removed from.
+     */
     public static void leaveGroup(User user, String groupName){
         DatabaseHandler dh = DatabaseHandler.getInstance();
-        user.leaveGroup(dh.getGroupObjectFromGroupName(groupName));
         dh.removeUserFromGroup(dh.getUserIDFromUsername(user.getUsername()), dh.getGroupIDFromName(groupName));
-
-
     }
 
+    /**
+     * Method to delete a group.
+     * @param groupName the name of the group.
+     */
     public static void deleteGroup(String groupName) {
         DatabaseHandler dh = DatabaseHandler.getInstance();
         dh.deleteGroup(groupName);
