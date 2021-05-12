@@ -1,5 +1,9 @@
 package Controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.FXCollections.*;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -53,7 +57,10 @@ public class ChangeOwnershipController implements Initializable {
     public void initData(Group group){
         this.group = group;
 
-        adminComboBox.getItems().addAll(group.getAdmins());
+        ObservableSet<GroupAdmin> admins = FXCollections.observableSet(group.getAdmins());
+
+        adminComboBox.getItems().addAll(admins);
+        System.out.println(adminComboBox.getItems());
     }
 
     /**

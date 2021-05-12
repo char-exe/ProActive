@@ -46,10 +46,7 @@ public class UIGroupItemController implements Initializable {
 
     public static void leaveGroup(User user, String groupName){
         DatabaseHandler dh = DatabaseHandler.getInstance();
-        user.leaveGroup(dh.getGroupObjectFromGroupName(groupName));
         dh.removeUserFromGroup(dh.getUserIDFromUsername(user.getUsername()), dh.getGroupIDFromName(groupName));
-
-
     }
 
     public static void deleteGroup(String groupName) {
