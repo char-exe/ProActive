@@ -182,7 +182,6 @@ public class GroupController implements Initializable {
                 );
             }
             dh.deleteGroupInv(tokenInput);
-            initUserGroupData();
         }
         else { //User has not been invited, or token has expired.
             if (tokenInput.equals("")) {
@@ -197,6 +196,7 @@ public class GroupController implements Initializable {
 
             if (dh.isInvExpired(tokenInput)) {
                 dh.deleteGroupInv(tokenInput);
+                initViewGroups();
             }
         }
     }
