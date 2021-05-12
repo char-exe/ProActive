@@ -204,7 +204,7 @@ public class LogActivityController implements Initializable {
                     user.updateGoals(Goal.Unit.valueOf(exercise.toUpperCase(Locale.ROOT)), minutes);
                 }
                 catch (IllegalArgumentException e) { //Exercise not in enum (i.e. custom exercise)
-                    System.out.println("Caught attempted invalid goals update.");
+                    e.printStackTrace();
                 }
 
                 user.updateGoals(Goal.Unit.EXERCISE, minutes);
@@ -306,7 +306,6 @@ public class LogActivityController implements Initializable {
             }
 
             //Show success message to user
-            System.out.println(food + " added to " + meal);
             foodFieldsLabel.setText(food + " added to " + meal);
 
             //update table

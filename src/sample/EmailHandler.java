@@ -94,7 +94,6 @@ public class EmailHandler {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
-            System.out.println(to);
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject("Thank you for creating an account with ProActive");
             message.setContent(
@@ -127,8 +126,6 @@ public class EmailHandler {
 
             Transport.send(message);
 
-            System.out.println("verification email sent");
-
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -147,7 +144,6 @@ public class EmailHandler {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
-            System.out.println(to);
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject("You Have Been Invited To A Group With Proactive");
             message.setContent(
@@ -181,8 +177,6 @@ public class EmailHandler {
 
             Transport.send(message);
 
-            System.out.println("verification email sent");
-
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -204,7 +198,6 @@ public class EmailHandler {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
-            System.out.println(to);
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(to)
@@ -215,8 +208,6 @@ public class EmailHandler {
                             "Please copy the following code into the Proactive App to join this goal!  " + goalToken);
 
             Transport.send(message);
-
-            System.out.println("Goal Invite sent");
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -243,8 +234,6 @@ public class EmailHandler {
                     + "\" Congratulations!");
 
             Transport.send(message);
-
-            System.out.println("Goal Completion sent");
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -273,8 +262,6 @@ public class EmailHandler {
 
             Transport.send(message);
 
-            System.out.println("Goal Completion sent");
-
         }
         catch (MessagingException e) {
             e.printStackTrace();
@@ -296,7 +283,6 @@ public class EmailHandler {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
-            System.out.println(to);
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject("ProActive Password Recovery");
             message.setContent(
@@ -330,8 +316,6 @@ public class EmailHandler {
 
             Transport.send(message);
 
-            System.out.println("Recovery Email Sent");
-
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -349,7 +333,6 @@ public class EmailHandler {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
-            System.out.println(to);
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject("ProActive Username Recovery");
             message.setContent(
@@ -381,8 +364,6 @@ public class EmailHandler {
                     "text/html");
 
             Transport.send(message);
-
-            System.out.println("Recovery Email Sent");
 
         } catch (MessagingException e) {
             e.printStackTrace();

@@ -83,7 +83,7 @@ public class DatabaseHandler {
             conn = DriverManager.getConnection(CONNECTION);
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -120,14 +120,10 @@ public class DatabaseHandler {
         // and as such, we can make this an atomic action
         insertIntoUserTable(user, hash, salt);
 
-        System.out.println("User Added To Database Successfully");
-
         //If the aforementioned method returns true we need to log the userID that it created, we need to do this
         //because we did not explicitly state the value we are giving the userID and as such need to calculate it.
         //Using the userID previously calculated, we will create the initial entry for the users weight
         insertWeightValue(user.getUsername(), user.getWeight(), LocalDate.now());
-
-        System.out.println("User Initial Weight Entry Added To Database Successfully");
 
         //Once this has all been completed, we have successfully created a user entry in the database
     }
@@ -150,7 +146,6 @@ public class DatabaseHandler {
             throw new NullPointerException();
         }
 
-        System.out.println(user.getEmail());
         String sql =
                 "INSERT INTO user (first_name, last_name, dob, height, sex, username, hash, salt, email)" +
                 "VALUES(?,?,?,?,?,?,?,?,?)";
@@ -169,7 +164,7 @@ public class DatabaseHandler {
             pstmt.executeUpdate();
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -198,7 +193,7 @@ public class DatabaseHandler {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return userID;
     }
@@ -225,7 +220,7 @@ public class DatabaseHandler {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return userHeight;
 
@@ -257,7 +252,7 @@ public class DatabaseHandler {
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return username;
     }
@@ -285,7 +280,6 @@ public class DatabaseHandler {
             }
         }
         catch (SQLException e) {
-            System.out.println("Could Not Find User");
             throw new SQLException();
         }
 
@@ -315,7 +309,6 @@ public class DatabaseHandler {
             }
         }
         catch (SQLException e) {
-            System.out.println("Could Not Find User");
             throw new SQLException();
         }
 
@@ -344,7 +337,7 @@ public class DatabaseHandler {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return false;
     }
@@ -370,7 +363,7 @@ public class DatabaseHandler {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return true;
     }
@@ -402,8 +395,6 @@ public class DatabaseHandler {
 
         Statement stmt  = conn.createStatement();
         stmt.executeUpdate(sql);
-
-        System.out.println("Weight entry added for " + username);
     }
 
     /**
@@ -426,7 +417,7 @@ public class DatabaseHandler {
             stmt.executeUpdate(sql);
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -591,7 +582,7 @@ public class DatabaseHandler {
             stmt.executeQuery(sql);
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -765,8 +756,6 @@ public class DatabaseHandler {
         catch (SQLException e) {
             e.printStackTrace();
         }
-
-        System.out.println(entries);
         return entries;
     }
 
@@ -1146,8 +1135,6 @@ public class DatabaseHandler {
 
         Statement stmt  = conn.createStatement();
         stmt.executeUpdate(sql);
-
-        System.out.println("Added " + exercise + " to database for " + username);
     }
 
     /**
@@ -1212,7 +1199,6 @@ public class DatabaseHandler {
 
         Statement stmt  = conn.createStatement();
         stmt.executeUpdate(sql);
-        System.out.println("Added " + food + " to database for " + username);
     }
 
     /**
@@ -1349,7 +1335,6 @@ public class DatabaseHandler {
         time = time.plusHours(36);
 
         String sql = "INSERT INTO groupInvTable (tokenVal, expiry_time, groupID, userID) VALUES ('" + tokenVal +"', '" + time + "', " + groupID + ", " + userID + ");";
-        System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
             stmt.executeUpdate(sql);
@@ -1389,7 +1374,6 @@ public class DatabaseHandler {
             if(rs.next()) {
                 noCups = rs.getInt("quantity") / 250;
 
-                System.out.println(userID + ": " + noCups + " cups of water");
             }
         }
         catch (SQLException e) {
@@ -1420,7 +1404,6 @@ public class DatabaseHandler {
         String role = null;
 
         String sql = "SELECT Group_Role FROM group_membership WHERE User_Id = " + userID + " AND Group_Id = " + groupID;
-        System.out.println(sql);
 
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql))
@@ -1789,7 +1772,6 @@ public class DatabaseHandler {
         try (Statement stmt = this.conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                System.out.println(unit);
                 workRate = rs.getFloat("progress");
             }
         }
@@ -1843,7 +1825,7 @@ public class DatabaseHandler {
             }
             catch (SQLException e)
             {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -1899,7 +1881,7 @@ public class DatabaseHandler {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return username;
     }
@@ -1953,7 +1935,7 @@ public class DatabaseHandler {
 
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return false;
     }
@@ -1976,7 +1958,7 @@ public class DatabaseHandler {
                 return rs.getInt("userID");
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return -1;
     }
@@ -2052,7 +2034,6 @@ public class DatabaseHandler {
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 groupID = rs.getInt("group_id");
-                System.out.println(groupID);
             }
         }
         catch (SQLException e) {
@@ -2084,7 +2065,6 @@ public class DatabaseHandler {
                      " SET group_role = 'Member'" +
                      " WHERE user_id = " + userID +
                      " AND group_id = " + groupID + ";";
-        System.out.println(sql);
 
         try{
              Statement stmt = this.conn.createStatement();
@@ -2116,7 +2096,6 @@ public class DatabaseHandler {
                     " SET group_role = 'Admin'" +
                     " WHERE user_id = " + userID +
                     " AND group_id = " + groupID + ";";
-        System.out.println(sql);
 
         try {
             Statement stmt = this.conn.createStatement();
@@ -2511,9 +2490,6 @@ public class DatabaseHandler {
         catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
-        System.out.println(sql);
-        System.out.println(sql2);
     }
 
     /**
@@ -2660,7 +2636,7 @@ public class DatabaseHandler {
         }
         catch (SQLException e)
         {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -2681,7 +2657,6 @@ public class DatabaseHandler {
         catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        System.out.println("User Left Group");
 
     }
 
@@ -2707,7 +2682,5 @@ public class DatabaseHandler {
         catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
-        System.out.println("Deleted Group: " + groupName);
     }
 }

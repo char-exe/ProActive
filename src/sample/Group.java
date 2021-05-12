@@ -197,7 +197,6 @@ public class Group {
         }
 
         if (!member.getUser().getUsername().equals(username)) {
-            System.out.println(member.getUser().getUsername());
             EmailHandler emailHandler = EmailHandler.getInstance();
             Session session = emailHandler.createSession();
             emailHandler.sendGroupGoalCompletion(session, member.getUser().getEmail(), goal, username);

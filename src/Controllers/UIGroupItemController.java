@@ -61,7 +61,6 @@ public class UIGroupItemController implements Initializable {
     public static void deleteGroup(String groupName) {
         DatabaseHandler dh = DatabaseHandler.getInstance();
         dh.deleteGroup(groupName);
-        System.out.println("Deleting");
     }
 
     /**

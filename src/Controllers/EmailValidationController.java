@@ -117,7 +117,6 @@ public class EmailValidationController implements Initializable{
         EmailHandler eh = EmailHandler.getInstance();
         Session session = eh.createSession();
 
-        System.out.println("Email Sending To: " + user.getEmail());
         dh.addTokenEntry(initialToken);
         eh.sendVerification(session, user.getEmail(), initialToken);
     }

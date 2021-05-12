@@ -66,8 +66,6 @@ public class CreateExerciseItemController implements Initializable {
             dbh.addExerciseItem(nameInput.getText(),
                                 Integer.parseInt(caloricBurnInput.getText()));
 
-            System.out.println("Item Created: " + nameInput.getText());
-
             parentScene.close();
 
         }

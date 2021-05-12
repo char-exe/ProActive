@@ -143,8 +143,6 @@ public class CreateNutritionItemController implements Initializable {
 
             dbh.addNutritionItem(n);
 
-            System.out.println("Item Created: " + nameInput.getText());
-
             parentScene.close();
         }
     }

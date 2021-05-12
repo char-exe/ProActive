@@ -62,7 +62,6 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //logo.setImage(new Image("src/Resources/proactive.png"));
         NotificationHandler notificationHandler = NotificationHandler.getInstance();
         notificationHandler.initMainController(this);
     }
@@ -74,7 +73,6 @@ public class MainController implements Initializable {
      */
     public void initData(User user){
         this.user = user;
-        System.out.println(user);
     }
 
     /**
@@ -85,7 +83,6 @@ public class MainController implements Initializable {
     @FXML
     public void homeScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-//        loader.setLocation(getClass().getClassLoader().getResource("src/FXML/SummaryPage.fxml"));
         loader.setLocation(getClass().getResource("/FXML/SummaryPage.fxml"));
         VBox vBox = loader.load();
 
@@ -135,13 +132,6 @@ public class MainController implements Initializable {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/FXML/Group.fxml"));
         VBox vBox = loader.load();
-//        VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/Group.fxml"));
-
-//        ScrollPane scrollPane = new ScrollPane();
-//        scrollPane.setContent(vBox);
-//        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-//        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-//        scrollPane.setFitToWidth(true);
 
         GroupController gc = loader.getController();
         gc.initData(user);
@@ -158,7 +148,6 @@ public class MainController implements Initializable {
      */
     @FXML private void goalsScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        //VBox vBox = FXMLLoader.load(getClass().getClassLoader().getResource("FXML/GoalPage.FXML"));
         loader.setLocation(getClass().getResource("/FXML/GoalPage.fxml"));
         VBox vBox = loader.load();
 
@@ -176,7 +165,6 @@ public class MainController implements Initializable {
      */
     @FXML private void manageProfileScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        //loader.setLocation(getClass().getClassLoader().getResource("src/FXML/ManageProfilePage.fxml"));
         loader.setLocation(getClass().getResource("/FXML/ManageProfilePage.fxml"));
         VBox vBox = loader.load();
 
@@ -213,8 +201,6 @@ public class MainController implements Initializable {
      * @param message Text to be displayed in the notification bar.
      */
     public void showNotification(String message) {
-        System.out.println("called");
-        System.out.println(message);
         notification.setText("");
         notification.setText(message);
 

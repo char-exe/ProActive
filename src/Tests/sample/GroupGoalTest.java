@@ -224,32 +224,6 @@ class GroupGoalTest {
         assertFalse(() -> groupGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test"));
     }
 
-    /*
-    @Test
-    void successfulUpdate() {
-        GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);
-
-        assertTrue(() -> groupGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test"));
-    }
-
-
-    @Test
-    void updateMarksCompletedAndInactive() {
-        GroupGoal groupGoal = new GroupGoal(1, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);
-
-        try {
-            groupGoal.updateProgress(Goal.Unit.PROTEIN, 1, "test");
-        }
-        catch (ExceptionInInitializerError e) {
-            System.out.println("caught");
-        }
-
-        assertTrue(groupGoal.isCompleted());
-        assertFalse(groupGoal.isActive());
-    }
-
-     */
-
     @Test
     void UpdateDoesNotMarkCompletedAndInactive() {
         GroupGoal groupGoal = new GroupGoal(2, Goal.Unit.PROTEIN, LocalDate.now().plusDays(1), 0, 1);

@@ -98,8 +98,6 @@ public class ManageProfilePageController implements Initializable {
      */
     public void initData(User user) {
         this.user = user;
-        System.out.println(this.user.getSex());
-        System.out.println(this.user);
     }
 
     /**
@@ -487,7 +485,7 @@ public class ManageProfilePageController implements Initializable {
 
             }
             catch (Exception e) {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
 
             exportButton.setDisable(false);

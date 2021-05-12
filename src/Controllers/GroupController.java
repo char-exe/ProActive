@@ -607,8 +607,6 @@ public class GroupController implements Initializable {
      * @throws IOException if the loading of the create group page throws an IOException.
      */
     public void createGroup() throws IOException {
-//        Stage parentScene = (Stage) createGroupButton.getScene().getWindow();
-//        Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/FXML/CreateGroupPage.fxml"));
 

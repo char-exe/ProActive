@@ -29,8 +29,7 @@ import java.util.*;
  * @version 1.2 - (SS) Added DateConverter as a nested class. Implemented functionality for pulling real data
  *                     from database.
  */
-public class SummaryController implements Initializable
-{
+public class SummaryController implements Initializable {
     @FXML private LineChart<Number, Number> intakeChart;
     @FXML private LineChart<Number, Number> burnChart;
     @FXML private LineChart<Number, Number> spentChart;

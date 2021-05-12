@@ -105,12 +105,9 @@ public class LoginPageController {
             displayInvalidPassword();
         }
         catch (IOException e1) {
-            System.out.println(e1.getMessage());
         }
         catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            System.out.println("String passed to SecretKeyFactory.getInstance has been spelled incorrectly, or is" +
-                    "otherwise incorrect.");
         }
         catch (InvalidKeySpecException e) {
             e.printStackTrace();

@@ -288,12 +288,9 @@ public class CreateAdvancedNutritionItemController implements Initializable {
                     Double.parseDouble(vitCInput.getText())
             );
 
-            System.out.println(n);
             Stage parentScene = (Stage) submitButton.getScene().getWindow();
 
             dbh.addNutritionItem(n);
-
-            System.out.println("Item Created: " + nameInput.getText());
 
             parentScene.close();
         }

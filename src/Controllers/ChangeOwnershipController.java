@@ -58,7 +58,6 @@ public class ChangeOwnershipController implements Initializable {
         ObservableSet<GroupAdmin> admins = FXCollections.observableSet(group.getAdmins());
 
         adminComboBox.getItems().addAll(admins);
-        System.out.println(adminComboBox.getItems());
     }
 
     /**

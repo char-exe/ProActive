@@ -29,9 +29,6 @@ public class Main extends Application {
         primaryStage.setMaxHeight(500);
 
         primaryStage.show();
-
-        //VBox content = FXMLLoader.load(getClass().getResource("SplashPage.fxml"));
-        //root.setCenter(content);
     }
 
     public static void main(String[] args) {
