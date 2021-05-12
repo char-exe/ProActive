@@ -196,9 +196,9 @@ public class GroupController implements Initializable {
 
             if (dh.isInvExpired(tokenInput)) {
                 dh.deleteGroupInv(tokenInput);
-                initViewGroups();
             }
         }
+        initViewGroups();
     }
 
     /**
