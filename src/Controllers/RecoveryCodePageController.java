@@ -77,8 +77,6 @@ public class RecoveryCodePageController {
         else {
             recoveryCodePopUp.setText("This code is invalid. Please try a different code. ");
         }
-
-
     }
 
     /**

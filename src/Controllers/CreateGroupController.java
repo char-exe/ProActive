@@ -1,24 +1,28 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import sample.DatabaseHandler;
-import sample.Goal;
 import sample.User;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 
+/**
+ * Class to control the Create Group page of the ProActive app.
+ *
+ * @author Charlie Jones
+ *
+ * @version 1.0
+ *
+ * 1.0 - First working version.
+ */
 public class CreateGroupController implements Initializable {
 
     @FXML private TextField groupNameField;
-    @FXML private Button confirmButton;
     @FXML private Label errorLabel;
 
     private DatabaseHandler dh;
@@ -33,14 +37,22 @@ public class CreateGroupController implements Initializable {
         this.user = user;
     }
 
+    /**
+     * Method to run after all FXML elements have been loaded, used for imposing restrictions on FXML elements
+     *
+     * @param url FXML defined parameter
+     * @param resourceBundle FXML defined parameter
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         dh = DatabaseHandler.getInstance();
-
     }
 
-    public void createGroup(ActionEvent actionEvent) {
+    /**
+     * Method to control the action of the create group button.
+     */
+    public void createGroup() {
 
         if(!groupNameField.getText().isEmpty()){
 
@@ -49,17 +61,13 @@ public class CreateGroupController implements Initializable {
                 Stage stage = (Stage) groupNameField.getScene().getWindow();
 
                 stage.close();
-
-            } else {
-
-                errorLabel.setText("Group name already taken, please choose another one.");
-
             }
-
-        } else {
+            else {
+                errorLabel.setText("Group name already taken, please choose another one.");
+            }
+        }
+        else {
             errorLabel.setText("Please enter a name.");
         }
-
     }
-
 }

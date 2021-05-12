@@ -18,7 +18,6 @@ import java.io.IOException;
  *
  * @version 1.0
  */
-
 public class ForgottenPasswordPageController {
 
     @FXML protected Label emailFieldPopUp;
@@ -26,6 +25,11 @@ public class ForgottenPasswordPageController {
     @FXML protected Button submitButton;
     @FXML protected Button cancelButton;
 
+    /**
+     * Method to control the action of the submit button.
+     *
+     * @throws IOException if the loading of the recovery page throws an IOException.
+     */
     @FXML
     protected void submit() throws IOException {
         String EMAILREGEX = "^\\w+.?\\w+@\\w+[.]\\w+([.]\\w+){0,2}$";

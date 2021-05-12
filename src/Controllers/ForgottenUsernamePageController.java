@@ -14,13 +14,12 @@ import sample.EmailHandler;
 import java.io.IOException;
 
 /**
- * A class to control the ForgottenPasswordPage FXML file.
+ * A class to control the ForgottenUsernamePage FXML file.
  *
  * @author Evan Clayton
  *
  * @version 1.0
  */
-
 public class ForgottenUsernamePageController {
 
     @FXML protected Label emailFieldPopUp;
@@ -28,8 +27,11 @@ public class ForgottenUsernamePageController {
     @FXML protected Button submitButton;
     @FXML protected Button cancelButton;
 
+    /**
+     * Method to control the action of the submit button.
+     */
     @FXML
-    protected void submit() throws IOException {
+    protected void submit() {
         String EMAILREGEX = "^\\w+.?\\w+@\\w+[.]\\w+([.]\\w+){0,2}$";
         if (emailField.getText().matches(EMAILREGEX) && DatabaseHandler.getInstance().checkEmailUnique(emailField.getText())) {
             //send the email with the code

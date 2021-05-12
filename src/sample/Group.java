@@ -37,7 +37,7 @@ public class Group {
     /**
      * This Group's GroupGoals.
      */
-    private ArrayList<GroupGoal> groupGoals;
+    private final ArrayList<GroupGoal> groupGoals;
 
     /**
      * Constructs a Group from a name and an owner. Initialises GroupGoals from the database.
@@ -152,35 +152,6 @@ public class Group {
         }
 
         this.owner = owner;
-    }
-
-
-    public void addMember(GroupMember member){
-
-    }
-
-    public void removeMember(GroupMember member){
-
-    }
-
-    public void addAdmin(GroupAdmin admin){
-
-    }
-
-    public void removeAdmin(GroupAdmin admin){
-
-    }
-
-    public void sendInvite(String email){
-
-    }
-
-//    public String createInvite(){
-//
-//    }
-
-    public void deleteGroup(){
-
     }
 
     /**

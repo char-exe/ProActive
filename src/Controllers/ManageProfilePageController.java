@@ -1,6 +1,5 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -10,7 +9,6 @@ import sample.User;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -23,11 +21,15 @@ import java.util.*;
  *
  * @author Owen Tasker
  * @author Samuel Scarfe
+ * @author Charlie Jones
  *
- * @version 1.1
+ * @version 1.4
  *
  * 1.0 - Initial commit
  * 1.1 - Connected to database, added simple error checking.
+ * 1.2 - Implemented tab view.
+ * 1.3 - Implemented metrics.
+ * 1.4 - Implemented csv export.
  */
 public class ManageProfilePageController implements Initializable {
 
@@ -303,13 +305,13 @@ public class ManageProfilePageController implements Initializable {
         }
     }
 
-    public void exportCSV(ActionEvent actionEvent) throws IOException {
+    /**
+     * Method to control export of user data to csv files.
+     */
+    public void exportCSV() {
 
         if (nutritionCheckBox.isSelected() || exerciseCheckBox.isSelected() || weightCheckBox.isSelected()) {
-
-
             try {
-
                 statusLabel.setText("");
                 exportButton.setDisable(true);
 
@@ -323,32 +325,24 @@ public class ManageProfilePageController implements Initializable {
                         user.getFirstname() + " " + user.getSurname(), user.getEmail()
                 });
 
-                if(nutritionCheckBox.isSelected()){
-
+                if(nutritionCheckBox.isSelected()) {
 
                     HashMap<String, ArrayList<NutritionItem>> nutrientEntries =
                             dh.getNutrientEntries(user.getUsername(), null);
 
-
                     rows.add(new String[] {
                             "NUTRITION"
                     });
-
 
                     rows.add(new String[] {"Date","kcal","proteinG","fatG","carbsG","sugarG","fibreG","cholesterolMg",
                             "sodiumMg","potassiumMg","calciumMg","magnesiumMg","phosphorusMg","ironMg","copperMg",
                             "zincMg","chlorideMg","seleniumUg","iodineUg","vitAUg","vitDUg","thiaminMg","riboflavinMg",
                             "niacinMg","vitB6Mg","vitB12Ug","folateUg","vitCMg"});
 
-
                     for(String date : nutrientEntries.keySet()){
-
                         ArrayList<NutritionItem> items = nutrientEntries.get(date);
-
                         if(items.size() > 1){
-
                             for(NutritionItem item : items){
-
                                 rows.add(
                                         new String[]{
                                                 date,
@@ -381,13 +375,10 @@ public class ManageProfilePageController implements Initializable {
                                                 String.valueOf(item.getVitCMg())
                                         }
                                 );
-
                             }
-
-                        } else {
-
+                        }
+                        else {
                             NutritionItem item = items.get(0);
-
                             rows.add(
                                     new String[]{
                                             date,
@@ -419,38 +410,25 @@ public class ManageProfilePageController implements Initializable {
                                             String.valueOf(item.getFolateUg()),
                                             String.valueOf(item.getVitCMg())
                                     }
-
                             );
-
                         }
-
                     }
-
-
                 }
 
-                if(exerciseCheckBox.isSelected()){
-
+                if(exerciseCheckBox.isSelected()) {
                     HashMap<String, List<List<String>>> exerciseEntries = dh.getBurnedEntries(user.getUsername());
 
                     rows.add(new String[] {
                             "EXERCISE"
                     });
 
-
                     rows.add(new String[]{"Date","ACTIVITY_NAME","DURATION","BURN_RATE"});
 
                     for(String date : exerciseEntries.keySet()){
-
-
                         List<List<String>> items = exerciseEntries.get(date);
 
-
                         if(items.size() > 0){
-
-
                             for(List<String> item : items){
-
                                 rows.add(
                                         new String[]{
                                                 date,
@@ -459,52 +437,37 @@ public class ManageProfilePageController implements Initializable {
                                                 String.valueOf(item.get(2))
 
                                         }
-
                                 );
-
                             }
-
-                        } else {
-
+                        }
+                        else {
                             List<String> item = items.get(0);
-
                             rows.add(
-                                    new String[]{
+                                    new String[] {
                                             date,
                                             String.valueOf(item.get(0)),
                                             String.valueOf(item.get(1)),
                                             String.valueOf(item.get(2))
 
                                     }
-
                             );
-
                         }
-
                     }
-
-
                 }
 
-                if(weightCheckBox.isSelected()){
-
+                if(weightCheckBox.isSelected()) {
                     HashMap<String, Integer> weightEntries = dh.getWeightEntries(user.getUsername(), null);
-
                     rows.add(new String[] {
                             "WEIGHT"
                     });
 
-
                     rows.add(new String[]{"Date","WEIGHT_KG"});
 
-                    for(String date : weightEntries.keySet()){
-
+                    for(String date : weightEntries.keySet()) {
                         rows.add(new String[]{
                                 date, String.valueOf(weightEntries.get(date))
                         });
-
                     }
-
                 }
 
                 LocalTime time = LocalTime.now();
@@ -514,7 +477,6 @@ public class ManageProfilePageController implements Initializable {
                                 "-" + time.getHour() + "." + time.getMinute() + "." + time.getSecond() + ".csv")
                 );
 
-
                 for (String[] rowData : rows) {
                     csvWriter.append(String.join(",", rowData));
                     csvWriter.append("\n");
@@ -523,19 +485,14 @@ public class ManageProfilePageController implements Initializable {
                 csvWriter.flush();
                 csvWriter.close();
 
-            } catch (Exception e) {
-
+            }
+            catch (Exception e) {
                 System.out.println(e.getMessage());
-
             }
 
             exportButton.setDisable(false);
-
             statusLabel.setText("Exported data to: " + csvPath);
-
         }
-
     }
-
 }
 

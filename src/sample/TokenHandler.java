@@ -35,17 +35,4 @@ public class TokenHandler {
 
         return uniqueRegToken.substring(0, num);
     }
-
-    /**
-     * Method for creating a unique token without passing a number as an argument.
-     *
-     * @return Returns a unique token
-     */
-    public static String createUniqueTokenWithoutArgument(){
-        Random rand = new Random();
-        int num = (rand.nextInt(35)+1); //number from 1 to 1000
-        String uniqueRegToken = UUID.randomUUID().toString();
-
-        return uniqueRegToken.substring(0, num);
-    }
 }

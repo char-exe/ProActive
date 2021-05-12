@@ -392,6 +392,11 @@ public class NutritionItem {
         return vitCMg;
     }
 
+    /**
+     * Method to get all macronutrient values of a this NutritionItem
+     *
+     * @return a HashMap the names of the macronutrients against their values.
+     */
     public HashMap<String, Double> getMacroNutrients(){
         return new HashMap<>(Map.ofEntries(
                 Map.entry("kcal", kcal),
@@ -404,6 +409,11 @@ public class NutritionItem {
         ));
     }
 
+    /**
+     * Method to get all mineral values of a this NutritionItem
+     *
+     * @return a HashMap the names of the minerals against their values.
+     */
     public HashMap<String, Double> getMinerals(){
         return new HashMap<>(Map.ofEntries(
                 Map.entry("Potassium (mg)", potassiumMg),
@@ -421,6 +431,11 @@ public class NutritionItem {
         ));
     }
 
+    /**
+     * Method to get all vitamin values of a this NutritionItem
+     *
+     * @return a HashMap the names of the vitamins against their values.
+     */
     public HashMap<String, Double> getVitamins(){
         return new HashMap<>(Map.ofEntries(
                 Map.entry("Folate (ug)", folateUg),
