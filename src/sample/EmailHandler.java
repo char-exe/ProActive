@@ -29,7 +29,7 @@ public class EmailHandler {
 
     private static final EmailHandler INSTANCE = new EmailHandler();
     private static final String EMAIL = "proactivese13@gmail.com";
-    private static final String PASS = "f45d09mFAcHr";
+    private static final String PASS = "REMOVED WHILE PUBLIC";
 
     /**
      * Private default constructor. Enforces the Singleton pattern.
